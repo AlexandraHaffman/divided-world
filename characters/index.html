@@ -1,100 +1,45 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Персонажи</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Персонажи | Разделённый мир</title>
 <style>
-
-body{
-background:#080c12;
-color:#c8d8e8;
-font-family:Arial,sans-serif;
-padding:30px;
-}
-
-h1{
-font-size:32px;
-margin-bottom:30px;
-}
-
-.card{
-
-background:#101823;
-
-border:1px solid #24445f;
-
-border-radius:12px;
-
-padding:20px;
-
-margin-bottom:16px;
-
-}
-
-.name{
-
-font-size:22px;
-
-font-weight:bold;
-
-margin-bottom:8px;
-
-}
-
-.info{
-
-color:#8ca5bc;
-
-}
-
-a{
-
-color:#4fc3f7;
-
-text-decoration:none;
-
-}
-
+body{background:#080c12;color:#c8d8e8;font-family:Arial,sans-serif;padding:24px}
+.card{background:#101823;border:1px solid #24445f;border-radius:12px;padding:16px;margin:12px 0}
+.name{font-size:22px;font-weight:bold;color:white}
+.meta{color:#4fc3f7;margin:6px 0}
+.quote{font-style:italic;margin:10px 0}
+a{color:#4fc3f7}
 </style>
-
 </head>
-
 <body>
 
 <h1>👥 Персонажи</h1>
+<div id="characters">Загрузка архива...</div>
 
-<div class="card">
+<a href="../index.html">← На главную</a>
 
-<div class="name">
+<script>
+fetch("../data/characters.json")
+  .then(response => response.json())
+  .then(data => {
+    const box = document.getElementById("characters");
+    box.innerHTML = "";
 
-????
-
-</div>
-
-<div class="info">
-
-Первый персонаж появится здесь.
-
-</div>
-
-</div>
-
-<p>
-
-<a href="../index.html">
-
-← На главную
-
-</a>
-
-</p>
+    data.forEach(char => {
+      box.innerHTML += `
+        <div class="card">
+          <div class="name">${char.name}</div>
+          <div class="meta">${char.faction} · ${char.role}</div>
+          <div class="quote">«${char.quote}»</div>
+          <div>${char.bio}</div>
+          <div class="meta">THREAT LEVEL: ${char.threat}</div>
+        </div>
+      `;
+    });
+  });
+</script>
 
 </body>
-
 </html>
