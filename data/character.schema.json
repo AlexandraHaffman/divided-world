@@ -1,0 +1,70 @@
+{
+  "id": "ulyana_spasskaya",
+  "name": "Ульяна Спасская",
+
+  "status": "Активен",
+  "gender": "Женский",
+  "birthdate": "12.06.2004",
+
+  "faction_id": "quiet_harbor",
+  "faction": "Тихая гавань",
+  "subfaction": null,
+  "role": "Покровительница прибрежных оазисов",
+  "location": "Дом лазури, Дом кораллов, Дом кипарисов",
+
+  "threat_level": 54,
+
+  "stats": {
+    "intelligence": 8,
+    "combat": 10,
+    "influence": 7,
+    "meta_power": 10,
+    "cruelty": 8,
+    "willpower": 8,
+    "stealth": 6,
+    "unpredictability": 7
+  },
+
+  "quote": "Я не собираюсь править, я собираюсь отдыхать. И в ваших интересах сделать мой отдых незабываемым.",
+
+  "short_bio": "Краткое описание для карточки.",
+  "biography": "Полная биография для страницы досье.",
+  "current_status": "Текущий статус персонажа.",
+
+  "abilities": [
+    "Абсолютный гидрокинез",
+    "Гидротрансляция"
+  ],
+
+  "aliases": [
+    "Ледяная Спасская",
+    "Хозяйка Тихой гавани"
+  ],
+
+  "relations": {
+    "partners": [],
+    "family": ["Лилия Спасская"],
+    "allies": [],
+    "enemies": []
+  },
+
+  "images": {
+    "obsidian": "Portrait_Ulyana_Spasskaya.jpg",
+    "obsidian_alt": null,
+    "official": "ulyana_spasskaya_official.jpg",
+    "telegram": null
+  },
+
+  "archive": {
+    "clearance": "OMNI",
+    "reliability": "CONFIRMED",
+    "source": "Obsidian export",
+    "updated_at": "2026-06-21"
+  },
+
+  "tags": [
+    "мета-человек",
+    "лидер",
+    "тихая-гавань"
+  ]
+}
