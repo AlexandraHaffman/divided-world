@@ -5,41 +5,850 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Персонажи | Разделённый мир</title>
 <style>
-body{background:#080c12;color:#c8d8e8;font-family:Arial,sans-serif;padding:24px}
-.card{background:#101823;border:1px solid #24445f;border-radius:12px;padding:16px;margin:12px 0}
-.name{font-size:22px;font-weight:bold;color:white}
-.meta{color:#4fc3f7;margin:6px 0}
-.quote{font-style:italic;margin:10px 0}
-a{color:#4fc3f7}
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #05080f;
+  --bg2: #080d18;
+  --grid: rgba(30,60,100,0.18);
+  --text: #b8cfe0;
+  --dim: #4a6a80;
+  --white: #e8f4ff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Сканлайны */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,20,40,0.15) 2px, rgba(0,20,40,0.15) 4px);
+  pointer-events:none;
+  z-index:1000;
+}
+
+/* Сетка фона */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* HEADER */
+.header {
+  position: relative;
+  z-index: 10;
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(30,100,180,0.2);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.back-btn {
+  color: var(--dim);
+  text-decoration: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(30,100,180,0.3);
+  padding: 4px 10px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+.back-btn:hover { color: #4fc3f7; border-color: #4fc3f7; }
+
+.sys-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.15em;
+}
+.sys-label span { color: #4fc3f7; }
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.page-title::before {
+  content: '// ';
+  color: var(--dim);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+.stat-pill {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+}
+.stat-pill b { color: #4fc3f7; }
+
+/* FILTERS */
+.filters {
+  position: relative;
+  z-index: 10;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid rgba(30,100,180,0.15);
+}
+.filter-btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--dim);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.filter-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+.filter-btn.active {
+  color: var(--white);
+  border-color: var(--faction-color, #4fc3f7);
+  background: rgba(var(--faction-rgb, 79,195,247), 0.08);
+  box-shadow: 0 0 10px rgba(var(--faction-rgb, 79,195,247), 0.15);
+}
+
+/* GRID */
+.grid {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 20px;
+}
+
+/* CARD */
+.char-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(8,13,24,0.95), rgba(5,8,15,0.98));
+  border: 1px solid rgba(var(--c-rgb), 0.25);
+  border-radius: 6px;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  animation: cardIn 0.5s both;
+}
+.char-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--c-rgb), 0.6);
+  box-shadow: 0 8px 30px rgba(var(--c-rgb), 0.15), 0 0 0 1px rgba(var(--c-rgb), 0.1);
+}
+
+@keyframes cardIn {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.card-top-bar {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgb(var(--c-rgb)), transparent);
+  opacity: 0.7;
+}
+
+.card-body { padding: 14px 16px 16px; }
+
+.card-faction {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: rgb(var(--c-rgb));
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.card-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.card-role {
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+/* Мини-радар */
+.card-radar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.card-radar-svg { flex-shrink: 0; }
+
+.threat-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.threat-num {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 26px;
+  font-weight: 900;
+  color: rgb(var(--c-rgb));
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(var(--c-rgb), 0.5);
+}
+.threat-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+}
+
+.card-quote {
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(var(--c-rgb), 0.7);
+  border-left: 2px solid rgba(var(--c-rgb), 0.3);
+  padding-left: 8px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.status-dot {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.status-dot::before {
+  content:'';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--s-color, #4a6a80);
+  box-shadow: 0 0 6px var(--s-color, #4a6a80);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50% { opacity:0.4; }
+}
+.card-open-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.char-card:hover .card-open-hint { opacity: 1; }
+
+/* EMPTY */
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--dim);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,5,10,0.92);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  position: relative;
+  background: linear-gradient(160deg, #070c18, #050810);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  transform: translateY(30px) scale(0.97);
+  transition: transform 0.3s;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(79,195,247,0.2) transparent;
+}
+.modal-overlay.open .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal-top-bar {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgb(var(--m-rgb, 79,195,247)), transparent);
+}
+.modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 28px; height: 28px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  color: var(--dim);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;align-items:center;justify-content:center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+.modal-close:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+.modal-hero {
+  padding: 20px 20px 0;
+}
+.modal-sys {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.modal-faction {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: rgb(var(--m-rgb, 79,195,247));
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.modal-name {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.modal-role {
+  font-size: 13px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+.modal-radar-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.modal-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  flex: 1;
+}
+.meta-cell {
+  background: rgba(var(--m-rgb, 79,195,247), 0.04);
+  border: 1px solid rgba(var(--m-rgb, 79,195,247), 0.12);
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+.meta-cell-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.meta-cell-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.modal-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--m-rgb, 79,195,247), 0.2), transparent);
+  margin: 0 20px 16px;
+}
+
+.modal-section { padding: 0 20px 16px; }
+.modal-section-title {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgb(var(--m-rgb, 79,195,247));
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  opacity: 0.7;
+}
+
+.modal-quote {
+  font-style: italic;
+  font-size: 16px;
+  color: rgba(var(--m-rgb, 79,195,247), 0.8);
+  border-left: 2px solid rgba(var(--m-rgb, 79,195,247), 0.4);
+  padding-left: 12px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.modal-bio {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.abilities-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ability-chip {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border: 1px solid rgba(var(--m-rgb, 79,195,247), 0.25);
+  border-radius: 3px;
+  color: rgb(var(--m-rgb, 79,195,247));
+  background: rgba(var(--m-rgb, 79,195,247), 0.05);
+  letter-spacing: 0.05em;
+}
+
+.stat-bars { display: flex; flex-direction: column; gap: 8px; }
+.stat-bar-row { display: flex; align-items: center; gap: 10px; }
+.stat-bar-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  width: 100px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.stat-bar-track {
+  flex: 1;
+  height: 3px;
+  background: rgba(var(--m-rgb, 79,195,247), 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(var(--m-rgb),0.5), rgb(var(--m-rgb)));
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 6px rgba(var(--m-rgb),0.4);
+}
+.stat-bar-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgb(var(--m-rgb, 79,195,247));
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.modal-bottom { height: 24px; }
+
+/* LOADING */
+.loading {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 80px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: 0.15em;
+}
+.loading::after {
+  content: '...';
+  animation: dots 1.5s infinite;
+}
+@keyframes dots {
+  0%,20% { content:'.' }
+  40%,60% { content:'..' }
+  80%,100%{ content:'...' }
+}
 </style>
 </head>
 <body>
 
-<h1>👥 Персонажи</h1>
-<div id="characters">Загрузка архива...</div>
+<div class="header">
+  <div class="header-top">
+    <a href="../index.html" class="back-btn">← АРХИВ</a>
+    <span class="sys-label">SYS.<span>PERSONNEL_DB</span> // CLEARANCE: OMNI</span>
+  </div>
+  <div class="page-title">Персонажи</div>
+  <div class="stats-row">
+    <div class="stat-pill">ЗАПИСЕЙ: <b id="count-total">—</b></div>
+    <div class="stat-pill">ОТОБРАЖЕНО: <b id="count-shown">—</b></div>
+    <div class="stat-pill">СТАТУС: <b style="color:#5dd98a">АКТИВНО</b></div>
+  </div>
+</div>
 
-<a href="../index.html">← На главную</a>
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-faction="all"
+    style="--faction-color:#4fc3f7;--faction-rgb:79,195,247">ВСЕ</button>
+</div>
+
+<div class="grid" id="grid">
+  <div class="loading">ЗАГРУЗКА АРХИВА ПЕРСОНАЖЕЙ</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-inner">
+    <div class="modal-top-bar" id="modal-bar"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+    <div class="modal-bottom"></div>
+  </div>
+</div>
 
 <script>
-fetch("../data/characters.json")
-  .then(response => response.json())
-  .then(data => {
-    const box = document.getElementById("characters");
-    box.innerHTML = "";
+// ── ЦВЕТА ФРАКЦИЙ ──────────────────────────────────────────
+const FACTION_COLORS = {
+  "Тенебрион":          { hex:"#c084fc", rgb:"192,132,252" },
+  "Единая Америка":     { hex:"#60a5fa", rgb:"96,165,250" },
+  "Ракшасы":            { hex:"#f87171", rgb:"248,113,113" },
+  "Аркадия":            { hex:"#34d399", rgb:"52,211,153" },
+  "Forge":              { hex:"#fbbf24", rgb:"251,191,36"  },
+  "Тихая гавань":       { hex:"#38bdf8", rgb:"56,189,248" },
+  "Белая зона":         { hex:"#94a3b8", rgb:"148,163,184" },
+  "Независимые":        { hex:"#a3e635", rgb:"163,230,53" },
+  "Экваториальная сеть":{ hex:"#fb923c", rgb:"251,146,60" },
+  "Гарнизон":           { hex:"#e2e8f0", rgb:"226,232,240" },
+  "Ковчег":             { hex:"#6ee7b7", rgb:"110,231,183" },
+};
+const DEFAULT_COLOR = { hex:"#4fc3f7", rgb:"79,195,247" };
 
-    data.forEach(char => {
-      box.innerHTML += `
-        <div class="card">
-          <div class="name">${char.name}</div>
-          <div class="meta">${char.faction} · ${char.role}</div>
-          <div class="quote">«${char.quote}»</div>
-          <div>${char.bio}</div>
-          <div class="meta">THREAT LEVEL: ${char.threat}</div>
-        </div>
-      `;
-    });
+const STATUS_COLORS = {
+  "Активен":    "#5dd98a",
+  "Мёртв":      "#f87171",
+  "Неизвестно": "#64748b",
+};
+
+function getFactionColor(faction) {
+  return FACTION_COLORS[faction] || DEFAULT_COLOR;
+}
+
+// ── РАДАР SVG ──────────────────────────────────────────────
+function buildRadar(stats, rgb, size=80) {
+  const vals = [
+    stats.intelligence||0, stats.combat||0, stats.influence||0,
+    stats.cruelty||0, stats.will||0, stats.stealth||0, stats.unpredictability||0
+  ];
+  const EMOJI = ["🧠","⚔","👑","🔪","🛡","🌑","🎲"];
+  const n=7, cx=size/2, cy=size/2, R=size*0.33;
+  const angles = Array.from({length:n},(_,i)=>(Math.PI*2*i/n)-Math.PI/2);
+  const pt = arr => arr.map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ");
+  const poly = r => angles.map(a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)]);
+
+  const rings = [0.33,0.66,1].map(f=>
+    `<polygon points="${pt(poly(R*f))}" fill="none" stroke="rgba(${rgb},${f===1?0.25:0.1})" stroke-width="0.8"/>`
+  ).join("");
+  const spokes = angles.map(a=>
+    `<line x1="${cx}" y1="${cy}" x2="${(cx+R*Math.cos(a)).toFixed(1)}" y2="${(cy+R*Math.sin(a)).toFixed(1)}" stroke="rgba(${rgb},0.12)" stroke-width="0.8"/>`
+  ).join("");
+  const dataPoints = angles.map((a,i)=>{
+    const r=(Math.min(vals[i],10)/10)*R;
+    return [cx+r*Math.cos(a),cy+r*Math.sin(a)];
   });
-</script>
+  const labels = size > 90 ? angles.map((a,i)=>{
+    const lx=cx+(R+13)*Math.cos(a), ly=cy+(R+13)*Math.sin(a);
+    return `<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="middle" font-size="9">${EMOJI[i]}</text>
+            <text x="${lx.toFixed(1)}" y="${(ly+14).toFixed(1)}" text-anchor="middle" font-size="7" fill="rgba(${rgb},0.7)" font-family="Share Tech Mono,monospace" font-weight="700">${vals[i]}</text>`;
+  }).join("") : "";
 
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="overflow:visible">
+    <defs><filter id="rg${size}"><feGaussianBlur stdDeviation="1.5"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    ${rings}${spokes}
+    <polygon points="${pt(dataPoints)}" fill="rgba(${rgb},0.12)" stroke="none"/>
+    <polygon points="${pt(dataPoints)}" fill="none" stroke="rgba(${rgb},0.8)" stroke-width="1.2" stroke-linejoin="round"/>
+    ${dataPoints.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2" fill="rgba(${rgb},1)" filter="url(#rg${size})"/>`).join("")}
+    ${labels}
+  </svg>`;
+}
+
+// ── ДАННЫЕ ──────────────────────────────────────────────────
+const REPO = "AlexandraHaffman/divided-world";
+const API  = `https://api.github.com/repos/${REPO}/contents/data/characters`;
+
+let allChars = [];
+let activeFilter = "all";
+
+async function loadCharacters() {
+  try {
+    const listRes = await fetch(API);
+    const files = await listRes.json();
+    const jsonFiles = files.filter(f => f.name.endsWith(".json") && f.name !== ".keep");
+
+    const chars = await Promise.all(jsonFiles.map(async f => {
+      const res = await fetch(f.download_url);
+      return res.json();
+    }));
+
+    allChars = chars.sort((a,b) => (b.threat_level||0) - (a.threat_level||0));
+    buildFilters();
+    renderGrid(allChars);
+    document.getElementById("count-total").textContent = allChars.length;
+  } catch(e) {
+    document.getElementById("grid").innerHTML =
+      `<div class="empty-state">ОШИБКА ЗАГРУЗКИ АРХИВА<br><span style="font-size:10px;opacity:0.5">${e.message}</span></div>`;
+  }
+}
+
+function buildFilters() {
+  const factions = [...new Set(allChars.map(c=>c.faction).filter(Boolean))].sort();
+  const wrap = document.getElementById("filters");
+  factions.forEach(f => {
+    const col = getFactionColor(f);
+    const btn = document.createElement("button");
+    btn.className = "filter-btn";
+    btn.dataset.faction = f;
+    btn.textContent = f.toUpperCase();
+    btn.style.cssText = `--faction-color:${col.hex};--faction-rgb:${col.rgb}`;
+    btn.onclick = () => setFilter(f);
+    wrap.appendChild(btn);
+  });
+}
+
+function setFilter(faction) {
+  activeFilter = faction;
+  document.querySelectorAll(".filter-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.faction === faction);
+  });
+  const filtered = faction === "all" ? allChars : allChars.filter(c=>c.faction===faction);
+  renderGrid(filtered);
+}
+
+document.querySelector(".filter-btn[data-faction='all']").onclick = () => setFilter("all");
+
+function renderGrid(chars) {
+  const grid = document.getElementById("grid");
+  document.getElementById("count-shown").textContent = chars.length;
+
+  if (!chars.length) {
+    grid.innerHTML = `<div class="empty-state">ПЕРСОНАЖИ НЕ НАЙДЕНЫ</div>`;
+    return;
+  }
+
+  grid.innerHTML = chars.map((c, i) => {
+    const col = getFactionColor(c.faction);
+    const sc  = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
+    const radar = buildRadar(c.stats||{}, col.rgb, 80);
+    const delay = Math.min(i*0.05, 1);
+    return `
+    <div class="char-card" style="--c-rgb:${col.rgb};animation-delay:${delay}s"
+         onclick="openModal(${i < (activeFilter==='all'?allChars.length:allChars.filter(x=>x.faction===activeFilter).length) ? allChars.indexOf(c) : allChars.indexOf(c)})">
+      <div class="card-top-bar"></div>
+      <div class="card-body">
+        <div class="card-faction">${c.faction||'—'}</div>
+        <div class="card-name">${c.name}</div>
+        <div class="card-role">${c.role||''}</div>
+        <div class="card-radar-row">
+          <div class="card-radar-svg">${radar}</div>
+          <div style="flex:1">
+            <div class="threat-badge" style="margin-bottom:8px">
+              <div class="threat-num">${c.threat_level||0}</div>
+              <div class="threat-label">THREAT</div>
+            </div>
+          </div>
+        </div>
+        ${c.card_quote ? `<div class="card-quote">«${c.card_quote}»</div>` : ''}
+        <div class="card-footer">
+          <div class="status-dot" style="--s-color:${sc};color:${sc}">${c.status||'Неизвестно'}</div>
+          <div class="card-open-hint">ДОСЬЕ →</div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  // Перепривязываем клики с правильными индексами
+  document.querySelectorAll(".char-card").forEach((el, i) => {
+    el.onclick = () => openModal(allChars.indexOf(chars[i]));
+  });
+}
+
+// ── МОДАЛКА ──────────────────────────────────────────────────
+function openModal(idx) {
+  const c = allChars[idx];
+  const col = getFactionColor(c.faction);
+  const sc  = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
+
+  document.getElementById("modal-bar").style.background =
+    `linear-gradient(90deg, transparent, rgb(${col.rgb}), transparent)`;
+  document.getElementById("modal-inner").style.cssText =
+    `--m-rgb:${col.rgb};border:1px solid rgba(${col.rgb},0.3);box-shadow:0 0 40px rgba(${col.rgb},0.1)`;
+
+  const radar = buildRadar(c.stats||{}, col.rgb, 130);
+  const stats = c.stats || {};
+  const statRows = [
+    ["Интеллект", stats.intelligence],
+    ["Боевые", stats.combat],
+    ["Влияние", stats.influence],
+    ["Мета-сила", stats.meta_power],
+    ["Жестокость", stats.cruelty],
+    ["Воля", stats.will],
+    ["Скрытность", stats.stealth],
+    ["Непредсказуемость", stats.unpredictability],
+  ];
+
+  document.getElementById("modal-content").innerHTML = `
+    <div class="modal-hero">
+      <div class="modal-sys">SYS.RECORD // ПЕРСОНАЖ #${String(idx+1).padStart(3,"0")}</div>
+      <div class="modal-faction">${c.faction||'—'}${c.subfaction?` · ${c.subfaction}`:''}</div>
+      <div class="modal-name">${c.name}</div>
+      <div class="modal-role">${c.role||''}</div>
+
+      <div class="modal-radar-row">
+        <div>${radar}</div>
+        <div class="modal-meta-grid">
+          <div class="meta-cell">
+            <div class="meta-cell-label">Статус</div>
+            <div class="meta-cell-val" style="color:${sc}">${c.status||'—'}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-cell-label">Угроза</div>
+            <div class="meta-cell-val" style="color:rgb(${col.rgb})">${c.threat_level||0}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-cell-label">Пол</div>
+            <div class="meta-cell-val">${c.gender||'—'}</div>
+          </div>
+          <div class="meta-cell">
+            <div class="meta-cell-label">Д.Р.</div>
+            <div class="meta-cell-val">${c.birthdate||'—'}</div>
+          </div>
+          <div class="meta-cell" style="grid-column:1/-1">
+            <div class="meta-cell-label">Локация</div>
+            <div class="meta-cell-val">${c.location||'—'}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    ${c.card_quote ? `
+    <div class="modal-section">
+      <div class="modal-quote">«${c.card_quote}»</div>
+    </div>` : ''}
+
+    ${c.biography ? `
+    <div class="modal-section">
+      <div class="modal-section-title">Биография</div>
+      <div class="modal-bio">${c.biography.replace(/\n/g,"<br>")}</div>
+    </div>
+    <div class="modal-divider"></div>` : ''}
+
+    ${c.current_status ? `
+    <div class="modal-section">
+      <div class="modal-section-title">Текущий статус</div>
+      <div class="modal-bio">${c.current_status.replace(/\n/g,"<br>")}</div>
+    </div>
+    <div class="modal-divider"></div>` : ''}
+
+    ${c.abilities?.length ? `
+    <div class="modal-section">
+      <div class="modal-section-title">Способности</div>
+      <div class="abilities-wrap">
+        ${c.abilities.map(a=>`<div class="ability-chip">${a}</div>`).join("")}
+      </div>
+    </div>
+    <div class="modal-divider"></div>` : ''}
+
+    <div class="modal-section">
+      <div class="modal-section-title">Характеристики</div>
+      <div class="stat-bars">
+        ${statRows.filter(([,v])=>v!==undefined).map(([label,val])=>`
+        <div class="stat-bar-row">
+          <div class="stat-bar-label">${label}</div>
+          <div class="stat-bar-track">
+            <div class="stat-bar-fill" style="width:${Math.min((val||0)/10*100,100)}%"></div>
+          </div>
+          <div class="stat-bar-val">${val||0}</div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+    ${c.aliases?.length ? `
+    <div class="modal-divider"></div>
+    <div class="modal-section">
+      <div class="modal-section-title">Псевдонимы</div>
+      <div class="abilities-wrap">
+        ${c.aliases.map(a=>`<div class="ability-chip">${a}</div>`).join("")}
+      </div>
+    </div>` : ''}
+  `;
+
+  document.getElementById("modal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById("modal")) return;
+  document.getElementById("modal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", e => { if(e.key==="Escape") closeModal(); });
+
+loadCharacters();
+</script>
 </body>
 </html>
