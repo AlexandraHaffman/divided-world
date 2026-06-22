@@ -8,6 +8,7 @@
   "faction": "Аркадия",
   "subfaction": "",
   "location": "Аркадия",
+  "faction_color": "#2ecc71",
   "aliases": [
     "Спаситель"
   ],
@@ -35,5 +36,8 @@
   "current_status": "",
   "avatar": "Portrait_Dorn",
   "alt_avatar": "",
-  "exported_at": "2026-06-21T20:45:23.809Z"
+  "avatar_web": "https://i.ibb.co/7djyftqF/F99-A293-B-0-C2-A-473-B-9-E84-3249046-BA8-D9.png",
+  "avatar_web_full": "https://i.ibb.co/R4QxQG8V/C950-AB37-105-C-4639-AA28-C26-D1-CE4-A785.jpg",
+  "tier": "Legendary",
+  "exported_at": "2026-06-22T19:43:31.445Z"
 }
