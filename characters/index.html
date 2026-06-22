@@ -10,6 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,20,40,0.12) 2px,rgba(0,20,40,0.12) 4px);pointer-events:none;z-index:1000;}
+.dossier-overlay::before{display:none;}
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,60,100,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,60,100,0.15) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 
 .header{position:relative;z-index:10;padding:20px 16px 14px;border-bottom:1px solid rgba(30,100,180,0.2);}
@@ -99,23 +100,23 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 /* Данные досье */
 .dossier-data{background:var(--bg);position:relative;z-index:10;}
 .dossier-data-line{height:1px;background:linear-gradient(90deg,transparent,rgba(var(--dr),0.3),transparent);}
-.dossier-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:14px 16px 0;}
+.dossier-meta{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:6px;padding:14px 16px 0;}
 .dossier-meta-cell{background:rgba(var(--dr),0.04);border:1px solid rgba(var(--dr),0.1);border-radius:4px;padding:6px 9px;}
-.dossier-meta-cell.wide{grid-column:1/-1;}
 .dossier-meta-label{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2px;}
 .dossier-meta-val{font-size:12px;font-weight:600;color:var(--white);}
 .dossier-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(var(--dr),0.15),transparent);margin:12px 16px;}
 .dossier-section{padding:0 16px 12px;}
 .dossier-section-title{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:rgba(var(--dr),0.6);text-transform:uppercase;margin-bottom:8px;}
-.dossier-radar{display:flex;justify-content:center;padding:4px 0 8px;}
+.dossier-stats-row{display:flex;gap:10px;align-items:flex-start;}
+.dossier-radar{flex-shrink:0;padding:0;}
 .dossier-quote{font-style:italic;font-size:14px;color:rgba(var(--dr),0.85);border-left:2px solid rgba(var(--dr),0.4);padding-left:10px;line-height:1.6;}
 .dossier-bio{font-size:13px;color:var(--text);line-height:1.7;}
-.stat-bars{display:flex;flex-direction:column;gap:6px;}
-.stat-row{display:flex;align-items:center;gap:8px;}
-.stat-name{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);width:88px;flex-shrink:0;letter-spacing:0.06em;text-transform:uppercase;}
+.stat-bars{display:flex;flex-direction:column;gap:7px;flex:1;justify-content:center;}
+.stat-row{display:flex;align-items:center;gap:5px;}
+.stat-name{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--dim);width:68px;flex-shrink:0;letter-spacing:0.04em;text-transform:uppercase;}
 .stat-track{flex:1;height:3px;background:rgba(var(--dr),0.1);border-radius:2px;overflow:hidden;}
 .stat-fill{height:100%;background:linear-gradient(90deg,rgba(var(--dr),0.5),rgb(var(--dr)));border-radius:2px;box-shadow:0 0 6px rgba(var(--dr),0.4);}
-.stat-val{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:rgb(var(--dr));width:18px;text-align:right;flex-shrink:0;}
+.stat-val{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;color:rgb(var(--dr));width:14px;text-align:right;flex-shrink:0;}
 .abilities{display:flex;flex-wrap:wrap;gap:5px;}
 .chip{font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid rgba(var(--dr),0.25);border-radius:3px;color:rgb(var(--dr));background:rgba(var(--dr),0.05);}
 .dossier-bottom{height:40px;}
@@ -312,20 +313,21 @@ function openDossier(idx){
       <div class="dossier-data-line"></div>
       <div class="dossier-meta">
         <div class="dossier-meta-cell"><div class="dossier-meta-label">Пол</div><div class="dossier-meta-val">${c.gender||'—'}</div></div>
-        <div class="dossier-meta-cell"><div class="dossier-meta-label">Д.Р.</div><div class="dossier-meta-val">${c.birthdate||'—'}</div></div>
-        <div class="dossier-meta-cell wide"><div class="dossier-meta-label">Локация</div><div class="dossier-meta-val">${c.location||'—'}</div></div>
+        <div class="dossier-meta-cell"><div class="dossier-meta-label">Дата рождения</div><div class="dossier-meta-val">${c.birthdate||'—'}</div></div>
+        <div class="dossier-meta-cell"><div class="dossier-meta-label">Локация</div><div class="dossier-meta-val">${c.location||'—'}</div></div>
       </div>
       <div class="dossier-divider"></div>
       <div class="dossier-section">
         <div class="dossier-section-title">Характеристики</div>
-        <div class="dossier-radar">${radar}</div>
-        <div class="stat-bars">${statRows.filter(([,v])=>v!==undefined).map(([l,v])=>`<div class="stat-row"><div class="stat-name">${l}</div><div class="stat-track"><div class="stat-fill" style="width:${Math.min((v||0)/10*100,100)}%"></div></div><div class="stat-val">${v||0}</div></div>`).join("")}</div>
+        <div class="dossier-stats-row">
+          <div class="dossier-radar">${radar}</div>
+          <div class="stat-bars">${statRows.filter(([l,v])=>v!==undefined&&!(l==="Мета-сила"&&(v||0)===0)).map(([l,v])=>`<div class="stat-row"><div class="stat-name">${l}</div><div class="stat-track"><div class="stat-fill" style="width:${Math.min((v||0)/10*100,100)}%"></div></div><div class="stat-val">${v||0}</div></div>`).join("")}</div>
+        </div>
       </div>
       ${c.card_quote?`<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-quote">«${c.card_quote}»</div></div>`:''}
       ${c.biography?`<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Биография</div><div class="dossier-bio">${c.biography.replace(/\n/g,"<br>")}</div></div>`:''}
       ${c.current_status?`<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Текущий статус</div><div class="dossier-bio">${c.current_status.replace(/\n/g,"<br>")}</div></div>`:''}
       ${c.abilities?.length?`<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Способности</div><div class="abilities">${c.abilities.map(a=>`<div class="chip">${a}</div>`).join("")}</div></div>`:''}
-      ${c.aliases?.length?`<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Псевдонимы</div><div class="abilities">${c.aliases.map(a=>`<div class="chip">${a}</div>`).join("")}</div></div>`:''}
       <div class="dossier-bottom"></div>
     </div>
   `;
