@@ -8,6 +8,7 @@
   "faction": "Тенебрион",
   "subfaction": "Церковь Тенебрии",
   "location": "Резиденция Артура Остермана",
+  "faction_color": "#ff9d00",
   "aliases": [
     "Апостол"
   ],
@@ -33,5 +34,8 @@
   "current_status": "",
   "avatar": "Portrait_Osterman",
   "alt_avatar": "",
-  "exported_at": "2026-06-21T20:45:05.952Z"
+  "avatar_web": "https://i.ibb.co/Dg1WzSYM/5-B39-B88-D-7167-48-A5-B512-1-FC2-F572-B4-F5.png",
+  "avatar_web_full": "https://i.ibb.co/GQqtZJB7/A4408787-2925-4278-9368-7-E298-B5-BCC2-F.png",
+  "tier": "Legendary",
+  "exported_at": "2026-06-22T20:02:46.967Z"
 }
