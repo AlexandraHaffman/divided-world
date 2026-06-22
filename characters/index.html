@@ -12,7 +12,7 @@ body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;mi
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,20,40,0.12) 2px,rgba(0,20,40,0.12) 4px);pointer-events:none;z-index:1000;}
 .dossier-overlay::before{display:none;}
 .dossier-overlay::after{display:none;}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,60,100,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,60,100,0.15) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+body:not(.dossier-open)::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,60,100,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,60,100,0.15) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 
 .header{position:relative;z-index:10;padding:20px 16px 14px;border-bottom:1px solid rgba(30,100,180,0.2);}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
@@ -72,7 +72,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .loading{position:relative;z-index:10;text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.15em;}
 
 /* ── ДОСЬЕ (полный экран) ── */
-.dossier-overlay{position:fixed;inset:0;z-index:500;overflow-y:auto;background:var(--bg);opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.dossier-overlay{position:fixed;inset:0;z-index:999;overflow-y:auto;background:var(--bg);opacity:0;pointer-events:none;transition:opacity 0.3s;isolation:isolate;}
+.dossier-overlay.open::before,.dossier-overlay.open::after{display:none!important;}
 .dossier-overlay.open{opacity:1;pointer-events:all;}
 
 /* Шапка — арт */
