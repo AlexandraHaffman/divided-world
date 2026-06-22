@@ -8,6 +8,7 @@
   "faction": "Аркадия",
   "subfaction": "",
   "location": "Аркадия",
+  "faction_color": "#2ecc71",
   "aliases": [
     "Спаситель"
   ],
@@ -34,5 +35,8 @@
   "current_status": "",
   "avatar": "Portrait_Wistner",
   "alt_avatar": "",
-  "exported_at": "2026-06-21T20:45:13.295Z"
+  "avatar_web": "https://i.ibb.co/23H3gyMR/A8-E1-C5-AF-14-EF-4-F7-C-BB2-E-C744-C3-E019-C0.png",
+  "avatar_web_full": "https://i.ibb.co/0yPmtJBp/0-B6-B0-D1-D-2-E75-4-C46-BE56-C8106-D49-E5-AE.png",
+  "tier": "Legendary",
+  "exported_at": "2026-06-22T17:53:42.696Z"
 }
