@@ -8,6 +8,7 @@
   "faction": "Единая Америка",
   "subfaction": "Единая Америка",
   "location": "Единая Америка",
+  "faction_color": "#4a9eff",
   "aliases": [
     "Верховный Председатель",
     "Адриан Гилберт"
@@ -35,5 +36,5 @@
   "current_status": "",
   "avatar": "Portrait_Gibert",
   "alt_avatar": "",
-  "exported_at": "2026-06-21T20:45:45.768Z"
+  "exported_at": "2026-06-22T13:12:37.023Z"
 }
