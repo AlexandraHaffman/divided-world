@@ -121,7 +121,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 /* для карточки без фото — над разделителем цитаты */
 .card-quote-a{position:relative;overflow:hidden;}
 
-/* мета-сила — только статичное свечение, без анимаций */
+/* мета-сила — статичное свечение + медленная пульсация для 10+ */
+@keyframes metaBreath{
+  0%,100%{height:calc(var(--mg-h) * 0.6);opacity:0.7;}
+  50%{height:var(--mg-h);opacity:1;}
+}
+.meta-glow--pulse{animation:metaBreath 4.5s ease-in-out infinite;}
 /* divine — разделитель чуть ярче */
 .char-card[data-meta="divine"].has-photo .card-quote-a{border-top:1.5px solid rgba(var(--cr),0.6);}
 
@@ -295,18 +300,16 @@ function getMetaGlow(c){
   const h=4+m*4.2, str=0.14+m*0.06;
   return{h:Math.round(h),str:+str.toFixed(2),anim:null};
 }
-/* строим div свечения — только статичный градиент */
+/* строим div свечения */
 function metaGlowHTML(c){
   const m=(c.stats&&c.stats.meta_power)||0;
   if(m<=0)return"";
-  // высота и непрозрачность плавно нарастают
-  let h, str;
-  if(m>=100){h=65;str=0.9;}
-  else if(m>=11){h=52;str=0.78;}
-  else if(m>=10){h=45;str=0.72;}
-  else{h=4+m*4.2;str=0.13+m*0.06;}
-  h=Math.round(h); str=+str.toFixed(2);
-  return`<div class="meta-glow" style="height:${h}px;background:linear-gradient(to top,rgba(var(--cr),${str}),transparent);"></div>`;
+  let h, str, cls="meta-glow";
+  if(m>=100){h=40;str=0.38;cls="meta-glow meta-glow--pulse";}
+  else if(m>=10){h=32;str=0.30;cls="meta-glow meta-glow--pulse";}
+  else{h=3+m*3.2;str=0.07+m*0.025;}
+  h=Math.round(h); str=+str.toFixed(3);
+  return`<div class="${cls}" style="--mg-h:${h}px;--mg-str:${str};height:${h}px;background:linear-gradient(to top,rgba(var(--cr),${str}),transparent);"></div>`;
 }
 
 function buildRadar(stats,rgb,size=70){
