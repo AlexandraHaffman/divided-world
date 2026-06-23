@@ -87,12 +87,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .char-card[data-tier="epic"] .card-top-bar{height:4px;opacity:1;}
 .char-card[data-tier="epic"] .tier-corners{opacity:0.7;}
 
-.char-card[data-tier="legendary"]{border-color:rgba(var(--cr),0.6);animation:cardIn 0.4s both,legendaryGlow 3s ease-in-out infinite;}
-.char-card[data-tier="legendary"] .card-top-bar{height:4px;opacity:1;background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 2.5s linear infinite;}
+.char-card[data-tier="legendary"]{border-color:rgba(var(--cr),0.6);animation:cardIn 0.4s both,legendaryGlow 7s ease-in-out infinite;}
+.char-card[data-tier="legendary"] .card-top-bar{height:4px;opacity:1;background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 6s linear infinite;}
 .char-card[data-tier="legendary"] .tier-corners{opacity:0.9;--corner-size:18px;--corner-w:1.5px;}
 
-.char-card[data-tier="divine"]{border:1px solid rgb(var(--cr));outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:cardIn 0.4s both,divineGlow 2s ease-in-out infinite;}
-.char-card[data-tier="divine"] .card-top-bar{height:5px;opacity:1;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 2s linear infinite;}
+.char-card[data-tier="divine"]{border:1px solid rgb(var(--cr));outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:cardIn 0.4s both,divineGlow 5s ease-in-out infinite;}
+.char-card[data-tier="divine"] .card-top-bar{height:5px;opacity:1;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 5s linear infinite;}
 .char-card[data-tier="divine"] .tier-corners{opacity:1;--corner-size:24px;--corner-w:2px;}
 
 @keyframes shimmerBar{0%{background-position:-100% 0}100%{background-position:200% 0}}
@@ -121,12 +121,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 /* для карточки без фото — над разделителем цитаты */
 .card-quote-a{position:relative;overflow:hidden;}
 
-@keyframes metaPulse{0%,100%{height:calc(var(--mg-h) * 0.75);opacity:0.8}50%{height:var(--mg-h);opacity:1}}
-@keyframes metaFire{0%,100%{clip-path:polygon(0% 100%,0% 35%,25% 55%,50% 25%,75% 50%,100% 40%,100% 100%)}50%{clip-path:polygon(0% 100%,0% 50%,25% 30%,50% 55%,75% 25%,100% 50%,100% 100%)}}
-@keyframes divineLine{0%,100%{background:rgba(var(--cr),0.7)}50%{background:rgba(255,255,255,0.9)}}
-/* мигающий разделитель у Divine (мета 100) */
-.char-card[data-meta="divine"].has-photo .card-quote-a{border-top:1.5px solid rgba(var(--cr),0.7);animation:divineLine 1.8s ease-in-out infinite;}
-.char-card[data-meta="divine"]:not(.has-photo) .card-quote{border-top:none;}
+/* мета-сила — только статичное свечение, без анимаций */
+/* divine — разделитель чуть ярче */
+.char-card[data-meta="divine"].has-photo .card-quote-a{border-top:1.5px solid rgba(var(--cr),0.6);}
 
 /* якоря мета-свечения */
 .meta-glow-anchor{position:absolute;left:0;right:0;bottom:0;height:0;z-index:2;pointer-events:none;}
@@ -298,13 +295,18 @@ function getMetaGlow(c){
   const h=4+m*4.2, str=0.14+m*0.06;
   return{h:Math.round(h),str:+str.toFixed(2),anim:null};
 }
-/* строим div свечения */
+/* строим div свечения — только статичный градиент */
 function metaGlowHTML(c){
-  const g=getMetaGlow(c);
-  if(!g)return"";
-  let style=`--mg-h:${g.h}px;--mg-str:${g.str};height:${g.h}px;`;
-  if(g.anim)style+=`animation:${g.anim} ${g.dur} ease-in-out infinite;`;
-  return`<div class="meta-glow" style="${style}"></div>`;
+  const m=(c.stats&&c.stats.meta_power)||0;
+  if(m<=0)return"";
+  // высота и непрозрачность плавно нарастают
+  let h, str;
+  if(m>=100){h=65;str=0.9;}
+  else if(m>=11){h=52;str=0.78;}
+  else if(m>=10){h=45;str=0.72;}
+  else{h=4+m*4.2;str=0.13+m*0.06;}
+  h=Math.round(h); str=+str.toFixed(2);
+  return`<div class="meta-glow" style="height:${h}px;background:linear-gradient(to top,rgba(var(--cr),${str}),transparent);"></div>`;
 }
 
 function buildRadar(stats,rgb,size=70){
