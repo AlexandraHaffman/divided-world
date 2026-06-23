@@ -32,13 +32,13 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .grid{position:relative;z-index:10;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;align-items:stretch;}
 
 /* КАРТОЧКА БЕЗ ФОТО */
-.char-card{position:relative;background:linear-gradient(135deg,rgba(8,13,24,0.95),rgba(5,8,15,0.98));border:1px solid rgba(var(--cr),0.25);border-radius:6px;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;animation:cardIn 0.4s both;display:flex;flex-direction:column;}
+.char-card{position:relative;background:linear-gradient(135deg,rgba(8,13,24,0.95),rgba(5,8,15,0.98));border:1px solid rgba(var(--cr),0.25);border-radius:6px;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;animation:cardIn 0.4s both;display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .char-card:hover{transform:translateY(-3px);border-color:rgba(var(--cr),0.6);box-shadow:0 6px 20px rgba(var(--cr),0.15);}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
 /* Подсветка при касании */
-.char-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(var(--cr),0.12) 0%,transparent 70%);opacity:0;transition:opacity 0.15s;pointer-events:none;z-index:5;}
-.char-card.tap-active::after{opacity:1;}
+@keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.char-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(var(--cr),0.0) 0%,rgba(var(--cr),0.15) 30%,rgba(var(--cr),0.25) 50%,rgba(var(--cr),0.15) 70%,rgba(var(--cr),0.0) 100%);background-size:200% 200%;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:5;}
+.char-card.tap-active::after{opacity:1;animation:shimmer 1.2s ease infinite;}
 .char-card.tap-active{border-color:rgba(var(--cr),0.5);box-shadow:0 0 16px rgba(var(--cr),0.2),inset 0 0 20px rgba(var(--cr),0.05);}
 
 .card-top-bar{height:2px;background:linear-gradient(90deg,transparent,rgb(var(--cr)),transparent);opacity:0.7;}
@@ -72,7 +72,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .card-photo-faction-bottom{font-family:'Share Tech Mono',monospace;font-size:clamp(6px,1.6vw,9px);letter-spacing:0.04em;color:rgb(var(--cr));text-transform:uppercase;font-weight:700;max-width:55%;line-height:1.2;}
 
 /* ЦИТАТА ПОД ФОТО */
-.card-quote-a{padding:9px 12px 11px;border-top:1px solid rgba(var(--cr),0.12);background:rgba(var(--cr),0.03);flex:1;display:flex;flex-direction:column;}
+.char-card.has-photo .card-body{padding:0;display:flex;flex-direction:column;flex:1;}.card-quote-a{padding:9px 12px 11px;border-top:1px solid rgba(var(--cr),0.12);background:rgba(var(--cr),0.03);flex:1;}
 .card-quote-a-text{font-style:italic;font-size:10px;color:rgba(var(--cr),0.65);border-left:2px solid rgba(var(--cr),0.35);padding-left:8px;line-height:1.45;max-height:5.2em;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}.card-quote-a-text::-webkit-scrollbar{display:none;}
 
 .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:12px;letter-spacing:0.1em;}
