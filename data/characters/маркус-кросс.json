@@ -10,11 +10,8 @@
   "location": "Бар «Глаз Бури»",
   "faction_color": "#d4a843",
   "aliases": [
-    [
-      "Смотрящий без короны",
-      "Хозяин бурь",
-      "Радиоведущий Экватор-FM"
-    ]
+    "Хозяин бурь",
+    "Радиоведущий Экватор-FM"
   ],
   "abilities": [
     [
@@ -47,5 +44,5 @@
   "avatar_web": "https://i.ibb.co/8gpRzwqL/FEABC295-6625-4-FCF-B3-AF-D775986-BFB4-E.jpg",
   "avatar_web_full": "https://i.ibb.co/gZbLxv0J/8-A8-A671-B-6-CF0-47-FB-893-C-2-A3974-AE8029.png",
   "tier": "legendary",
-  "exported_at": "2026-06-23T11:11:49.368Z"
+  "exported_at": "2026-06-23T11:12:50.355Z"
 }
