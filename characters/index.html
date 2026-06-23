@@ -75,6 +75,91 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .char-card.has-photo .card-body{padding:0;display:flex;flex-direction:column;flex:1;}.card-quote-a{padding:9px 12px 11px;border-top:1px solid rgba(var(--cr),0.12);background:rgba(var(--cr),0.03);flex:1;}
 .card-quote-a-text{font-style:italic;font-size:10px;color:rgba(var(--cr),0.65);border-left:2px solid rgba(var(--cr),0.35);padding-left:8px;line-height:1.45;max-height:5.2em;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}.card-quote-a-text::-webkit-scrollbar{display:none;}
 
+/* ═══ СИСТЕМА ТИРОВ ═══ */
+/* базовые границы/полоска переопределяются по тиру */
+.char-card[data-tier="common"]{border-color:rgba(var(--cr),0.2);}
+.char-card[data-tier="common"] .card-top-bar{height:2px;opacity:0.6;}
+
+.char-card[data-tier="rare"]{border-color:rgba(var(--cr),0.35);}
+.char-card[data-tier="rare"] .card-top-bar{height:3px;opacity:0.85;}
+
+.char-card[data-tier="epic"]{border-color:rgba(var(--cr),0.5);}
+.char-card[data-tier="epic"] .card-top-bar{height:4px;opacity:1;}
+.char-card[data-tier="epic"] .tier-corners{opacity:0.7;}
+
+.char-card[data-tier="legendary"]{border-color:rgba(var(--cr),0.6);animation:cardIn 0.4s both,legendaryGlow 3s ease-in-out infinite;}
+.char-card[data-tier="legendary"] .card-top-bar{height:4px;opacity:1;background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 2.5s linear infinite;}
+.char-card[data-tier="legendary"] .tier-corners{opacity:0.9;--corner-size:18px;--corner-w:1.5px;}
+
+.char-card[data-tier="divine"]{border:1px solid rgb(var(--cr));outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:cardIn 0.4s both,divineGlow 2s ease-in-out infinite;}
+.char-card[data-tier="divine"] .card-top-bar{height:5px;opacity:1;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 2s linear infinite;}
+.char-card[data-tier="divine"] .tier-corners{opacity:1;--corner-size:24px;--corner-w:2px;}
+
+@keyframes shimmerBar{0%{background-position:-100% 0}100%{background-position:200% 0}}
+@keyframes divineBar{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes legendaryGlow{0%,100%{box-shadow:0 0 8px rgba(var(--cr),0.2),inset 0 0 12px rgba(var(--cr),0.04)}50%{box-shadow:0 0 16px rgba(var(--cr),0.35),inset 0 0 20px rgba(var(--cr),0.08)}}
+@keyframes divineGlow{0%,100%{box-shadow:0 0 20px rgba(var(--cr),0.4),inset 0 0 30px rgba(var(--cr),0.08)}50%{box-shadow:0 0 40px rgba(var(--cr),0.65),inset 0 0 50px rgba(var(--cr),0.15)}}
+
+/* угловые акценты (epic+) */
+.tier-corners{position:absolute;inset:0;border-radius:6px;pointer-events:none;z-index:6;opacity:0;--corner-size:12px;--corner-w:1px;
+  background:
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) top left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) top left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) top right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) top right/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) bottom left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) bottom left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) bottom right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--cr)),rgb(var(--cr))) bottom right/var(--corner-w) var(--corner-size) no-repeat;}
+
+/* ═══ БЕЙДЖ ТОП-5 ФРАКЦИЙ ═══ */
+.faction-badge{font-family:'Share Tech Mono',monospace;font-size:clamp(6px,1.6vw,8px);font-weight:700;letter-spacing:0.05em;color:rgb(var(--cr));background:rgba(var(--cr),0.1);border:1px solid rgba(var(--cr),0.35);border-radius:2px;padding:1px 6px;text-transform:uppercase;display:inline-block;max-width:60%;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ═══ МЕТА-СИЛА (свечение вверх от разделителя) ═══ */
+/* poto-карточка: свечение в нижней части фото-инфо */
+.meta-glow{position:absolute;left:0;right:0;bottom:0;pointer-events:none;z-index:1;height:var(--mg-h,0);background:linear-gradient(to top,rgba(var(--cr),var(--mg-str,0)),transparent);}
+/* для карточки без фото — над разделителем цитаты */
+.card-quote-a{position:relative;overflow:hidden;}
+
+@keyframes metaPulse{0%,100%{height:calc(var(--mg-h) * 0.75);opacity:0.8}50%{height:var(--mg-h);opacity:1}}
+@keyframes metaFire{0%,100%{clip-path:polygon(0% 100%,0% 35%,25% 55%,50% 25%,75% 50%,100% 40%,100% 100%)}50%{clip-path:polygon(0% 100%,0% 50%,25% 30%,50% 55%,75% 25%,100% 50%,100% 100%)}}
+@keyframes divineLine{0%,100%{background:rgba(var(--cr),0.7)}50%{background:rgba(255,255,255,0.9)}}
+/* мигающий разделитель у Divine (мета 100) */
+.char-card[data-meta="divine"].has-photo .card-quote-a{border-top:1.5px solid rgba(var(--cr),0.7);animation:divineLine 1.8s ease-in-out infinite;}
+.char-card[data-meta="divine"]:not(.has-photo) .card-quote{border-top:none;}
+
+/* якоря мета-свечения */
+.meta-glow-anchor{position:absolute;left:0;right:0;bottom:0;height:0;z-index:2;pointer-events:none;}
+.meta-glow-anchor .meta-glow{bottom:0;}
+.card-photo-info{z-index:3;}
+.meta-glow-wrap{position:relative;height:0;}
+.meta-glow-wrap .meta-glow{bottom:auto;top:0;}
+
+/* fire-вариант: свечение с языками пламени */
+.meta-glow[style*="metaFire"]{animation-name:metaFire;}
+
+/* ═══ ПЕРЕКЛЮЧАТЕЛЬ КОЛОНОК ═══ */
+.view-controls{position:relative;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(30,100,180,0.15);}
+.cols-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;}
+.cols-slider{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:2px;}
+.cols-opt{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;color:var(--dim);background:transparent;border:none;width:28px;height:24px;border-radius:3px;cursor:pointer;transition:all 0.15s;}
+.cols-opt:hover{color:var(--text);}
+.cols-opt.active{color:#05080f;background:#4fc3f7;box-shadow:0 0 10px rgba(79,195,247,0.4);}
+
+/* динамические колонки */
+.grid[data-cols="1"]{grid-template-columns:1fr;}
+.grid[data-cols="2"]{grid-template-columns:1fr 1fr;}
+.grid[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
+.grid[data-cols="5"]{grid-template-columns:repeat(5,1fr);}
+
+/* ═══ ДРОПДАУН ФРАКЦИЙ ═══ */
+.filters-toggle{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.08em;padding:4px 12px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);border-radius:3px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;display:flex;align-items:center;gap:6px;}
+.filters-toggle:hover{border-color:rgba(255,255,255,0.3);color:var(--white);}
+.filters-toggle .chev{transition:transform 0.2s;}
+.filters-toggle.open .chev{transform:rotate(180deg);}
+.filters{max-height:0;overflow:hidden;padding:0 16px;border-bottom:none;transition:max-height 0.3s ease,padding 0.3s ease;}
+.filters.open{max-height:300px;padding:10px 16px;border-bottom:1px solid rgba(30,100,180,0.15);}
+
 .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:12px;letter-spacing:0.1em;}
 .loading{position:relative;z-index:10;text-align:center;padding:60px 20px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:0.15em;}
 
@@ -145,11 +230,22 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   </div>
 </div>
 
+<div class="view-controls">
+  <span class="cols-label">КОЛОНКИ</span>
+  <div class="cols-slider" id="cols-slider">
+    <button class="cols-opt" data-cols="1">1</button>
+    <button class="cols-opt active" data-cols="2">2</button>
+    <button class="cols-opt" data-cols="3">3</button>
+    <button class="cols-opt" data-cols="5">5</button>
+  </div>
+  <button class="filters-toggle" id="filters-toggle">ФРАКЦИИ <span class="chev">▾</span></button>
+</div>
+
 <div class="filters" id="filters">
   <button class="filter-btn active" data-faction="all" style="--fc:#4fc3f7;--fr:79,195,247">ВСЕ</button>
 </div>
 
-<div class="grid" id="grid"><div class="loading">ЗАГРУЗКА АРХИВА...</div></div>
+<div class="grid" id="grid" data-cols="2"><div class="loading">ЗАГРУЗКА АРХИВА...</div></div>
 
 <div class="dossier-overlay" id="dossier">
   <div id="dossier-inner"></div>
@@ -177,6 +273,39 @@ const STATUS_COLORS={"Активен":"#5dd98a","Мёртв":"#f87171","Неиз
 
 function hexToRgb(h){const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return r?`${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}`:null;}
 function getFactionColor(c){if(c.faction_color){const r=hexToRgb(c.faction_color);if(r)return{hex:c.faction_color,rgb:r};}return FACTION_COLORS[c.faction]||DEFAULT_COLOR;}
+
+/* топ-5 крупнейших фракций — получают бейдж */
+const TOP_FACTIONS=new Set(["Тенебрион","Единая Америка","Аркадия","Forge","Ракшасы"]);
+function isTopFaction(c){return TOP_FACTIONS.has(c.faction);}
+
+/* нормализация тира (регистр в JSON гуляет) */
+function getTier(c){return (c.tier||"common").toLowerCase().trim();}
+
+/* мета-сила: высота и сила свечения + класс анимации */
+function getMetaGlow(c){
+  const m=(c.stats&&c.stats.meta_power)||0;
+  if(m<=0)return null;
+  if(m>=100){ // Divine — Тенебриа
+    return{h:62,str:0.92,anim:"metaFire",dur:"1.8s",divineLine:true,fire:true};
+  }
+  if(m>=11){ // за гранью — огонь (Маркус и будущие)
+    return{h:50,str:0.85,anim:"metaFire",dur:"1.6s",fire:true};
+  }
+  if(m>=10){ // пульсация
+    return{h:42,str:0.78,anim:"metaPulse",dur:"2.2s"};
+  }
+  // 1–9 статичное, нарастает
+  const h=4+m*4.2, str=0.14+m*0.06;
+  return{h:Math.round(h),str:+str.toFixed(2),anim:null};
+}
+/* строим div свечения */
+function metaGlowHTML(c){
+  const g=getMetaGlow(c);
+  if(!g)return"";
+  let style=`--mg-h:${g.h}px;--mg-str:${g.str};height:${g.h}px;`;
+  if(g.anim)style+=`animation:${g.anim} ${g.dur} ease-in-out infinite;`;
+  return`<div class="meta-glow" style="${style}"></div>`;
+}
 
 function buildRadar(stats,rgb,size=70){
   const vals=[stats.intelligence||0,stats.combat||0,stats.influence||0,stats.cruelty||0,stats.will||0,stats.stealth||0,stats.unpredictability||0];
@@ -239,11 +368,17 @@ function renderGrid(chars){
     const factionLabel=c.faction||'—';
 
     if(hasPhoto){
-      return`<div class="char-card has-photo" style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+      const tier=getTier(c);
+      const top=isTopFaction(c);
+      const metaAttr=((c.stats&&c.stats.meta_power)||0)>=100?' data-meta="divine"':'';
+      const factionEl=top?`<div class="faction-badge">${factionLabel}</div>`:`<div class="card-photo-faction-bottom">${factionLabel}</div>`;
+      return`<div class="char-card has-photo" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
         <div class="card-top-bar"></div>
+        <div class="tier-corners"></div>
         <div class="card-body">
           <div class="card-photo-wrap">
             <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+            <div class="meta-glow-anchor">${metaGlowHTML(c)}</div>
             <div class="card-photo-info">
               <div class="card-photo-name">${c.name}</div>
               <div class="card-photo-role">${c.role||''}</div>
@@ -252,7 +387,7 @@ function renderGrid(chars){
                   <div class="card-photo-threat-num">${c.threat_level||0}</div>
                   <div class="card-photo-threat-lbl">THREAT</div>
                 </div>
-                <div class="card-photo-faction-bottom">${factionLabel}</div>
+                ${factionEl}
               </div>
             </div>
           </div>
@@ -262,14 +397,20 @@ function renderGrid(chars){
     }
 
     const radar=buildRadar(c.stats||{},col.rgb,70);
-    return`<div class="char-card" style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+    const tier=getTier(c);
+    const top=isTopFaction(c);
+    const metaAttr=((c.stats&&c.stats.meta_power)||0)>=100?' data-meta="divine"':'';
+    const factionEl=top?`<div class="faction-badge">${factionLabel}</div>`:`<div class="card-faction-bottom">${factionLabel}</div>`;
+    return`<div class="char-card" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
       <div class="card-top-bar"></div>
+      <div class="tier-corners"></div>
       <div class="card-body">
         <div class="card-name">${c.name}</div>
         <div class="card-role">${c.role||''}</div>
         <div class="card-radar-row">${radar}<div><div class="threat-num">${c.threat_level||0}</div><div class="threat-label">THREAT</div></div></div>
+        <div class="meta-glow-wrap">${metaGlowHTML(c)}</div>
         ${c.card_quote?`<div class="card-quote">«${c.card_quote}»</div>`:''}
-        <div class="card-footer"><div class="card-faction-bottom">${factionLabel}</div><div class="card-arrow">→</div></div>
+        <div class="card-footer">${factionEl}<div class="card-arrow">→</div></div>
       </div>
     </div>`;
   }).join("");
@@ -374,6 +515,20 @@ function closeDossier(){
   document.getElementById("dossier").classList.remove("open");
   document.body.style.overflow="";
 }
+/* переключатель колонок */
+document.getElementById("cols-slider").addEventListener("click",e=>{
+  const btn=e.target.closest(".cols-opt");
+  if(!btn)return;
+  document.querySelectorAll(".cols-opt").forEach(b=>b.classList.toggle("active",b===btn));
+  document.getElementById("grid").dataset.cols=btn.dataset.cols;
+});
+
+/* дропдаун фракций */
+document.getElementById("filters-toggle").addEventListener("click",()=>{
+  document.getElementById("filters-toggle").classList.toggle("open");
+  document.getElementById("filters").classList.toggle("open");
+});
+
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDossier();});
 loadCharacters();
 </script>
