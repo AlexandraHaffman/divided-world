@@ -29,10 +29,10 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .filter-btn:hover{color:var(--white);border-color:rgba(255,255,255,0.3);}
 .filter-btn.active{color:var(--white);border-color:var(--fc,#4fc3f7);background:rgba(var(--fr,79,195,247),0.08);box-shadow:0 0 8px rgba(var(--fr,79,195,247),0.15);}
 
-.grid{position:relative;z-index:10;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;align-items:start;}
+.grid{position:relative;z-index:10;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;align-items:stretch;}
 
 /* КАРТОЧКА БЕЗ ФОТО */
-.char-card{position:relative;background:linear-gradient(135deg,rgba(8,13,24,0.95),rgba(5,8,15,0.98));border:1px solid rgba(var(--cr),0.25);border-radius:6px;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;animation:cardIn 0.4s both;}
+.char-card{position:relative;background:linear-gradient(135deg,rgba(8,13,24,0.95),rgba(5,8,15,0.98));border:1px solid rgba(var(--cr),0.25);border-radius:6px;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;animation:cardIn 0.4s both;display:flex;flex-direction:column;}
 .char-card:hover{transform:translateY(-3px);border-color:rgba(var(--cr),0.6);box-shadow:0 6px 20px rgba(var(--cr),0.15);}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
@@ -50,7 +50,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .threat-label{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:0.1em;}
 .card-quote{font-style:italic;font-size:10px;color:rgba(var(--cr),0.7);border-left:2px solid rgba(var(--cr),0.3);padding-left:6px;line-height:1.4;margin-bottom:8px;}
 .card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
-.card-faction-bottom{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.08em;color:rgb(var(--cr));text-transform:uppercase;font-weight:700;}
+.card-faction-bottom{font-family:'Share Tech Mono',monospace;font-size:clamp(7px,1.8vw,9px);letter-spacing:0.06em;color:rgb(var(--cr));text-transform:uppercase;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;}
 .card-arrow{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);opacity:0;transition:opacity 0.2s;}
 .char-card:hover .card-arrow{opacity:1;}
 
@@ -69,7 +69,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .card-photo-threat{display:flex;align-items:baseline;gap:3px;}
 .card-photo-threat-num{font-family:'Share Tech Mono',monospace;font-size:20px;font-weight:900;color:rgb(var(--cr));text-shadow:0 0 10px rgba(var(--cr),0.5);}
 .card-photo-threat-lbl{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--dim);}
-.card-photo-faction-bottom{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.08em;color:rgb(var(--cr));text-transform:uppercase;font-weight:700;}
+.card-photo-faction-bottom{font-family:'Share Tech Mono',monospace;font-size:clamp(7px,1.8vw,9px);letter-spacing:0.06em;color:rgb(var(--cr));text-transform:uppercase;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;}
 
 /* ЦИТАТА ПОД ФОТО */
 .card-quote-a{padding:9px 12px 11px;border-top:1px solid rgba(var(--cr),0.12);background:rgba(var(--cr),0.03);}
