@@ -1,0 +1,40 @@
+{
+  "id": "барон",
+  "name": "Барон",
+  "status": "Активен",
+  "gender": "Мужской",
+  "role": "Лидер группировки",
+  "birthdate": "03.11",
+  "faction": "Дно",
+  "subfaction": "",
+  "location": "Белая зона",
+  "faction_color": "#ff00ff",
+  "aliases": [
+    "Барон"
+  ],
+  "abilities": [
+    "лидерство",
+    "управление наемниками"
+  ],
+  "threat_level": 35,
+  "stats": {
+    "intelligence": 4,
+    "combat": 3,
+    "influence": 3,
+    "meta_power": 0,
+    "cruelty": 7,
+    "will": 6,
+    "stealth": 6,
+    "unpredictability": 6
+  },
+  "card_quote": "Не думал, что когда-нибудь с тобой соглашусь. А вот, пришлось",
+  "card_bio": "",
+  "biography": "Барон — один из ключевых лидеров группировок Белой Зоны, глава организации под названием «Дно». Известен как влиятельный наниматель, пользующийся авторитетом в криминальных кругах.\n\nБарон демонстрирует прагматичный и жесткий подход к управлению. Он не терпит лишних разговоров, предпочитая конкретику и результат. В отношениях с другими лидерами группировок придерживается политики вынужденного сотрудничества, однако за этой внешней вежливостью скрываются холодный расчет и стремление к укреплению собственного влияния.",
+  "current_status": "",
+  "avatar": "Portrait_Baron",
+  "alt_avatar": "",
+  "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B48A265-961B-4516-8449-652540165A66.jpeg",
+  "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E46F71F4-A5AC-42F4-87E7-183F74339F11.png",
+  "tier": "common",
+  "exported_at": "2026-06-24T13:22:31.826Z"
+}
