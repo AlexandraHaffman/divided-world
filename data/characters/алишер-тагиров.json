@@ -1,0 +1,42 @@
+{
+  "id": "алишер-тагиров",
+  "name": "Алишер Тагиров",
+  "status": "Активен",
+  "gender": "Мужской",
+  "role": "Лидер группировки",
+  "birthdate": "20.10",
+  "faction": "Полиция",
+  "subfaction": "",
+  "location": "Белая зона",
+  "faction_color": "",
+  "aliases": [
+    "Алишер Бурханович",
+    "Начальник полиции"
+  ],
+  "abilities": [
+    "Тактическое планирование",
+    "управление",
+    "стрельба"
+  ],
+  "threat_level": 31,
+  "stats": {
+    "intelligence": 4,
+    "combat": 4,
+    "influence": 3,
+    "meta_power": 0,
+    "cruelty": 4,
+    "will": 8,
+    "stealth": 6,
+    "unpredictability": 2
+  },
+  "card_quote": "Не сегодня, не завтра, но порядок вернется. Идем, сынок",
+  "card_bio": "",
+  "biography": "Алишер Бурханович Тагиров — седой мужчина чуть старше пятидесяти лет, занимающий пост начальника возрождающейся полиции. Обладает высоким уровнем энергии и оптимизма. Известен как опытный тактик и организатор, способный эффективно управлять ресурсами и подчиненными. Имеет негласный, но высокий авторитет среди своих людей. Неоднократно проявлял готовность к решительным действиям, включая уничтожение ресурсов, чтобы они не достались врагам.",
+  "current_status": "",
+  "avatar": "Portrait_Tagirov",
+  "alt_avatar": "",
+  "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0C67E291-83A7-4947-B8F2-6D76E14E16F8.jpeg",
+  "avatar_web_full": "https://alexandrahaffman.github.io/divided-world/data/images/characters/FBDEF33D-A9B5-479F-B4F6-97CB28ABA3DC.jpeg",
+  "tier": "common",
+  "exported_at": "2026-06-24T13:21:18.744Z"
+}
