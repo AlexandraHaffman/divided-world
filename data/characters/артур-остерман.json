@@ -3,7 +3,7 @@
   "name": "Артур Остерман",
   "status": "Активен",
   "gender": "Мужской",
-  "role": "",
+  "role": "Апостол",
   "birthdate": "15.01",
   "faction": "Тенебрион",
   "subfaction": "Церковь Тенебрии",
@@ -37,5 +37,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B39B88D-7167-48A5-B512-1FC2F572B4F5.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A4408787-2925-4278-9368-7E298B5BCC2F.png",
   "tier": "Legendary",
-  "exported_at": "2026-06-23T20:14:30.079Z"
+  "exported_at": "2026-06-25T04:26:50.745Z"
 }
