@@ -36,7 +36,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .char-card:hover{transform:translateY(-3px);border-color:rgba(var(--cr),0.6);box-shadow:0 6px 20px rgba(var(--cr),0.15);}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* Подсветка при касании */
 @keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.char-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(var(--cr),0.0) 0%,rgba(var(--cr),0.15) 30%,rgba(var(--cr),0.25) 50%,rgba(var(--cr),0.15) 70%,rgba(var(--cr),0.0) 100%);background-size:200% 200%;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:5;}
 .char-card.tap-active::after{opacity:1;animation:shimmer 1.2s ease infinite;}
 .char-card.tap-active{border-color:rgba(var(--cr),0.5);box-shadow:0 0 16px rgba(var(--cr),0.2),inset 0 0 20px rgba(var(--cr),0.05);}
@@ -54,7 +53,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .card-arrow{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);opacity:0;transition:opacity 0.2s;}
 .char-card:hover .card-arrow{opacity:1;}
 
-/* КАРТОЧКА С ФОТО */
+/* КАРТОЧКА С ФОТО (обычная — 1 и 2 колонки) */
 .char-card.has-photo .card-body{padding:0;}
 .card-photo-wrap{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;}
 .card-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
@@ -71,36 +70,59 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .card-photo-threat-lbl{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--dim);}
 .card-photo-faction-bottom{font-family:'Share Tech Mono',monospace;font-size:clamp(6px,1.6vw,9px);letter-spacing:0.04em;color:rgb(var(--cr));text-transform:uppercase;font-weight:700;max-width:55%;line-height:1.2;}
 
-/* ЦИТАТА ПОД ФОТО */
 .char-card.has-photo .card-body{padding:0;display:flex;flex-direction:column;flex:1;}.card-quote-a{padding:9px 12px 11px;border-top:1px solid rgba(var(--cr),0.12);background:rgba(var(--cr),0.03);flex:1;}
 .card-quote-a-text{font-style:italic;font-size:10px;color:rgba(var(--cr),0.65);border-left:2px solid rgba(var(--cr),0.35);padding-left:8px;line-height:1.45;max-height:5.2em;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}.card-quote-a-text::-webkit-scrollbar{display:none;}
 
+/* ═══ КОМПАКТНАЯ КАРТОЧКА — 3 КОЛОНКИ ═══ */
+.char-card.compact-3{display:flex;flex-direction:column;}
+.char-card.compact-3 .card-body{padding:0;display:flex;flex-direction:column;flex:1;}
+.compact-3-photo{position:relative;aspect-ratio:3/4;overflow:hidden;}
+.compact-3-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
+.char-card.compact-3:hover .compact-3-photo img{transform:scale(1.03);}
+.compact-3-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,rgba(5,8,15,0.92) 100%);pointer-events:none;}
+/* threat + фракция внизу поверх фото */
+.compact-3-overlay{position:absolute;bottom:6px;left:7px;right:7px;z-index:3;display:flex;align-items:baseline;justify-content:space-between;}
+.compact-3-threat{display:flex;align-items:baseline;gap:2px;}
+.compact-3-threat-num{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:900;color:rgb(var(--cr));text-shadow:0 0 8px rgba(var(--cr),0.7);line-height:1;}
+.compact-3-threat-lbl{font-family:'Share Tech Mono',monospace;font-size:5px;color:rgba(var(--cr),0.6);letter-spacing:0.1em;}
+.compact-3-faction{font-family:'Share Tech Mono',monospace;font-size:6px;color:rgb(var(--cr));border:1px solid rgba(var(--cr),0.3);padding:1px 4px;border-radius:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;}
+/* имя под фото */
+.compact-3-name-area{padding:5px 7px 7px;}
+.compact-3-name{font-size:11px;font-weight:700;color:var(--white);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ═══ КОМПАКТНАЯ КАРТОЧКА — 5 КОЛОНОК ═══ */
+.char-card.compact-5{display:flex;flex-direction:column;}
+.char-card.compact-5 .card-body{padding:0;display:flex;flex-direction:column;flex:1;}
+.compact-5-photo{position:relative;aspect-ratio:3/4;overflow:hidden;}
+.compact-5-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s;}
+.char-card.compact-5:hover .compact-5-photo img{transform:scale(1.03);}
+/* затемнение сверху — под цифру */
+.compact-5-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,8,15,0.6) 0%,transparent 35%,transparent 100%);pointer-events:none;}
+/* threat — верхний левый угол */
+.compact-5-threat{position:absolute;top:5px;left:6px;z-index:3;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:900;color:rgb(var(--cr));text-shadow:0 0 8px rgba(var(--cr),0.8),0 1px 4px rgba(0,0,0,0.9);line-height:1;}
+/* имя под фото, многострочное */
+.compact-5-name-area{padding:4px 6px 6px;}
+.compact-5-name{font-size:8px;font-weight:700;color:var(--white);line-height:1.3;white-space:normal;word-break:break-word;}
+
 /* ═══ СИСТЕМА ТИРОВ ═══ */
-/* базовые границы/полоска переопределяются по тиру */
 .char-card[data-tier="common"]{border-color:rgba(var(--cr),0.2);}
 .char-card[data-tier="common"] .card-top-bar{height:2px;opacity:0.6;}
-
 .char-card[data-tier="rare"]{border-color:rgba(var(--cr),0.35);}
 .char-card[data-tier="rare"] .card-top-bar{height:3px;opacity:0.85;}
-
 .char-card[data-tier="epic"]{border-color:rgba(var(--cr),0.5);}
 .char-card[data-tier="epic"] .card-top-bar{height:4px;opacity:1;}
 .char-card[data-tier="epic"] .tier-corners{opacity:0.7;}
-
 .char-card[data-tier="legendary"]{border-color:rgba(var(--cr),0.6);animation:cardIn 0.4s both,legendaryGlow 7s ease-in-out infinite;}
 .char-card[data-tier="legendary"] .card-top-bar{height:4px;opacity:1;background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 6s linear infinite;}
 .char-card[data-tier="legendary"] .tier-corners{opacity:0.9;--corner-size:18px;--corner-w:1.5px;}
-
 .char-card[data-tier="divine"]{border:1px solid rgb(var(--cr));outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:cardIn 0.4s both,divineGlow 5s ease-in-out infinite;}
 .char-card[data-tier="divine"] .card-top-bar{height:5px;opacity:1;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 5s linear infinite;}
 .char-card[data-tier="divine"] .tier-corners{opacity:1;--corner-size:24px;--corner-w:2px;}
-
 @keyframes shimmerBar{0%{background-position:-100% 0}100%{background-position:200% 0}}
 @keyframes divineBar{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes legendaryGlow{0%,100%{box-shadow:0 0 8px rgba(var(--cr),0.2),inset 0 0 12px rgba(var(--cr),0.04)}50%{box-shadow:0 0 16px rgba(var(--cr),0.35),inset 0 0 20px rgba(var(--cr),0.08)}}
 @keyframes divineGlow{0%,100%{box-shadow:0 0 20px rgba(var(--cr),0.4),inset 0 0 30px rgba(var(--cr),0.08)}50%{box-shadow:0 0 40px rgba(var(--cr),0.65),inset 0 0 50px rgba(var(--cr),0.15)}}
 
-/* угловые акценты (epic+) */
 .tier-corners{position:absolute;inset:0;border-radius:6px;pointer-events:none;z-index:6;opacity:0;--corner-size:12px;--corner-w:1px;
   background:
     linear-gradient(rgb(var(--cr)),rgb(var(--cr))) top left/var(--corner-size) var(--corner-w) no-repeat,
@@ -115,30 +137,17 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 /* ═══ БЕЙДЖ ТОП-5 ФРАКЦИЙ ═══ */
 .faction-badge{font-family:'Share Tech Mono',monospace;font-size:clamp(6px,1.6vw,8px);font-weight:700;letter-spacing:0.05em;color:rgb(var(--cr));background:rgba(var(--cr),0.1);border:1px solid rgba(var(--cr),0.35);border-radius:2px;padding:1px 6px;text-transform:uppercase;display:inline-block;max-width:60%;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-/* ═══ МЕТА-СИЛА (свечение вверх от разделителя) ═══ */
-/* poto-карточка: свечение в нижней части фото-инфо */
+/* ═══ МЕТА-СИЛА ═══ */
 .meta-glow{position:absolute;left:0;right:0;bottom:0;pointer-events:none;z-index:1;height:var(--mg-h,0);background:linear-gradient(to top,rgba(var(--cr),var(--mg-str,0)),transparent);}
-/* для карточки без фото — над разделителем цитаты */
 .card-quote-a{position:relative;overflow:hidden;}
-
-/* мета-сила — статичное свечение + медленная пульсация для 10+ */
-@keyframes metaBreath{
-  0%,100%{height:calc(var(--mg-h) * 0.6);opacity:0.7;}
-  50%{height:var(--mg-h);opacity:1;}
-}
+@keyframes metaBreath{0%,100%{height:calc(var(--mg-h) * 0.6);opacity:0.7;}50%{height:var(--mg-h);opacity:1;}}
 .meta-glow--pulse{animation:metaBreath 4.5s ease-in-out infinite;}
-/* divine — разделитель чуть ярче */
 .char-card[data-meta="divine"].has-photo .card-quote-a{border-top:1.5px solid rgba(var(--cr),0.6);}
-
-/* якоря мета-свечения */
 .meta-glow-anchor{position:absolute;left:0;right:0;bottom:0;height:0;z-index:2;pointer-events:none;}
 .meta-glow-anchor .meta-glow{bottom:0;}
 .card-photo-info{z-index:3;}
 .meta-glow-wrap{position:relative;height:0;}
 .meta-glow-wrap .meta-glow{bottom:auto;top:0;}
-
-/* fire-вариант: свечение с языками пламени */
-.meta-glow[style*="metaFire"]{animation-name:metaFire;}
 
 /* ═══ ПЕРЕКЛЮЧАТЕЛЬ КОЛОНОК ═══ */
 .view-controls{position:relative;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(30,100,180,0.15);}
@@ -148,7 +157,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .cols-opt:hover{color:var(--text);}
 .cols-opt.active{color:#05080f;background:#4fc3f7;box-shadow:0 0 10px rgba(79,195,247,0.4);}
 
-/* динамические колонки */
 .grid[data-cols="1"]{grid-template-columns:1fr;}
 .grid[data-cols="2"]{grid-template-columns:1fr 1fr;}
 .grid[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
@@ -276,39 +284,18 @@ const STATUS_COLORS={"Активен":"#5dd98a","Мёртв":"#f87171","Неиз
 function hexToRgb(h){const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return r?`${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}`:null;}
 function getFactionColor(c){if(c.faction_color){const r=hexToRgb(c.faction_color);if(r)return{hex:c.faction_color,rgb:r};}return FACTION_COLORS[c.faction]||DEFAULT_COLOR;}
 
-/* топ-5 крупнейших фракций — получают бейдж */
 const TOP_FACTIONS=new Set(["Тенебрион","Единая Америка","Аркадия","Forge","Ракшасы"]);
 function isTopFaction(c){return TOP_FACTIONS.has(c.faction);}
-
-/* нормализация тира (регистр в JSON гуляет) */
 function getTier(c){return (c.tier||"common").toLowerCase().trim();}
 
-/* мета-сила: высота и сила свечения + класс анимации */
-function getMetaGlow(c){
-  const m=(c.stats&&c.stats.meta_power)||0;
-  if(m<=0)return null;
-  if(m>=100){ // Divine — Тенебриа
-    return{h:62,str:0.92,anim:"metaFire",dur:"1.8s",divineLine:true,fire:true};
-  }
-  if(m>=11){ // за гранью — огонь (Маркус и будущие)
-    return{h:50,str:0.85,anim:"metaFire",dur:"1.6s",fire:true};
-  }
-  if(m>=10){ // пульсация
-    return{h:42,str:0.78,anim:"metaPulse",dur:"2.2s"};
-  }
-  // 1–9 статичное, нарастает
-  const h=4+m*4.2, str=0.14+m*0.06;
-  return{h:Math.round(h),str:+str.toFixed(2),anim:null};
-}
-/* строим div свечения */
 function metaGlowHTML(c){
   const m=(c.stats&&c.stats.meta_power)||0;
   if(m<=0)return"";
-  let h, str, cls="meta-glow";
+  let h,str,cls="meta-glow";
   if(m>=100){h=40;str=0.38;cls="meta-glow meta-glow--pulse";}
   else if(m>=10){h=32;str=0.30;cls="meta-glow meta-glow--pulse";}
   else{h=3+m*3.2;str=0.07+m*0.025;}
-  h=Math.round(h); str=+str.toFixed(3);
+  h=Math.round(h);str=+str.toFixed(3);
   return`<div class="${cls}" style="--mg-h:${h}px;--mg-str:${str};height:${h}px;background:linear-gradient(to top,rgba(var(--cr),${str}),transparent);"></div>`;
 }
 
@@ -328,6 +315,7 @@ function buildRadar(stats,rgb,size=70){
 
 const REPO="AlexandraHaffman/divided-world";
 let allChars=[],currentFiltered=[];
+let currentCols=2;
 
 async function loadCharacters(){
   try{
@@ -361,96 +349,124 @@ function setFilter(faction){
 }
 document.querySelector(".filter-btn[data-faction='all']").onclick=()=>setFilter("all");
 
+/* ── Генерация HTML карточки в зависимости от режима колонок ── */
+function buildCard(c, i, cols){
+  const col=getFactionColor(c);
+  const hasPhoto=!!c.avatar_web;
+  const tier=getTier(c);
+  const delay=Math.min(i*0.04,0.8);
+  const factionLabel=c.faction||'—';
+  const metaAttr=((c.stats&&c.stats.meta_power)||0)>=100?' data-meta="divine"':'';
+
+  /* ── КОМПАКТНАЯ 5 колонок ── */
+  if(cols>=5 && hasPhoto){
+    return`<div class="char-card compact-5" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+      <div class="card-top-bar"></div>
+      <div class="tier-corners"></div>
+      <div class="card-body">
+        <div class="compact-5-photo">
+          <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+          <div class="compact-5-threat">${c.threat_level||0}</div>
+        </div>
+        <div class="compact-5-name-area"><div class="compact-5-name">${c.name}</div></div>
+      </div>
+    </div>`;
+  }
+
+  /* ── КОМПАКТНАЯ 3 колонки ── */
+  if(cols>=3 && hasPhoto){
+    const factionEl=`<div class="compact-3-faction">${factionLabel}</div>`;
+    return`<div class="char-card compact-3" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+      <div class="card-top-bar"></div>
+      <div class="tier-corners"></div>
+      <div class="card-body">
+        <div class="compact-3-photo">
+          <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+          <div class="compact-3-overlay">
+            <div class="compact-3-threat">
+              <span class="compact-3-threat-num">${c.threat_level||0}</span>
+              <span class="compact-3-threat-lbl">THREAT</span>
+            </div>
+            ${factionEl}
+          </div>
+        </div>
+        <div class="compact-3-name-area"><div class="compact-3-name">${c.name}</div></div>
+      </div>
+    </div>`;
+  }
+
+  /* ── ОБЫЧНАЯ карточка с фото (1–2 колонки) ── */
+  if(hasPhoto){
+    const top=isTopFaction(c);
+    const factionEl=top?`<div class="faction-badge">${factionLabel}</div>`:`<div class="card-photo-faction-bottom">${factionLabel}</div>`;
+    return`<div class="char-card has-photo" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+      <div class="card-top-bar"></div>
+      <div class="tier-corners"></div>
+      <div class="card-body">
+        <div class="card-photo-wrap">
+          <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+          <div class="meta-glow-anchor">${metaGlowHTML(c)}</div>
+          <div class="card-photo-info">
+            <div class="card-photo-name">${c.name}</div>
+            <div class="card-photo-role">${c.role||''}</div>
+            <div class="card-photo-bottom">
+              <div class="card-photo-threat">
+                <div class="card-photo-threat-num">${c.threat_level||0}</div>
+                <div class="card-photo-threat-lbl">THREAT</div>
+              </div>
+              ${factionEl}
+            </div>
+          </div>
+        </div>
+        ${c.card_quote?`<div class="card-quote-a"><div class="card-quote-a-text">«${c.card_quote}»</div></div>`:''}
+      </div>
+    </div>`;
+  }
+
+  /* ── Карточка без фото (радар) — всегда обычная ── */
+  const radar=buildRadar(c.stats||{},col.rgb,70);
+  const top=isTopFaction(c);
+  const factionEl=top?`<div class="faction-badge">${factionLabel}</div>`:`<div class="card-faction-bottom">${factionLabel}</div>`;
+  return`<div class="char-card" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+    <div class="card-top-bar"></div>
+    <div class="tier-corners"></div>
+    <div class="card-body">
+      <div class="card-name">${c.name}</div>
+      <div class="card-role">${c.role||''}</div>
+      <div class="card-radar-row">${radar}<div><div class="threat-num">${c.threat_level||0}</div><div class="threat-label">THREAT</div></div></div>
+      <div class="meta-glow-wrap">${metaGlowHTML(c)}</div>
+      ${c.card_quote?`<div class="card-quote">«${c.card_quote}»</div>`:''}
+      <div class="card-footer">${factionEl}<div class="card-arrow">→</div></div>
+    </div>
+  </div>`;
+}
+
 function renderGrid(chars){
   document.getElementById("count-shown").textContent=chars.length;
   const grid=document.getElementById("grid");
   if(!chars.length){grid.innerHTML=`<div class="empty-state">НЕ НАЙДЕНО</div>`;return;}
-  grid.innerHTML=chars.map((c,i)=>{
-    const col=getFactionColor(c);
-    const sc=STATUS_COLORS[c.status]||STATUS_COLORS["Неизвестно"];
-    const hasPhoto=!!c.avatar_web;
-    const delay=Math.min(i*0.04,0.8);
-    const factionLabel=c.faction||'—';
+  grid.innerHTML=chars.map((c,i)=>buildCard(c,i,currentCols)).join("");
+  attachCardEvents();
+}
 
-    if(hasPhoto){
-      const tier=getTier(c);
-      const top=isTopFaction(c);
-      const metaAttr=((c.stats&&c.stats.meta_power)||0)>=100?' data-meta="divine"':'';
-      const factionEl=top?`<div class="faction-badge">${factionLabel}</div>`:`<div class="card-photo-faction-bottom">${factionLabel}</div>`;
-      return`<div class="char-card has-photo" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
-        <div class="card-top-bar"></div>
-        <div class="tier-corners"></div>
-        <div class="card-body">
-          <div class="card-photo-wrap">
-            <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
-            <div class="meta-glow-anchor">${metaGlowHTML(c)}</div>
-            <div class="card-photo-info">
-              <div class="card-photo-name">${c.name}</div>
-              <div class="card-photo-role">${c.role||''}</div>
-              <div class="card-photo-bottom">
-                <div class="card-photo-threat">
-                  <div class="card-photo-threat-num">${c.threat_level||0}</div>
-                  <div class="card-photo-threat-lbl">THREAT</div>
-                </div>
-                ${factionEl}
-              </div>
-            </div>
-          </div>
-          ${c.card_quote?`<div class="card-quote-a"><div class="card-quote-a-text">«${c.card_quote}»</div></div>`:''}
-        </div>
-      </div>`;
-    }
-
-    const radar=buildRadar(c.stats||{},col.rgb,70);
-    const tier=getTier(c);
-    const top=isTopFaction(c);
-    const metaAttr=((c.stats&&c.stats.meta_power)||0)>=100?' data-meta="divine"':'';
-    const factionEl=top?`<div class="faction-badge">${factionLabel}</div>`:`<div class="card-faction-bottom">${factionLabel}</div>`;
-    return`<div class="char-card" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
-      <div class="card-top-bar"></div>
-      <div class="tier-corners"></div>
-      <div class="card-body">
-        <div class="card-name">${c.name}</div>
-        <div class="card-role">${c.role||''}</div>
-        <div class="card-radar-row">${radar}<div><div class="threat-num">${c.threat_level||0}</div><div class="threat-label">THREAT</div></div></div>
-        <div class="meta-glow-wrap">${metaGlowHTML(c)}</div>
-        ${c.card_quote?`<div class="card-quote">«${c.card_quote}»</div>`:''}
-        <div class="card-footer">${factionEl}<div class="card-arrow">→</div></div>
-      </div>
-    </div>`;
-  }).join("");
-
-  // Умный тап: различаем скролл и намеренный тап
+function attachCardEvents(){
   document.querySelectorAll(".char-card").forEach((el,i)=>{
-    let startX,startY,tapTimer,moved=false;
-
+    let startX,startY,moved=false;
     el.addEventListener("touchstart",e=>{
-      startX=e.touches[0].clientX;
-      startY=e.touches[0].clientY;
-      moved=false;
+      startX=e.touches[0].clientX;startY=e.touches[0].clientY;moved=false;
       el.classList.add("tap-active");
     },{passive:true});
-
     el.addEventListener("touchmove",e=>{
-      const dx=Math.abs(e.touches[0].clientX-startX);
-      const dy=Math.abs(e.touches[0].clientY-startY);
-      if(dx>10||dy>10){
-        moved=true;
-        el.classList.remove("tap-active");
+      if(Math.abs(e.touches[0].clientX-startX)>10||Math.abs(e.touches[0].clientY-startY)>10){
+        moved=true;el.classList.remove("tap-active");
       }
     },{passive:true});
-
     el.addEventListener("touchend",e=>{
       el.classList.remove("tap-active");
-      if(!moved){
-        e.preventDefault();
-        openDossier(allChars.indexOf(currentFiltered[i]));
-      }
+      if(!moved){e.preventDefault();openDossier(allChars.indexOf(currentFiltered[i]));}
     });
-
-    // Десктоп — обычный клик
     el.addEventListener("click",()=>{
-      if(!('ontouchstart' in window)) openDossier(allChars.indexOf(currentFiltered[i]));
+      if(!('ontouchstart' in window))openDossier(allChars.indexOf(currentFiltered[i]));
     });
   });
 }
@@ -464,7 +480,6 @@ function openDossier(idx){
   const stats=c.stats||{};
   const statRows=[["Интеллект",stats.intelligence],["Боевые",stats.combat],["Влияние",stats.influence],["Мета-сила",stats.meta_power],["Жестокость",stats.cruelty],["Воля",stats.will],["Скрытность",stats.stealth],["Непредсказуемость",stats.unpredictability]];
   const radar=buildRadar(stats,col.rgb,150);
-
   document.getElementById("dossier-inner").innerHTML=`
     <div class="dossier-art" style="--dr:${col.rgb}">
       <div class="dossier-faction-bar" style="background:linear-gradient(90deg,transparent,rgb(${col.rgb}),transparent)"></div>
@@ -520,15 +535,17 @@ function closeDossier(){
   document.getElementById("dossier").classList.remove("open");
   document.body.style.overflow="";
 }
-/* переключатель колонок */
+
+/* переключатель колонок — перерисовывает грид */
 document.getElementById("cols-slider").addEventListener("click",e=>{
   const btn=e.target.closest(".cols-opt");
   if(!btn)return;
   document.querySelectorAll(".cols-opt").forEach(b=>b.classList.toggle("active",b===btn));
+  currentCols=parseInt(btn.dataset.cols);
   document.getElementById("grid").dataset.cols=btn.dataset.cols;
+  renderGrid(currentFiltered);
 });
 
-/* дропдаун фракций */
 document.getElementById("filters-toggle").addEventListener("click",()=>{
   document.getElementById("filters-toggle").classList.toggle("open");
   document.getElementById("filters").classList.toggle("open");
