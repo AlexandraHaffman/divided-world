@@ -10,7 +10,7 @@
   "location": "Аркадия",
   "faction_color": "#2ecc71",
   "aliases": [
-    "Спаситель"
+    "Профессор Вистнер"
   ],
   "abilities": [
     "Научные исследования",
@@ -38,5 +38,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A8E1C5AF-14EF-4F7C-BB2E-C744C3E019C0.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0B6B0D1D-2E75-4C46-BE56-C8106D49E5AE.png",
   "tier": "Legendary",
-  "exported_at": "2026-06-23T20:15:12.958Z"
+  "exported_at": "2026-06-25T04:28:07.161Z"
 }
