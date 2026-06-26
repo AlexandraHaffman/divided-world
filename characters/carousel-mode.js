@@ -263,3 +263,12 @@ function deactivateCarouselMode() {
   if (cm) cm.classList.remove("active");
   document.getElementById("grid").style.display = "";
 }
+
+document.getElementById("cols-slider").addEventListener("click", e => {
+  const btn = e.target.closest(".cols-opt");
+  if (!btn || btn.dataset.cols !== "1") return;
+  e.stopImmediatePropagation();
+  document.querySelectorAll(".cols-opt").forEach(b => b.classList.toggle("active", b === btn));
+  activateCarouselMode();
+}, true);
+
