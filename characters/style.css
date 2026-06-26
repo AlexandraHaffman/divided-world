@@ -246,12 +246,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card[data-tier="legendary"] .c-card-bar{background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 6s linear infinite;}
 .c-card[data-tier="divine"] .c-card-bar{height:4px;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 5s linear infinite;}
 
-.c-card-photo{position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;background:linear-gradient(160deg,#0d1a2a,#05080f);}
+
 .c-card-photo img{width:100%;height:100%;object-fit:cover;display:block;}
 .c-card-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(5,8,15,0.7) 65%,rgba(5,8,15,0.97) 100%);}
 .c-card-no-photo{width:100%;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d1a2a,#05080f);}
 .c-card-no-photo-text{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(79,195,247,0.12);letter-spacing:3px;}
-
+.c-card-photo{position:relative;width:100%;height:68vh;overflow:hidden;background:linear-gradient(160deg,#0d1a2a,#05080f);}
 .c-card-info{position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;z-index:2;}
 .c-card-sys{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.45);letter-spacing:0.18em;margin-bottom:3px;}
 .c-card-name{font-size:22px;font-weight:700;color:var(--white);letter-spacing:0.03em;line-height:1.1;margin-bottom:2px;}
@@ -297,3 +297,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card.glitch-out-rev .c-card-back{animation:cGlitchOut 0.45s forwards;}
 .c-card.glitch-in-rev .c-card-face{animation:cGlitchIn 0.4s forwards;}
 
+.c-card-face{min-height:68vh;}
+.c-card-back{min-height:68vh;}
+.carousel-track{align-items:stretch;}
+.c-card-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
