@@ -354,11 +354,8 @@ function attachCardEvents() {
 document.getElementById("cols-slider").addEventListener("click", e => {
   const btn = e.target.closest(".cols-opt");
   if (!btn) return;
-  const cols = parseInt(btn.dataset.cols);
-  if (cols === 1) return; // карусель обрабатывает сама
   document.querySelectorAll(".cols-opt").forEach(b => b.classList.toggle("active", b === btn));
-  deactivateCarouselMode();
-  currentCols = cols;
+  currentCols = parseInt(btn.dataset.cols);
   document.getElementById("grid").dataset.cols = btn.dataset.cols;
   renderGrid(currentFiltered);
 });
