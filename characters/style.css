@@ -300,4 +300,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card-face{min-height:68vh;}
 .c-card-back{min-height:68vh;}
 .carousel-track{align-items:stretch;}
-.c-card-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+.c-card-photo img{width:100%;height:100%;object-fit:cover;object-position:center 
+
+.carousel-track{justify-content:flex-start;}
+.carousel-shelf:has(.carousel-track > .c-card:only-child) .carousel-track{justify-content:center;}
+
+  
