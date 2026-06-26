@@ -1,0 +1,41 @@
+{
+  "id": "клара-уолш",
+  "name": "Клара Уолш",
+  "status": "Активен",
+  "gender": "Женский",
+  "role": "",
+  "birthdate": "14.10",
+  "faction": "Forge",
+  "subfaction": "",
+  "location": "Forge",
+  "faction_color": "#a8d8ff",
+  "aliases": [
+    "Моральный компас Forge"
+  ],
+  "abilities": [
+    "Аналитический ум",
+    "Проницательность",
+    "Социальное взаимодействие"
+  ],
+  "threat_level": 26,
+  "stats": {
+    "intelligence": 5,
+    "combat": 1,
+    "influence": 3,
+    "meta_power": 0,
+    "cruelty": 4,
+    "will": 7,
+    "stealth": 4,
+    "unpredictability": 2
+  },
+  "card_quote": "Справедливость, добытая лично, оставляет на душе след, который не смыть верой",
+  "card_bio": "",
+  "biography": "Клара Уолш – жена Ричарда Уолша, основателя корпорации Forge. Хотя она не занимает официальных руководящих постов, её роль в структуре Forge значительна: она выступает в качестве неофициального морального компаса проекта.\n\nКлара обладает глубоким аналитическим умом и проницательностью. Её жизненный путь отмечен тяжелой личной трагедией – убийством дочери Софии, что привело к радикальным изменениям в её мировоззрении и действиях. В Forge она взаимодействует с Отделом Социальных Программ и Реконструкции (CSRO), занимаясь вопросами, критически важными для поддержания морального духа населения на подконтрольных территориях.",
+  "current_status": "",
+  "avatar": "Portrait_Clara_Wallsh",
+  "alt_avatar": "",
+  "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B358B92A-C5E7-4A30-B93A-6D05A488A4C2.jpeg",
+  "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/403A3FA8-0ACF-4CCA-9430-80C479877188.jpeg",
+  "tier": "common",
+  "exported_at": "2026-06-26T11:40:07.551Z"
+}
