@@ -20,7 +20,7 @@
     "Психологическое влияние",
     "Аналитический ум"
   ],
-  "threat_level": 57,
+  "threat_level": 58,
   "stats": {
     "intelligence": 10,
     "combat": 2,
@@ -40,5 +40,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E9709DFE-E713-4D1D-8804-55275B534835.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/80FCA5EE-1B0D-4146-BE8D-3D2632652081.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-06-26T23:35:18.901Z"
+  "exported_at": "2026-06-26T23:41:36.747Z"
 }
