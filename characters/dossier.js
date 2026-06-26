@@ -179,6 +179,7 @@ function buildCard(c, i, cols) {
 
 /* ── Рендер грида ── */
 function renderGrid(chars) {
+  if (currentCols === 1) { activateCarouselMode(); return; }
   document.getElementById("count-shown").textContent = chars.length;
   const grid = document.getElementById("grid");
   if (!chars.length) { grid.innerHTML = `<div class="empty-state">НЕ НАЙДЕНО</div>`; return; }
