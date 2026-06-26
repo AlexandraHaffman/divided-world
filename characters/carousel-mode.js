@@ -261,18 +261,29 @@ function deactivateCarouselMode() {
 }
 
 /* ── Патч переключателя колонок ── */
-// Перезаписываем обработчик из dossier.js
-document.getElementById("cols-slider").addEventListener("click", e => {
-  const btn = e.target.closest(".cols-opt");
-  if (!btn) return;
-  const cols = parseInt(btn.dataset.cols);
+document.addEventListener("DOMContentLoaded", () => {
+  const slider = document.getElementById("cols-slider");
+  
+  // Клонируем, чтобы убить все старые обработчики
+  const newSlider = slider.cloneNode(true);
+  slider.parentNode.replaceChild(newSlider, slider);
 
-  if (cols === 1) {
-    activateCarouselMode();
-  } else {
-    deactivateCarouselMode();
-    currentCols = cols;
-    document.getElementById("grid").dataset.cols = btn.dataset.cols;
-    renderGrid(currentFiltered);
-  }
-}, true); // capture:true — перехватываем раньше старого обработчика
+  newSlider.addEventListener("click", e => {
+    const btn = e.target.closest(".cols-opt");
+    if (!btn) return;
+    const cols = parseInt(btn.dataset.cols);
+
+    newSlider.querySelectorAll(".cols-opt").forEach(b =>
+      b.classList.toggle("active", b === btn)
+    );
+
+    if (cols === 1) {
+      activateCarouselMode();
+    } else {
+      deactivateCarouselMode();
+      currentCols = cols;
+      document.getElementById("grid").dataset.cols = btn.dataset.cols;
+      renderGrid(currentFiltered);
+    }
+  });
+});
