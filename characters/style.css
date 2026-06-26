@@ -215,6 +215,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .dossier-bottom{height:40px;}
 .art-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d1020,#05080f);}
 .art-placeholder-text{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(var(--dr),0.15);letter-spacing:3px;}
+
 /* ══════════════════════════════════════════
    РЕЖИМ «ПО 1» — КАРУСЕЛИ ПО ТИРАМ
    ══════════════════════════════════════════ */
@@ -232,13 +233,15 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .carousel-shelf-count{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;}
 .carousel-shelf-line{height:1px;margin:0 16px 10px;background:linear-gradient(90deg,rgb(var(--shelf-cr,79,195,247)),transparent);opacity:0.25;}
 
-.carousel-track{display:flex;gap:12px;padding:4px 16px 12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;}
+.carousel-track{display:flex;gap:12px;padding:4px 16px 12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;align-items:stretch;}
 .carousel-track::-webkit-scrollbar{display:none;}
+.carousel-track--single{justify-content:center;}
 
 .c-card{flex-shrink:0;width:calc(100vw - 56px);max-width:360px;scroll-snap-align:start;position:relative;border-radius:10px;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 
 .c-card-face,.c-card-back{position:relative;width:100%;border-radius:10px;overflow:hidden;}
-.c-card-back{display:none;padding:18px 16px 20px;background:linear-gradient(160deg,#060d1a,#05080f);border:1px solid rgba(var(--cr),0.4);min-height:300px;flex-direction:column;gap:10px;}
+.c-card-face{min-height:68vh;}
+.c-card-back{display:none;padding:18px 16px 20px;background:linear-gradient(160deg,#060d1a,#05080f);border:1px solid rgba(var(--cr),0.4);min-height:68vh;flex-direction:column;gap:10px;}
 .c-card.flipped .c-card-face{display:none;}
 .c-card.flipped .c-card-back{display:flex;}
 
@@ -246,13 +249,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card[data-tier="legendary"] .c-card-bar{background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 6s linear infinite;}
 .c-card[data-tier="divine"] .c-card-bar{height:4px;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 5s linear infinite;}
 
-
-.c-card-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-.c-card-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,rgba(5,8,15,0.7) 65%,rgba(5,8,15,0.97) 100%);}
-.c-card-no-photo{width:100%;aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d1a2a,#05080f);}
-.c-card-no-photo-text{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(79,195,247,0.12);letter-spacing:3px;}
 .c-card-photo{position:relative;width:100%;height:68vh;overflow:hidden;background:linear-gradient(160deg,#0d1a2a,#05080f);}
-.c-card-info{position:absolute;bottom:0;left:0;right:0;padding:12px 14px 14px;z-index:2;}
+.c-card-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+.c-card-photo-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 25%,rgba(5,8,15,0.6) 55%,rgba(5,8,15,0.97) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px 16px;z-index:2;}
+.c-card-no-photo{width:100%;height:68vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d1a2a,#05080f);}
+.c-card-no-photo-text{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(79,195,247,0.12);letter-spacing:3px;}
+
 .c-card-sys{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.45);letter-spacing:0.18em;margin-bottom:3px;}
 .c-card-name{font-size:22px;font-weight:700;color:var(--white);letter-spacing:0.03em;line-height:1.1;margin-bottom:2px;}
 .c-card-role{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px;line-height:1.3;}
@@ -262,7 +264,10 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card-threat-lbl{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.5);letter-spacing:0.12em;}
 .c-card-status{display:flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.1em;background:rgba(var(--sc-rgb,93,217,138),0.08);border:1px solid rgba(var(--sc-rgb,93,217,138),0.2);padding:3px 9px;border-radius:3px;color:var(--sc,#5dd98a);}
 .c-card-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sc,#5dd98a);box-shadow:0 0 6px var(--sc,#5dd98a);animation:pulse 2s infinite;}
-.c-card-tap-hint{position:absolute;bottom:14px;right:14px;z-index:3;font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.35);letter-spacing:0.12em;pointer-events:none;}
+
+.c-face-bottom{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px;}
+.c-face-faction{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgb(var(--cr));border:1px solid rgba(var(--cr),0.3);padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:0.06em;}
+.c-face-radar{opacity:0.85;}
 
 .c-back-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .c-back-sys{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.45);letter-spacing:0.15em;margin-bottom:2px;}
@@ -296,13 +301,3 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card.glitch-in .c-card-back{animation:cGlitchIn 0.4s forwards;}
 .c-card.glitch-out-rev .c-card-back{animation:cGlitchOut 0.45s forwards;}
 .c-card.glitch-in-rev .c-card-face{animation:cGlitchIn 0.4s forwards;}
-
-.c-card-face{min-height:68vh;}
-.c-card-back{min-height:68vh;}
-.carousel-track{align-items:stretch;}
-.c-card-photo img{width:100%;height:100%;object-fit:cover;object-position:center 
-
-.carousel-track{justify-content:flex-start;}
-.carousel-shelf:has(.carousel-track > .c-card:only-child) .carousel-track{justify-content:center;}
-
-  
