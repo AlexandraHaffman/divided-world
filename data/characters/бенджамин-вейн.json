@@ -18,9 +18,9 @@
     "Навыки рукопашного боя",
     "Биометрическое отслеживание (вживленный чип-трекер)"
   ],
-  "threat_level": 28,
+  "threat_level": 30,
   "stats": {
-    "intelligence": 1,
+    "intelligence": 3,
     "combat": 6,
     "influence": 0,
     "meta_power": 0,
@@ -38,5 +38,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BA9FB608-C627-424F-B426-92B6BCFC1311.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BCC66E46-4894-406C-A955-A83F65E8B6D6.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-27T05:12:13.720Z"
+  "exported_at": "2026-06-27T05:12:52.620Z"
 }
