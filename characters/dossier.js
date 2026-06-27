@@ -358,7 +358,12 @@ document.getElementById("cols-slider").addEventListener("click", e => {
   document.querySelectorAll(".cols-opt").forEach(b => b.classList.toggle("active", b === btn));
   currentCols = parseInt(btn.dataset.cols);
   document.getElementById("grid").dataset.cols = btn.dataset.cols;
-  renderGrid(currentFiltered);
+  if (currentCols === 1) {
+    renderGrid(currentFiltered);
+  } else {
+    deactivateCarouselMode();
+    renderGrid(currentFiltered);
+  }
 });
 
 /* ── Дропдаун фракций ── */
