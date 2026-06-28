@@ -231,3 +231,72 @@
   50%  { background-position: 100% 50% }
   100% { background-position: 0% 50% }
 }
+
+/* ══════════════════════════════════════════════════════
+   КАРУСЕЛЬ — ФИКСЫ ДЛЯ LANDSCAPE И ОБЩИЕ УЛУЧШЕНИЯ
+   ══════════════════════════════════════════════════════ */
+
+/* Карточка всегда вертикальная — высота через aspect-ratio,
+   не через vh, чтобы не зависеть от ориентации экрана */
+.c-card {
+  width: calc(100vmin - 56px);
+  max-width: 340px;
+}
+
+/* Фото-блок: aspect-ratio вместо фиксированного height */
+.c-card-photo {
+  height: auto !important;
+  aspect-ratio: 4 / 5;
+}
+
+/* Заглушка без фото — тоже aspect-ratio */
+.c-card-no-photo {
+  height: auto !important;
+  aspect-ratio: 4 / 5;
+}
+
+/* Лицевая сторона — по содержимому, не фиксированная */
+.c-card-face {
+  min-height: unset !important;
+}
+
+/* Оборотная сторона — тоже убираем min-height,
+   пусть растягивается по контенту */
+.c-card-back {
+  min-height: unset !important;
+  max-height: 90vmin;
+}
+
+/* Радар на лицевой карточке — крупнее */
+.c-face-radar svg {
+  width: 90px !important;
+  height: 90px !important;
+}
+
+/* Весь нижний блок (faction + radar) — прижат к низу оверлея */
+.c-card-photo-overlay {
+  justify-content: flex-end;
+}
+
+/* Блок с именем/ролью/тритом прижимаем к низу,
+   убираем лишний отступ где был статус */
+.c-card-bottom-row {
+  margin-top: 6px;
+}
+
+/* В landscape — карточки чуть уже чтобы видно было соседей */
+@media (orientation: landscape) {
+  .c-card {
+    width: calc(55vw - 32px);
+    max-width: 380px;
+  }
+
+  .c-card-photo {
+    aspect-ratio: 3 / 4;
+  }
+
+  .c-face-radar svg {
+    width: 110px !important;
+    height: 110px !important;
+  }
+}
