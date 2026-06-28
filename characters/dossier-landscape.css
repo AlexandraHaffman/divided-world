@@ -1,0 +1,261 @@
+/* ══════════════════════════════════════════════════════
+   ДОСЬЕ — ГОРИЗОНТАЛЬНЫЙ LAYOUT
+   Срабатывает при landscape на телефоне И на компьютере
+   (min-width: 600px покрывает оба случая)
+   ══════════════════════════════════════════════════════ */
+
+@media (orientation: landscape), (min-width: 600px) {
+
+  /* Оверлей — горизонтальный flex, без вертикального скролла */
+  .dossier-overlay {
+    overflow: hidden;
+  }
+
+  /* Внутренний контейнер — два столбца на всю высоту */
+  #dossier-inner {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+  }
+
+  /* ── ЛЕВАЯ КОЛОНКА: портрет ── */
+  .dossier-art {
+    /* Ширина = высота × 4/5, но не больше 420px */
+    width: min(80vh, 420px);
+    min-width: min(80vh, 420px);
+    height: 100vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Портрет заполняет колонку целиком, обрез 4:5 */
+  .dossier-art-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .dossier-art-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* Градиент снизу — плавный переход к тёмному */
+  .dossier-art-gradient {
+    background: linear-gradient(
+      to bottom,
+      rgba(5,8,15,0.05) 0%,
+      transparent 20%,
+      transparent 55%,
+      rgba(5,8,15,0.55) 78%,
+      rgba(5,8,15,0.97) 100%
+    );
+  }
+
+  /* Инфо-блок с именем — внизу левой колонки */
+  .dossier-art-info {
+    padding: 14px 16px 20px;
+  }
+
+  /* Имя чуть меньше чтобы влезло */
+  .dossier-name {
+    font-size: clamp(22px, 3.5vh, 34px);
+  }
+
+  /* Угрозу тоже масштабируем */
+  .dossier-threat-num {
+    font-size: clamp(28px, 5vh, 40px);
+  }
+
+  /* Подсказка-скролл не нужна в горизонтальном режиме */
+  .dossier-scroll-hint {
+    display: none;
+  }
+
+  /* ── ПРАВАЯ КОЛОНКА: данные ── */
+  .dossier-data {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Кастомный скроллбар */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--dr), 0.3) transparent;
+  }
+
+  .dossier-data::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .dossier-data::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .dossier-data::-webkit-scrollbar-thumb {
+    background: rgba(var(--dr), 0.35);
+    border-radius: 2px;
+  }
+
+  /* Полоска сверху правой колонки — вертикальная линия разделитель */
+  .dossier-data-line {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(var(--dr), 0.5), transparent);
+    margin-bottom: 6px;
+  }
+
+  /* Мета-строка — горизонтальная сетка */
+  .dossier-meta {
+    grid-template-columns: 1fr 1fr 1.2fr;
+    padding: 10px 16px 0;
+  }
+
+  /* Шрифты в правой колонке масштабируем под экран */
+  .dossier-section-title {
+    font-size: clamp(7px, 1.2vh, 9px);
+  }
+
+  .dossier-bio {
+    font-size: clamp(11px, 1.6vh, 14px);
+    line-height: 1.65;
+  }
+
+  .dossier-quote {
+    font-size: clamp(12px, 1.8vh, 15px);
+  }
+
+  /* Радар в досье чуть меньше чтобы оставить место стат-барам */
+  .dossier-radar svg {
+    width: clamp(100px, 18vh, 150px);
+    height: clamp(100px, 18vh, 150px);
+  }
+
+  /* Отступ снизу правой колонки */
+  .dossier-bottom {
+    height: 24px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   УБИРАЕМ СТАТУС ОТОВСЮДУ
+   ══════════════════════════════════════════════════════ */
+
+/* В досье */
+.dossier-status {
+  display: none !important;
+}
+
+/* В карточках карусели */
+.c-card-status {
+  display: none !important;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   ТИР-ЭФФЕКТЫ В ДОСЬЕ (горизонтальный режим)
+   Применяются к левой колонке .dossier-art
+   через data-tier на .dossier-overlay
+   ══════════════════════════════════════════════════════ */
+
+/* RARE — чуть ярче верхняя полоска */
+.dossier-overlay[data-tier="rare"] .dossier-faction-bar {
+  height: 3px;
+  opacity: 0.9;
+}
+
+/* EPIC — угловые акценты на левой колонке */
+.dossier-overlay[data-tier="epic"] .dossier-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  --corner-size: 22px;
+  --corner-w: 1.5px;
+  background:
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--corner-w) var(--corner-size) no-repeat;
+  opacity: 0.6;
+}
+.dossier-overlay[data-tier="epic"] .dossier-faction-bar {
+  height: 4px;
+}
+
+/* LEGENDARY — shimmer на верхней полоске + угловые акценты + пульс свечения */
+.dossier-overlay[data-tier="legendary"] .dossier-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  --corner-size: 28px;
+  --corner-w: 2px;
+  background:
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--corner-w) var(--corner-size) no-repeat;
+  opacity: 0.9;
+}
+.dossier-overlay[data-tier="legendary"] .dossier-faction-bar {
+  height: 4px;
+  background: linear-gradient(90deg,transparent,rgb(var(--dr)),rgba(var(--dr),0.4),rgb(var(--dr)),transparent);
+  background-size: 200% 100%;
+  animation: shimmerBar 6s linear infinite;
+}
+.dossier-overlay[data-tier="legendary"] .dossier-art {
+  animation: dossierLegendaryGlow 7s ease-in-out infinite;
+}
+@keyframes dossierLegendaryGlow {
+  0%,100% { box-shadow: inset 0 0 40px rgba(var(--dr),0.06); }
+  50%      { box-shadow: inset 0 0 70px rgba(var(--dr),0.14); }
+}
+
+/* DIVINE — двойная рамка + белый flash на полоске + сильный пульс */
+.dossier-overlay[data-tier="divine"] .dossier-art {
+  outline: 2px solid rgba(var(--dr),0.4);
+  outline-offset: -2px;
+  animation: dossierDivineGlow 5s ease-in-out infinite;
+}
+@keyframes dossierDivineGlow {
+  0%,100% { box-shadow: inset 0 0 60px rgba(var(--dr),0.1), 0 0 30px rgba(var(--dr),0.2); }
+  50%      { box-shadow: inset 0 0 100px rgba(var(--dr),0.22), 0 0 60px rgba(var(--dr),0.45); }
+}
+.dossier-overlay[data-tier="divine"] .dossier-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  --corner-size: 36px;
+  --corner-w: 2px;
+  background:
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--corner-w) var(--corner-size) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--corner-size) var(--corner-w) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--corner-w) var(--corner-size) no-repeat;
+  opacity: 1;
+}
+.dossier-overlay[data-tier="divine"] .dossier-faction-bar {
+  height: 5px;
+  background: linear-gradient(90deg,transparent,rgba(var(--dr),0.4),rgb(var(--dr)),#fff,rgb(var(--dr)),rgba(var(--dr),0.4),transparent);
+  background-size: 300% 100%;
+  animation: divineBar 5s linear infinite;
+}
