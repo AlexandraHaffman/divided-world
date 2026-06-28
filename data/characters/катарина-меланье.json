@@ -17,7 +17,7 @@
     "Социальная инженерия",
     "Стратегическое управление"
   ],
-  "threat_level": 37,
+  "threat_level": 36,
   "stats": {
     "intelligence": 7,
     "combat": 2,
@@ -26,7 +26,7 @@
     "cruelty": 7,
     "will": 8,
     "stealth": 5,
-    "unpredictability": 2
+    "unpredictability": 1
   },
   "card_quote": "Дисциплина — единственный подарок, который стоит дарить ребенку",
   "card_bio": "Катарина Меланье — Верховная Наставница Капитула Воспитания Тенебриона. Она руководит системой, в которой рождаются, обучаются и воспитываются будущие поколения державы, определяя всё — от образовательных программ до принципов генетического отбора. Для Катарины дисциплина и порядок являются высшим проявлением заботы, а воспитание — главным инструментом построения идеального общества.",
@@ -37,5 +37,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AF32072F-0D73-4FCC-B2BF-5462BAA92F11.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B1C8D6E5-8FC5-4C54-B58B-0978B512A2D8.jpeg",
   "tier": "rare",
-  "exported_at": "2026-06-28T14:13:39.527Z"
+  "exported_at": "2026-06-28T14:14:35.429Z"
 }
