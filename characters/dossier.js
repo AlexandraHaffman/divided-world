@@ -95,6 +95,7 @@ function buildCard(c, i, cols) {
   const factionLabel = c.faction || '—';
   const metaAttr = ((c.stats && c.stats.meta_power) || 0) >= 100 ? ' data-meta="divine"' : '';
 
+  /* 5 колонок */
   if (cols >= 5 && hasPhoto) {
     return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
@@ -108,6 +109,7 @@ function buildCard(c, i, cols) {
     </div>`;
   }
 
+  /* 3 колонки */
   if (cols >= 3 && hasPhoto) {
     return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
@@ -127,6 +129,7 @@ function buildCard(c, i, cols) {
     </div>`;
   }
 
+  /* С фото (1–2 колонки) */
   if (hasPhoto) {
     const top = isTopFaction(c);
     const factionEl = top
@@ -155,6 +158,7 @@ function buildCard(c, i, cols) {
     </div>`;
   }
 
+  /* Без фото (радар) */
   const radar = buildRadar(c.stats || {}, col.rgb, 70);
   const top = isTopFaction(c);
   const factionEl = top
@@ -175,7 +179,6 @@ function buildCard(c, i, cols) {
 
 /* ── Рендер грида ── */
 function renderGrid(chars) {
-  if (currentCols === 1) { activateCarouselMode(); return; }
   document.getElementById("count-shown").textContent = chars.length;
   const grid = document.getElementById("grid");
   if (!chars.length) { grid.innerHTML = `<div class="empty-state">НЕ НАЙДЕНО</div>`; return; }
@@ -208,19 +211,24 @@ async function loadCharacters() {
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/characters`);
     const data = await res.json();
+
+    // ФИX: проверяем что пришёл массив, а не сообщение об ошибке
     if (!Array.isArray(data)) {
       const msg = data.message || "Неизвестная ошибка API";
       throw new Error(msg);
     }
+
     allChars = (await Promise.all(
       data
         .filter(f => f.name.endsWith(".json") && f.name !== ".keep")
         .map(async f => (await fetch(f.download_url)).json())
     )).sort((a, b) => (b.threat_level || 0) - (a.threat_level || 0));
+
     currentFiltered = [...allChars];
     buildFilters();
     renderGrid(allChars);
     document.getElementById("count-total").textContent = allChars.length;
+
   } catch (e) {
     document.getElementById("grid").innerHTML =
       `<div class="empty-state">ОШИБКА: ${e.message}<br><br>Попробуйте обновить страницу через минуту.</div>`;
@@ -309,6 +317,7 @@ function openDossier(idx) {
     </div>`;
 
   const overlay = document.getElementById("dossier");
+  overlay.dataset.tier = getTier(c);
   overlay.classList.add("open");
   overlay.scrollTop = 0;
   document.body.style.overflow = "hidden";
