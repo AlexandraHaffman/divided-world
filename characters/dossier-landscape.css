@@ -12,7 +12,6 @@
     width: 100%;
   }
 
-  /* ── ЛЕВАЯ КОЛОНКА: портрет ── */
   .dossier-art {
     width: min(80vh, 420px);
     min-width: min(80vh, 420px);
@@ -52,7 +51,6 @@
   .dossier-threat-num { font-size: clamp(28px, 5vh, 40px); }
   .dossier-scroll-hint { display: none; }
 
-  /* ── ПРАВАЯ КОЛОНКА: данные ── */
   .dossier-data {
     flex: 1;
     height: 100vh;
@@ -93,7 +91,7 @@
 }
 
 /* ══════════════════════════════════════════════════════
-   УБИРАЕМ СТАТУС ОТОВСЮДУ
+   УБИРАЕМ СТАТУС
    ══════════════════════════════════════════════════════ */
 
 .dossier-status  { display: none !important; }
@@ -224,10 +222,9 @@
 }
 
 /* ══════════════════════════════════════════════════════
-   КАРУСЕЛЬ — КАРТОЧКИ (ПОЛНЫЙ ФИКС)
+   КАРУСЕЛЬ — КАРТОЧКИ
    ══════════════════════════════════════════════════════ */
 
-/* Размер карточки */
 .c-card {
   width: min(calc(100vw - 56px), 360px);
   max-width: 360px;
@@ -240,7 +237,7 @@
   overflow: hidden;
 }
 
-/* Фото — aspect-ratio, всегда вертикальное */
+/* Фото */
 .c-card-photo {
   width: 100%;
   aspect-ratio: 4 / 5;
@@ -285,7 +282,7 @@
   );
 }
 
-/* Оверлей — поверх фото, весь блок */
+/* Оверлей на всё фото */
 .c-card-overlay {
   position: absolute;
   inset: 0;
@@ -345,13 +342,21 @@
   margin-bottom: 2px;
 }
 
+/* Роль — 2 строки, без переноса одного слова */
 .c-card-role {
   font-size: 10px;
   color: rgba(255,255,255,0.4);
   margin-bottom: 6px;
-  white-space: nowrap;
+  /* Разрешаем перенос, но не по одному слову */
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-height: 1.35;
+  max-height: 2.7em;
 }
 
 .c-card-threat {
@@ -376,26 +381,38 @@
   letter-spacing: 0.12em;
 }
 
-/* Радар справа внизу */
+/* Радар — поднят чуть выше через align-items */
 .c-face-radar {
   flex-shrink: 0;
   opacity: 0.9;
-  margin-bottom: -6px;
+  align-self: center; /* поднимаем от самого низа */
+  margin-bottom: 8px;
 }
 
 .c-face-radar svg {
   display: block;
-  width: 110px !important;
-  height: 110px !important;
+  width: 100px !important;
+  height: 100px !important;
 }
 
-/* Оборотная сторона — та же высота через aspect-ratio */
+/* ══════════════════════════════════════════════════════
+   ОБОРОТНАЯ СТОРОНА — та же высота что лицевая
+   ══════════════════════════════════════════════════════ */
+
 .c-card-back {
+  /* Точно такой же размер как лицевая */
+  width: 100%;
   aspect-ratio: 4 / 5;
   min-height: unset !important;
   max-height: unset !important;
+  box-sizing: border-box;
+
+  /* Скролл внутри */
   overflow-y: auto !important;
   overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--cr), 0.3) transparent;
+
   display: none;
   flex-direction: column;
   gap: 10px;
@@ -403,19 +420,28 @@
   background: linear-gradient(160deg, #060d1a, #05080f);
   border: 1px solid rgba(var(--cr), 0.4);
   border-radius: 10px;
-  box-sizing: border-box;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(var(--cr), 0.2) transparent;
 }
 
-.c-card-back::-webkit-scrollbar { width: 2px; }
-.c-card-back::-webkit-scrollbar-thumb { background: rgba(var(--cr), 0.3); border-radius: 2px; }
+.c-card-back::-webkit-scrollbar { width: 3px; }
+.c-card-back::-webkit-scrollbar-thumb {
+  background: rgba(var(--cr), 0.4);
+  border-radius: 2px;
+}
 .c-card-back::-webkit-scrollbar-track { background: transparent; }
 
 .c-card.flipped .c-card-face { display: none; }
 .c-card.flipped .c-card-back { display: flex; }
 
-/* В landscape — карточка масштабируется по высоте */
+/* Биография — скроллится отдельно если контент большой */
+.c-back-bio {
+  font-size: 11px;
+  color: var(--text, #b8cfe0);
+  line-height: 1.65;
+  /* Не ограничиваем — пусть скроллится вся карточка */
+  flex-shrink: 0;
+}
+
+/* В landscape */
 @media (orientation: landscape) {
   .c-card {
     width: min(calc(80vh * 4 / 5), 340px);
@@ -423,7 +449,7 @@
   }
 
   .c-face-radar svg {
-    width: 90px !important;
-    height: 90px !important;
+    width: 85px !important;
+    height: 85px !important;
   }
 }
