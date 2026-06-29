@@ -32,11 +32,13 @@ function injectCarouselContainer() {
 function buildCarouselCard(c, idx) {
   const col = getFactionColor(c);
   const tier = getTier(c);
-  const sc = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
-  const scRgb = sc === "#5dd98a" ? "93,217,138" : sc === "#f87171" ? "248,113,113" : "100,116,139";
   const stats = c.stats || {};
   const photoUrl = c.avatar_web_full || c.avatar_web || "";
 
+  /* Радар 120px для лицевой стороны */
+  const radarFace = buildRadar(stats, col.rgb, 120);
+
+  /* Стат-бары для оборотной стороны */
   const statsHTML = [
     ["Интеллект",   stats.intelligence],
     ["Боевые",      stats.combat],
@@ -60,29 +62,49 @@ function buildCarouselCard(c, idx) {
   const bioHTML = c.biography
     ? `<div class="c-back-bio">${c.biography.replace(/\n/g,"<br>").substring(0,300)}${c.biography.length>300?"…":""}</div>` : "";
 
-  const radarHTML = buildRadar(stats, col.rgb, 80);
-
+  /* ── ЛИЦЕВАЯ СТОРОНА ──
+     Структура:
+     - сверху: SYS.RECORD + бейдж фракции
+     - снизу: [имя / роль / THREAT]  [радар 120px]
+  */
   const faceContent = photoUrl
     ? `<div class="c-card-photo">
         <img src="${photoUrl}" alt="${c.name}" loading="lazy">
-        <div class="c-card-photo-overlay">
+        <div class="c-card-gradient"></div>
+        <div class="c-card-top">
           <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
-          <div class="c-card-name">${c.name}</div>
-          <div class="c-card-role">${c.role || ""}</div>
-          <div class="c-card-bottom-row">
+          <div class="c-face-faction">${c.faction || "—"}</div>
+        </div>
+        <div class="c-card-bottom">
+          <div class="c-card-text">
+            <div class="c-card-name">${c.name}</div>
+            <div class="c-card-role">${c.role || ""}</div>
             <div class="c-card-threat">
               <div class="c-card-threat-num">${c.threat_level || 0}</div>
               <div class="c-card-threat-lbl">THREAT</div>
             </div>
-            <div class="c-card-status" style="--sc:${sc};--sc-rgb:${scRgb}">${c.status || "—"}</div>
           </div>
-          <div class="c-face-bottom">
-            <div class="c-face-faction">${c.faction || "—"}</div>
-            <div class="c-face-radar">${radarHTML}</div>
-          </div>
+          <div class="c-face-radar">${radarFace}</div>
         </div>
       </div>`
-    : `<div class="c-card-no-photo"><span class="c-card-no-photo-text">NO SIGNAL</span></div>`;
+    : `<div class="c-card-no-photo">
+        <div class="c-card-top">
+          <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
+          <div class="c-face-faction">${c.faction || "—"}</div>
+        </div>
+        <div class="c-card-bottom">
+          <div class="c-card-text">
+            <div class="c-card-name">${c.name}</div>
+            <div class="c-card-role">${c.role || ""}</div>
+            <div class="c-card-threat">
+              <div class="c-card-threat-num">${c.threat_level || 0}</div>
+              <div class="c-card-threat-lbl">THREAT</div>
+            </div>
+          </div>
+          <div class="c-face-radar">${radarFace}</div>
+        </div>
+        <span class="c-card-no-photo-text">NO SIGNAL</span>
+      </div>`;
 
   return `<div class="c-card" data-tier="${tier}" data-idx="${idx}" style="--cr:${col.rgb}">
     <div class="c-card-face" style="border:1px solid rgba(${col.rgb},0.35);background:linear-gradient(160deg,#0d1020,#05080f);">
