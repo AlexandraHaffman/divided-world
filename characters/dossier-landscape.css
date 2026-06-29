@@ -81,13 +81,11 @@
   .dossier-quote { font-size: clamp(12px, 1.8vh, 15px); }
   .dossier-bottom { height: 24px; }
 
-  /* ── РАДАР КРУПНЕЕ, стат-бары сжимаются сами ── */
   .dossier-radar svg {
     width: clamp(140px, 24vh, 200px);
     height: clamp(140px, 24vh, 200px);
   }
 
-  /* Выравниваем радар и бары по центру по вертикали */
   .dossier-stats-row {
     align-items: center;
     gap: 16px;
@@ -103,15 +101,12 @@
 
 /* ══════════════════════════════════════════════════════
    ТИР-ЭФФЕКТЫ В ДОСЬЕ
-   data-tier ставится на .dossier-overlay через JS
    ══════════════════════════════════════════════════════ */
 
-/* ── RARE ── */
 .dossier-overlay[data-tier="rare"] .dossier-faction-bar {
   height: 3px; opacity: 0.9;
 }
 
-/* ── EPIC — угловые акценты ── */
 .dossier-overlay[data-tier="epic"] .dossier-art::before {
   content: '';
   position: absolute; inset: 0;
@@ -130,7 +125,6 @@
 }
 .dossier-overlay[data-tier="epic"] .dossier-faction-bar { height: 4px; }
 
-/* ── LEGENDARY — shimmer + углы + боковое свечение + пульс ── */
 .dossier-overlay[data-tier="legendary"] .dossier-art::before {
   content: '';
   position: absolute; inset: 0;
@@ -148,7 +142,6 @@
   opacity: 0.9;
 }
 
-/* Вертикальная светящаяся линия справа от портрета */
 .dossier-overlay[data-tier="legendary"] .dossier-art::after {
   content: '';
   position: absolute; top: 0; right: 0; bottom: 0;
@@ -178,7 +171,6 @@
   50%      { box-shadow: inset 0 0 90px rgba(var(--dr),0.18); }
 }
 
-/* ── DIVINE — двойная рамка + белый flash + сильный пульс + вертикальная линия ── */
 .dossier-overlay[data-tier="divine"] .dossier-art {
   outline: 2px solid rgba(var(--dr),0.5);
   outline-offset: -2px;
@@ -206,7 +198,6 @@
   opacity: 1;
 }
 
-/* Вертикальная линия справа — мощнее чем у legendary */
 .dossier-overlay[data-tier="divine"] .dossier-art::after {
   content: '';
   position: absolute; top: 0; right: 0; bottom: 0;
@@ -233,123 +224,37 @@
 }
 
 /* ══════════════════════════════════════════════════════
-   КАРУСЕЛЬ — ФИКСЫ ДЛЯ LANDSCAPE И ОБЩИЕ УЛУЧШЕНИЯ
+   КАРУСЕЛЬ — КАРТОЧКИ (ПОЛНЫЙ ФИКС)
    ══════════════════════════════════════════════════════ */
 
-/* Карточка всегда вертикальная — высота через aspect-ratio,
-   не через vh, чтобы не зависеть от ориентации экрана */
+/* Размер карточки */
 .c-card {
-  width: calc(100vmin - 56px);
-  max-width: 340px;
-}
-
-/* Фото-блок: aspect-ratio вместо фиксированного height */
-.c-card-photo {
-  height: auto !important;
-  aspect-ratio: 4 / 5;
-}
-
-/* Заглушка без фото — тоже aspect-ratio */
-.c-card-no-photo {
-  height: auto !important;
-  aspect-ratio: 4 / 5;
-}
-
-/* Лицевая сторона — по содержимому, не фиксированная */
-.c-card-face {
-  min-height: unset !important;
-}
-
-/* Оборотная сторона — тоже убираем min-height,
-   пусть растягивается по контенту */
-.c-card-back {
-  min-height: unset !important;
-  max-height: 90vmin;
-}
-
-/* Радар на лицевой карточке — крупнее */
-.c-face-radar svg {
-  width: 90px !important;
-  height: 90px !important;
-}
-
-/* Весь нижний блок (faction + radar) — прижат к низу оверлея */
-.c-card-photo-overlay {
-  justify-content: flex-end;
-}
-
-/* Блок с именем/ролью/тритом прижимаем к низу,
-   убираем лишний отступ где был статус */
-.c-card-bottom-row {
-  margin-top: 6px;
-}
-
-/* В landscape — карточки чуть уже чтобы видно было соседей */
-@media (orientation: landscape) {
-  .c-card {
-    width: calc(55vw - 32px);
-    max-width: 380px;
-  }
-
-  .c-card-photo {
-    aspect-ratio: 3 / 4;
-  }
-
-  .c-face-radar svg {
-    width: 110px !important;
-    height: 110px !important;
-  }
-}
-
-/* ── УБИРАЕМ ДЫРУ ГДЕ БЫЛ СТАТУС ── */
-
-/* bottom-row не растягиваем, threat прижимаем к низу */
-.c-card-bottom-row {
-  justify-content: flex-start !important;
-  gap: 0 !important;
-  margin-top: 4px;
-}
-
-/* Весь оверлей — плотнее, без лишних отступов */
-.c-card-photo-overlay {
-  padding: 10px 12px 12px !important;
-  gap: 2px !important;
-}
-
-/* role поджимаем */
-.c-card-role {
-  margin-bottom: 4px !important;
-}
-
-/* Нижняя строка faction+radar — вплотную к threat */
-.c-face-bottom {
-  margin-top: 6px !important;
-}
-
-/* ══════════════════════════════════════════════════════
-   КАРУСЕЛЬ — НОВАЯ СТРУКТУРА ЛИЦЕВОЙ КАРТОЧКИ
-   ══════════════════════════════════════════════════════ */
-
-/* Карточка всегда вертикальная через aspect-ratio */
-.c-card {
-  /* В portrait: почти на весь экран */
   width: min(calc(100vw - 56px), 360px);
   max-width: 360px;
 }
 
-/* Фото — aspect-ratio 4:5, всегда вертикальное */
+/* Лицевая сторона */
+.c-card-face {
+  min-height: unset !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Фото — aspect-ratio, всегда вертикальное */
 .c-card-photo {
   width: 100%;
   aspect-ratio: 4 / 5;
   position: relative;
   overflow: hidden;
   background: linear-gradient(160deg, #0d1a2a, #05080f);
-  /* Убираем старый height */
   height: auto !important;
 }
+
 .c-card-photo img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center top;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
   display: block;
 }
 
@@ -360,43 +265,66 @@
   position: relative;
   background: linear-gradient(160deg, #0d1a2a, #05080f);
   height: auto !important;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Градиент поверх фото */
 .c-card-gradient {
-  position: absolute; inset: 0; pointer-events: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
   background: linear-gradient(to bottom,
-    transparent 40%,
+    rgba(5,8,15,0.75) 0%,
+    transparent 22%,
+    transparent 42%,
     rgba(5,8,15,0.55) 62%,
-    rgba(5,8,15,0.97) 80%
+    rgba(5,8,15,0.97) 85%
   );
 }
 
-/* Верхний блок: SYS.RECORD + фракция */
-.c-card-top {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 3;
-  padding: 10px 12px;
-  background: linear-gradient(to bottom, rgba(5,8,15,0.8) 0%, transparent 100%);
-  display: flex; justify-content: space-between; align-items: flex-start;
-}
-.c-card-sys {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 7px; color: rgba(var(--cr),0.45); letter-spacing: 0.18em;
-}
-.c-face-faction {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 7px; color: rgb(var(--cr));
-  border: 1px solid rgba(var(--cr),0.35);
-  padding: 2px 7px; border-radius: 2px;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  white-space: nowrap;
+/* Оверлей — поверх фото, весь блок */
+.c-card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 12px 14px;
 }
 
-/* Нижний блок: текст слева, радар справа */
+/* Верхний блок */
+.c-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.c-card-sys {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  color: rgba(var(--cr), 0.45);
+  letter-spacing: 0.18em;
+}
+
+.c-face-faction {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  color: rgb(var(--cr));
+  border: 1px solid rgba(var(--cr), 0.35);
+  padding: 2px 7px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  background: rgba(5,8,15,0.5);
+}
+
+/* Нижний блок: текст + радар */
 .c-card-bottom {
-  position: absolute; bottom: 0; left: 0; right: 0; z-index: 4;
-  padding: 12px;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -404,45 +332,98 @@
   gap: 8px;
 }
 
-/* Текст: имя / роль / threat */
-.c-card-text { flex: 1; min-width: 0; }
+.c-card-text {
+  flex: 1;
+  min-width: 0;
+}
+
 .c-card-name {
-  font-size: 20px; font-weight: 700; color: #e8f4ff;
-  line-height: 1.1; margin-bottom: 2px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #e8f4ff;
+  line-height: 1.1;
+  margin-bottom: 2px;
 }
+
 .c-card-role {
-  font-size: 10px; color: rgba(255,255,255,0.4);
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
   margin-bottom: 6px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.c-card-threat { display: flex; align-items: baseline; gap: 4px; }
+
+.c-card-threat {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
 .c-card-threat-num {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 32px; font-weight: 900;
-  color: rgb(var(--cr)); text-shadow: 0 0 16px rgba(var(--cr),0.6); line-height: 1;
+  font-size: 32px;
+  font-weight: 900;
+  color: rgb(var(--cr));
+  text-shadow: 0 0 16px rgba(var(--cr), 0.6);
+  line-height: 1;
 }
+
 .c-card-threat-lbl {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 7px; color: rgba(var(--cr),0.5); letter-spacing: 0.12em;
+  font-size: 7px;
+  color: rgba(var(--cr), 0.5);
+  letter-spacing: 0.12em;
 }
 
-/* Радар справа — overflow:hidden чтобы размер был предсказуемым */
+/* Радар справа внизу */
 .c-face-radar {
   flex-shrink: 0;
-  overflow: hidden;
-  margin-bottom: -20px; /* выравнивает визуальный низ радара по низу THREAT */
   opacity: 0.9;
+  margin-bottom: -6px;
 }
-.c-face-radar svg { display: block; }
 
-/* Лицевая сторона — убираем старый min-height */
-.c-card-face { min-height: unset !important; }
-.c-card-back { min-height: unset !important; max-height: 90vmax; }
+.c-face-radar svg {
+  display: block;
+  width: 110px !important;
+  height: 110px !important;
+}
 
-/* В landscape — карточка масштабируется по высоте экрана */
+/* Оборотная сторона — та же высота через aspect-ratio */
+.c-card-back {
+  aspect-ratio: 4 / 5;
+  min-height: unset !important;
+  max-height: unset !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px 20px;
+  background: linear-gradient(160deg, #060d1a, #05080f);
+  border: 1px solid rgba(var(--cr), 0.4);
+  border-radius: 10px;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--cr), 0.2) transparent;
+}
+
+.c-card-back::-webkit-scrollbar { width: 2px; }
+.c-card-back::-webkit-scrollbar-thumb { background: rgba(var(--cr), 0.3); border-radius: 2px; }
+.c-card-back::-webkit-scrollbar-track { background: transparent; }
+
+.c-card.flipped .c-card-face { display: none; }
+.c-card.flipped .c-card-back { display: flex; }
+
+/* В landscape — карточка масштабируется по высоте */
 @media (orientation: landscape) {
   .c-card {
     width: min(calc(80vh * 4 / 5), 340px);
     max-width: 340px;
+  }
+
+  .c-face-radar svg {
+    width: 90px !important;
+    height: 90px !important;
   }
 }
