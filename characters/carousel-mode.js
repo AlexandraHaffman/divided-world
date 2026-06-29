@@ -35,10 +35,8 @@ function buildCarouselCard(c, idx) {
   const stats = c.stats || {};
   const photoUrl = c.avatar_web_full || c.avatar_web || "";
 
-  /* Радар 120px для лицевой стороны */
   const radarFace = buildRadar(stats, col.rgb, 120);
 
-  /* Стат-бары для оборотной стороны */
   const statsHTML = [
     ["Интеллект",   stats.intelligence],
     ["Боевые",      stats.combat],
@@ -62,46 +60,45 @@ function buildCarouselCard(c, idx) {
   const bioHTML = c.biography
     ? `<div class="c-back-bio">${c.biography.replace(/\n/g,"<br>").substring(0,300)}${c.biography.length>300?"…":""}</div>` : "";
 
-  /* ── ЛИЦЕВАЯ СТОРОНА ──
-     Структура:
-     - сверху: SYS.RECORD + бейдж фракции
-     - снизу: [имя / роль / THREAT]  [радар 120px]
-  */
   const faceContent = photoUrl
     ? `<div class="c-card-photo">
         <img src="${photoUrl}" alt="${c.name}" loading="lazy">
         <div class="c-card-gradient"></div>
-        <div class="c-card-top">
-          <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
-          <div class="c-face-faction">${c.faction || "—"}</div>
-        </div>
-        <div class="c-card-bottom">
-          <div class="c-card-text">
-            <div class="c-card-name">${c.name}</div>
-            <div class="c-card-role">${c.role || ""}</div>
-            <div class="c-card-threat">
-              <div class="c-card-threat-num">${c.threat_level || 0}</div>
-              <div class="c-card-threat-lbl">THREAT</div>
-            </div>
+        <div class="c-card-overlay">
+          <div class="c-card-top">
+            <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
+            <div class="c-face-faction">${c.faction || "—"}</div>
           </div>
-          <div class="c-face-radar">${radarFace}</div>
+          <div class="c-card-bottom">
+            <div class="c-card-text">
+              <div class="c-card-name">${c.name}</div>
+              <div class="c-card-role">${c.role || ""}</div>
+              <div class="c-card-threat">
+                <div class="c-card-threat-num">${c.threat_level || 0}</div>
+                <div class="c-card-threat-lbl">THREAT</div>
+              </div>
+            </div>
+            <div class="c-face-radar">${radarFace}</div>
+          </div>
         </div>
       </div>`
     : `<div class="c-card-no-photo">
-        <div class="c-card-top">
-          <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
-          <div class="c-face-faction">${c.faction || "—"}</div>
-        </div>
-        <div class="c-card-bottom">
-          <div class="c-card-text">
-            <div class="c-card-name">${c.name}</div>
-            <div class="c-card-role">${c.role || ""}</div>
-            <div class="c-card-threat">
-              <div class="c-card-threat-num">${c.threat_level || 0}</div>
-              <div class="c-card-threat-lbl">THREAT</div>
-            </div>
+        <div class="c-card-overlay">
+          <div class="c-card-top">
+            <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
+            <div class="c-face-faction">${c.faction || "—"}</div>
           </div>
-          <div class="c-face-radar">${radarFace}</div>
+          <div class="c-card-bottom">
+            <div class="c-card-text">
+              <div class="c-card-name">${c.name}</div>
+              <div class="c-card-role">${c.role || ""}</div>
+              <div class="c-card-threat">
+                <div class="c-card-threat-num">${c.threat_level || 0}</div>
+                <div class="c-card-threat-lbl">THREAT</div>
+              </div>
+            </div>
+            <div class="c-face-radar">${radarFace}</div>
+          </div>
         </div>
         <span class="c-card-no-photo-text">NO SIGNAL</span>
       </div>`;
