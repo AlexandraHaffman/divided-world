@@ -18,16 +18,16 @@
     "Убеждение",
     "Предвидение"
   ],
-  "threat_level": 30,
+  "threat_level": 36,
   "stats": {
-    "intelligence": 6,
+    "intelligence": 7,
     "combat": 2,
     "influence": 7,
     "meta_power": 6,
-    "cruelty": 4,
-    "will": 7,
-    "stealth": 2,
-    "unpredictability": 2
+    "cruelty": 5,
+    "will": 8,
+    "stealth": 4,
+    "unpredictability": 3
   },
   "card_quote": "Закрой глаза, дитя. Исповедь — это не наказание, это возвращение домой.",
   "card_bio": "Великая Мать Церкви Тенебрии и одна из самых влиятельных фигур Тенебриона. Возглавляет его духовную жизнь, руководит крупнейшими религиозными церемониями и считается главным нравственным ориентиром для миллионов верующих. Искренне разделяет идеалы своей веры и пользуется огромным уважением как среди духовенства, так и среди простых граждан.",
@@ -37,6 +37,6 @@
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/41DB6C4C-B4FE-4C3C-84B7-FB683B41B6E9.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B441113C-FE3C-4907-8818-A70B8A857663.jpeg",
-  "tier": "common",
-  "exported_at": "2026-06-30T06:23:41.373Z"
+  "tier": "rare",
+  "exported_at": "2026-06-30T07:30:23.368Z"
 }
