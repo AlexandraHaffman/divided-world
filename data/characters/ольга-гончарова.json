@@ -8,7 +8,7 @@
   "faction": "Тенебрион",
   "subfaction": "",
   "location": "Тенебрион",
-  "faction_color": "#ff9d00",
+  "faction_color": "",
   "aliases": [
     "Майор Гончарова"
   ],
@@ -41,5 +41,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BE8B8969-77BD-4AC3-9DA1-A2E16034E946.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4D6DFACD-EA81-44B5-9F60-64EDB7326A3F.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-06-30T14:48:12.871Z"
+  "exported_at": "2026-06-30T14:49:21.795Z"
 }
