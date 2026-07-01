@@ -356,3 +356,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card.glitch-in .c-card-back{animation:cGlitchIn 0.4s forwards;}
 .c-card.glitch-out-rev .c-card-back{animation:cGlitchOut 0.45s forwards;}
 .c-card.glitch-in-rev .c-card-face{animation:cGlitchIn 0.4s forwards;}
+
+.legendary-link{display:inline-block;margin-top:8px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.08em;color:rgb(var(--dr));border:1px solid rgba(var(--dr),0.5);padding:4px 10px;border-radius:2px;text-decoration:none;background:rgba(var(--dr),0.08);}
+.legendary-link:active{background:rgba(var(--dr),0.2);}
+
