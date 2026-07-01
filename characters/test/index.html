@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Персонажи | Разделённый мир — превью сравнения</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <a href="#" class="back-btn">← АРХИВ</a>
+    <span class="sys-label">SYS.<span>PERSONNEL_DB</span> // CLEARANCE: OMNI</span>
+  </div>
+  <div class="page-title">Персонажи</div>
+  <div class="stats-row">
+    <div class="stat-pill">ЗАПИСЕЙ: <b id="count-total">—</b></div>
+    <div class="stat-pill">ОТОБРАЖЕНО: <b id="count-shown">—</b></div>
+    <div class="stat-pill">СТАТУС: <b style="color:#5dd98a">АКТИВНО</b></div>
+  </div>
+</div>
+
+<div class="view-controls">
+  <span class="cols-label">КОЛОНКИ</span>
+  <div class="cols-slider" id="cols-slider">
+    <button class="cols-opt" data-cols="1">1</button>
+    <button class="cols-opt active" data-cols="2">2</button>
+    <button class="cols-opt" data-cols="3">3</button>
+    <button class="cols-opt" data-cols="5">5</button>
+  </div>
+  <button class="filters-toggle" id="filters-toggle">ФРАКЦИИ <span class="chev">▾</span></button>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-faction="all" style="--fc:#4fc3f7;--fr:79,195,247">ВСЕ</button>
+</div>
+
+<div class="grid" id="grid" data-cols="2">
+  <div class="loading">ЗАГРУЗКА АРХИВА...</div>
+</div>
+
+<div class="dossier-overlay" id="dossier">
+  <div id="dossier-inner"></div>
+</div>
+
+<div class="compare-bar" id="compare-bar">
+  <div class="compare-bar-count" id="compare-bar-count">Выбрано: <b>0</b></div>
+  <div class="compare-bar-actions">
+    <button class="compare-bar-btn" onclick="clearCompareSelection()">Очистить</button>
+    <button class="compare-bar-btn primary" id="compare-bar-go" onclick="openCompare()" disabled>Сравнить →</button>
+  </div>
+</div>
+
+<div class="compare-overlay" id="compare-overlay">
+  <div id="compare-inner"></div>
+</div>
+
+<script src="carousel-stub.js"></script>
+<script src="compare-mode.js"></script>
+<script src="dossier.js"></script>
+</body>
+</html>
