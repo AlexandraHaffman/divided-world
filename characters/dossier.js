@@ -50,7 +50,7 @@ function metaGlowHTML(c) {
   return `<div class="${cls}" style="--mg-h:${h}px;--mg-str:${str};height:${h}px;background:linear-gradient(to top,rgba(var(--cr),${str}),transparent);"></div>`;
 }
 
-/* ── Радар ── */
+/* ── Радар (одиночный — используется и dossier.js, и compare-mode.js) ── */
 function buildRadar(stats, rgb, size = 70) {
   const vals = [
     stats.intelligence || 0, stats.combat || 0, stats.influence || 0,
@@ -94,9 +94,10 @@ function buildCard(c, i, cols) {
   const delay = Math.min(i * 0.04, 0.8);
   const factionLabel = c.faction || '—';
   const metaAttr = ((c.stats && c.stats.meta_power) || 0) >= 100 ? ' data-meta="divine"' : '';
+  const globalIdx = allChars.indexOf(c);
 
   if (cols >= 5 && hasPhoto) {
-    return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+    return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="card-body">
         <div class="compact-5-photo">
@@ -108,9 +109,12 @@ function buildCard(c, i, cols) {
     </div>`;
   }
 
+  /* Компакт-3: сюда же добавлен .cmp-check — визуальная галочка выбора,
+     переключается классом cmp-selected из compare-mode.js */
   if (cols >= 3 && hasPhoto) {
-    return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+    return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
+      <div class="cmp-check"></div>
       <div class="card-body">
         <div class="compact-3-photo">
           <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
@@ -132,7 +136,7 @@ function buildCard(c, i, cols) {
     const factionEl = top
       ? `<div class="faction-badge">${factionLabel}</div>`
       : `<div class="card-photo-faction-bottom">${factionLabel}</div>`;
-    return `<div class="char-card has-photo" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+    return `<div class="char-card has-photo" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="card-body">
         <div class="card-photo-wrap">
@@ -160,7 +164,7 @@ function buildCard(c, i, cols) {
   const factionEl = top
     ? `<div class="faction-badge">${factionLabel}</div>`
     : `<div class="card-faction-bottom">${factionLabel}</div>`;
-  return `<div class="char-card" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}">
+  return `<div class="char-card" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
     <div class="card-top-bar"></div><div class="tier-corners"></div>
     <div class="card-body">
       <div class="card-name">${c.name}</div>
@@ -181,6 +185,7 @@ function renderGrid(chars) {
   if (!chars.length) { grid.innerHTML = `<div class="empty-state">НЕ НАЙДЕНО</div>`; return; }
   grid.innerHTML = chars.map((c, i) => buildCard(c, i, currentCols)).join("");
   attachCardEvents();
+  if (currentCols === 3 && typeof applyCompareSelectionState === "function") applyCompareSelectionState();
 }
 
 /* ── Фильтры ── */
@@ -248,8 +253,6 @@ function openDossier(idx) {
   ];
   const radar = buildRadar(stats, col.rgb, 150);
 
-  /* Полоска фракции — для legendary/divine инлайн-стиль НЕ ставим,
-     анимация идёт через CSS по data-tier на оверлее */
   const factionBarStyle = (tier === "legendary" || tier === "divine")
     ? `style="--dr:${col.rgb}"`
     : `style="background:linear-gradient(90deg,transparent,rgb(${col.rgb}),transparent)"`;
@@ -327,10 +330,13 @@ function closeDossier() {
   document.body.style.overflow = "";
 }
 
-/* ── Touch/click на карточках ── */
+/* ── Touch/click на карточках ──
+   В режиме 3 колонок тап переключает выбор для сравнения
+   (toggleCompareSelect определена в compare-mode.js), иначе — открывает досье. */
 function attachCardEvents() {
-  document.querySelectorAll(".char-card").forEach((el, i) => {
+  document.querySelectorAll(".char-card").forEach(el => {
     let startX, startY, moved = false;
+    const gidx = parseInt(el.dataset.gidx);
     el.addEventListener("touchstart", e => {
       startX = e.touches[0].clientX; startY = e.touches[0].clientY; moved = false;
       el.classList.add("tap-active");
@@ -342,10 +348,17 @@ function attachCardEvents() {
     }, { passive: true });
     el.addEventListener("touchend", e => {
       el.classList.remove("tap-active");
-      if (!moved) { e.preventDefault(); openDossier(allChars.indexOf(currentFiltered[i])); }
+      if (!moved) {
+        e.preventDefault();
+        if (currentCols === 3 && typeof toggleCompareSelect === "function") toggleCompareSelect(gidx, el);
+        else openDossier(gidx);
+      }
     });
     el.addEventListener("click", () => {
-      if (!('ontouchstart' in window)) openDossier(allChars.indexOf(currentFiltered[i]));
+      if (!('ontouchstart' in window)) {
+        if (currentCols === 3 && typeof toggleCompareSelect === "function") toggleCompareSelect(gidx, el);
+        else openDossier(gidx);
+      }
     });
   });
 }
@@ -358,6 +371,7 @@ document.getElementById("cols-slider").addEventListener("click", e => {
   currentCols = parseInt(btn.dataset.cols);
   document.getElementById("grid").dataset.cols = btn.dataset.cols;
   deactivateCarouselMode();
+  if (currentCols !== 3 && typeof clearCompareSelection === "function") clearCompareSelection();
   if (currentCols !== 1) renderGrid(currentFiltered);
   else activateCarouselMode();
 });
@@ -370,7 +384,12 @@ document.getElementById("filters-toggle").addEventListener("click", () => {
 document.querySelector(".filter-btn[data-faction='all']").addEventListener("click", () => setFilter("all"));
 
 /* ── Клавиша Escape ── */
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeDossier(); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    closeDossier();
+    if (typeof closeCompare === "function") closeCompare();
+  }
+});
 
 /* ── Старт ── */
 loadCharacters();

@@ -90,6 +90,60 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compact-3-name-area{padding:5px 7px 7px;}
 .compact-3-name{font-size:11px;font-weight:700;color:var(--white);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
+/* ── ВЫДЕЛЕНИЕ ДЛЯ СРАВНЕНИЯ (3 колонки) ── */
+/* Вся фотография тонируется цветом фракции персонажа + яркая рамка.
+   Маленькая галочка в углу оставлена как быстрый индикатор — при желании уберём. */
+.char-card.compact-3.cmp-selected{border-color:rgb(var(--cr));box-shadow:0 0 0 2px rgba(var(--cr),0.55),0 8px 22px rgba(var(--cr),0.35);}
+.char-card.compact-3.cmp-selected .compact-3-photo::before{
+  content:'';position:absolute;inset:0;z-index:2;
+  background:linear-gradient(165deg,rgba(var(--cr),0.55) 0%,rgba(var(--cr),0.28) 45%,rgba(var(--cr),0.08) 100%);
+  mix-blend-mode:hard-light;
+}
+.char-card.compact-3.cmp-selected .compact-3-photo::after{
+  background:linear-gradient(to bottom,rgba(var(--cr),0.1) 0%,rgba(5,8,15,0.85) 100%);
+}
+.cmp-check{position:absolute;top:6px;right:6px;z-index:6;width:20px;height:20px;border-radius:50%;background:rgba(5,8,15,0.55);border:1.5px solid rgba(var(--cr),0.5);display:flex;align-items:center;justify-content:center;transition:all 0.15s;backdrop-filter:blur(2px);}
+.char-card.compact-3.cmp-selected .cmp-check{background:rgb(var(--cr));border-color:rgb(var(--cr));box-shadow:0 0 10px rgba(var(--cr),0.6);}
+.cmp-check::after{content:'';width:9px;height:5px;border-left:2px solid #05080f;border-bottom:2px solid #05080f;transform:rotate(-45deg) translateY(-1px);opacity:0;transition:opacity 0.15s;}
+.char-card.compact-3.cmp-selected .cmp-check::after{opacity:1;}
+
+/* ── ПАНЕЛЬ СРАВНЕНИЯ (снизу) ── */
+.compare-bar{position:fixed;left:0;right:0;bottom:0;z-index:500;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:rgba(5,8,15,0.96);backdrop-filter:blur(10px);border-top:1px solid rgba(79,195,247,0.25);transform:translateY(100%);transition:transform 0.25s ease;box-shadow:0 -8px 24px rgba(0,0,0,0.4);}
+.compare-bar.show{transform:translateY(0);}
+.compare-bar-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:0.05em;line-height:1.3;}
+.compare-bar-count b{color:#4fc3f7;font-size:13px;}
+.compare-bar-hint{display:block;font-size:8px;color:rgba(255,157,0,0.7);margin-top:1px;letter-spacing:0.04em;}
+.compare-bar-actions{display:flex;gap:8px;flex-shrink:0;}
+.compare-bar-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.08em;padding:8px 14px;border-radius:4px;cursor:pointer;text-transform:uppercase;border:1px solid rgba(255,255,255,0.15);background:transparent;color:var(--dim);}
+.compare-bar-btn.primary{color:#05080f;background:#4fc3f7;border-color:#4fc3f7;box-shadow:0 0 12px rgba(79,195,247,0.4);font-weight:700;}
+.compare-bar-btn.primary:disabled{opacity:0.3;box-shadow:none;pointer-events:none;color:var(--dim);background:rgba(255,255,255,0.05);}
+
+/* ── ЭКРАН СРАВНЕНИЯ (полноэкранный оверлей) ── */
+.compare-overlay{position:fixed;inset:0;z-index:999;overflow-y:auto;background:var(--bg);opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.compare-overlay.open{opacity:1;pointer-events:all;}
+.compare-header{position:relative;z-index:5;padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.compare-close{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);padding:5px 12px;border-radius:3px;cursor:pointer;letter-spacing:0.1em;margin-bottom:14px;display:inline-block;}
+.compare-title{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;}
+.compare-legend{display:flex;flex-wrap:wrap;gap:10px 16px;}
+.compare-legend-item{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--white);}
+.compare-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;}
+.compare-legend-faction{font-family:'Share Tech Mono',monospace;font-size:8px;font-weight:400;color:var(--dim);text-transform:uppercase;letter-spacing:0.05em;}
+.compare-radar-wrap{display:flex;justify-content:center;padding:20px 16px 4px;}
+.compare-section-title{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;padding:18px 16px 10px;}
+.compare-stats{padding:0 16px 50px;display:flex;flex-direction:column;gap:16px;}
+.compare-stat-row{display:flex;flex-direction:column;gap:4px;}
+.compare-stat-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;}
+
+/* ── «Перетягивание каната»: один трек, поделённый цветами пропорционально значениям ── */
+.compare-tug-nums{display:flex;}
+.compare-tug-nums span{flex-shrink:0;text-align:center;font-family:'Share Tech Mono',monospace;font-weight:900;font-size:14px;line-height:1.4;text-shadow:0 0 8px currentColor;transition:width 0.3s;}
+.compare-tug-track{display:flex;height:22px;border-radius:11px;overflow:hidden;background:rgba(255,255,255,0.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);}
+.compare-tug-seg{height:100%;transition:width 0.3s;border-right:1px solid rgba(5,8,15,0.55);position:relative;}
+.compare-tug-seg:last-child{border-right:none;}
+.compare-tug-seg.winner{box-shadow:inset 0 0 14px rgba(255,255,255,0.4);}
+.compare-tug-seg.winner::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.12);}
+.compare-empty-note{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);text-align:center;padding:8px 16px 0;letter-spacing:0.05em;}
+
 /* ── КОМПАКТНАЯ 5 колонок ── */
 .char-card.compact-5{display:flex;flex-direction:column;}
 .char-card.compact-5 .card-body{padding:0;display:flex;flex-direction:column;flex:1;}
@@ -215,90 +269,3 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .dossier-bottom{height:40px;}
 .art-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d1020,#05080f);}
 .art-placeholder-text{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(var(--dr),0.15);letter-spacing:3px;}
-
-/* ══════════════════════════════════════════
-   РЕЖИМ «ПО 1» — КАРУСЕЛИ ПО ТИРАМ
-   ══════════════════════════════════════════ */
-
-.carousel-mode{position:relative;z-index:10;padding:8px 0 40px;display:none;}
-.carousel-mode.active{display:block;}
-
-.carousel-group-switch{display:flex;align-items:center;gap:6px;padding:6px 16px 12px;}
-.carousel-group-btn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.12em;padding:4px 12px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--dim);border-radius:3px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
-.carousel-group-btn.active{color:#4fc3f7;border-color:rgba(79,195,247,0.5);background:rgba(79,195,247,0.06);}
-
-.carousel-shelf{margin-bottom:28px;}
-.carousel-shelf-header{display:flex;align-items:baseline;gap:8px;padding:0 16px 8px;}
-.carousel-shelf-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgb(var(--shelf-cr,79,195,247));text-shadow:0 0 12px rgba(var(--shelf-cr,79,195,247),0.4);}
-.carousel-shelf-count{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;}
-.carousel-shelf-line{height:1px;margin:0 16px 10px;background:linear-gradient(90deg,rgb(var(--shelf-cr,79,195,247)),transparent);opacity:0.25;}
-
-.carousel-track{display:flex;gap:12px;padding:4px 16px 12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;align-items:stretch;}
-.carousel-track::-webkit-scrollbar{display:none;}
-.carousel-track--single{justify-content:center;}
-
-.c-card{flex-shrink:0;width:calc(100vw - 56px);max-width:360px;scroll-snap-align:start;position:relative;border-radius:10px;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
-
-.c-card-face,.c-card-back{position:relative;width:100%;border-radius:10px;overflow:hidden;}
-.c-card-face{min-height:68vh;}
-.c-card-back{display:none;padding:18px 16px 20px;background:linear-gradient(160deg,#060d1a,#05080f);border:1px solid rgba(var(--cr),0.4);min-height:68vh;max-height:90vh;overflow-y:auto;flex-direction:column;gap:10px;}
-.c-card.flipped .c-card-face{display:none;}
-.c-card.flipped .c-card-back{display:flex;}
-
-.c-card-bar{height:3px;background:linear-gradient(90deg,transparent,rgb(var(--cr)),transparent);opacity:0.8;}
-.c-card[data-tier="legendary"] .c-card-bar{background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 6s linear infinite;}
-.c-card[data-tier="divine"] .c-card-bar{height:4px;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 5s linear infinite;}
-
-.c-card-photo{position:relative;width:100%;height:68vh;overflow:hidden;background:linear-gradient(160deg,#0d1a2a,#05080f);}
-.c-card-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-.c-card-photo-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 25%,rgba(5,8,15,0.6) 55%,rgba(5,8,15,0.97) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px 16px;z-index:3;}
-
-.c-card-no-photo{width:100%;height:68vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0d1a2a,#05080f);}
-.c-card-no-photo-text{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(79,195,247,0.12);letter-spacing:3px;}
-
-.c-card-sys{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.45);letter-spacing:0.18em;margin-bottom:3px;}
-.c-card-name{font-size:22px;font-weight:700;color:var(--white);letter-spacing:0.03em;line-height:1.1;margin-bottom:2px;}
-.c-card-role{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px;line-height:1.3;}
-.c-card-bottom-row{display:flex;align-items:center;justify-content:space-between;}
-.c-card-threat{display:flex;align-items:baseline;gap:4px;}
-.c-card-threat-num{font-family:'Share Tech Mono',monospace;font-size:32px;font-weight:900;color:rgb(var(--cr));text-shadow:0 0 16px rgba(var(--cr),0.6);line-height:1;}
-.c-card-threat-lbl{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.5);letter-spacing:0.12em;}
-.c-card-status{display:flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.1em;background:rgba(var(--sc-rgb,93,217,138),0.08);border:1px solid rgba(var(--sc-rgb,93,217,138),0.2);padding:3px 9px;border-radius:3px;color:var(--sc,#5dd98a);}
-.c-card-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--sc,#5dd98a);box-shadow:0 0 6px var(--sc,#5dd98a);animation:pulse 2s infinite;}
-
-.c-face-bottom{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px;}
-.c-face-faction{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgb(var(--cr));border:1px solid rgba(var(--cr),0.3);padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:0.06em;}
-.c-face-radar{opacity:0.85;}
-
-.c-back-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
-.c-back-sys{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(var(--cr),0.45);letter-spacing:0.15em;margin-bottom:2px;}
-.c-back-name{font-size:20px;font-weight:700;color:var(--white);line-height:1.1;}
-.c-back-role{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;}
-.c-back-faction{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgb(var(--cr));border:1px solid rgba(var(--cr),0.3);padding:2px 8px;border-radius:2px;white-space:nowrap;margin-top:2px;}
-.c-back-quote{font-style:italic;font-size:12px;color:rgba(var(--cr),0.75);border-left:2px solid rgba(var(--cr),0.35);padding-left:10px;line-height:1.55;}
-.c-back-stats{display:flex;flex-direction:column;gap:6px;}
-.c-back-stat-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.1em;margin-bottom:4px;text-transform:uppercase;}
-.c-stat-row{display:flex;align-items:center;gap:6px;}
-.c-stat-name{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--dim);width:72px;flex-shrink:0;text-transform:uppercase;}
-.c-stat-track{flex:1;height:2px;background:rgba(var(--cr),0.1);border-radius:2px;overflow:hidden;}
-.c-stat-fill{height:100%;background:linear-gradient(90deg,rgba(var(--cr),0.5),rgb(var(--cr)));border-radius:2px;}
-.c-stat-val{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;color:rgb(var(--cr));width:14px;text-align:right;flex-shrink:0;}
-.c-back-bio{font-size:11px;color:var(--text);line-height:1.65;flex:1;}
-.c-back-abilities{display:flex;flex-wrap:wrap;gap:4px;}
-.c-back-chip{font-family:'Share Tech Mono',monospace;font-size:8px;padding:2px 7px;border:1px solid rgba(var(--cr),0.25);border-radius:3px;color:rgb(var(--cr));background:rgba(var(--cr),0.05);}
-.c-back-meta{display:flex;gap:8px;flex-wrap:wrap;}
-.c-back-meta-cell{background:rgba(var(--cr),0.04);border:1px solid rgba(var(--cr),0.1);border-radius:4px;padding:5px 9px;flex:1;min-width:80px;}
-.c-back-meta-label{font-family:'Share Tech Mono',monospace;font-size:6px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2px;}
-.c-back-meta-val{font-size:11px;font-weight:600;color:var(--white);}
-
-.c-card[data-tier="rare"]{outline:1px solid rgba(var(--cr),0.12);outline-offset:2px;}
-.c-card[data-tier="epic"]{outline:1px solid rgba(var(--cr),0.2);outline-offset:3px;}
-.c-card[data-tier="legendary"]{outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:legendaryGlow 7s ease-in-out infinite;}
-.c-card[data-tier="divine"]{outline:2px solid rgba(var(--cr),0.5);outline-offset:4px;animation:divineGlow 5s ease-in-out infinite;}
-
-@keyframes cGlitchOut{0%{transform:none;filter:none;opacity:1;}15%{transform:translateX(-5px);filter:hue-rotate(90deg) brightness(1.8);}30%{transform:translateX(7px) scaleX(1.02);filter:hue-rotate(-60deg) brightness(1.4);clip-path:polygon(0 25%,100% 25%,100% 50%,0 50%);}45%{transform:translateX(-3px);filter:brightness(2.5);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);}60%{transform:translateX(4px) skewX(-2deg);filter:hue-rotate(180deg) brightness(1.6);}75%{transform:translateX(-1px);filter:brightness(3);clip-path:polygon(0 70%,100% 70%,100% 85%,0 85%);}90%{transform:none;filter:brightness(1.2);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);}100%{opacity:0;transform:none;filter:none;}}
-@keyframes cGlitchIn{0%{opacity:0;transform:translateX(10px);filter:hue-rotate(90deg) brightness(2);}20%{opacity:1;transform:translateX(-6px);filter:hue-rotate(-30deg) brightness(1.5);}40%{transform:translateX(4px) skewX(1deg);filter:brightness(1.3);}60%{transform:translateX(-2px);filter:brightness(1.1);}80%{transform:translateX(1px);filter:none;}100%{opacity:1;transform:none;filter:none;}}
-.c-card.glitch-out .c-card-face{animation:cGlitchOut 0.45s forwards;}
-.c-card.glitch-in .c-card-back{animation:cGlitchIn 0.4s forwards;}
-.c-card.glitch-out-rev .c-card-back{animation:cGlitchOut 0.45s forwards;}
-.c-card.glitch-in-rev .c-card-face{animation:cGlitchIn 0.4s forwards;}

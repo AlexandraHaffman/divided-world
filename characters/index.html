@@ -45,7 +45,22 @@
   <div id="dossier-inner"></div>
 </div>
 
+<!-- НОВОЕ: панель выбора для режима сравнения (3 колонки) -->
+<div class="compare-bar" id="compare-bar">
+  <div class="compare-bar-count" id="compare-bar-count">Выбрано: <b>0</b></div>
+  <div class="compare-bar-actions">
+    <button class="compare-bar-btn" onclick="clearCompareSelection()">Очистить</button>
+    <button class="compare-bar-btn primary" id="compare-bar-go" onclick="openCompare()" disabled>Сравнить →</button>
+  </div>
+</div>
+
+<!-- НОВОЕ: полноэкранный оверлей сравнения -->
+<div class="compare-overlay" id="compare-overlay">
+  <div id="compare-inner"></div>
+</div>
+
 <script src="dossier.js"></script>
+<script src="compare-mode.js"></script>
 <script src="carousel-mode.js"></script>
 
 </body>
