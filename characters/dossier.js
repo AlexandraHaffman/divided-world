@@ -272,9 +272,9 @@ function openDossier(idx) {
       <div class="dossier-art-gradient"></div>
       <div class="dossier-art-info">
         <div class="dossier-sys">SYS.RECORD // ПЕРСОНАЖ #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
-        <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</div>
-        <div class="dossier-name">${c.name}</div>
+        <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</<div class="dossier-name">${c.name}</div>
         <div class="dossier-role">${c.role || ''}</div>
+${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ РАСШИРЕННОЕ ДОСЬЕ</a>` : ''}
         <div class="dossier-hero-row">
           <div class="dossier-threat-big">
             <div class="dossier-threat-num">${c.threat_level || 0}</div>
