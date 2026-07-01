@@ -240,6 +240,8 @@ function openDossier(idx) {
   const sc = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
   const scRgb = sc === "#5dd98a" ? "93,217,138" : sc === "#f87171" ? "248,113,113" : "100,116,139";
   const artUrl = c.avatar_web_full || c.avatar_web || "";
+  const legendaryPages = { "Элиас Дорн": "dorn" }; // сюда будем добавлять новых легендарок
+  const legendarySlug = legendaryPages[c.name];
   const stats = c.stats || {};
   const statRows = [
     ["Интеллект",         stats.intelligence],
