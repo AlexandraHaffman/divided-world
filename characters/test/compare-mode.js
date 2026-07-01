@@ -89,6 +89,35 @@ function buildCompareRadar(chars, cols, size = 220) {
   </svg>`;
 }
 
+/* Одна строка сравнения в стиле «перетягивание каната»:
+   единый трек делится на сегменты пропорционально значениям.
+   Для 2 персонажей это выглядит как классическое перетягивание,
+   для 3+ — как честное деление по долям. */
+function buildTugRow(label, vals, cols) {
+  const sum = vals.reduce((a, b) => a + b, 0);
+  const max = Math.max(...vals);
+  const tie = vals.every(v => v === max);
+  const allZero = sum <= 0;
+
+  const numsHTML = vals.map((v, i) => {
+    const w = allZero ? (100 / vals.length) : (v / sum * 100);
+    return `<span style="width:${w}%;color:rgb(${cols[i].rgb})">${v}</span>`;
+  }).join("");
+
+  const segsHTML = vals.map((v, i) => {
+    const w = allZero ? (100 / vals.length) : (v / sum * 100);
+    const isWinner = v === max && max > 0 && !tie;
+    const bg = allZero ? "rgba(255,255,255,0.08)" : `rgb(${cols[i].rgb})`;
+    return `<div class="compare-tug-seg${isWinner ? ' winner' : ''}" style="width:${w}%;background:${bg}"></div>`;
+  }).join("");
+
+  return `<div class="compare-stat-row">
+    <div class="compare-stat-label">${label}</div>
+    <div class="compare-tug-nums">${numsHTML}</div>
+    <div class="compare-tug-track">${segsHTML}</div>
+  </div>`;
+}
+
 /* Открыть полноэкранный оверлей сравнения */
 function openCompare() {
   if (compareSelection.length < 2) return;
@@ -112,20 +141,7 @@ function openCompare() {
 
   const statsHTML = statDefs.map(([label, key]) => {
     const vals = chars.map(c => (c.stats && c.stats[key]) || 0);
-    const max = Math.max(...vals);
-    const tie = vals.every(v => v === max);
-    const valsHTML = chars.map((c, i) => {
-      const v = vals[i];
-      const isWinner = v === max && max > 0 && !tie;
-      return `<div class="compare-stat-val${isWinner ? ' winner' : ''}" style="color:rgb(${cols[i].rgb})">
-        <div class="compare-stat-num">${v}</div>
-        <div class="compare-stat-track"><div class="compare-stat-fill" style="width:${Math.min(v/10*100,100)}%;background:rgb(${cols[i].rgb})"></div></div>
-      </div>`;
-    }).join("");
-    return `<div class="compare-stat-row">
-      <div class="compare-stat-label">${label}</div>
-      <div class="compare-stat-vals">${valsHTML}</div>
-    </div>`;
+    return buildTugRow(label, vals, cols);
   }).join("");
 
   document.getElementById("compare-inner").innerHTML = `

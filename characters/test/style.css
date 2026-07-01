@@ -91,8 +91,17 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compact-3-name{font-size:11px;font-weight:700;color:var(--white);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 /* ── ВЫДЕЛЕНИЕ ДЛЯ СРАВНЕНИЯ (3 колонки) ── */
-.char-card.compact-3.cmp-selected{border-color:rgb(var(--cr));box-shadow:0 0 0 2px rgba(var(--cr),0.45),0 6px 18px rgba(var(--cr),0.25);}
-.char-card.compact-3.cmp-selected .compact-3-photo::before{content:'';position:absolute;inset:0;background:rgba(var(--cr),0.14);z-index:2;}
+/* Вся фотография тонируется цветом фракции персонажа + яркая рамка.
+   Маленькая галочка в углу оставлена как быстрый индикатор — при желании уберём. */
+.char-card.compact-3.cmp-selected{border-color:rgb(var(--cr));box-shadow:0 0 0 2px rgba(var(--cr),0.55),0 8px 22px rgba(var(--cr),0.35);}
+.char-card.compact-3.cmp-selected .compact-3-photo::before{
+  content:'';position:absolute;inset:0;z-index:2;
+  background:linear-gradient(165deg,rgba(var(--cr),0.55) 0%,rgba(var(--cr),0.28) 45%,rgba(var(--cr),0.08) 100%);
+  mix-blend-mode:hard-light;
+}
+.char-card.compact-3.cmp-selected .compact-3-photo::after{
+  background:linear-gradient(to bottom,rgba(var(--cr),0.1) 0%,rgba(5,8,15,0.85) 100%);
+}
 .cmp-check{position:absolute;top:6px;right:6px;z-index:6;width:20px;height:20px;border-radius:50%;background:rgba(5,8,15,0.55);border:1.5px solid rgba(var(--cr),0.5);display:flex;align-items:center;justify-content:center;transition:all 0.15s;backdrop-filter:blur(2px);}
 .char-card.compact-3.cmp-selected .cmp-check{background:rgb(var(--cr));border-color:rgb(var(--cr));box-shadow:0 0 10px rgba(var(--cr),0.6);}
 .cmp-check::after{content:'';width:9px;height:5px;border-left:2px solid #05080f;border-bottom:2px solid #05080f;transform:rotate(-45deg) translateY(-1px);opacity:0;transition:opacity 0.15s;}
@@ -121,16 +130,18 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compare-legend-faction{font-family:'Share Tech Mono',monospace;font-size:8px;font-weight:400;color:var(--dim);text-transform:uppercase;letter-spacing:0.05em;}
 .compare-radar-wrap{display:flex;justify-content:center;padding:20px 16px 4px;}
 .compare-section-title{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;padding:18px 16px 10px;}
-.compare-stats{padding:0 16px 50px;display:flex;flex-direction:column;gap:12px;}
-.compare-stat-row{display:flex;flex-direction:column;gap:5px;}
+.compare-stats{padding:0 16px 50px;display:flex;flex-direction:column;gap:16px;}
+.compare-stat-row{display:flex;flex-direction:column;gap:4px;}
 .compare-stat-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;}
-.compare-stat-vals{display:flex;gap:8px;}
-.compare-stat-val{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:7px 9px;transition:all 0.2s;}
-.compare-stat-val.winner{border-color:currentColor;box-shadow:0 0 12px currentColor;background:rgba(255,255,255,0.04);}
-.compare-stat-num{font-family:'Share Tech Mono',monospace;font-size:16px;font-weight:900;line-height:1;}
-.compare-stat-val.winner .compare-stat-num{text-shadow:0 0 10px currentColor;}
-.compare-stat-track{height:3px;border-radius:2px;background:rgba(255,255,255,0.08);overflow:hidden;}
-.compare-stat-fill{height:100%;border-radius:2px;}
+
+/* ── «Перетягивание каната»: один трек, поделённый цветами пропорционально значениям ── */
+.compare-tug-nums{display:flex;}
+.compare-tug-nums span{flex-shrink:0;text-align:center;font-family:'Share Tech Mono',monospace;font-weight:900;font-size:14px;line-height:1.4;text-shadow:0 0 8px currentColor;transition:width 0.3s;}
+.compare-tug-track{display:flex;height:22px;border-radius:11px;overflow:hidden;background:rgba(255,255,255,0.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);}
+.compare-tug-seg{height:100%;transition:width 0.3s;border-right:1px solid rgba(5,8,15,0.55);position:relative;}
+.compare-tug-seg:last-child{border-right:none;}
+.compare-tug-seg.winner{box-shadow:inset 0 0 14px rgba(255,255,255,0.4);}
+.compare-tug-seg.winner::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.12);}
 .compare-empty-note{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);text-align:center;padding:8px 16px 0;letter-spacing:0.05em;}
 
 /* ── КОМПАКТНАЯ 5 колонок ── */
