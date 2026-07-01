@@ -24,6 +24,9 @@ const STATUS_COLORS = {
 const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
 
+/* ── Легендарные страницы: имя персонажа → slug HTML-файла в characters/legendary/ ── */
+const LEGENDARY_PAGES = { "Элиас Дорн": "dorn" };
+
 let allChars = [], currentFiltered = [], currentCols = 2;
 
 /* ── Утилиты ── */
@@ -240,8 +243,7 @@ function openDossier(idx) {
   const sc = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
   const scRgb = sc === "#5dd98a" ? "93,217,138" : sc === "#f87171" ? "248,113,113" : "100,116,139";
   const artUrl = c.avatar_web_full || c.avatar_web || "";
-  const legendaryPages = { "Элиас Дорн": "dorn" }; // сюда будем добавлять новых легендарок
-  const legendarySlug = legendaryPages[c.name];
+  const legendarySlug = LEGENDARY_PAGES[c.name];
   const stats = c.stats || {};
   const statRows = [
     ["Интеллект",         stats.intelligence],
@@ -272,9 +274,10 @@ function openDossier(idx) {
       <div class="dossier-art-gradient"></div>
       <div class="dossier-art-info">
         <div class="dossier-sys">SYS.RECORD // ПЕРСОНАЖ #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
-        <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</<div class="dossier-name">${c.name}</div>
+        <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</div>
+        <div class="dossier-name">${c.name}</div>
         <div class="dossier-role">${c.role || ''}</div>
-${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ РАСШИРЕННОЕ ДОСЬЕ</a>` : ''}
+        ${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ РАСШИРЕННОЕ ДОСЬЕ</a>` : ''}
         <div class="dossier-hero-row">
           <div class="dossier-threat-big">
             <div class="dossier-threat-num">${c.threat_level || 0}</div>
