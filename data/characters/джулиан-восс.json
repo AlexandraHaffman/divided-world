@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Главный судмедэксперт и консультант Минздрава",
-  "birthdate": "18.01",
+  "birthdate": "23.01",
   "faction": "Единая Америка",
   "subfaction": "Министерство здравоохранения",
   "location": "Восточный регион",
@@ -38,5 +38,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8D663F65-D8AA-4202-B7A0-7E509DDD9FAF.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E0533A9D-0E18-4897-B259-86E4D727CF20.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-01T12:54:38.504Z"
+  "exported_at": "2026-07-01T12:54:48.438Z"
 }
