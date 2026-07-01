@@ -265,6 +265,7 @@ function openDossier(idx) {
     <div class="dossier-art" style="--dr:${col.rgb}">
       <div class="dossier-faction-bar" ${factionBarStyle}></div>
       <button class="dossier-close" onclick="closeDossier()">← АРХИВ</button>
+      ${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ РАСШИРЕННОЕ ДОСЬЕ</a>` : ''}
       <div class="dossier-art-bg">
         ${artUrl
           ? `<img src="${artUrl}" alt="${c.name}">`
@@ -277,7 +278,6 @@ function openDossier(idx) {
         <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</div>
         <div class="dossier-name">${c.name}</div>
         <div class="dossier-role">${c.role || ''}</div>
-        ${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ РАСШИРЕННОЕ ДОСЬЕ</a>` : ''}
         <div class="dossier-hero-row">
           <div class="dossier-threat-big">
             <div class="dossier-threat-num">${c.threat_level || 0}</div>
