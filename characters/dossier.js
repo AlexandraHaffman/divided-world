@@ -25,7 +25,7 @@ const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
 
 /* ── Легендарные страницы: имя персонажа → slug HTML-файла в characters/legendary/ ── */
-const LEGENDARY_PAGES = { "Элиас Дорн": "dorn" };
+const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn" };
 
 let allChars = [], currentFiltered = [], currentCols = 2;
 
