@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Элиас Дорн | Собранный макет</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0d0f; --dr:58,92,74; --paper:#c9c3b4; --paper-dim:#8a8579;
+    --ink:#e6e8e6; --dim:#6b7370; --amber:201,151,39;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;
+    padding-bottom:34px;}
+
+  img{display:block;width:100%;height:100%;object-fit:cover;}
+
+  /* ── ТИКЕР СУМРАКА ── */
+  .sumrak-ticker{position:fixed;left:0;right:0;bottom:0;height:34px;z-index:50;
+    background:rgba(10,8,5,0.94);border-top:1px solid rgba(var(--amber),0.3);
+    display:flex;align-items:center;overflow:hidden;}
+  .sumrak-ticker-label{flex-shrink:0;padding:0 10px;font-size:8px;color:rgb(var(--amber));
+    letter-spacing:0.1em;border-right:1px solid rgba(var(--amber),0.25);height:100%;display:flex;align-items:center;gap:5px;}
+  .sumrak-dot{width:5px;height:5px;border-radius:50%;background:rgb(var(--amber));animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .sumrak-ticker-track{white-space:nowrap;font-size:10px;color:rgba(var(--amber),0.8);
+    animation:tickerLeft 35s linear infinite;padding-left:100%;}
+  @keyframes tickerLeft{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
+  section{padding:24px 16px;position:relative;}
+  .sec-eyebrow{font-size:9px;letter-spacing:0.18em;color:rgba(var(--dr),0.85);margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;}
+  .sec-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right, rgba(var(--dr),0.4), transparent);}
+
+  /* ── 1. СТАТУС/РОЛЬ ── */
+  .hero{min-height:75vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;
+    padding:0;overflow:hidden;}
+  .hero-img-wrap{position:absolute;inset:0;}
+  .hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,13,15,0.1) 0%,transparent 35%,rgba(10,13,15,0.85) 75%,rgba(10,13,15,1) 100%);}
+  .hero-content{position:relative;z-index:2;padding:20px 16px 24px;}
+  .hero-name{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,0.8);}
+  .hero-role{font-size:12px;color:rgba(var(--dr),1);letter-spacing:0.08em;margin:6px 0 14px;}
+  .hero-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:var(--dim);}
+  .hero-meta b{color:rgb(var(--dr));font-size:14px;}
+
+  /* ── ВСТУПЛЕНИЕ ── */
+  .intro-text{font-family:'Spectral',serif;font-size:13px;color:var(--paper);line-height:1.7;}
+  .intro-text b{color:rgb(var(--dr));font-weight:600;}
+
+  /* ── 2. БИОГРАФИЯ ── */
+  .bio-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;padding:4px 16px 12px;margin:0 -16px;scrollbar-width:none;}
+  .bio-track::-webkit-scrollbar{display:none;}
+  .bio-card{flex-shrink:0;width:78vw;max-width:320px;scroll-snap-align:start;
+    border:1px solid rgba(var(--dr),0.35);border-radius:8px;overflow:hidden;background:rgba(var(--dr),0.03);}
+  .bio-card-photo{aspect-ratio:4/5;}
+  .bio-card-body{padding:12px;}
+  .bio-period{font-size:9px;color:rgba(var(--dr),0.8);letter-spacing:0.1em;}
+  .bio-title{font-family:'JetBrains Mono',monospace;font-size:14px;margin:3px 0 6px;}
+  .bio-text{font-size:10px;color:var(--paper-dim);line-height:1.5;}
+  .bio-hint{text-align:center;font-size:8px;color:var(--dim);letter-spacing:0.1em;margin-top:4px;}
+
+  /* ── 3. НАПРАВЛЕНИЯ ── */
+  .direction-inline{font-family:'Spectral',serif;font-size:12px;color:var(--paper);line-height:1.7;margin-bottom:14px;}
+  .direction-inline b{color:rgb(var(--dr));font-weight:600;font-style:normal;}
+  .direction-inline .accent{color:rgba(var(--amber),0.9);}
+
+  /* ── ОСОБНЯК ── */
+  .mansion-wrap{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin-bottom:10px;}
+  .mansion-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,13,15,0.6),transparent 50%);}
+
+  /* ── 4. ОТНОШЕНИЯ ── */
+  .relation{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start;}
+  .relation-portrait{width:56px;height:56px;flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid rgba(var(--dr),0.4);}
+  .relation-name{font-family:'JetBrains Mono',monospace;font-size:13px;}
+  .relation-text{font-size:11px;color:var(--paper-dim);line-height:1.5;margin-top:2px;}
+
+  /* ── 5. ФИЛОСОФИЯ ── */
+  .philosophy-wrap{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin-bottom:14px;}
+  .philosophy-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,13,15,0.5),transparent 40%);}
+  .philosophy-quote{font-family:'Spectral',serif;font-style:italic;font-size:14px;color:rgba(var(--dr),0.9);
+    border-left:2px solid rgba(var(--dr),0.4);padding-left:12px;line-height:1.6;margin:14px 0;}
+
+  .footer-note{text-align:center;font-size:9px;color:var(--dim);padding:24px 16px 20px;}
+</style>
+</head>
+<body>
+
+<!-- ТИКЕР СУМРАКА -->
+<div class="sumrak-ticker">
+  <div class="sumrak-ticker-label"><span class="sumrak-dot"></span>СУМРАК</div>
+  <div class="sumrak-ticker-track">
+    Оливер Бенкс — Аркан: рецензия отклонена &nbsp;·&nbsp; Хелен Марч — Уайтхолл: перевод согласован &nbsp;·&nbsp; Ричард Пембертон — Хайлендс: кафедра сменена &nbsp;·&nbsp; Софи Рэдклифф — Призрачный флот: судно «Кассандра» доставило груз &nbsp;·&nbsp;
+  </div>
+</div>
+
+<!-- 1. СТАТУС / РОЛЬ -->
+<section class="hero">
+  <div class="hero-img-wrap"><img src="assets/hero.png" alt="Элиас Дорн"></div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-name">ЭЛИАС ДОРН</div>
+    <div class="hero-role">Спаситель Аркадии · Сектор Внутренних Дел и Экономики</div>
+    <div class="hero-meta">
+      <span><b>50</b> THREAT</span>
+      <span>АРКАДИЯ</span>
+      <span>СТАТУС: АКТИВЕН</span>
+    </div>
+  </div>
+</section>
+
+<!-- ВСТУПЛЕНИЕ -->
+<section>
+  <div class="sec-eyebrow">ПОЛОЖЕНИЕ</div>
+  <div class="intro-text">Сегодня Дорн — один из трёх Спасителей, курирующий <b>внутренние дела и экономику</b> Аркадии. Он держит хрупкое равновесие между наукой Вистнера и силой Грея — тихо, методично, без публичных жестов. Люди на улицах узнают его редко: он предпочитает, чтобы такие встречи случались как можно реже.</div>
+</section>
+
+<!-- 2. БИОГРАФИЯ -->
+<section>
+  <div class="sec-eyebrow">БИОГРАФИЯ</div>
+  <div class="bio-track">
+    <div class="bio-card">
+      <div class="bio-card-photo"><img src="assets/bio1.png" alt="Молодой Дорн"></div>
+      <div class="bio-card-body">
+        <div class="bio-period">до 2015</div>
+        <div class="bio-title">Криминальное восхождение</div>
+        <div class="bio-text">До Коллапса имя Дорна не значилось ни в одном официальном реестре...</div>
+      </div>
+    </div>
+    <div class="bio-card">
+      <div class="bio-card-photo"><img src="assets/bio2.png" alt="Дорн и Вистнер"></div>
+      <div class="bio-card-body">
+        <div class="bio-period">2015–2019</div>
+        <div class="bio-title">Работа с Вистнером</div>
+        <div class="bio-text">Пути пересеклись в разгар «Санитарной Очистки»...</div>
+      </div>
+    </div>
+    <div class="bio-card">
+      <div class="bio-card-photo"><img src="assets/bio3.png" alt="Бегство в Британию"></div>
+      <div class="bio-card-body">
+        <div class="bio-period">2019–2020</div>
+        <div class="bio-title">Бегство в Британию</div>
+        <div class="bio-text">Крах системы начался с ошибки одного человека...</div>
+      </div>
+    </div>
+    <div class="bio-card">
+      <div class="bio-card-photo"><img src="assets/bio4.png" alt="Коллапс и Аркадия"></div>
+      <div class="bio-card-body">
+        <div class="bio-period">2026–2030</div>
+        <div class="bio-title">Коллапс и Аркадия</div>
+        <div class="bio-text">Ошибка пришла с гостеприимства...</div>
+      </div>
+    </div>
+    <div class="bio-card">
+      <div class="bio-card-photo"><img src="assets/bio5.png" alt="Дорн сегодня"></div>
+      <div class="bio-card-body">
+        <div class="bio-period">настоящее время</div>
+        <div class="bio-title">Спаситель Аркадии</div>
+        <div class="bio-text">Сегодня он курирует Сектор Внутренних Дел...</div>
+      </div>
+    </div>
+  </div>
+  <div class="bio-hint">‹ СВАЙП ДЛЯ СЛЕДУЮЩЕГО ЭТАПА ›</div>
+</section>
+
+<!-- 3. НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ -->
+<section>
+  <div class="sec-eyebrow">ЧЕМ ОН ЗАНЯТ</div>
+  <div class="direction-inline">По утрам, ещё до совещаний, Дорн проходит по набережной пешком — старая привычка видеть город, а не сводки о нём. К девяти он уже в Административном корпусе, где решает вопросы, которые на бумаге называются «внутренней политикой», а на деле — не дать Аркадии превратиться в то, от чего она бежала.</div>
+  <div class="direction-inline">Раз в несколько недель он читает лекции в <b>Аркане</b> — интеллектуальном ядре страны. Его семинары по социальной динамике синтетических субъектов известны тем, что студенты уходят с них с новыми вопросами, а не готовыми ответами.</div>
+  <div class="direction-inline">Тише всего он говорит о собственном детище — сети <span class="accent">«Сумрак»</span>. Агенты вроде тех, чьи доклады идут строкой внизу экрана прямо сейчас, работают не арестами, а перестановками: рецензия не прошла, перевод согласован, конференция перенесена. Никто не замечает руки.</div>
+  <div class="direction-inline">И где-то на периферии — тайная дипломатия: каналы с Джамахирией Нар и Австралийским Протекторатом, которые держат Аркадию на плаву, пока остальной мир воюет.</div>
+
+  <div class="mansion-wrap">
+    <img src="assets/mansion.png" alt="Особняк в Глазго">
+    <div class="mansion-gradient"></div>
+  </div>
+  <div class="direction-inline" style="font-size:11px;color:var(--paper-dim);">Дом в Глазго — там, где он бывает реже всего. Одно окно, свет только в нём, всё остальное — тьма и дождь.</div>
+</section>
+
+<!-- 4. ОТНОШЕНИЯ -->
+<section>
+  <div class="sec-eyebrow">ОТНОШЕНИЯ</div>
+
+  <div class="relation">
+    <div class="relation-portrait"><img src="assets/wistner.png" alt="Курт Вистнер"></div>
+    <div>
+      <div class="relation-name">Курт Вистнер</div>
+      <div class="relation-text">Соратник и оппонент одновременно — спорят о методах, но ни разу не предали друг друга.</div>
+    </div>
+  </div>
+
+  <div class="relation">
+    <div class="relation-portrait"><img src="assets/grey.png" alt="Юлиан Грей"></div>
+    <div>
+      <div class="relation-name">Юлиан Грей</div>
+      <div class="relation-text">Пережил его покушение — и выбрал милосердие вместо казни.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. ФИЛОСОФИЯ -->
+<section>
+  <div class="sec-eyebrow">ФИЛОСОФИЯ</div>
+  <div class="philosophy-wrap">
+    <img src="assets/philosophy.png" alt="Трещины">
+    <div class="philosophy-gradient"></div>
+  </div>
+  <div class="philosophy-quote">«За дверью не ждут. То, что зовёт вас наружу, — не дом»</div>
+  <div class="intro-text">[Развёрнутый текст о прагматичном пацифизме и цене решений, которые никто не видит]</div>
+</section>
+
+<div class="footer-note">СОБРАННЫЙ МАКЕТ · ВСЕ ИЗОБРАЖЕНИЯ ФИНАЛЬНЫЕ</div>
+
+</body>
+</html>
