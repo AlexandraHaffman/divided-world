@@ -11,10 +11,8 @@
     --ink:#e6e8e6; --dim:#6b7370; --amber:201,151,39;
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;
-    position:relative;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;position:relative;}
 
-  /* ── ЛЁГКАЯ ФОНОВАЯ ТЕКСТУРА ── */
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
     background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 4px);}
   body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
@@ -29,16 +27,19 @@
     display:flex;align-items:center;gap:8px;}
   .sec-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right, rgba(var(--dr),0.4), transparent);}
 
-  /* ── 1. СТАТУС/РОЛЬ ── */
-  .hero{min-height:75vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;
+  /* ── 1. ШАПКА ── */
+  .hero{min-height:78vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;
     padding:0;overflow:hidden;z-index:2;}
   .hero-img-wrap{position:absolute;inset:0;}
   .hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,13,15,0.1) 0%,transparent 35%,rgba(10,13,15,0.85) 75%,rgba(10,13,15,1) 100%);}
-  .hero-content{position:relative;z-index:2;padding:20px 16px 24px;}
+  .hero-threat{position:absolute;top:16px;right:16px;z-index:3;text-align:right;}
+  .hero-threat-num{font-family:'Share Tech Mono',monospace;font-size:34px;font-weight:900;color:rgb(var(--dr));
+    line-height:1;text-shadow:0 0 18px rgba(var(--dr),0.6);}
+  .hero-threat-lbl{font-size:8px;color:rgba(var(--dr),0.6);letter-spacing:0.15em;}
+  .hero-content{position:relative;z-index:2;padding:20px 16px 28px;}
   .hero-name{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,0.8);}
-  .hero-role{font-size:14px;color:rgba(var(--dr),1);letter-spacing:0.06em;margin:8px 0 16px;}
-  .hero-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--dim);}
-  .hero-meta b{color:rgb(var(--dr));font-size:16px;}
+  .hero-role{font-size:14px;color:rgba(var(--dr),1);letter-spacing:0.04em;margin:8px 0 6px;line-height:1.5;}
+  .hero-birth{font-size:12px;color:var(--dim);letter-spacing:0.04em;}
 
   /* ── ВСТУПЛЕНИЕ ── */
   .intro-text{font-family:'Spectral',serif;font-size:16px;color:var(--paper);line-height:1.75;}
@@ -49,54 +50,50 @@
     -webkit-overflow-scrolling:touch;padding:4px 16px 12px;margin:0 -16px;scrollbar-width:none;}
   .bio-track::-webkit-scrollbar{display:none;}
   .bio-card{flex-shrink:0;width:80vw;max-width:340px;scroll-snap-align:start;
-    border:1px solid rgba(var(--dr),0.35);border-radius:8px;overflow:hidden;background:rgba(var(--dr),0.03);}
-  .bio-card-photo{aspect-ratio:4/5;}
-  .bio-card-body{padding:14px;}
+    border:1px solid rgba(var(--dr),0.35);border-radius:8px;overflow:hidden;background:rgba(var(--dr),0.03);
+    display:flex;flex-direction:column;}
+  .bio-card-photo{aspect-ratio:4/5;position:relative;flex-shrink:0;}
+  .bio-card-photo::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(to bottom,transparent 60%,rgba(6,8,9,0.92) 100%);pointer-events:none;}
+  .bio-quote{position:absolute;bottom:10px;left:12px;right:12px;z-index:2;
+    font-family:'Spectral',serif;font-style:italic;font-size:12px;color:rgba(220,225,218,0.92);
+    line-height:1.5;text-shadow:0 1px 6px rgba(0,0,0,0.9);border-left:2px solid rgba(var(--dr),0.7);padding-left:8px;}
+  .bio-card-body{padding:12px 14px;height:170px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .bio-card-body::-webkit-scrollbar{width:3px;}
+  .bio-card-body::-webkit-scrollbar-thumb{background:rgba(var(--dr),0.4);border-radius:2px;}
   .bio-period{font-size:11px;color:rgba(var(--dr),0.85);letter-spacing:0.1em;}
-  .bio-title{font-family:'JetBrains Mono',monospace;font-size:17px;margin:4px 0 8px;}
+  .bio-title{font-family:'JetBrains Mono',monospace;font-size:16px;margin:4px 0 8px;}
   .bio-text{font-size:13px;color:var(--paper-dim);line-height:1.6;}
-  .bio-hint{text-align:center;font-size:10px;color:var(--dim);letter-spacing:0.1em;margin-top:6px;}
 
-  /* ── 3. НАПРАВЛЕНИЯ — раскрывающиеся карточки ── */
+  /* ── 3. ПОРТФЕЛЬ ── */
   .dir-card{border:1px solid rgba(var(--dr),0.3);border-radius:8px;margin-bottom:12px;
     background:linear-gradient(135deg,rgba(var(--dr),0.06),rgba(var(--dr),0.01));overflow:hidden;
     transition:border-color 0.2s,box-shadow 0.2s;}
-  .dir-card.amber{border-color:rgba(var(--amber),0.35);
-    background:linear-gradient(135deg,rgba(var(--amber),0.07),rgba(var(--amber),0.01));}
   .dir-card.open{border-color:rgba(var(--dr),0.6);box-shadow:0 0 16px rgba(var(--dr),0.15);}
-  .dir-card.amber.open{border-color:rgba(var(--amber),0.6);box-shadow:0 0 16px rgba(var(--amber),0.15);}
-  .dir-card-head{display:flex;align-items:center;gap:12px;padding:14px 14px;cursor:pointer;-webkit-user-select:none;user-select:none;}
+  .dir-card-head{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;-webkit-user-select:none;user-select:none;}
   .dir-icon{font-size:14px;color:rgb(var(--dr));flex-shrink:0;text-shadow:0 0 8px rgba(var(--dr),0.6);}
-  .dir-card.amber .dir-icon{color:rgb(var(--amber));text-shadow:0 0 8px rgba(var(--amber),0.6);}
   .dir-title{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--ink);}
-  .dir-teaser{font-size:11px;color:var(--dim);letter-spacing:0.02em;margin-top:2px;}
+  .dir-teaser{font-size:11px;color:var(--dim);margin-top:2px;}
   .dir-chevron{margin-left:auto;font-size:12px;color:var(--dim);transition:transform 0.25s;flex-shrink:0;}
   .dir-card.open .dir-chevron{transform:rotate(180deg);color:rgb(var(--dr));}
-  .dir-card.amber.open .dir-chevron{color:rgb(var(--amber));}
   .dir-card-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
-  .dir-card.open .dir-card-body{max-height:300px;}
+  .dir-card.open .dir-card-body{max-height:420px;}
   .dir-card-body-inner{padding:12px 14px 16px;font-family:'Spectral',serif;font-size:14px;color:var(--paper);
-    line-height:1.7;border-top:1px dashed rgba(var(--dr),0.2);margin:0;}
+    line-height:1.7;border-top:1px dashed rgba(var(--dr),0.2);}
 
-  /* ── МОДУЛЬ СУМРАКА (компактный, в потоке) ── */
-  .sumrak-module{border:1px solid rgba(var(--amber),0.4);border-radius:8px;overflow:hidden;cursor:pointer;
-    background:linear-gradient(135deg,rgba(var(--amber),0.09),rgba(var(--amber),0.02));
-    transition:box-shadow 0.2s,border-color 0.2s;-webkit-user-select:none;user-select:none;}
-  .sumrak-module:active{box-shadow:0 0 18px rgba(var(--amber),0.25);border-color:rgba(var(--amber),0.7);}
-  .sumrak-module-head{display:flex;align-items:center;gap:10px;padding:14px 14px 10px;}
-  .sumrak-module-dot{width:7px;height:7px;border-radius:50%;background:rgb(var(--amber));flex-shrink:0;
-    box-shadow:0 0 8px rgb(var(--amber));animation:pulse 1.6s infinite;}
-  .sumrak-module-title{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:rgb(var(--amber));}
-  .sumrak-module-sub{font-size:10px;color:var(--dim);letter-spacing:0.04em;margin-top:2px;}
-  .sumrak-module-arrow{margin-left:auto;font-size:16px;color:rgba(var(--amber),0.6);flex-shrink:0;}
-  .sumrak-module-live{padding:0 14px 14px;font-size:12px;color:rgba(var(--amber),0.85);line-height:1.6;
-    border-top:1px dashed rgba(var(--amber),0.25);margin:0 14px;padding-top:10px;min-height:44px;}
+  /* ── СКРЫТЫЙ УЗЕЛ СУМРАКА ── */
+  .sumrak-node{margin-top:20px;padding:8px 4px;cursor:pointer;-webkit-user-select:none;user-select:none;
+    display:flex;align-items:center;gap:8px;opacity:0.45;transition:opacity 0.3s;}
+  .sumrak-node:active{opacity:0.9;}
+  .sumrak-node-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(var(--amber),0.35),transparent);}
+  .sumrak-node-dot{width:4px;height:4px;border-radius:50%;background:rgba(var(--amber),0.7);
+    animation:pulse 3s infinite;flex-shrink:0;}
 
   /* ── МОДАЛЬНОЕ ОКНО СУМРАКА ── */
-  .sumrak-modal{position:fixed;inset:0;z-index:200;background:rgba(4,5,6,0.85);backdrop-filter:blur(3px);
+  .sumrak-modal{position:fixed;inset:0;z-index:200;background:rgba(4,5,6,0.88);backdrop-filter:blur(3px);
     opacity:0;pointer-events:none;transition:opacity 0.25s;display:flex;align-items:flex-end;}
   .sumrak-modal.open{opacity:1;pointer-events:all;}
-  .sumrak-modal-inner{background:var(--bg);width:100%;max-height:85vh;border-radius:16px 16px 0 0;
+  .sumrak-modal-inner{background:var(--bg);width:100%;max-height:88vh;border-radius:16px 16px 0 0;
     overflow-y:auto;position:relative;transform:translateY(16px);transition:transform 0.25s;}
   .sumrak-modal.open .sumrak-modal-inner{transform:translateY(0);}
   .sumrak-modal-close{position:absolute;top:12px;right:12px;z-index:5;width:30px;height:30px;border-radius:50%;
@@ -108,56 +105,67 @@
     font-size:24px;font-weight:700;color:rgb(var(--amber));text-shadow:0 0 20px rgba(var(--amber),0.5);}
   .sumrak-modal-desc{padding:16px;font-family:'Spectral',serif;font-size:14px;color:var(--paper);line-height:1.7;}
   .sumrak-modal-section-title{font-size:10px;letter-spacing:0.18em;color:rgba(var(--amber),0.8);
-    padding:4px 16px 10px;text-transform:uppercase;}
+    padding:4px 16px 10px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+  .sumrak-live-dot{width:5px;height:5px;border-radius:50%;background:rgb(var(--amber));animation:pulse 1.6s infinite;}
   .sumrak-modal-list{padding:0 16px 24px;display:flex;flex-direction:column;gap:10px;}
-  .sumrak-report{border-left:2px solid rgba(var(--amber),0.35);padding-left:10px;}
+  .sumrak-report{border-left:2px solid rgba(var(--amber),0.35);padding-left:10px;animation:reportIn 0.4s both;}
+  @keyframes reportIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
   .sumrak-report-meta{font-size:9px;color:var(--dim);letter-spacing:0.05em;margin-bottom:2px;}
   .sumrak-report-meta b{color:rgba(var(--amber),0.9);}
   .sumrak-report-text{font-size:12px;color:var(--paper-dim);line-height:1.5;}
-  .dir-card.amber .dir-card-body-inner{border-top-color:rgba(var(--amber),0.25);}
 
   /* ── ОСОБНЯК ── */
   .mansion-wrap{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin:18px 0 12px;}
   .mansion-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,13,15,0.6),transparent 50%);}
+  .mansion-text{font-family:'Spectral',serif;font-size:15px;color:var(--paper);line-height:1.75;}
+  .mansion-photos{display:flex;gap:10px;margin-top:12px;}
+  .mansion-photo-slot{flex:1;aspect-ratio:4/3;border:1px dashed rgba(var(--dr),0.45);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(var(--dr),0.8);
+    text-align:center;padding:8px;letter-spacing:0.05em;background:rgba(var(--dr),0.04);}
 
-  /* ── 4. ОТНОШЕНИЯ ── */
+  /* ── ОТНОШЕНИЯ ── */
   .relation{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
   .relation-portrait{width:64px;height:64px;flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid rgba(var(--dr),0.4);}
+  .relation-portrait.empty{display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:rgba(var(--dr),0.7);
+    background:rgba(var(--dr),0.07);}
   .relation-name{font-family:'JetBrains Mono',monospace;font-size:16px;}
   .relation-text{font-size:14px;color:var(--paper-dim);line-height:1.6;margin-top:4px;}
 
-  /* ── 5. ФИЛОСОФИЯ ── */
-  .philosophy-wrap{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin-bottom:16px;}
-  .philosophy-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,13,15,0.5),transparent 40%);}
+  /* ── ФИЛОСОФИЯ ── */
+  .philosophy-slot{position:relative;aspect-ratio:16/9;border:1px dashed rgba(var(--dr),0.45);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(var(--dr),0.8);
+    text-align:center;padding:14px;letter-spacing:0.05em;background:rgba(var(--dr),0.04);margin-bottom:16px;}
   .philosophy-quote{font-family:'Spectral',serif;font-style:italic;font-size:17px;color:rgba(var(--dr),0.9);
     border-left:2px solid rgba(var(--dr),0.4);padding-left:14px;line-height:1.65;margin:16px 0;}
+  .philosophy-text{font-family:'Spectral',serif;font-size:15px;color:var(--paper);line-height:1.75;}
 
   .footer-note{text-align:center;font-size:10px;color:var(--dim);padding:24px 16px 20px;position:relative;z-index:2;}
   .ph{border:1px dashed rgba(var(--dr),0.5);background:rgba(var(--dr),0.05);color:rgba(var(--dr),0.9);
-    font-size:11px;letter-spacing:0.05em;padding:12px;text-align:center;border-radius:4px;}
+    font-size:11px;padding:12px;text-align:center;border-radius:4px;}
 </style>
 </head>
 <body>
 
-<!-- 1. СТАТУС / РОЛЬ -->
+<!-- 1. ШАПКА -->
 <section class="hero">
   <div class="hero-img-wrap"><img src="D29D6EAA-35BE-4719-A061-5C8FFC1269CA.png" alt="Элиас Дорн"></div>
   <div class="hero-gradient"></div>
+  <div class="hero-threat">
+    <div class="hero-threat-num">50</div>
+    <div class="hero-threat-lbl">THREAT</div>
+  </div>
   <div class="hero-content">
     <div class="hero-name">ЭЛИАС ДОРН</div>
-    <div class="hero-role">Спаситель Аркадии · Сектор Внутренних Дел и Экономики</div>
-    <div class="hero-meta">
-      <span><b>50</b> THREAT</span>
-      <span>АРКАДИЯ</span>
-      <span>СТАТУС: АКТИВЕН</span>
-    </div>
+    <div class="hero-role">Спаситель Аркадии с 7 мая 2030 года<br>Сектор Внутренних Дел и Экономики</div>
+    <div class="hero-birth">р. 12 февраля 1975, старая Европа</div>
   </div>
 </section>
 
 <!-- ВСТУПЛЕНИЕ -->
 <section>
   <div class="sec-eyebrow">ПОЛОЖЕНИЕ</div>
-  <div class="intro-text">Сегодня Дорн — один из трёх Спасителей, курирующий <b>внутренние дела и экономику</b> Аркадии. Он держит хрупкое равновесие между наукой Вистнера и силой Грея — тихо, методично, без публичных жестов. Люди на улицах узнают его редко: он предпочитает, чтобы такие встречи случались как можно реже.</div>
+  <div class="intro-text">Из троих Спасителей Дорн — тот, чья работа наименее заметна и наиболее необратима. Вистнер строит машины, Грей охраняет стены — Дорн строит <b>саму ткань общества</b>: экономику без дефицита, город без преступности, порядок, который держится не на страхе, а на том, что нарушать его попросту невыгодно. Его узнают на улицах — и уступают дорогу не из страха, а из уважения, которое сложно объяснить тому, кто не жил при старом мире.</div>
 </section>
 
 <!-- 2. БИОГРАФИЯ -->
@@ -166,10 +174,9 @@
   <div class="bio-track" id="bioTrack">
     <div class="ph">Загрузка биографии...</div>
   </div>
-  <div class="bio-hint">‹ СВАЙП ДЛЯ СЛЕДУЮЩЕГО ЭТАПА ›</div>
 </section>
 
-<!-- 3. НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ -->
+<!-- 3. ПОРТФЕЛЬ -->
 <section>
   <div class="sec-eyebrow">ПОРТФЕЛЬ</div>
 
@@ -178,23 +185,23 @@
       <span class="dir-icon">◆</span>
       <div>
         <div class="dir-title">Внутренняя политика</div>
-        <div class="dir-teaser">Административный корпус, каждое утро</div>
+        <div class="dir-teaser">Сектор Внутренних Дел и Экономики</div>
       </div>
       <span class="dir-chevron">▾</span>
     </div>
-    <div class="dir-card-body"><div class="dir-card-body-inner">По утрам, ещё до совещаний, Дорн проходит по набережной пешком — старая привычка видеть город, а не сводки о нём. К девяти он уже в Административном корпусе, где решает вопросы, которые на бумаге называются «внутренней политикой», а на деле — не дать Аркадии превратиться в то, от чего она бежала.</div></div>
+    <div class="dir-card-body"><div class="dir-card-body-inner">Именно Дорн выстроил распределительную экономику Аркадии — систему, в которой дефицит невозможен по определению, а преступность исчезла не из-за наказаний, а из-за отсутствия почвы: украсть то, что и так распределяется по потребности, попросту бессмысленно. Его сектор курирует всё — от квот синт-заводов Уэльса до аттестационных комиссий. Ни одного бунта за тридцать лет — статистика, которой не может похвастаться ни одно государство старого мира.</div></div>
   </div>
 
   <div class="dir-card" onclick="this.classList.toggle('open')">
     <div class="dir-card-head">
       <span class="dir-icon">◆</span>
       <div>
-        <div class="dir-title">Аркан</div>
-        <div class="dir-teaser">Лекции раз в несколько недель</div>
+        <div class="dir-title">Профессорская деятельность</div>
+        <div class="dir-teaser">Аркан · курс «Анатомия компромисса»</div>
       </div>
       <span class="dir-chevron">▾</span>
     </div>
-    <div class="dir-card-body"><div class="dir-card-body-inner">Раз в несколько недель он читает лекции в Аркане — интеллектуальном ядре страны. Его семинары по социальной динамике синтетических субъектов известны тем, что студенты уходят с них с новыми вопросами, а не готовыми ответами.</div></div>
+    <div class="dir-card-body"><div class="dir-card-body-inner">В Аркане Дорн читает авторский курс «Анатомия компромисса» — о переговорах, цене решений и социальной динамике синтетических субъектов. Попасть на его семинары сложнее, чем на любую другую дисциплину: запись закрывается за минуты. Он единственный из Спасителей, кто регулярно спорит со студентами лицом к лицу — и считает эти споры лучшей проверкой собственных решений.</div></div>
   </div>
 
   <div class="dir-card" onclick="this.classList.toggle('open')">
@@ -202,34 +209,36 @@
       <span class="dir-icon">◆</span>
       <div>
         <div class="dir-title">Внешняя политика</div>
-        <div class="dir-teaser">На периферии, вне документов</div>
+        <div class="dir-teaser">Альянс Выживания · Призрачный флот</div>
       </div>
       <span class="dir-chevron">▾</span>
     </div>
-    <div class="dir-card-body"><div class="dir-card-body-inner">И где-то на периферии — каналы с Джамахирией Нар и Австралийским Протекторатом, которые держат Аркадию на плаву, пока остальной мир воюет. Ни один из этих каналов не значится ни в одном официальном документе.</div></div>
+    <div class="dir-card-body"><div class="dir-card-body-inner">В 2031 году Дорн лично установил тайный канал с Джамахирией Нар — нефть в обход всех блокад. Годом позже запустил «Призрачный флот»: замаскированные торговые суда, которые официально не существуют. В 2046-м закрепил «Пакт Выживания» с Австралийским Протекторатом — технологии в обмен на разведданные. Всё это вместе называется «Альянсом Выживания», и ни одна из этих строк не значится ни в одном официальном документе Аркадии.</div></div>
   </div>
 
-  <!-- ── МОДУЛЬ СУМРАКА ── -->
-  <div class="sumrak-module" onclick="openSumrakModal()">
-    <div class="sumrak-module-head">
-      <span class="sumrak-module-dot"></span>
-      <div>
-        <div class="sumrak-module-title">Сумрак</div>
-        <div class="sumrak-module-sub">собственная сеть · тап для подробностей</div>
-      </div>
-      <span class="sumrak-module-arrow">→</span>
-    </div>
-    <div class="sumrak-module-live" id="sumrakLive">Загрузка...</div>
+  <!-- скрытый узел Сумрака -->
+  <div class="sumrak-node" onclick="openSumrakModal()">
+    <div class="sumrak-node-line"></div>
+    <div class="sumrak-node-dot"></div>
+    <div class="sumrak-node-line"></div>
   </div>
+</section>
 
+<!-- ОСОБНЯК -->
+<section>
+  <div class="sec-eyebrow">РЕЗИДЕНЦИЯ</div>
   <div class="mansion-wrap">
     <img src="917AA5DA-4C45-4F17-A9A8-C460D6F62F2E.png" alt="Особняк в Глазго">
     <div class="mansion-gradient"></div>
   </div>
-  <div class="direction-inline">Дом в Глазго — там, где он бывает реже всего, но никогда не продаёт и не сдаёт. Персонал минимальный, визиты не афишируются. Одно освещённое окно на верхнем этаже — кабинет, где он читает то, что не проходит через Сумрак. Соседи знают его как немногословного джентльмена, который никогда не бывает дома по выходным.</div>
+  <div class="mansion-text">Особняк викторианской постройки в Парк-Серкус — старом квартале Глазго на холме над Кельвингроув, где дома пережили и старый мир, и Коллапс. Дорн выкупил его в первый же год Аркадии и с тех пор не продаёт, не сдаёт и не перестраивает. Персонал — три человека, все с двадцатилетним стажем и подпиской, которую никто никогда не проверял: не было нужды. Одно освещённое окно на верхнем этаже — кабинет, где он читает то, что не проходит через «Сумрак». Соседи знают его как немногословного джентльмена, который никогда не бывает дома по выходным.</div>
+  <div class="mansion-photos">
+    <div class="mansion-photo-slot">ТУТ БУДЕТ ФОТО:<br>рабочий кабинет</div>
+    <div class="mansion-photo-slot">ТУТ БУДЕТ ФОТО:<br>особняк, другой ракурс</div>
+  </div>
 </section>
 
-<!-- 4. ОТНОШЕНИЯ -->
+<!-- ОТНОШЕНИЯ -->
 <section>
   <div class="sec-eyebrow">ОТНОШЕНИЯ</div>
 
@@ -248,17 +257,30 @@
       <div class="relation-text">Пережил его покушение — и выбрал милосердие вместо казни.</div>
     </div>
   </div>
+
+  <div class="relation">
+    <div class="relation-portrait empty">АБ</div>
+    <div>
+      <div class="relation-name">Алистер Бер</div>
+      <div class="relation-text">Главный торговый партнёр — генерал Австралийского Протектората. Взаимная выгода без взаимного доверия.</div>
+    </div>
+  </div>
+
+  <div class="relation">
+    <div class="relation-portrait empty">АО</div>
+    <div>
+      <div class="relation-name">Артур Остерман</div>
+      <div class="relation-text">Идейный враг ещё со времён старого мира — охотился на Дорна тогда и не простил ему нового статуса сейчас.</div>
+    </div>
+  </div>
 </section>
 
-<!-- 5. ФИЛОСОФИЯ -->
+<!-- ФИЛОСОФИЯ -->
 <section>
   <div class="sec-eyebrow">ФИЛОСОФИЯ</div>
-  <div class="philosophy-wrap">
-    <img src="B5FFF944-867E-4E0E-BDE3-42F62A53EE06.png" alt="Трещины">
-    <div class="philosophy-gradient"></div>
-  </div>
+  <div class="philosophy-slot">ТУТ БУДЕТ ФОТО:<br>Дорн у окна кабинета, со спины, город за стеклом</div>
   <div class="philosophy-quote">«За дверью не ждут. То, что зовёт вас наружу, — не дом»</div>
-  <div class="intro-text">Дорн не верит в открытые двери. Прагматичный пацифизм для него — не про доброту, а про расчёт: конфликт стоит дороже компромисса почти всегда, а насилие — это провал переговоров, а не их продолжение. Он не открывает купол миру и не закрывает его наглухо — он решает, кому именно и когда позволено войти, и делает это тихо, до того, как вопрос вообще становится вопросом. Цену этих решений не видит никто, кроме него самого — ни благодарности, ни признания, только результат: Аркадия стоит ещё один день.</div>
+  <div class="philosophy-text">Прагматичный пацифизм Дорна — не про доброту, а про расчёт: конфликт почти всегда стоит дороже компромисса. Он не открывает купол миру и не запирает его наглухо — он решает, кому и когда позволено войти. Тихо. До того, как вопрос станет вопросом.</div>
 </section>
 
 <div class="footer-note">ДОСЬЕ ПРОДОЛЖАЕТ ПОПОЛНЯТЬСЯ</div>
@@ -273,8 +295,8 @@
       <div class="sumrak-modal-art-title">СУМРАК</div>
     </div>
     <div class="sumrak-modal-desc">Сеть мягкой социальной инженерии, созданная и лично курируемая Дорном. Агенты не арестовывают — они делают так, чтобы неугодным «не повезло»: рецензия не прошла, перевод согласован, конференция перенесена. Никто не замечает руки.</div>
-    <div class="sumrak-modal-section-title">ЖИВЫЕ ДОКЛАДЫ</div>
-    <div class="sumrak-modal-list" id="sumrakModalList">Загрузка...</div>
+    <div class="sumrak-modal-section-title"><span class="sumrak-live-dot"></span>КАНАЛ АКТИВЕН</div>
+    <div class="sumrak-modal-list" id="sumrakModalList"></div>
   </div>
 </div>
 
@@ -286,6 +308,13 @@ const BIO_IMAGES = [
   'E3B36AFF-10DA-4E74-A53F-296BA9F0213D.png',
   '2D3A333F-D45B-453A-8454-7B1ABD86EAEC.png'
 ];
+const BIO_QUOTES = [
+  '«В порту не спрашивают, кто ты. Спрашивают, что ты слышал»',
+  '«Я не верил Вистнеру. Я верил цифрам в его отчётах»',
+  '«Мы не бежали. Мы выбирали, где встать, когда всё рухнет»',
+  '«Порядок не провозглашают. Его наводят»',
+  '«Аркадия держится не на куполе»'
+];
 
 fetch('dorn-biography.json')
   .then(r => r.json())
@@ -293,7 +322,10 @@ fetch('dorn-biography.json')
     const track = document.getElementById('bioTrack');
     track.innerHTML = data.biography.map((stage, i) => `
       <div class="bio-card">
-        <div class="bio-card-photo"><img src="${BIO_IMAGES[i] || ''}" alt="${stage.title}"></div>
+        <div class="bio-card-photo">
+          <img src="${BIO_IMAGES[i] || ''}" alt="${stage.title}">
+          <div class="bio-quote">${BIO_QUOTES[i] || ''}</div>
+        </div>
         <div class="bio-card-body">
           <div class="bio-period">${stage.period}</div>
           <div class="bio-title">${stage.title}</div>
@@ -316,52 +348,52 @@ function shuffle(arr) {
 
 function nowLabel() {
   const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mo = String(now.getMonth() + 1).padStart(2, '0');
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
-  return `${hh}:${mm} · 2061`;
+  return `${dd}.${mo}.2061 · ${hh}:${mm}`;
 }
 
 let SUMRAK_REPORTS = [];
-let sumrakCycleIndex = 0;
+let sumrakFeedIndex = 0;
+let sumrakInterval = null;
 
-function cycleSumrakLive() {
-  const el = document.getElementById('sumrakLive');
+function reportHTML(r) {
+  return `<div class="sumrak-report">
+    <div class="sumrak-report-meta"><b>${nowLabel()}</b> · ${r.from} · ${r.location}</div>
+    <div class="sumrak-report-text">${r.text}</div>
+  </div>`;
+}
+
+function pushSumrakReport() {
   if (!SUMRAK_REPORTS.length) return;
-  const r = SUMRAK_REPORTS[sumrakCycleIndex % SUMRAK_REPORTS.length];
-  el.style.opacity = 0;
-  setTimeout(() => {
-    el.innerHTML = `<b>[${nowLabel()}]</b> ${r.from} — ${r.location}<br>${r.text}`;
-    el.style.opacity = 1;
-  }, 250);
-  sumrakCycleIndex++;
+  const list = document.getElementById('sumrakModalList');
+  const r = SUMRAK_REPORTS[sumrakFeedIndex % SUMRAK_REPORTS.length];
+  list.insertAdjacentHTML('afterbegin', reportHTML(r));
+  while (list.children.length > 15) list.removeChild(list.lastChild);
+  sumrakFeedIndex++;
 }
 
 function openSumrakModal() {
   const list = document.getElementById('sumrakModalList');
-  list.innerHTML = SUMRAK_REPORTS.map(r => `
-    <div class="sumrak-report">
-      <div class="sumrak-report-meta"><b>${nowLabel()}</b> · ${r.from} · ${r.location}</div>
-      <div class="sumrak-report-text">${r.text}</div>
-    </div>`).join('');
+  list.innerHTML = '';
+  for (let i = 0; i < 5; i++) pushSumrakReport();
   document.getElementById('sumrakModal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  if (sumrakInterval) clearInterval(sumrakInterval);
+  sumrakInterval = setInterval(pushSumrakReport, 5000);
 }
 function closeSumrakModal() {
   document.getElementById('sumrakModal').classList.remove('open');
   document.body.style.overflow = '';
+  if (sumrakInterval) { clearInterval(sumrakInterval); sumrakInterval = null; }
 }
 
 fetch('dorn-sumrak-feed.json')
   .then(r => r.json())
-  .then(data => {
-    SUMRAK_REPORTS = shuffle(data.reports);
-    document.getElementById('sumrakLive').style.transition = 'opacity 0.25s';
-    cycleSumrakLive();
-    setInterval(cycleSumrakLive, 4000);
-  })
-  .catch(() => {
-    document.getElementById('sumrakLive').textContent = 'Не удалось загрузить dorn-sumrak-feed.json';
-  });
+  .then(data => { SUMRAK_REPORTS = shuffle(data.reports); })
+  .catch(() => { SUMRAK_REPORTS = []; });
 </script>
 </body>
 </html>
