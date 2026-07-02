@@ -319,13 +319,21 @@ function toggleSound() {
   const btn = document.getElementById('soundBtn');
   soundOn = !soundOn;
   if (soundOn) {
-    audio.play().catch(() => {});
-    btn.textContent = '🔊';
+    audio.play().then(() => {
+      btn.textContent = '🔊';
+    }).catch((err) => {
+      alert('Не удалось запустить звук: ' + err.message);
+      soundOn = false;
+      btn.textContent = '🔇';
+    });
   } else {
     audio.pause();
     btn.textContent = '🔇';
   }
 }
+document.getElementById('themeAudio').addEventListener('error', () => {
+  console.log('Audio failed to load. Check theme.mp3 exists next to dorn.html.');
+});
 
 const BIO_IMAGES = [
   '9DA579D8-6C9E-43F9-9247-31993D0626F6.png',
