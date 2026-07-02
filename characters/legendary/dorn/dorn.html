@@ -42,6 +42,10 @@
   .hero-threat-num{font-family:'Share Tech Mono',monospace;font-size:34px;font-weight:900;color:rgb(var(--dr));
     line-height:1;text-shadow:0 0 18px rgba(var(--dr),0.6);}
   .hero-threat-lbl{font-size:8px;color:rgba(var(--dr),0.6);letter-spacing:0.15em;}
+  .sound-btn{margin-top:10px;background:rgba(5,8,9,0.5);border:1px solid rgba(var(--dr),0.5);
+    color:rgb(var(--dr));font-size:16px;width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);cursor:pointer;
+    margin-left:auto;}
   .hero-content{position:relative;z-index:2;padding:20px 16px 28px;}
   .hero-name{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,0.8);}
   .hero-role{font-size:14px;color:rgba(var(--dr),1);letter-spacing:0.04em;margin:8px 0 6px;line-height:1.5;}
@@ -157,7 +161,9 @@
   <div class="hero-threat">
     <div class="hero-threat-num">50</div>
     <div class="hero-threat-lbl">THREAT</div>
+    <button class="sound-btn" id="soundBtn" onclick="toggleSound()">🔇</button>
   </div>
+  <audio id="themeAudio" src="theme.mp3" loop></audio>
   <div class="hero-content">
     <div class="hero-name">ЭЛИАС ДОРН</div>
     <div class="hero-role">Спаситель Аркадии с 7 мая 2030 года<br>Сектор Внутренних Дел и Экономики</div>
@@ -307,6 +313,20 @@
 </div>
 
 <script>
+let soundOn = false;
+function toggleSound() {
+  const audio = document.getElementById('themeAudio');
+  const btn = document.getElementById('soundBtn');
+  soundOn = !soundOn;
+  if (soundOn) {
+    audio.play().catch(() => {});
+    btn.textContent = '🔊';
+  } else {
+    audio.pause();
+    btn.textContent = '🔇';
+  }
+}
+
 const BIO_IMAGES = [
   '9DA579D8-6C9E-43F9-9247-31993D0626F6.png',
   '049C8CDB-7534-471B-A0D4-F228106F6588.png',
