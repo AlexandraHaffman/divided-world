@@ -9,6 +9,7 @@
   :root{
     --bg:#0a0d0f; --dr:58,92,74; --paper:#c9c3b4; --paper-dim:#8a8579;
     --ink:#e6e8e6; --dim:#6b7370; --amber:201,151,39;
+    --ber:160,82,45; --tenebrion:255,157,0;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;position:relative;}
@@ -26,6 +27,11 @@
   .sec-eyebrow{font-size:11px;letter-spacing:0.18em;color:rgba(var(--dr),0.9);margin-bottom:12px;
     display:flex;align-items:center;gap:8px;}
   .sec-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right, rgba(var(--dr),0.4), transparent);}
+
+  /* ── КНОПКА ВЫЙТИ ── */
+  .exit-btn{position:fixed;top:14px;left:14px;z-index:100;font-family:'Share Tech Mono',monospace;
+    font-size:10px;color:rgba(255,255,255,0.6);background:rgba(5,8,9,0.6);border:1px solid rgba(255,255,255,0.15);
+    padding:6px 12px;border-radius:3px;text-decoration:none;letter-spacing:0.08em;backdrop-filter:blur(4px);}
 
   /* ── 1. ШАПКА ── */
   .hero{min-height:78vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;
@@ -77,17 +83,20 @@
   .dir-chevron{margin-left:auto;font-size:12px;color:var(--dim);transition:transform 0.25s;flex-shrink:0;}
   .dir-card.open .dir-chevron{transform:rotate(180deg);color:rgb(var(--dr));}
   .dir-card-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
-  .dir-card.open .dir-card-body{max-height:420px;}
+  .dir-card.open .dir-card-body{max-height:520px;}
   .dir-card-body-inner{padding:12px 14px 16px;font-family:'Spectral',serif;font-size:14px;color:var(--paper);
     line-height:1.7;border-top:1px dashed rgba(var(--dr),0.2);}
+  .dir-card-body-inner p{margin:0 0 12px;}
+  .dir-card-body-inner p:last-child{margin-bottom:0;}
 
-  /* ── СКРЫТЫЙ УЗЕЛ СУМРАКА ── */
-  .sumrak-node{margin-top:20px;padding:8px 4px;cursor:pointer;-webkit-user-select:none;user-select:none;
-    display:flex;align-items:center;gap:8px;opacity:0.45;transition:opacity 0.3s;}
-  .sumrak-node:active{opacity:0.9;}
-  .sumrak-node-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(var(--amber),0.35),transparent);}
-  .sumrak-node-dot{width:4px;height:4px;border-radius:50%;background:rgba(var(--amber),0.7);
-    animation:pulse 3s infinite;flex-shrink:0;}
+  /* ── УЗЕЛ СУМРАКА (заметнее, но не подписан) ── */
+  .sumrak-node{margin-top:20px;padding:10px 14px;cursor:pointer;-webkit-user-select:none;user-select:none;
+    display:flex;align-items:center;gap:10px;border:1px solid rgba(var(--amber),0.22);border-radius:6px;
+    background:rgba(var(--amber),0.03);transition:border-color 0.25s,background 0.25s;}
+  .sumrak-node:active{border-color:rgba(var(--amber),0.5);background:rgba(var(--amber),0.08);}
+  .sumrak-node-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(var(--amber),0.4),transparent);}
+  .sumrak-node-dot{width:5px;height:5px;border-radius:50%;background:rgba(var(--amber),0.8);
+    animation:pulse 3s infinite;flex-shrink:0;box-shadow:0 0 6px rgba(var(--amber),0.5);}
 
   /* ── МОДАЛЬНОЕ ОКНО СУМРАКА ── */
   .sumrak-modal{position:fixed;inset:0;z-index:200;background:rgba(4,5,6,0.88);backdrop-filter:blur(3px);
@@ -119,33 +128,27 @@
   .mansion-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,13,15,0.6),transparent 50%);}
   .mansion-text{font-family:'Spectral',serif;font-size:15px;color:var(--paper);line-height:1.75;}
   .mansion-photos{display:flex;gap:10px;margin-top:12px;}
-  .mansion-photo-slot{flex:1;aspect-ratio:4/3;border:1px dashed rgba(var(--dr),0.45);border-radius:6px;
-    display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(var(--dr),0.8);
-    text-align:center;padding:8px;letter-spacing:0.05em;background:rgba(var(--dr),0.04);}
+  .mansion-photo-slot{flex:1;aspect-ratio:4/3;border:1px solid rgba(var(--dr),0.4);border-radius:6px;overflow:hidden;}
 
   /* ── ОТНОШЕНИЯ ── */
   .relation{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
-  .relation-portrait{width:64px;height:64px;flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid rgba(var(--dr),0.4);}
-  .relation-portrait.empty{display:flex;align-items:center;justify-content:center;
-    font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:rgba(var(--dr),0.7);
-    background:rgba(var(--dr),0.07);}
-  .relation-name{font-family:'JetBrains Mono',monospace;font-size:16px;}
+  .relation-portrait{width:64px;height:64px;flex-shrink:0;border-radius:6px;overflow:hidden;border:2px solid rgba(var(--rc),0.55);}
+  .relation-name{font-family:'JetBrains Mono',monospace;font-size:16px;color:rgb(var(--rc));}
   .relation-text{font-size:14px;color:var(--paper-dim);line-height:1.6;margin-top:4px;}
 
   /* ── ФИЛОСОФИЯ ── */
-  .philosophy-slot{position:relative;aspect-ratio:16/9;border:1px dashed rgba(var(--dr),0.45);border-radius:6px;
-    display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(var(--dr),0.8);
-    text-align:center;padding:14px;letter-spacing:0.05em;background:rgba(var(--dr),0.04);margin-bottom:16px;}
+  .philosophy-photo{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin-bottom:16px;}
   .philosophy-quote{font-family:'Spectral',serif;font-style:italic;font-size:17px;color:rgba(var(--dr),0.9);
     border-left:2px solid rgba(var(--dr),0.4);padding-left:14px;line-height:1.65;margin:16px 0;}
   .philosophy-text{font-family:'Spectral',serif;font-size:15px;color:var(--paper);line-height:1.75;}
 
-  .footer-note{text-align:center;font-size:10px;color:var(--dim);padding:24px 16px 20px;position:relative;z-index:2;}
   .ph{border:1px dashed rgba(var(--dr),0.5);background:rgba(var(--dr),0.05);color:rgba(var(--dr),0.9);
     font-size:11px;padding:12px;text-align:center;border-radius:4px;}
 </style>
 </head>
 <body>
+
+<a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
 
 <!-- 1. ШАПКА -->
 <section class="hero">
@@ -158,7 +161,7 @@
   <div class="hero-content">
     <div class="hero-name">ЭЛИАС ДОРН</div>
     <div class="hero-role">Спаситель Аркадии с 7 мая 2030 года<br>Сектор Внутренних Дел и Экономики</div>
-    <div class="hero-birth">р. 12 февраля 1975, старая Европа</div>
+    <div class="hero-birth">р. 12 февраля 1975, Гамбург</div>
   </div>
 </section>
 
@@ -189,7 +192,7 @@
       </div>
       <span class="dir-chevron">▾</span>
     </div>
-    <div class="dir-card-body"><div class="dir-card-body-inner">Именно Дорн выстроил распределительную экономику Аркадии — систему, в которой дефицит невозможен по определению, а преступность исчезла не из-за наказаний, а из-за отсутствия почвы: украсть то, что и так распределяется по потребности, попросту бессмысленно. Его сектор курирует всё — от квот синт-заводов Уэльса до аттестационных комиссий. Ни одного бунта за тридцать лет — статистика, которой не может похвастаться ни одно государство старого мира.</div></div>
+    <div class="dir-card-body"><div class="dir-card-body-inner">Спасители правят по очереди, и в свой срок Дорн неизменно фокусируется на одном: экономике без дефицита и порядке без страха. Он выстроил распределительную систему Аркадии — где украсть то, что и так выдают по потребности, попросту бессмысленно. Его сектор курирует всё, от квот синт-заводов Уэльса до аттестационных комиссий. Ни одного бунта за тридцать лет — статистика, которой не может похвастаться ни одно государство старого мира.</div></div>
   </div>
 
   <div class="dir-card" onclick="this.classList.toggle('open')">
@@ -197,11 +200,11 @@
       <span class="dir-icon">◆</span>
       <div>
         <div class="dir-title">Профессорская деятельность</div>
-        <div class="dir-teaser">Аркан · курс «Анатомия компромисса»</div>
+        <div class="dir-teaser">Аркан · курс по социологии</div>
       </div>
       <span class="dir-chevron">▾</span>
     </div>
-    <div class="dir-card-body"><div class="dir-card-body-inner">В Аркане Дорн читает авторский курс «Анатомия компромисса» — о переговорах, цене решений и социальной динамике синтетических субъектов. Попасть на его семинары сложнее, чем на любую другую дисциплину: запись закрывается за минуты. Он единственный из Спасителей, кто регулярно спорит со студентами лицом к лицу — и считает эти споры лучшей проверкой собственных решений.</div></div>
+    <div class="dir-card-body"><div class="dir-card-body-inner">В Аркане Дорн читает авторский курс по социологии — о переговорах, цене решений и социальной динамике синтетических субъектов. Попасть на его семинары сложнее, чем на любую другую дисциплину: запись закрывается за минуты. Он единственный из Спасителей, кто регулярно спорит со студентами лицом к лицу — и считает эти споры лучшей проверкой собственных решений.</div></div>
   </div>
 
   <div class="dir-card" onclick="this.classList.toggle('open')">
@@ -209,14 +212,17 @@
       <span class="dir-icon">◆</span>
       <div>
         <div class="dir-title">Внешняя политика</div>
-        <div class="dir-teaser">Альянс Выживания · Призрачный флот</div>
+        <div class="dir-teaser">Альянс Выживания</div>
       </div>
       <span class="dir-chevron">▾</span>
     </div>
-    <div class="dir-card-body"><div class="dir-card-body-inner">В 2031 году Дорн лично установил тайный канал с Джамахирией Нар — нефть в обход всех блокад. Годом позже запустил «Призрачный флот»: замаскированные торговые суда, которые официально не существуют. В 2046-м закрепил «Пакт Выживания» с Австралийским Протекторатом — технологии в обмен на разведданные. Всё это вместе называется «Альянсом Выживания», и ни одна из этих строк не значится ни в одном официальном документе Аркадии.</div></div>
+    <div class="dir-card-body"><div class="dir-card-body-inner">
+      <p>В 2031 году Дорн лично установил канал поставок с Джамахирией Нар. Годом позже к нему добавился «Призрачный флот» — подводные транспорты, невидимые для разведки Тенебриона и Единой Америки.</p>
+      <p>С 2046 года Аркадию и Австралийский Протекторат связывает «Пакт Выживания» — технологии в обмен на разведданные. Договор курирует постоянная дипломатическая миссия, но решения по-прежнему принимают лично Дорн и генерал Бер.</p>
+      <p>С Единой Америкой всё иначе — там не переговоры, а редкие инциденты. В 2061 году именно Дорн вёл переговоры с захваченным экипажем вторгшегося фрегата — сдержанно, без публичности, на своих условиях.</p>
+    </div></div>
   </div>
 
-  <!-- скрытый узел Сумрака -->
   <div class="sumrak-node" onclick="openSumrakModal()">
     <div class="sumrak-node-line"></div>
     <div class="sumrak-node-dot"></div>
@@ -231,14 +237,10 @@
     <img src="917AA5DA-4C45-4F17-A9A8-C460D6F62F2E.png" alt="Особняк в Глазго">
     <div class="mansion-gradient"></div>
   </div>
-  <div class="mansion-text">Особняк викторианской постройки в Парк-Серкус — старом квартале Глазго на холме над Кельвингроув, где дома пережили и старый мир, и Коллапс. Дорн выкупил его в первый же год Аркадии и с тех пор не продаёт, не сдаёт и не перестраивает. Персонал — три человека, все с двадцатилетним стажем и подпиской, которую никто никогда не проверял: не было нужды. Одно освещённое окно на верхнем этаже — кабинет, где он читает то, что не проходит через «Сумрак». Соседи знают его как немногословного джентльмена, который никогда не бывает дома по выходным.</div>
+  <div class="mansion-text">Особняк викторианской постройки в Парк-Серкус — старом квартале Глазго на холме над Кельвингроув, где дома пережили и старый мир, и Коллапс. Дорн выкупил его в первый же год Аркадии и с тех пор не продаёт, не сдаёт и не перестраивает. Персонал — три человека, все с двадцатилетним стажем. Одно освещённое окно на верхнем этаже — кабинет, тот угол дома, где Дорн обитает чаще всего. Соседи знают его как немногословного джентльмена, который редко бывает дома.</div>
   <div class="mansion-photos">
-    <div class="mansion-photo-slot" style="border:1px solid rgba(var(--dr),0.4);padding:0;overflow:hidden;">
-      <img src="3D9F2F54-692C-482F-AE63-38D72DDC2030.png" alt="Кабинет Дорна" style="width:100%;height:100%;object-fit:cover;">
-    </div>
-    <div class="mansion-photo-slot" style="border:1px solid rgba(var(--dr),0.4);padding:0;overflow:hidden;">
-      <img src="84C505C8-3079-4501-9EF4-2BCB8AD2BD9B.png" alt="Особняк, другой ракурс" style="width:100%;height:100%;object-fit:cover;">
-    </div>
+    <div class="mansion-photo-slot"><img src="3D9F2F54-692C-482F-AE63-38D72DDC2030.png" alt="Кабинет Дорна"></div>
+    <div class="mansion-photo-slot"><img src="84C505C8-3079-4501-9EF4-2BCB8AD2BD9B.png" alt="Особняк, другой ракурс"></div>
   </div>
 </section>
 
@@ -246,35 +248,35 @@
 <section>
   <div class="sec-eyebrow">ОТНОШЕНИЯ</div>
 
-  <div class="relation">
+  <div class="relation" style="--rc:var(--dr)">
     <div class="relation-portrait"><img src="01A74B83-8A81-4168-983E-193CBB08EB98.png" alt="Курт Вистнер"></div>
     <div>
       <div class="relation-name">Курт Вистнер</div>
-      <div class="relation-text">Соратник и оппонент одновременно — спорят о методах, но ни разу не предали друг друга.</div>
+      <div class="relation-text">Их союз держит Аркадию на плаву уже тридцать лет: Вистнер строит будущее по чертежам, Дорн — по тому, что сработает на практике. Спорят чаще, чем соглашаются, но ни разу не подвели друг друга там, где это было важно.</div>
     </div>
   </div>
 
-  <div class="relation">
+  <div class="relation" style="--rc:var(--dr)">
     <div class="relation-portrait"><img src="8C96E9F6-2A0A-4E58-A363-2154DADB21E2.png" alt="Юлиан Грей"></div>
     <div>
       <div class="relation-name">Юлиан Грей</div>
-      <div class="relation-text">Пережил его покушение — и выбрал милосердие вместо казни.</div>
+      <div class="relation-text">Самый молодой из Триумвирата — и единственный, кого Дорн скорее направляет, чем контролирует. Людям нужен герой, а не бухгалтер: эту роль может сыграть только Грей, и Дорн следит, чтобы она не стоила ему слишком дорого.</div>
     </div>
   </div>
 
-  <div class="relation">
+  <div class="relation" style="--rc:var(--ber)">
     <div class="relation-portrait"><img src="28FE83B1-FC10-4100-8CB5-31A8FDEE101C.png" alt="Алистер Бер"></div>
     <div>
       <div class="relation-name">Алистер Бер</div>
-      <div class="relation-text">Главный торговый партнёр — генерал Австралийского Протектората. Взаимная выгода без взаимного доверия.</div>
+      <div class="relation-text">Генерал Австралийского Протектората. Дорна и Бера свело не столько выгодой, сколько тем, что у обоих всё же есть принципы — редкость среди тех, с кем приходится вести дела. Переговоры ведут доверенные люди с обеих сторон, но решения принимают эти двое.</div>
     </div>
   </div>
 
-  <div class="relation">
+  <div class="relation" style="--rc:var(--tenebrion)">
     <div class="relation-portrait"><img src="787B0C27-A48A-4C48-83E8-FF08B13B6C43.png" alt="Артур Остерман"></div>
     <div>
       <div class="relation-name">Артур Остерман</div>
-      <div class="relation-text">Идейный враг ещё со времён старого мира — охотился на Дорна тогда и не простил ему нового статуса сейчас.</div>
+      <div class="relation-text">Противник Дорна ещё со времён старого мира, ныне — духовный и политический лидер Тенебриона. Рассматривает Аркадию как временное препятствие на пути к процветанию теократической державы.</div>
     </div>
   </div>
 </section>
@@ -282,14 +284,12 @@
 <!-- ФИЛОСОФИЯ -->
 <section>
   <div class="sec-eyebrow">ФИЛОСОФИЯ</div>
-  <div class="philosophy-slot" style="border:none;padding:0;overflow:hidden;">
-    <img src="C5C8744A-3548-49EE-9202-81D6DB510852.png" alt="Дорн у окна" style="width:100%;height:100%;object-fit:cover;">
+  <div class="philosophy-photo">
+    <img src="C5C8744A-3548-49EE-9202-81D6DB510852.png" alt="Дорн у окна">
   </div>
-  <div class="philosophy-quote">«За дверью не ждут. То, что зовёт вас наружу, — не дом»</div>
-  <div class="philosophy-text">Прагматичный пацифизм Дорна — не про доброту, а про расчёт: конфликт почти всегда стоит дороже компромисса. Он не открывает купол миру и не запирает его наглухо — он решает, кому и когда позволено войти. Тихо. До того, как вопрос станет вопросом.</div>
+  <div class="philosophy-quote">«За порогом дома не бывает»</div>
+  <div class="philosophy-text">Прагматичный пацифизм Дорна — расчёт, а не сострадание: конфликт почти всегда стоит дороже компромисса. Он не открывает купол миру и не запирает его наглухо — он решает, кому и когда позволено войти.</div>
 </section>
-
-<div class="footer-note">ДОСЬЕ ПРОДОЛЖАЕТ ПОПОЛНЯТЬСЯ</div>
 
 <!-- МОДАЛЬНОЕ ОКНО СУМРАКА -->
 <div class="sumrak-modal" id="sumrakModal">
@@ -315,10 +315,10 @@ const BIO_IMAGES = [
   '2D3A333F-D45B-453A-8454-7B1ABD86EAEC.png'
 ];
 const BIO_QUOTES = [
-  '«В порту не спрашивают, кто ты. Спрашивают, что ты слышал»',
-  '«Я не верил Вистнеру. Я верил цифрам в его отчётах»',
-  '«Мы не бежали. Мы выбирали, где встать, когда всё рухнет»',
-  '«Порядок не провозглашают. Его наводят»',
+  '«Полиция приходит, когда уже поздно что-то менять. Я приходил раньше»',
+  '«Сначала это была просто хорошая зарплата. Потом я увидел, кого именно он ловит — и зарплата перестала быть единственной причиной остаться»',
+  '«Мы ушли не потому, что испугались. Продолжать нашими силами было бессмысленно — а бессмысленное я не делаю»',
+  '«Гостеприимство — не оправдание. Мы впустили хаос и заплатили за это порядком»',
   '«Аркадия держится не на куполе»'
 ];
 
