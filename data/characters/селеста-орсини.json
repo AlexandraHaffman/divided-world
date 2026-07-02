@@ -18,11 +18,11 @@
     "Убеждение",
     "Предвидение"
   ],
-  "threat_level": 36,
+  "threat_level": 37,
   "stats": {
     "intelligence": 7,
     "combat": 2,
-    "influence": 7,
+    "influence": 8,
     "meta_power": 6,
     "cruelty": 5,
     "will": 8,
@@ -38,5 +38,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/41DB6C4C-B4FE-4C3C-84B7-FB683B41B6E9.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B441113C-FE3C-4907-8818-A70B8A857663.jpeg",
   "tier": "rare",
-  "exported_at": "2026-06-30T07:32:45.182Z"
+  "exported_at": "2026-07-02T16:41:46.436Z"
 }
