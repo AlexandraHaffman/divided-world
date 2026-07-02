@@ -3,7 +3,7 @@
   "name": "Катарина Меланье",
   "status": "Активен",
   "gender": "Женский",
-  "role": "",
+  "role": "Глава Капитула Воспитания",
   "birthdate": "20.01",
   "faction": "Тенебрион",
   "subfaction": "Капитул Воспитания",
@@ -37,5 +37,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AF32072F-0D73-4FCC-B2BF-5462BAA92F11.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B1C8D6E5-8FC5-4C54-B58B-0978B512A2D8.jpeg",
   "tier": "rare",
-  "exported_at": "2026-06-28T14:15:17.987Z"
+  "exported_at": "2026-07-02T16:46:14.979Z"
 }
