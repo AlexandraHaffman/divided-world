@@ -25,8 +25,7 @@
   .sumrak-dot{width:5px;height:5px;border-radius:50%;background:rgb(var(--amber));animation:pulse 1.6s infinite;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
   .sumrak-ticker-track{white-space:nowrap;font-size:10px;color:rgba(var(--amber),0.8);
-    animation:tickerLeft 35s linear infinite;padding-left:100%;}
-  @keyframes tickerLeft{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+    padding-left:100%;will-change:transform;}
 
   section{padding:24px 16px;position:relative;}
   .sec-eyebrow{font-size:9px;letter-spacing:0.18em;color:rgba(var(--dr),0.85);margin-bottom:10px;
@@ -225,10 +224,34 @@ fetch('dorn-sumrak-feed.json')
       .join(' &nbsp;·&nbsp; ');
 
     document.getElementById('sumrakTrack').innerHTML = line + ' &nbsp;·&nbsp; ';
+    startTickerAnimation();
   })
   .catch(() => {
     document.getElementById('sumrakTrack').textContent = 'Не удалось загрузить dorn-sumrak-feed.json';
   });
+
+// ── Плавная бесконечная прокрутка с постоянной скоростью (px/сек), не зависит от длины текста ──
+function startTickerAnimation() {
+  const track = document.getElementById('sumrakTrack');
+  const SPEED = 40; // пикселей в секунду
+  let pos = track.parentElement.getBoundingClientRect().width; // старт за правым краем
+  let last = null;
+
+  function step(ts) {
+    if (last === null) last = ts;
+    const dt = (ts - last) / 1000;
+    last = ts;
+    pos -= SPEED * dt;
+    const trackWidth = track.scrollWidth;
+    if (pos < -trackWidth) {
+      pos = track.parentElement.getBoundingClientRect().width;
+    }
+    track.style.transform = `translateX(${pos}px)`;
+    requestAnimationFrame(step);
+  }
+  track.style.paddingLeft = '0'; // теперь позиционируем через JS, паддинг больше не нужен
+  requestAnimationFrame(step);
+}
 </script>
 </body>
 </html>
