@@ -20,10 +20,10 @@
     "Лидерство",
     "Генерация силовых щитов"
   ],
-  "threat_level": 43,
+  "threat_level": 44,
   "stats": {
     "intelligence": 3,
-    "combat": 8,
+    "combat": 9,
     "influence": 8,
     "meta_power": 7,
     "cruelty": 8,
@@ -40,5 +40,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C7235927-F255-43DA-B46C-DA65BD592AB1.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F663BE07-48E0-46AF-96A3-65FBBAFA4F61.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-27T21:37:27.721Z"
+  "exported_at": "2026-07-02T16:40:55.127Z"
 }
