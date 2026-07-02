@@ -8,7 +8,7 @@
   "faction": "Тенебрион",
   "subfaction": "Капитул Надзора",
   "location": "Тенебрион",
-  "faction_color": "",
+  "faction_color": "#ff9d00",
   "aliases": [
     "Верховный Пресекатель"
   ],
@@ -36,5 +36,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/786136FB-450D-4C30-BEBD-660E3EAAD280.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FBDD52F8-924F-4D92-864A-4E25EB991068.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-02T16:56:51.584Z"
+  "exported_at": "2026-07-02T16:57:10.036Z"
 }
