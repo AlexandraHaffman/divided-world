@@ -20,7 +20,7 @@
     "Управление ресурсами",
     "Визионерство"
   ],
-  "threat_level": 45,
+  "threat_level": 46,
   "stats": {
     "intelligence": 9,
     "combat": 2,
@@ -28,7 +28,7 @@
     "meta_power": 0,
     "cruelty": 5,
     "will": 9,
-    "stealth": 5,
+    "stealth": 6,
     "unpredictability": 7
   },
   "card_quote": "Мы не восстанавливаем старое. Мы строим то, что прежний мир не смог даже вообразить",
@@ -40,5 +40,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E49D5DDB-F103-465C-B609-665F9FF35700.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/99D73045-75D7-46BE-853A-154ED2E083AF.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-23T21:18:11.191Z"
+  "exported_at": "2026-07-02T16:44:05.677Z"
 }
