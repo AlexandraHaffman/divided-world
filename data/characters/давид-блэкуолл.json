@@ -18,16 +18,16 @@
     "Глобальное операционное управление",
     "Управление логистикой и инфраструктурой"
   ],
-  "threat_level": 32,
+  "threat_level": 36,
   "stats": {
     "intelligence": 7,
     "combat": 4,
-    "influence": 6,
+    "influence": 7,
     "meta_power": 0,
-    "cruelty": 3,
-    "will": 8,
+    "cruelty": 4,
+    "will": 9,
     "stealth": 1,
-    "unpredictability": 3
+    "unpredictability": 4
   },
   "card_quote": "Чертежи не лгут, Ричард. Если мы хотим построить этот мир, нам нужно больше бетона и меньше красивых слов.",
   "card_bio": "Главный операционный директор Forge, гениальный инженер и единственный человек, которого Ричард Уолш считает своим равным. Человек действия, предпочитающий строительную каску креслу директора.",
@@ -37,6 +37,6 @@
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8CA5EC00-6F91-4A5B-A358-1C6DCFA7A3BA.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/EC8F526E-D644-4118-96AC-90DBF2D8AF06.jpeg",
-  "tier": "common",
-  "exported_at": "2026-06-29T17:30:54.572Z"
+  "tier": "rare",
+  "exported_at": "2026-07-03T06:55:25.097Z"
 }
