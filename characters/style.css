@@ -87,8 +87,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compact-3-threat-num{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:900;color:rgb(var(--cr));text-shadow:0 0 8px rgba(var(--cr),0.7);line-height:1;}
 .compact-3-threat-lbl{font-family:'Share Tech Mono',monospace;font-size:5px;color:rgba(var(--cr),0.6);letter-spacing:0.1em;}
 .compact-3-faction{font-family:'Share Tech Mono',monospace;font-size:6px;color:rgb(var(--cr));border:1px solid rgba(var(--cr),0.3);padding:1px 4px;border-radius:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;}
-.compact-3-name-area{padding:5px 7px 7px;}
-.compact-3-name{font-size:11px;font-weight:700;color:var(--white);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.compact-3-name-area{padding:5px 7px 7px;text-align:center;}
+.compact-3-name{font-size:11px;font-weight:700;color:rgb(var(--cr));line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 8px rgba(var(--cr),0.55);}
 
 /* ── ВЫДЕЛЕНИЕ ДЛЯ СРАВНЕНИЯ (3 колонки) ── */
 /* Вся фотография тонируется цветом фракции персонажа + яркая рамка.
