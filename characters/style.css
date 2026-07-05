@@ -7,7 +7,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,60,100,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,60,100,0.15) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 
 /* ── ШАПКА ── */
-.header{position:relative;z-index:10;padding:20px 16px 14px;border-bottom:1px solid rgba(30,100,180,0.2);}
+.header{position:relative;z-index:200;padding:20px 16px 14px;border-bottom:1px solid rgba(30,100,180,0.2);}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .back-btn{color:var(--dim);text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.1em;border:1px solid rgba(30,100,180,0.3);padding:4px 10px;border-radius:3px;transition:all 0.2s;}
 .back-btn:hover{color:#4fc3f7;border-color:#4fc3f7;}
