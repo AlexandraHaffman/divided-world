@@ -22,17 +22,27 @@ const STATUS_COLORS = {
   "Неизвестно": "#64748b"
 };
 
+/* ── Цвета для дропдауна фильтра по тиру ──
+   Отдельное имя (TIER_FILTER_COLORS), чтобы не конфликтовать с TIER_COLORS
+   и TIER_ORDER, которые живут в carousel-mode.js. */
+const TIER_FILTER_COLORS = {
+  common:    { hex: "#6b7280", rgb: "107,114,128" },
+  rare:      { hex: "#60a5fa", rgb: "96,165,250" },
+  epic:      { hex: "#a78bfa", rgb: "167,139,250" },
+  legendary: { hex: "#fbbf24", rgb: "251,191,36" },
+  divine:    { hex: "#ffffff", rgb: "255,255,255" }
+};
+
 const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
 
 /* ── Легендарные страницы: имя персонажа → slug HTML-файла в characters/legendary/ ── */
 const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn" };
 
-/* ── Порядок тиров для сортировки ── */
-const TIER_ORDER = { divine: 5, legendary: 4, epic: 3, rare: 2, common: 1 };
-
 let allChars = [], currentFiltered = [], currentCols = 2;
 let currentFaction = "all";
+let currentTier = "all";
+let metaOnly = false;
 let currentSort = "threat"; // "threat" | "name"
 
 /* ── Утилиты ── */
@@ -120,7 +130,10 @@ function buildCard(c, i, cols) {
   const globalIdx = allChars.indexOf(c);
   const isDead = (c.status || '').trim() === 'Мёртв';
   const deadAttr = isDead ? ' data-status="dead"' : '';
-  const deadGlass = isDead ? '<div class="dead-glass"></div>' : '';
+  /* «Помехи связи» поверх фото — со случайной задержкой, чтобы карточки
+     не мигали синхронно. Цвет фото НЕ трогаем. */
+  const deadDelay = (Math.random() * 6).toFixed(2);
+  const deadGlass = isDead ? `<div class="dead-glitch" style="animation-delay:${deadDelay}s"></div>` : '';
 
   if (cols >= 5 && hasPhoto) {
     return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
@@ -219,14 +232,16 @@ function renderGrid(chars) {
   applySearch();
 }
 
-/* ── Пересборка отфильтрованного списка (фильтр + сортировка) ── */
+/* ── Пересборка отфильтрованного списка (фракция + тир + мета + сортировка) ── */
 function refreshFiltered() {
-  const base = currentFaction === "all" ? allChars : allChars.filter(c => c.faction === currentFaction);
+  let base = currentFaction === "all" ? allChars : allChars.filter(c => c.faction === currentFaction);
+  if (currentTier !== "all") base = base.filter(c => getTier(c) === currentTier);
+  if (metaOnly) base = base.filter(c => ((c.stats && c.stats.meta_power) || 0) > 0);
   currentFiltered = sortChars(base);
   renderGrid(currentFiltered);
 }
 
-/* ── Фильтры ── */
+/* ── Фильтры по фракциям ── */
 function buildFilters() {
   const factions = [...new Set(allChars.map(c => c.faction).filter(Boolean))].sort();
   const wrap = document.getElementById("filters");
@@ -242,7 +257,26 @@ function buildFilters() {
 
 function setFilter(faction) {
   currentFaction = faction;
-  document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b.dataset.faction === faction));
+  document.querySelectorAll("#filters .filter-btn").forEach(b => b.classList.toggle("active", b.dataset.faction === faction));
+  refreshFiltered();
+}
+
+/* ── Фильтры по тиру ── */
+function buildTierFilters() {
+  const wrap = document.getElementById("tier-filters");
+  ["common","rare","epic","legendary","divine"].forEach(t => {
+    const col = TIER_FILTER_COLORS[t];
+    const btn = document.createElement("button");
+    btn.className = "filter-btn"; btn.dataset.tier = t; btn.textContent = t.toUpperCase();
+    btn.style.cssText = `--fc:${col.hex};--fr:${col.rgb}`;
+    btn.onclick = () => setTierFilter(t);
+    wrap.appendChild(btn);
+  });
+}
+
+function setTierFilter(tier) {
+  currentTier = tier;
+  document.querySelectorAll("#tier-filters .filter-btn").forEach(b => b.classList.toggle("active", b.dataset.tier === tier));
   refreshFiltered();
 }
 
@@ -263,6 +297,7 @@ async function loadCharacters() {
     currentFaction = "all";
     currentFiltered = sortChars(allChars);
     buildFilters();
+    buildTierFilters();
     renderGrid(currentFiltered);
     document.getElementById("count-total").textContent = allChars.length;
   } catch (e) {
@@ -276,6 +311,7 @@ function openDossier(idx) {
   const c = allChars[idx];
   const col = getFactionColor(c);
   const tier = getTier(c);
+  const isDead = (c.status || '').trim() === 'Мёртв';
   const sc = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
   const scRgb = sc === "#5dd98a" ? "93,217,138" : sc === "#f87171" ? "248,113,113" : "100,116,139";
   const artUrl = c.avatar_web_full || c.avatar_web || "";
@@ -309,6 +345,13 @@ function openDossier(idx) {
         }
       </div>
       <div class="dossier-art-gradient"></div>
+      ${isDead ? `
+      <div class="dossier-terminated-stamp">
+        <div class="stamp-inner">
+          <span class="stamp-line1">TERMINATED</span>
+          <span class="stamp-line2">SYS.RECORD CLOSED</span>
+        </div>
+      </div>` : ''}
       <div class="dossier-art-info">
         <div class="dossier-sys">SYS.RECORD // ПЕРСОНАЖ #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
         <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</div>
@@ -429,7 +472,21 @@ document.getElementById("filters-toggle").addEventListener("click", () => {
   document.getElementById("filters-toggle").classList.toggle("open");
   document.getElementById("filters").classList.toggle("open");
 });
-document.querySelector(".filter-btn[data-faction='all']").addEventListener("click", () => setFilter("all"));
+document.querySelector("#filters .filter-btn[data-faction='all']").addEventListener("click", () => setFilter("all"));
+
+/* ── Дропдаун тиров ── */
+document.getElementById("tier-toggle").addEventListener("click", () => {
+  document.getElementById("tier-toggle").classList.toggle("open");
+  document.getElementById("tier-filters").classList.toggle("open");
+});
+document.querySelector("#tier-filters .filter-btn[data-tier='all']").addEventListener("click", () => setTierFilter("all"));
+
+/* ── Кнопка «Мета-люди» ── */
+document.getElementById("meta-toggle").addEventListener("click", () => {
+  metaOnly = !metaOnly;
+  document.getElementById("meta-toggle").classList.toggle("active", metaOnly);
+  refreshFiltered();
+});
 
 /* ── Клавиша Escape ── */
 document.addEventListener("keydown", e => {
@@ -491,9 +548,8 @@ function applySearch() {
   // выпадашка (только когда поле в фокусе)
   if (document.activeElement === input && matches.length) {
     suggBox.innerHTML = matches.slice(0, 8).map(c => {
-      const col = getFactionColor(c);
       const gidx = allChars.indexOf(c);
-      return `<div class="search-sugg-item" style="--cr:${col.rgb}" data-gidx="${gidx}">${highlightMatch(c.name, searchQuery)}</div>`;
+      return `<div class="search-sugg-item" data-gidx="${gidx}">${highlightMatch(c.name, searchQuery)}</div>`;
     }).join("");
     suggBox.classList.add("show");
   } else {

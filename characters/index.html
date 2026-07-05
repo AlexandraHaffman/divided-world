@@ -35,11 +35,21 @@
     <button class="cols-opt" data-cols="5">5</button>
   </div>
   <button class="sort-toggle" id="sort-toggle">СОРТ: <span id="sort-label">УГРОЗА ↓</span></button>
+</div>
+
+<!-- строка кнопок-фильтров: ФРАКЦИИ · ТИРЫ · МЕТА-ЛЮДИ -->
+<div class="filter-toggles-row">
   <button class="filters-toggle" id="filters-toggle">ФРАКЦИИ <span class="chev">▾</span></button>
+  <button class="filters-toggle" id="tier-toggle">ТИРЫ <span class="chev">▾</span></button>
+  <button class="sort-toggle" id="meta-toggle">МЕТА-ЛЮДИ</button>
 </div>
 
 <div class="filters" id="filters">
   <button class="filter-btn active" data-faction="all" style="--fc:#4fc3f7;--fr:79,195,247">ВСЕ</button>
+</div>
+
+<div class="filters" id="tier-filters">
+  <button class="filter-btn active" data-tier="all" style="--fc:#4fc3f7;--fr:79,195,247">ВСЕ</button>
 </div>
 
 <div class="grid" id="grid" data-cols="2">
