@@ -6,10 +6,11 @@ const FACTION_COLORS = {
   "Forge":                  { hex: "#a8d8ff", rgb: "168,216,255" },
   "Тихая гавань":           { hex: "#38bdf8", rgb: "56,189,248" },
   "Белая зона":             { hex: "#94a3b8", rgb: "148,163,184" },
-  "Независимые":            { hex: "#a3e635", rgb: "163,230,53" },
+  "Независимые":            { hex: "#9ca3af", rgb: "156,163,175" },
   "Экваториальная сеть":    { hex: "#d4a843", rgb: "212,168,67" },
   "Гарнизон":               { hex: "#aaaaaa", rgb: "170,170,170" },
-  "Ковчег":                 { hex: "#8899bb", rgb: "136,153,187" },
+  "Ковчег":                 { hex: "#e8e0c9", rgb: "232,224,201" },
+  "Титаны":                 { hex: "#8a9a5b", rgb: "138,154,91" },
   "Джамахирия Нар":         { hex: "#B8540A", rgb: "184,84,10" },
   "Австралийский протекторат": { hex: "#a0522d", rgb: "160,82,45" },
   "Отражение бездны":       { hex: "#3d5a3e", rgb: "61,90,62" },
@@ -40,8 +41,11 @@ function hexToRgb(h) {
   return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : null;
 }
 function getFactionColor(c) {
+  /* Приоритет: 1) таблица сайта — правится одной строчкой без переэкспорта персонажей,
+     2) faction_color, вшитый экспортом из Obsidian, 3) дефолтный голубой */
+  if (FACTION_COLORS[c.faction]) return FACTION_COLORS[c.faction];
   if (c.faction_color) { const r = hexToRgb(c.faction_color); if (r) return { hex: c.faction_color, rgb: r }; }
-  return FACTION_COLORS[c.faction] || DEFAULT_COLOR;
+  return DEFAULT_COLOR;
 }
 function isTopFaction(c) { return TOP_FACTIONS.has(c.faction); }
 function getTier(c) { return (c.tier || "common").toLowerCase().trim(); }
@@ -114,13 +118,17 @@ function buildCard(c, i, cols) {
   const factionLabel = c.faction || '—';
   const metaAttr = ((c.stats && c.stats.meta_power) || 0) >= 100 ? ' data-meta="divine"' : '';
   const globalIdx = allChars.indexOf(c);
+  const isDead = (c.status || '').trim() === 'Мёртв';
+  const deadAttr = isDead ? ' data-status="dead"' : '';
+  const deadGlass = isDead ? '<div class="dead-glass"></div>' : '';
 
   if (cols >= 5 && hasPhoto) {
-    return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+    return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="card-body">
         <div class="compact-5-photo">
           <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+          ${deadGlass}
           <div class="compact-5-threat">${c.threat_level || 0}</div>
         </div>
         <div class="compact-5-name-area"><div class="compact-5-name">${c.name}</div></div>
@@ -131,12 +139,13 @@ function buildCard(c, i, cols) {
   /* Компакт-3: сюда же добавлен .cmp-check — визуальная галочка выбора,
      переключается классом cmp-selected из compare-mode.js */
   if (cols >= 3 && hasPhoto) {
-    return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+    return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="cmp-check"></div>
       <div class="card-body">
         <div class="compact-3-photo">
           <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+          ${deadGlass}
           <div class="compact-3-overlay">
             <div class="compact-3-threat">
               <span class="compact-3-threat-num">${c.threat_level || 0}</span>
@@ -155,11 +164,12 @@ function buildCard(c, i, cols) {
     const factionEl = top
       ? `<div class="faction-badge">${factionLabel}</div>`
       : `<div class="card-photo-faction-bottom">${factionLabel}</div>`;
-    return `<div class="char-card has-photo" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+    return `<div class="char-card has-photo" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="card-body">
         <div class="card-photo-wrap">
           <img src="${c.avatar_web}" alt="${c.name}" loading="lazy">
+          ${deadGlass}
           <div class="meta-glow-anchor">${metaGlowHTML(c)}</div>
           <div class="card-photo-info">
             <div class="card-photo-name">${c.name}</div>
@@ -183,8 +193,9 @@ function buildCard(c, i, cols) {
   const factionEl = top
     ? `<div class="faction-badge">${factionLabel}</div>`
     : `<div class="card-faction-bottom">${factionLabel}</div>`;
-  return `<div class="char-card" data-tier="${tier}"${metaAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+  return `<div class="char-card" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
     <div class="card-top-bar"></div><div class="tier-corners"></div>
+    ${deadGlass}
     <div class="card-body">
       <div class="card-name">${c.name}</div>
       <div class="card-role">${c.role || ''}</div>
