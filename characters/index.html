@@ -18,7 +18,11 @@
   <div class="stats-row">
     <div class="stat-pill">ЗАПИСЕЙ: <b id="count-total">—</b></div>
     <div class="stat-pill">ОТОБРАЖЕНО: <b id="count-shown">—</b></div>
-    <div class="stat-pill">СТАТУС: <b style="color:#5dd98a">АКТИВНО</b></div>
+    <div class="search-wrap" id="search-wrap">
+      <input type="text" id="search-input" class="search-input" placeholder="Поиск по имени…" autocomplete="off">
+      <button class="search-clear" id="search-clear" aria-label="Очистить">✕</button>
+      <div class="search-suggestions" id="search-suggestions"></div>
+    </div>
   </div>
 </div>
 
@@ -30,6 +34,7 @@
     <button class="cols-opt" data-cols="3">3</button>
     <button class="cols-opt" data-cols="5">5</button>
   </div>
+  <button class="sort-toggle" id="sort-toggle">СОРТ: <span id="sort-label">УГРОЗА ↓</span></button>
   <button class="filters-toggle" id="filters-toggle">ФРАКЦИИ <span class="chev">▾</span></button>
 </div>
 
@@ -45,7 +50,7 @@
   <div id="dossier-inner"></div>
 </div>
 
-<!-- НОВОЕ: панель выбора для режима сравнения (3 колонки) -->
+<!-- панель выбора для режима сравнения (3 колонки) -->
 <div class="compare-bar" id="compare-bar">
   <div class="compare-bar-count" id="compare-bar-count">Выбрано: <b>0</b></div>
   <div class="compare-bar-actions">
@@ -54,7 +59,7 @@
   </div>
 </div>
 
-<!-- НОВОЕ: полноэкранный оверлей сравнения -->
+<!-- полноэкранный оверлей сравнения -->
 <div class="compare-overlay" id="compare-overlay">
   <div id="compare-inner"></div>
 </div>

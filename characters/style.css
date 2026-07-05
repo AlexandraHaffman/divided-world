@@ -15,9 +15,38 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .sys-label span{color:#4fc3f7;}
 .page-title{font-size:26px;font-weight:700;color:var(--white);letter-spacing:0.08em;text-transform:uppercase;}
 .page-title::before{content:'// ';color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:13px;}
-.stats-row{display:flex;gap:16px;margin-top:6px;}
+.stats-row{display:flex;gap:16px;margin-top:6px;align-items:center;flex-wrap:wrap;}
 .stat-pill{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;}
 .stat-pill b{color:#4fc3f7;}
+
+/* ── ПОИСК ПО ИМЕНИ ── */
+.search-wrap{position:relative;flex:1;min-width:130px;max-width:260px;}
+.search-input{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.15);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.05em;padding:5px 26px 5px 10px;border-radius:3px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.search-input::placeholder{color:var(--dim);}
+.search-input:focus{border-color:#4fc3f7;box-shadow:0 0 8px rgba(79,195,247,0.25);}
+.search-wrap.no-match .search-input{border-color:#f87171;box-shadow:0 0 8px rgba(248,113,113,0.3);}
+
+.search-clear{position:absolute;top:50%;right:6px;transform:translateY(-50%);width:16px;height:16px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:var(--dim);font-size:9px;line-height:1;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;transition:all 0.15s;}
+.search-clear.show{display:flex;}
+.search-clear:hover{background:rgba(255,255,255,0.2);color:var(--white);}
+
+.search-suggestions{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;background:rgba(5,8,15,0.97);border:1px solid rgba(79,195,247,0.3);border-radius:5px;backdrop-filter:blur(8px);max-height:260px;overflow-y:auto;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5);}
+.search-suggestions.show{display:block;}
+.search-sugg-item{padding:8px 12px;font-size:12px;font-weight:600;color:rgb(var(--cr));border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:background 0.15s;}
+.search-sugg-item:last-child{border-bottom:none;}
+.search-sugg-item:hover,.search-sugg-item:active{background:rgba(var(--cr),0.12);}
+.search-sugg-item mark{background:none;color:#fff;text-shadow:0 0 8px currentColor;font-weight:900;}
+
+/* Подсветка имени найденной карточки */
+@keyframes searchGlow{0%,100%{filter:brightness(1);text-shadow:0 0 6px rgba(255,210,63,0.35);}50%{filter:brightness(1.3);text-shadow:0 0 18px rgba(255,210,63,0.95);}}
+.char-card.search-match .compact-3-name,
+.char-card.search-match .compact-5-name,
+.char-card.search-match .card-name,
+.char-card.search-match .card-photo-name{
+  color:#ffd23f !important;
+  animation:searchGlow 1s ease-in-out infinite;
+}
+.char-card.search-match{border-color:rgba(255,210,63,0.5);}
 
 /* ── ФИЛЬТРЫ ── */
 .filters{position:relative;z-index:10;padding:10px 16px;display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid rgba(30,100,180,0.15);}
@@ -91,8 +120,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compact-3-name{font-size:11px;font-weight:700;color:rgb(var(--cr));line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 8px rgba(var(--cr),0.55);}
 
 /* ── ВЫДЕЛЕНИЕ ДЛЯ СРАВНЕНИЯ (3 колонки) ── */
-/* Вся фотография тонируется цветом фракции персонажа + яркая рамка.
-   Маленькая галочка в углу оставлена как быстрый индикатор — при желании уберём. */
 .char-card.compact-3.cmp-selected{border-color:rgb(var(--cr));box-shadow:0 0 0 2px rgba(var(--cr),0.55),0 8px 22px rgba(var(--cr),0.35);}
 .char-card.compact-3.cmp-selected .compact-3-photo::before{
   content:'';position:absolute;inset:0;z-index:2;
@@ -134,7 +161,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compare-stat-row{display:flex;flex-direction:column;gap:4px;}
 .compare-stat-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;}
 
-/* ── «Перетягивание каната»: один трек, поделённый цветами пропорционально значениям ── */
+/* ── «Перетягивание каната» ── */
 .compare-tug-nums{display:flex;}
 .compare-tug-nums span{flex-shrink:0;text-align:center;font-family:'Share Tech Mono',monospace;font-weight:900;font-size:14px;line-height:1.4;text-shadow:0 0 8px currentColor;transition:width 0.3s;}
 .compare-tug-track{display:flex;height:22px;border-radius:11px;overflow:hidden;background:rgba(255,255,255,0.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);}
@@ -200,12 +227,17 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .meta-glow-wrap .meta-glow{bottom:auto;top:0;}
 
 /* ── ПЕРЕКЛЮЧАТЕЛЬ КОЛОНОК ── */
-.view-controls{position:relative;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(30,100,180,0.15);}
+.view-controls{position:relative;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(30,100,180,0.15);flex-wrap:wrap;}
 .cols-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;}
 .cols-slider{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:2px;}
 .cols-opt{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;color:var(--dim);background:transparent;border:none;width:28px;height:24px;border-radius:3px;cursor:pointer;transition:all 0.15s;}
 .cols-opt:hover{color:var(--text);}
 .cols-opt.active{color:#05080f;background:#4fc3f7;box-shadow:0 0 10px rgba(79,195,247,0.4);}
+
+/* ── КНОПКА СОРТИРОВКИ ── */
+.sort-toggle{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.08em;padding:4px 12px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);border-radius:3px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;white-space:nowrap;}
+.sort-toggle:hover{border-color:rgba(255,255,255,0.3);color:var(--white);}
+.sort-toggle span{color:#4fc3f7;}
 
 /* ── ДРОПДАУН ФРАКЦИЙ ── */
 .filters-toggle{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.08em;padding:4px 12px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--text);border-radius:3px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;display:flex;align-items:center;gap:6px;}

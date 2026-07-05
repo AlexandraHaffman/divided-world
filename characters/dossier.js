@@ -27,7 +27,12 @@ const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка
 /* ── Легендарные страницы: имя персонажа → slug HTML-файла в characters/legendary/ ── */
 const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn" };
 
+/* ── Порядок тиров для сортировки ── */
+const TIER_ORDER = { divine: 5, legendary: 4, epic: 3, rare: 2, common: 1 };
+
 let allChars = [], currentFiltered = [], currentCols = 2;
+let currentFaction = "all";
+let currentSort = "threat"; // "threat" | "name"
 
 /* ── Утилиты ── */
 function hexToRgb(h) {
@@ -40,6 +45,17 @@ function getFactionColor(c) {
 }
 function isTopFaction(c) { return TOP_FACTIONS.has(c.faction); }
 function getTier(c) { return (c.tier || "common").toLowerCase().trim(); }
+
+/* ── Сортировка списка персонажей ── */
+function sortChars(list) {
+  const arr = [...list];
+  if (currentSort === "name") {
+    arr.sort((a, b) => (a.name || "").localeCompare(b.name || "", "ru"));
+  } else {
+    arr.sort((a, b) => (b.threat_level || 0) - (a.threat_level || 0));
+  }
+  return arr;
+}
 
 /* ── Мета-сила ── */
 function metaGlowHTML(c) {
@@ -189,6 +205,14 @@ function renderGrid(chars) {
   grid.innerHTML = chars.map((c, i) => buildCard(c, i, currentCols)).join("");
   attachCardEvents();
   if (currentCols === 3 && typeof applyCompareSelectionState === "function") applyCompareSelectionState();
+  applySearch();
+}
+
+/* ── Пересборка отфильтрованного списка (фильтр + сортировка) ── */
+function refreshFiltered() {
+  const base = currentFaction === "all" ? allChars : allChars.filter(c => c.faction === currentFaction);
+  currentFiltered = sortChars(base);
+  renderGrid(currentFiltered);
 }
 
 /* ── Фильтры ── */
@@ -206,9 +230,9 @@ function buildFilters() {
 }
 
 function setFilter(faction) {
+  currentFaction = faction;
   document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b.dataset.faction === faction));
-  currentFiltered = faction === "all" ? allChars : allChars.filter(c => c.faction === faction);
-  renderGrid(currentFiltered);
+  refreshFiltered();
 }
 
 /* ── Загрузка персонажей ── */
@@ -225,9 +249,10 @@ async function loadCharacters() {
         .filter(f => f.name.endsWith(".json") && f.name !== ".keep")
         .map(async f => (await fetch(f.download_url)).json())
     )).sort((a, b) => (b.threat_level || 0) - (a.threat_level || 0));
-    currentFiltered = [...allChars];
+    currentFaction = "all";
+    currentFiltered = sortChars(allChars);
     buildFilters();
-    renderGrid(allChars);
+    renderGrid(currentFiltered);
     document.getElementById("count-total").textContent = allChars.length;
   } catch (e) {
     document.getElementById("grid").innerHTML =
@@ -381,6 +406,13 @@ document.getElementById("cols-slider").addEventListener("click", e => {
   else activateCarouselMode();
 });
 
+/* ── Переключатель сортировки ── */
+document.getElementById("sort-toggle").addEventListener("click", () => {
+  currentSort = currentSort === "threat" ? "name" : "threat";
+  document.getElementById("sort-label").textContent = currentSort === "threat" ? "УГРОЗА ↓" : "ИМЯ А-Я";
+  refreshFiltered();
+});
+
 /* ── Дропдаун фракций ── */
 document.getElementById("filters-toggle").addEventListener("click", () => {
   document.getElementById("filters-toggle").classList.toggle("open");
@@ -393,6 +425,111 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeDossier();
     if (typeof closeCompare === "function") closeCompare();
+  }
+});
+
+/* ══════════════════════════════════════════
+   ПОИСК ПО ИМЕНИ
+   ══════════════════════════════════════════ */
+let searchQuery = "";
+
+function highlightMatch(name, query) {
+  const i = name.toLowerCase().indexOf(query);
+  if (i === -1) return name;
+  return name.slice(0, i) + "<mark>" + name.slice(i, i + query.length) + "</mark>" + name.slice(i + query.length);
+}
+
+function getSearchMatches() {
+  if (!searchQuery) return [];
+  return currentFiltered.filter(c => c.name.toLowerCase().includes(searchQuery));
+}
+
+function applySearch() {
+  const wrap = document.getElementById("search-wrap");
+  const clearBtn = document.getElementById("search-clear");
+  const suggBox = document.getElementById("search-suggestions");
+  const input = document.getElementById("search-input");
+
+  document.querySelectorAll(".char-card.search-match").forEach(el => el.classList.remove("search-match"));
+
+  // крестик виден только когда что-то введено
+  clearBtn.classList.toggle("show", !!searchQuery);
+
+  if (!searchQuery) {
+    wrap.classList.remove("no-match");
+    suggBox.classList.remove("show");
+    suggBox.innerHTML = "";
+    document.getElementById("count-shown").textContent = currentFiltered.length;
+    return;
+  }
+
+  const matches = getSearchMatches();
+
+  // счётчик "ОТОБРАЖЕНО" = число совпадений
+  document.getElementById("count-shown").textContent = matches.length;
+
+  // поле краснеет, если совпадений нет
+  wrap.classList.toggle("no-match", matches.length === 0);
+
+  // подсветка карточек в гриде
+  document.querySelectorAll("#grid .char-card").forEach(el => {
+    const idx = parseInt(el.dataset.idx);
+    if (matches.includes(currentFiltered[idx])) el.classList.add("search-match");
+  });
+
+  // выпадашка (только когда поле в фокусе)
+  if (document.activeElement === input && matches.length) {
+    suggBox.innerHTML = matches.slice(0, 8).map(c => {
+      const col = getFactionColor(c);
+      const gidx = allChars.indexOf(c);
+      return `<div class="search-sugg-item" style="--cr:${col.rgb}" data-gidx="${gidx}">${highlightMatch(c.name, searchQuery)}</div>`;
+    }).join("");
+    suggBox.classList.add("show");
+  } else {
+    suggBox.classList.remove("show");
+  }
+
+  // остался ровно один — плавно скроллим к нему
+  if (matches.length === 1) {
+    const idx = currentFiltered.indexOf(matches[0]);
+    const el = document.querySelector(`#grid .char-card[data-idx="${idx}"]`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+function clearSearch() {
+  searchQuery = "";
+  document.getElementById("search-input").value = "";
+  applySearch();
+}
+
+document.getElementById("search-input").addEventListener("input", e => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  applySearch();
+});
+document.getElementById("search-input").addEventListener("focus", applySearch);
+
+document.getElementById("search-clear").addEventListener("click", () => {
+  clearSearch();
+  document.getElementById("search-input").focus();
+});
+
+document.getElementById("search-suggestions").addEventListener("click", e => {
+  const item = e.target.closest(".search-sugg-item");
+  if (!item) return;
+  const gidx = parseInt(item.dataset.gidx);
+  const c = allChars[gidx];
+  if (!currentFiltered.includes(c)) setFilter("all");
+  document.getElementById("search-input").value = c.name;
+  searchQuery = c.name.toLowerCase();
+  applySearch();
+  document.getElementById("search-suggestions").classList.remove("show");
+  document.getElementById("search-input").blur();
+});
+
+document.addEventListener("click", e => {
+  if (!e.target.closest("#search-wrap")) {
+    document.getElementById("search-suggestions").classList.remove("show");
   }
 });
 
