@@ -39,6 +39,149 @@ const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка
 /* ── Легендарные страницы: имя персонажа → slug HTML-файла в characters/legendary/ ── */
 const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn" };
 
+/* ══════════════════════════════════════════
+   ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров + реакции
+   Бэкенд — бесплатный публичный counterapi.dev (v1, без ключей).
+   Каждый персонаж считается по своему file-slug (имени JSON-файла без .json),
+   так что переименование поля name в будущем не собьёт счётчик.
+   ══════════════════════════════════════════ */
+const COUNTER_NS = "divided-world-chars";
+const REACTIONS = [
+  { key: "fire",  emoji: "🔥" },
+  { key: "heart", emoji: "❤️" },
+  { key: "skull", emoji: "💀" },
+  { key: "shock", emoji: "😱" }
+];
+
+async function counterUp(key) {
+  try {
+    const res = await fetch(`https://api.counterapi.dev/v1/${COUNTER_NS}/${encodeURIComponent(key)}/up`);
+    const data = await res.json();
+    return typeof data.count === "number" ? data.count : null;
+  } catch (e) { return null; }
+}
+async function counterGet(key) {
+  try {
+    const res = await fetch(`https://api.counterapi.dev/v1/${COUNTER_NS}/${encodeURIComponent(key)}`);
+    const data = await res.json();
+    return typeof data.count === "number" ? data.count : 0;
+  } catch (e) { return 0; }
+}
+
+function injectFeedbackStyles() {
+  if (document.getElementById("feedback-styles")) return;
+  const style = document.createElement("style");
+  style.id = "feedback-styles";
+  style.textContent = `
+    .dossier-view-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:#5a7a9a;letter-spacing:1px;margin-top:8px;}
+    .dossier-reactions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+    .react-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.14);color:#c8d8e8;font-family:'Share Tech Mono',monospace;
+      font-size:12px;padding:6px 10px;border-radius:20px;cursor:pointer;transition:all .2s;}
+    .react-btn:active{transform:scale(0.94);}
+    .react-btn.reacted{border-color:rgba(79,195,247,0.6);background:rgba(79,195,247,0.12);}
+    .react-btn:disabled{opacity:0.85;cursor:default;}
+    .react-emoji{font-size:15px;line-height:1;}
+    .react-count{color:#4fc3f7;min-width:12px;text-align:left;}
+    #top-viewed-btn{position:fixed;bottom:16px;right:16px;z-index:500;
+      background:rgba(13,19,32,0.9);color:#4fc3f7;border:1px solid rgba(79,195,247,0.4);
+      font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;
+      padding:10px 14px;border-radius:2px;backdrop-filter:blur(6px);cursor:pointer;}
+    #top-viewed-btn:active{transform:scale(0.96);}
+    .top-viewed-row{display:flex;justify-content:space-between;padding:7px 0;
+      border-bottom:1px solid rgba(79,195,247,0.1);font-size:13px;}
+  `;
+  document.head.appendChild(style);
+}
+
+/* Плавающая кнопка «топ просмотров», добавляется один раз после загрузки персонажей */
+function injectTopButton() {
+  if (document.getElementById("top-viewed-btn")) return;
+  const btn = document.createElement("button");
+  btn.id = "top-viewed-btn";
+  btn.textContent = "🏆 ТОП";
+  btn.addEventListener("click", showTopViewed);
+  document.body.appendChild(btn);
+}
+
+async function showTopViewed() {
+  const btn = document.getElementById("top-viewed-btn");
+  const originalText = btn.textContent;
+  btn.textContent = "…";
+  btn.disabled = true;
+
+  const results = await Promise.all(allChars.map(async c => ({
+    name: c.name,
+    n: await counterGet(`view-${c._slug}`)
+  })));
+  results.sort((a, b) => b.n - a.n);
+  const top = results.slice(0, 10);
+
+  btn.textContent = originalText;
+  btn.disabled = false;
+
+  const overlay = document.createElement("div");
+  overlay.id = "top-viewed-overlay";
+  overlay.style.cssText = `position:fixed;inset:0;z-index:600;background:rgba(6,9,14,0.92);
+    backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;`;
+  overlay.innerHTML = `
+    <div style="max-width:360px;width:100%;background:rgba(13,19,32,0.96);
+      border:1px solid rgba(79,195,247,0.3);padding:20px;font-family:'Share Tech Mono',monospace;color:#c8d8e8;">
+      <div style="font-size:10px;letter-spacing:3px;color:#5a7a9a;margin-bottom:14px;">САМЫЕ ОТКРЫВАЕМЫЕ ДОСЬЕ</div>
+      ${top.length
+        ? top.map((t, i) => `<div class="top-viewed-row"><span>${i + 1}. ${t.name}</span><span style="color:#4fc3f7;">${t.n}</span></div>`).join("")
+        : `<div style="font-size:12px;color:#5a7a9a;">ДАННЫХ ПОКА НЕТ</div>`}
+      <button id="close-top-overlay" style="margin-top:16px;width:100%;padding:10px;background:transparent;
+        border:1px solid rgba(79,195,247,0.3);color:#4fc3f7;font-family:'Share Tech Mono',monospace;
+        letter-spacing:2px;cursor:pointer;">ЗАКРЫТЬ</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("close-top-overlay").addEventListener("click", () => overlay.remove());
+  overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
+}
+
+/* Инкремент счётчика просмотров конкретного досье + отображение результата */
+async function incrementViewCounter(c) {
+  const el = document.getElementById("dossier-view-count");
+  if (!el || !c._slug) return;
+  el.textContent = "";
+  const n = await counterUp(`view-${c._slug}`);
+  if (n !== null) el.textContent = `👁 ПРОСМОТРОВ: ${n}`;
+}
+
+/* Рендер и логика реакций для текущего досье */
+function renderReactions(c) {
+  const wrap = document.getElementById("dossier-reactions");
+  if (!wrap || !c._slug) return;
+
+  wrap.innerHTML = REACTIONS.map(r => {
+    const already = localStorage.getItem(`reacted-${c._slug}-${r.key}`) === "1";
+    return `<button class="react-btn${already ? " reacted" : ""}" data-key="${r.key}" ${already ? "disabled" : ""}>
+      <span class="react-emoji">${r.emoji}</span><span class="react-count" data-key="${r.key}">…</span>
+    </button>`;
+  }).join("");
+
+  REACTIONS.forEach(async r => {
+    const n = await counterGet(`react-${r.key}-${c._slug}`);
+    const countEl = wrap.querySelector(`.react-count[data-key="${r.key}"]`);
+    if (countEl) countEl.textContent = n;
+  });
+
+  wrap.querySelectorAll(".react-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const key = btn.dataset.key;
+      const storageKey = `reacted-${c._slug}-${key}`;
+      if (localStorage.getItem(storageKey)) return;
+      btn.disabled = true;
+      const n = await counterUp(`react-${key}-${c._slug}`);
+      const countEl = btn.querySelector(".react-count");
+      if (countEl && n !== null) countEl.textContent = n;
+      localStorage.setItem(storageKey, "1");
+      btn.classList.add("reacted");
+    });
+  });
+}
+
 let allChars = [], currentFiltered = [], currentCols = 2;
 let currentFaction = "all";
 let currentTier = "all";
@@ -292,7 +435,13 @@ async function loadCharacters() {
     allChars = (await Promise.all(
       data
         .filter(f => f.name.endsWith(".json") && f.name !== ".keep")
-        .map(async f => (await fetch(f.download_url)).json())
+        .map(async f => {
+          const c = await (await fetch(f.download_url)).json();
+          /* slug на основе имени файла — стабильный ключ для счётчиков,
+             не зависит от изменений поля name в будущем */
+          c._slug = f.name.replace(/\.json$/, "");
+          return c;
+        })
     )).sort((a, b) => (b.threat_level || 0) - (a.threat_level || 0));
     currentFaction = "all";
     currentFiltered = sortChars(allChars);
@@ -300,6 +449,7 @@ async function loadCharacters() {
     buildTierFilters();
     renderGrid(currentFiltered);
     document.getElementById("count-total").textContent = allChars.length;
+    injectTopButton();
   } catch (e) {
     document.getElementById("grid").innerHTML =
       `<div class="empty-state">ОШИБКА: ${e.message}<br><br>Попробуйте обновить страницу через минуту.</div>`;
@@ -364,6 +514,8 @@ function openDossier(idx) {
           </div>
           <div class="dossier-status" style="--sc2:${sc};--sc-rgb:${scRgb};color:${sc}">${c.status || '—'}</div>
         </div>
+        <div id="dossier-view-count" class="dossier-view-count"></div>
+        <div id="dossier-reactions" class="dossier-reactions"></div>
         <div class="dossier-scroll-hint">
           <span>ДОСЬЕ</span>
           <div class="scroll-arrow" style="--dr:${col.rgb}"></div>
@@ -407,6 +559,9 @@ function openDossier(idx) {
   overlay.classList.add("open");
   overlay.scrollTop = 0;
   document.body.style.overflow = "hidden";
+
+  incrementViewCounter(c);
+  renderReactions(c);
 }
 
 function closeDossier() {
@@ -601,4 +756,5 @@ document.addEventListener("click", e => {
 });
 
 /* ── Старт ── */
+injectFeedbackStyles();
 loadCharacters();
