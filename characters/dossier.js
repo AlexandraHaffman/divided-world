@@ -22,9 +22,6 @@ const STATUS_COLORS = {
   "Неизвестно": "#64748b"
 };
 
-/* ── Цвета для дропдауна фильтра по тиру ──
-   Отдельное имя (TIER_FILTER_COLORS), чтобы не конфликтовать с TIER_COLORS
-   и TIER_ORDER, которые живут в carousel-mode.js. */
 const TIER_FILTER_COLORS = {
   common:    { hex: "#6b7280", rgb: "107,114,128" },
   rare:      { hex: "#60a5fa", rgb: "96,165,250" },
@@ -35,17 +32,15 @@ const TIER_FILTER_COLORS = {
 
 const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
-
-/* ── Легендарные страницы: имя персонажа → slug HTML-файла в characters/legendary/ ── */
 const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn" };
 
 /* ══════════════════════════════════════════
-   ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров + реакции
-   Бэкенд — бесплатный публичный counterapi.dev (v1, без ключей).
-   Каждый персонаж считается по своему file-slug (имени JSON-файла без .json),
-   так что переименование поля name в будущем не собьёт счётчик.
+   ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров + реакции (counterapi.dev v1)
+   ТОП читает только реально открывавшихся персонажей (их slug'и копятся
+   в localStorage), маленькими пачками — иначе rate-limit даёт нули.
    ══════════════════════════════════════════ */
 const COUNTER_NS = "divided-world-chars";
+const VIEWED_KEY = "dw-viewed-slugs";
 const REACTIONS = [
   { key: "fire",  emoji: "🔥" },
   { key: "heart", emoji: "❤️" },
@@ -68,88 +63,119 @@ async function counterGet(key) {
   } catch (e) { return 0; }
 }
 
+function getViewedSlugs() {
+  try { return JSON.parse(localStorage.getItem(VIEWED_KEY)) || []; }
+  catch (e) { return []; }
+}
+function addViewedSlug(slug) {
+  const set = new Set(getViewedSlugs());
+  set.add(slug);
+  try { localStorage.setItem(VIEWED_KEY, JSON.stringify([...set])); } catch (e) {}
+}
+
 function injectFeedbackStyles() {
   if (document.getElementById("feedback-styles")) return;
   const style = document.createElement("style");
   style.id = "feedback-styles";
   style.textContent = `
-    .dossier-view-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:#5a7a9a;letter-spacing:1px;margin-top:8px;}
-    .dossier-reactions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
-    .react-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.14);color:#c8d8e8;font-family:'Share Tech Mono',monospace;
-      font-size:12px;padding:6px 10px;border-radius:20px;cursor:pointer;transition:all .2s;}
+    .dossier-view-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a6a80;letter-spacing:0.1em;margin-top:8px;}
+    .dossier-reactions{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0 4px;opacity:0.5;transition:opacity 0.2s;}
+    .dossier-reactions:hover{opacity:1;}
+    .react-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.1);color:#b8cfe0;font-family:'Share Tech Mono',monospace;
+      font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;transition:all .2s;}
     .react-btn:active{transform:scale(0.94);}
-    .react-btn.reacted{border-color:rgba(79,195,247,0.6);background:rgba(79,195,247,0.12);}
-    .react-btn:disabled{opacity:0.85;cursor:default;}
-    .react-emoji{font-size:15px;line-height:1;}
-    .react-count{color:#4fc3f7;min-width:12px;text-align:left;}
-    #top-viewed-btn{position:fixed;bottom:16px;right:16px;z-index:500;
-      background:rgba(13,19,32,0.9);color:#4fc3f7;border:1px solid rgba(79,195,247,0.4);
-      font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;
-      padding:10px 14px;border-radius:2px;backdrop-filter:blur(6px);cursor:pointer;}
-    #top-viewed-btn:active{transform:scale(0.96);}
+    .react-btn.reacted{border-color:rgba(79,195,247,0.5);background:rgba(79,195,247,0.1);}
+    .react-btn:disabled{cursor:default;}
+    .react-emoji{font-size:14px;line-height:1;}
+    .react-count{color:#4fc3f7;min-width:10px;text-align:left;font-size:10px;}
+    #top-viewed-overlay{position:fixed;inset:0;z-index:1200;background:rgba(5,8,15,0.93);
+      backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
+    .top-viewed-box{max-width:360px;width:100%;background:rgba(8,13,24,0.97);
+      border:1px solid rgba(79,195,247,0.3);border-radius:6px;padding:20px;
+      font-family:'Share Tech Mono',monospace;color:#b8cfe0;}
+    .top-viewed-title{font-size:10px;letter-spacing:0.2em;color:#4a6a80;margin-bottom:14px;text-transform:uppercase;}
     .top-viewed-row{display:flex;justify-content:space-between;padding:7px 0;
       border-bottom:1px solid rgba(79,195,247,0.1);font-size:13px;}
+    .top-viewed-row b{color:#4fc3f7;font-weight:700;}
+    .top-viewed-empty{font-size:12px;color:#4a6a80;line-height:1.6;}
+    .top-viewed-close{margin-top:16px;width:100%;padding:10px;background:transparent;
+      border:1px solid rgba(79,195,247,0.3);color:#4fc3f7;font-family:'Share Tech Mono',monospace;
+      letter-spacing:0.15em;cursor:pointer;border-radius:3px;text-transform:uppercase;}
+    .top-viewed-close:active{background:rgba(79,195,247,0.1);}
   `;
   document.head.appendChild(style);
 }
 
-/* Плавающая кнопка «топ просмотров», добавляется один раз после загрузки персонажей */
+/* Кнопка «ТОП» встраивается в ряд .filter-toggles-row сразу после «Мета-люди».
+   Класс .sort-toggle — тот же, что у соседних кнопок, поэтому стиль совпадает 1:1. */
 function injectTopButton() {
   if (document.getElementById("top-viewed-btn")) return;
+  const meta = document.getElementById("meta-toggle");
+  if (!meta || !meta.parentNode) return;
   const btn = document.createElement("button");
   btn.id = "top-viewed-btn";
-  btn.textContent = "🏆 ТОП";
+  btn.className = "sort-toggle";
+  btn.innerHTML = `🏆 ТОП`;
   btn.addEventListener("click", showTopViewed);
-  document.body.appendChild(btn);
+  meta.parentNode.insertBefore(btn, meta.nextSibling);
+}
+
+async function getCountsBatched(slugs, batchSize = 6) {
+  const out = [];
+  for (let i = 0; i < slugs.length; i += batchSize) {
+    const batch = slugs.slice(i, i + batchSize);
+    const chunk = await Promise.all(batch.map(async slug => ({
+      slug, n: await counterGet(`view-${slug}`)
+    })));
+    out.push(...chunk);
+  }
+  return out;
 }
 
 async function showTopViewed() {
   const btn = document.getElementById("top-viewed-btn");
-  const originalText = btn.textContent;
-  btn.textContent = "…";
+  const original = btn.innerHTML;
+  btn.innerHTML = "…";
   btn.disabled = true;
 
-  const results = await Promise.all(allChars.map(async c => ({
-    name: c.name,
-    n: await counterGet(`view-${c._slug}`)
-  })));
-  results.sort((a, b) => b.n - a.n);
-  const top = results.slice(0, 10);
+  const viewedSlugs = getViewedSlugs().filter(slug => allChars.some(c => c._slug === slug));
+  const counts = await getCountsBatched(viewedSlugs);
 
-  btn.textContent = originalText;
+  const nameBySlug = Object.fromEntries(allChars.map(c => [c._slug, c.name]));
+  const rows = counts
+    .map(r => ({ name: nameBySlug[r.slug] || r.slug, n: r.n }))
+    .filter(r => r.n > 0)
+    .sort((a, b) => b.n - a.n)
+    .slice(0, 10);
+
+  btn.innerHTML = original;
   btn.disabled = false;
 
   const overlay = document.createElement("div");
   overlay.id = "top-viewed-overlay";
-  overlay.style.cssText = `position:fixed;inset:0;z-index:600;background:rgba(6,9,14,0.92);
-    backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;`;
   overlay.innerHTML = `
-    <div style="max-width:360px;width:100%;background:rgba(13,19,32,0.96);
-      border:1px solid rgba(79,195,247,0.3);padding:20px;font-family:'Share Tech Mono',monospace;color:#c8d8e8;">
-      <div style="font-size:10px;letter-spacing:3px;color:#5a7a9a;margin-bottom:14px;">САМЫЕ ОТКРЫВАЕМЫЕ ДОСЬЕ</div>
-      ${top.length
-        ? top.map((t, i) => `<div class="top-viewed-row"><span>${i + 1}. ${t.name}</span><span style="color:#4fc3f7;">${t.n}</span></div>`).join("")
-        : `<div style="font-size:12px;color:#5a7a9a;">ДАННЫХ ПОКА НЕТ</div>`}
-      <button id="close-top-overlay" style="margin-top:16px;width:100%;padding:10px;background:transparent;
-        border:1px solid rgba(79,195,247,0.3);color:#4fc3f7;font-family:'Share Tech Mono',monospace;
-        letter-spacing:2px;cursor:pointer;">ЗАКРЫТЬ</button>
+    <div class="top-viewed-box">
+      <div class="top-viewed-title">Самые открываемые досье</div>
+      ${rows.length
+        ? rows.map((t, i) => `<div class="top-viewed-row"><span>${i + 1}. ${t.name}</span><b>${t.n}</b></div>`).join("")
+        : `<div class="top-viewed-empty">Пока нет данных.<br>Открой несколько досье — и они появятся здесь.</div>`}
+      <button class="top-viewed-close">Закрыть</button>
     </div>`;
   document.body.appendChild(overlay);
-  document.getElementById("close-top-overlay").addEventListener("click", () => overlay.remove());
+  overlay.querySelector(".top-viewed-close").addEventListener("click", () => overlay.remove());
   overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
 }
 
-/* Инкремент счётчика просмотров конкретного досье + отображение результата */
 async function incrementViewCounter(c) {
   const el = document.getElementById("dossier-view-count");
   if (!el || !c._slug) return;
+  addViewedSlug(c._slug);
   el.textContent = "";
   const n = await counterUp(`view-${c._slug}`);
   if (n !== null) el.textContent = `👁 ПРОСМОТРОВ: ${n}`;
 }
 
-/* Рендер и логика реакций для текущего досье */
 function renderReactions(c) {
   const wrap = document.getElementById("dossier-reactions");
   if (!wrap || !c._slug) return;
@@ -186,16 +212,13 @@ let allChars = [], currentFiltered = [], currentCols = 2;
 let currentFaction = "all";
 let currentTier = "all";
 let metaOnly = false;
-let currentSort = "threat"; // "threat" | "name"
+let currentSort = "threat";
 
-/* ── Утилиты ── */
 function hexToRgb(h) {
   const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
   return r ? `${parseInt(r[1],16)},${parseInt(r[2],16)},${parseInt(r[3],16)}` : null;
 }
 function getFactionColor(c) {
-  /* Приоритет: 1) таблица сайта — правится одной строчкой без переэкспорта персонажей,
-     2) faction_color, вшитый экспортом из Obsidian, 3) дефолтный голубой */
   if (FACTION_COLORS[c.faction]) return FACTION_COLORS[c.faction];
   if (c.faction_color) { const r = hexToRgb(c.faction_color); if (r) return { hex: c.faction_color, rgb: r }; }
   return DEFAULT_COLOR;
@@ -203,7 +226,6 @@ function getFactionColor(c) {
 function isTopFaction(c) { return TOP_FACTIONS.has(c.faction); }
 function getTier(c) { return (c.tier || "common").toLowerCase().trim(); }
 
-/* ── Сортировка списка персонажей ── */
 function sortChars(list) {
   const arr = [...list];
   if (currentSort === "name") {
@@ -214,7 +236,6 @@ function sortChars(list) {
   return arr;
 }
 
-/* ── Мета-сила ── */
 function metaGlowHTML(c) {
   const m = (c.stats && c.stats.meta_power) || 0;
   if (m <= 0) return "";
@@ -226,7 +247,6 @@ function metaGlowHTML(c) {
   return `<div class="${cls}" style="--mg-h:${h}px;--mg-str:${str};height:${h}px;background:linear-gradient(to top,rgba(var(--cr),${str}),transparent);"></div>`;
 }
 
-/* ── Радар (одиночный — используется и dossier.js, и compare-mode.js) ── */
 function buildRadar(stats, rgb, size = 70) {
   const vals = [
     stats.intelligence || 0, stats.combat || 0, stats.influence || 0,
@@ -262,7 +282,6 @@ function buildRadar(stats, rgb, size = 70) {
   </svg>`;
 }
 
-/* ── Построение карточки ── */
 function buildCard(c, i, cols) {
   const col = getFactionColor(c);
   const hasPhoto = !!c.avatar_web;
@@ -273,8 +292,6 @@ function buildCard(c, i, cols) {
   const globalIdx = allChars.indexOf(c);
   const isDead = (c.status || '').trim() === 'Мёртв';
   const deadAttr = isDead ? ' data-status="dead"' : '';
-  /* «Помехи связи» поверх фото — со случайной задержкой, чтобы карточки
-     не мигали синхронно. Цвет фото НЕ трогаем. */
   const deadDelay = (Math.random() * 6).toFixed(2);
   const deadGlass = isDead ? `<div class="dead-glitch" style="animation-delay:${deadDelay}s"></div>` : '';
 
@@ -292,8 +309,6 @@ function buildCard(c, i, cols) {
     </div>`;
   }
 
-  /* Компакт-3: сюда же добавлен .cmp-check — визуальная галочка выбора,
-     переключается классом cmp-selected из compare-mode.js */
   if (cols >= 3 && hasPhoto) {
     return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
@@ -363,7 +378,6 @@ function buildCard(c, i, cols) {
   </div>`;
 }
 
-/* ── Рендер грида ── */
 function renderGrid(chars) {
   if (currentCols === 1) { activateCarouselMode(); return; }
   document.getElementById("count-shown").textContent = chars.length;
@@ -375,7 +389,6 @@ function renderGrid(chars) {
   applySearch();
 }
 
-/* ── Пересборка отфильтрованного списка (фракция + тир + мета + сортировка) ── */
 function refreshFiltered() {
   let base = currentFaction === "all" ? allChars : allChars.filter(c => c.faction === currentFaction);
   if (currentTier !== "all") base = base.filter(c => getTier(c) === currentTier);
@@ -384,7 +397,6 @@ function refreshFiltered() {
   renderGrid(currentFiltered);
 }
 
-/* ── Фильтры по фракциям ── */
 function buildFilters() {
   const factions = [...new Set(allChars.map(c => c.faction).filter(Boolean))].sort();
   const wrap = document.getElementById("filters");
@@ -404,7 +416,6 @@ function setFilter(faction) {
   refreshFiltered();
 }
 
-/* ── Фильтры по тиру ── */
 function buildTierFilters() {
   const wrap = document.getElementById("tier-filters");
   ["common","rare","epic","legendary","divine"].forEach(t => {
@@ -423,7 +434,6 @@ function setTierFilter(tier) {
   refreshFiltered();
 }
 
-/* ── Загрузка персонажей ── */
 async function loadCharacters() {
   try {
     const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/characters`);
@@ -437,8 +447,6 @@ async function loadCharacters() {
         .filter(f => f.name.endsWith(".json") && f.name !== ".keep")
         .map(async f => {
           const c = await (await fetch(f.download_url)).json();
-          /* slug на основе имени файла — стабильный ключ для счётчиков,
-             не зависит от изменений поля name в будущем */
           c._slug = f.name.replace(/\.json$/, "");
           return c;
         })
@@ -456,7 +464,6 @@ async function loadCharacters() {
   }
 }
 
-/* ── Досье: открытие ── */
 function openDossier(idx) {
   const c = allChars[idx];
   const col = getFactionColor(c);
@@ -515,7 +522,6 @@ function openDossier(idx) {
           <div class="dossier-status" style="--sc2:${sc};--sc-rgb:${scRgb};color:${sc}">${c.status || '—'}</div>
         </div>
         <div id="dossier-view-count" class="dossier-view-count"></div>
-        <div id="dossier-reactions" class="dossier-reactions"></div>
         <div class="dossier-scroll-hint">
           <span>ДОСЬЕ</span>
           <div class="scroll-arrow" style="--dr:${col.rgb}"></div>
@@ -551,6 +557,10 @@ function openDossier(idx) {
       ${c.biography ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Биография</div><div class="dossier-bio">${c.biography.replace(/\n/g,"<br>")}</div></div>` : ''}
       ${c.current_status ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Текущий статус</div><div class="dossier-bio">${c.current_status.replace(/\n/g,"<br>")}</div></div>` : ''}
       ${c.abilities?.length ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Способности</div><div class="abilities">${c.abilities.map(a=>`<div class="chip">${a}</div>`).join("")}</div></div>` : ''}
+      <div class="dossier-divider"></div>
+      <div class="dossier-section">
+        <div id="dossier-reactions" class="dossier-reactions"></div>
+      </div>
       <div class="dossier-bottom"></div>
     </div>`;
 
@@ -569,9 +579,6 @@ function closeDossier() {
   document.body.style.overflow = "";
 }
 
-/* ── Touch/click на карточках ──
-   В режиме 3 колонок тап переключает выбор для сравнения
-   (toggleCompareSelect определена в compare-mode.js), иначе — открывает досье. */
 function attachCardEvents() {
   document.querySelectorAll(".char-card").forEach(el => {
     let startX, startY, moved = false;
@@ -602,7 +609,6 @@ function attachCardEvents() {
   });
 }
 
-/* ── Переключатель колонок ── */
 document.getElementById("cols-slider").addEventListener("click", e => {
   const btn = e.target.closest(".cols-opt");
   if (!btn) return;
@@ -615,39 +621,36 @@ document.getElementById("cols-slider").addEventListener("click", e => {
   else activateCarouselMode();
 });
 
-/* ── Переключатель сортировки ── */
 document.getElementById("sort-toggle").addEventListener("click", () => {
   currentSort = currentSort === "threat" ? "name" : "threat";
   document.getElementById("sort-label").textContent = currentSort === "threat" ? "УГРОЗА ↓" : "ИМЯ А-Я";
   refreshFiltered();
 });
 
-/* ── Дропдаун фракций ── */
 document.getElementById("filters-toggle").addEventListener("click", () => {
   document.getElementById("filters-toggle").classList.toggle("open");
   document.getElementById("filters").classList.toggle("open");
 });
 document.querySelector("#filters .filter-btn[data-faction='all']").addEventListener("click", () => setFilter("all"));
 
-/* ── Дропдаун тиров ── */
 document.getElementById("tier-toggle").addEventListener("click", () => {
   document.getElementById("tier-toggle").classList.toggle("open");
   document.getElementById("tier-filters").classList.toggle("open");
 });
 document.querySelector("#tier-filters .filter-btn[data-tier='all']").addEventListener("click", () => setTierFilter("all"));
 
-/* ── Кнопка «Мета-люди» ── */
 document.getElementById("meta-toggle").addEventListener("click", () => {
   metaOnly = !metaOnly;
   document.getElementById("meta-toggle").classList.toggle("active", metaOnly);
   refreshFiltered();
 });
 
-/* ── Клавиша Escape ── */
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeDossier();
     if (typeof closeCompare === "function") closeCompare();
+    const ov = document.getElementById("top-viewed-overlay");
+    if (ov) ov.remove();
   }
 });
 
@@ -674,8 +677,6 @@ function applySearch() {
   const input = document.getElementById("search-input");
 
   document.querySelectorAll(".char-card.search-match").forEach(el => el.classList.remove("search-match"));
-
-  // крестик виден только когда что-то введено
   clearBtn.classList.toggle("show", !!searchQuery);
 
   if (!searchQuery) {
@@ -687,20 +688,14 @@ function applySearch() {
   }
 
   const matches = getSearchMatches();
-
-  // счётчик "ОТОБРАЖЕНО" = число совпадений
   document.getElementById("count-shown").textContent = matches.length;
-
-  // поле краснеет, если совпадений нет
   wrap.classList.toggle("no-match", matches.length === 0);
 
-  // подсветка карточек в гриде
   document.querySelectorAll("#grid .char-card").forEach(el => {
     const idx = parseInt(el.dataset.idx);
     if (matches.includes(currentFiltered[idx])) el.classList.add("search-match");
   });
 
-  // выпадашка (только когда поле в фокусе)
   if (document.activeElement === input && matches.length) {
     suggBox.innerHTML = matches.slice(0, 8).map(c => {
       const gidx = allChars.indexOf(c);
@@ -711,7 +706,6 @@ function applySearch() {
     suggBox.classList.remove("show");
   }
 
-  // остался ровно один — плавно скроллим к нему
   if (matches.length === 1) {
     const idx = currentFiltered.indexOf(matches[0]);
     const el = document.querySelector(`#grid .char-card[data-idx="${idx}"]`);
@@ -755,6 +749,5 @@ document.addEventListener("click", e => {
   }
 });
 
-/* ── Старт ── */
 injectFeedbackStyles();
 loadCharacters();
