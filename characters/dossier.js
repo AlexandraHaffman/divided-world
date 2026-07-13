@@ -54,12 +54,6 @@ const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт 
    ══════════════════════════════════════════ */
 const COUNTER_NS = "divided-world-chars";
 const VIEWED_KEY = "dw-viewed-slugs";
-const REACTIONS = [
-  { key: "fire",  emoji: "🔥" },
-  { key: "heart", emoji: "❤️" },
-  { key: "skull", emoji: "💀" },
-  { key: "shock", emoji: "😱" }
-];
 
 async function counterUp(key) {
   try {
@@ -68,12 +62,16 @@ async function counterUp(key) {
     return typeof data.count === "number" ? data.count : null;
   } catch (e) { return null; }
 }
+/* Возвращает null (а не 0), когда запрос реально не удался — 0 должно
+   означать «счётчик существует и равен нулю», а не «сервис не ответил»,
+   иначе showTopViewed() не отличит рейт-лимит от «пока нет данных». */
 async function counterGet(key) {
   try {
     const res = await fetch(`https://api.counterapi.dev/v1/${COUNTER_NS}/${encodeURIComponent(key)}`);
+    if (!res.ok) return null;
     const data = await res.json();
-    return typeof data.count === "number" ? data.count : 0;
-  } catch (e) { return 0; }
+    return typeof data.count === "number" ? data.count : null;
+  } catch (e) { return null; }
 }
 
 function getViewedSlugs() {
@@ -92,16 +90,6 @@ function injectFeedbackStyles() {
   style.id = "feedback-styles";
   style.textContent = `
     .dossier-view-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a6a80;letter-spacing:0.1em;margin-top:8px;}
-    .dossier-reactions{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0 4px;opacity:0.5;transition:opacity 0.2s;}
-    .dossier-reactions:hover{opacity:1;}
-    .react-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.1);color:#b8cfe0;font-family:'Share Tech Mono',monospace;
-      font-size:11px;padding:5px 10px;border-radius:20px;cursor:pointer;transition:all .2s;}
-    .react-btn:active{transform:scale(0.94);}
-    .react-btn.reacted{border-color:rgba(79,195,247,0.5);background:rgba(79,195,247,0.1);}
-    .react-btn:disabled{cursor:default;}
-    .react-emoji{font-size:14px;line-height:1;}
-    .react-count{color:#4fc3f7;min-width:10px;text-align:left;font-size:10px;}
     #top-viewed-overlay{position:fixed;inset:0;z-index:1200;background:rgba(5,8,15,0.93);
       backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
     .top-viewed-box{max-width:360px;width:100%;background:rgba(8,13,24,0.97);
@@ -134,7 +122,10 @@ function injectTopButton() {
   meta.parentNode.insertBefore(btn, meta.nextSibling);
 }
 
-async function getCountsBatched(slugs, batchSize = 6) {
+/* Меньше параллельных запросов + пауза между пачками — раньше 6 счётчиков
+   разом нередко били по рейт-лимиту counterapi.dev, и ТОП всегда выглядел
+   пустым, даже если досье реально открывали. */
+async function getCountsBatched(slugs, batchSize = 3, delayMs = 300) {
   const out = [];
   for (let i = 0; i < slugs.length; i += batchSize) {
     const batch = slugs.slice(i, i + batchSize);
@@ -142,6 +133,7 @@ async function getCountsBatched(slugs, batchSize = 6) {
       slug, n: await counterGet(`view-${slug}`)
     })));
     out.push(...chunk);
+    if (i + batchSize < slugs.length) await new Promise(r => setTimeout(r, delayMs));
   }
   return out;
 }
@@ -154,16 +146,21 @@ async function showTopViewed() {
 
   const viewedSlugs = getViewedSlugs().filter(slug => allChars.some(c => c._slug === slug));
   const counts = await getCountsBatched(viewedSlugs);
+  const allFailed = viewedSlugs.length > 0 && counts.every(r => r.n === null);
 
   const nameBySlug = Object.fromEntries(allChars.map(c => [c._slug, c.name]));
   const rows = counts
+    .filter(r => typeof r.n === "number" && r.n > 0)
     .map(r => ({ name: nameBySlug[r.slug] || r.slug, n: r.n }))
-    .filter(r => r.n > 0)
     .sort((a, b) => b.n - a.n)
     .slice(0, 10);
 
   btn.innerHTML = original;
   btn.disabled = false;
+
+  const emptyMsg = allFailed
+    ? "Сервис счётчиков сейчас недоступен.<br>Попробуй обновить страницу чуть позже."
+    : "Пока нет данных.<br>Открой несколько досье — и они появятся здесь.";
 
   const overlay = document.createElement("div");
   overlay.id = "top-viewed-overlay";
@@ -172,7 +169,7 @@ async function showTopViewed() {
       <div class="top-viewed-title">Самые открываемые досье</div>
       ${rows.length
         ? rows.map((t, i) => `<div class="top-viewed-row"><span>${i + 1}. ${t.name}</span><b>${t.n}</b></div>`).join("")
-        : `<div class="top-viewed-empty">Пока нет данных.<br>Открой несколько досье — и они появятся здесь.</div>`}
+        : `<div class="top-viewed-empty">${emptyMsg}</div>`}
       <button class="top-viewed-close">Закрыть</button>
     </div>`;
   document.body.appendChild(overlay);
@@ -187,38 +184,6 @@ async function incrementViewCounter(c) {
   el.textContent = "";
   const n = await counterUp(`view-${c._slug}`);
   if (n !== null) el.textContent = `👁 ПРОСМОТРОВ: ${n}`;
-}
-
-function renderReactions(c) {
-  const wrap = document.getElementById("dossier-reactions");
-  if (!wrap || !c._slug) return;
-
-  wrap.innerHTML = REACTIONS.map(r => {
-    const already = localStorage.getItem(`reacted-${c._slug}-${r.key}`) === "1";
-    return `<button class="react-btn${already ? " reacted" : ""}" data-key="${r.key}" ${already ? "disabled" : ""}>
-      <span class="react-emoji">${r.emoji}</span><span class="react-count" data-key="${r.key}">…</span>
-    </button>`;
-  }).join("");
-
-  REACTIONS.forEach(async r => {
-    const n = await counterGet(`react-${r.key}-${c._slug}`);
-    const countEl = wrap.querySelector(`.react-count[data-key="${r.key}"]`);
-    if (countEl) countEl.textContent = n;
-  });
-
-  wrap.querySelectorAll(".react-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const key = btn.dataset.key;
-      const storageKey = `reacted-${c._slug}-${key}`;
-      if (localStorage.getItem(storageKey)) return;
-      btn.disabled = true;
-      const n = await counterUp(`react-${key}-${c._slug}`);
-      const countEl = btn.querySelector(".react-count");
-      if (countEl && n !== null) countEl.textContent = n;
-      localStorage.setItem(storageKey, "1");
-      btn.classList.add("reacted");
-    });
-  });
 }
 
 let allChars = [], currentFiltered = [], currentCols = 2;
@@ -570,10 +535,6 @@ function openDossier(idx) {
       ${c.biography ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Биография</div><div class="dossier-bio">${c.biography.replace(/\n/g,"<br>")}</div></div>` : ''}
       ${c.current_status ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Текущий статус</div><div class="dossier-bio">${c.current_status.replace(/\n/g,"<br>")}</div></div>` : ''}
       ${c.abilities?.length ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Способности</div><div class="abilities">${c.abilities.map(a=>`<div class="chip">${a}</div>`).join("")}</div></div>` : ''}
-      <div class="dossier-divider"></div>
-      <div class="dossier-section">
-        <div id="dossier-reactions" class="dossier-reactions"></div>
-      </div>
       <div class="dossier-bottom"></div>
     </div>`;
 
@@ -584,7 +545,6 @@ function openDossier(idx) {
   document.body.style.overflow = "hidden";
 
   incrementViewCounter(c);
-  renderReactions(c);
 }
 
 function closeDossier() {
