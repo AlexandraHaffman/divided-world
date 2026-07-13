@@ -66,7 +66,7 @@
 
   /* компакт-5 колонок */
   .compact-5-name { font-size: 11px; }
-  .compact-5-name-area { padding: 6px 8px 8px; }
+  .compact-5-name-area { padding: 6px 8px 8px; min-height: 44px; }
   .compact-5-threat { font-size: 17px; top: 7px; left: 8px; }
 
   /* дропдауны фильтров */
