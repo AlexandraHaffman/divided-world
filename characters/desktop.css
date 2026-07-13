@@ -1,0 +1,143 @@
+/* ══════════════════════════════════════════════════════
+   ДЕСКТОП-МАСШТАБИРОВАНИЕ
+
+   style.css и carousel-mode.js писались мобильно-first и
+   используют фиксированные мелкие px — на широком мониторе
+   всё выглядит игрушечным. Ниже — только увеличение размеров
+   и удобства для широких экранов, мобильная вёрстка не трогается.
+   ══════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  /* ── общий контейнер: не растягиваем контент во всю ширину монитора ── */
+  .header-top, .page-title, .stats-row,
+  .view-controls, .filter-toggles-row, .filters,
+  .grid, .carousel-mode {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .filters { display: flex; }
+
+  /* ── шапка ── */
+  .page-title { font-size: 40px; }
+  .sys-label { font-size: 11px; }
+  .back-btn { font-size: 12px; padding: 6px 14px; }
+  .stat-pill { font-size: 11px; }
+  .search-wrap { max-width: 320px; min-width: 220px; }
+  .search-input { font-size: 13px; padding: 8px 32px 8px 14px; }
+  .search-suggestions { max-height: 340px; }
+  .search-sugg-item { font-size: 13px; padding: 10px 14px; }
+
+  /* ── переключатели/фильтры ── */
+  .filter-btn { font-size: 11px; padding: 6px 14px; cursor: pointer; }
+  .filters-toggle, .sort-toggle { font-size: 11px; height: 34px; padding: 0 16px; }
+  .cols-label { font-size: 10px; }
+  .cols-opt { width: 36px; height: 30px; font-size: 13px; }
+
+  /* ── сетка карточек: больше воздуха, чуть заметнее рамки ── */
+  .grid { gap: 20px; padding: 24px; }
+  .char-card { border-width: 1.5px; }
+  .char-card:hover { transform: translateY(-4px); }
+
+  /* карточка без фото — радар */
+  .card-body { padding: 14px 16px 16px; }
+  .card-name { font-size: 20px; }
+  .card-role { font-size: 12px; margin-bottom: 10px; }
+  .card-quote { font-size: 13px; }
+  .threat-num { font-size: 30px; }
+  .threat-label { font-size: 8px; }
+  .card-radar-row svg { width: 100px !important; height: 100px !important; }
+  .card-faction-bottom, .card-photo-faction-bottom { font-size: 11px !important; }
+  .faction-badge { font-size: 9px !important; padding: 2px 8px; }
+
+  /* карточка с фото (1–2 колонки) */
+  .card-photo-name { font-size: 20px; }
+  .card-photo-role { font-size: 11px; }
+  .card-photo-threat-num { font-size: 26px; }
+  .card-quote-a-text { font-size: 13px; max-height: 6.5em; }
+
+  /* компакт-3 колонки */
+  .compact-3-name { font-size: 15px; }
+  .compact-3-name-area { padding: 8px 10px 10px; }
+  .compact-3-threat-num { font-size: 20px; }
+  .compact-3-threat-lbl { font-size: 6px; }
+  .compact-3-faction { font-size: 9px; padding: 2px 6px; }
+
+  /* компакт-5 колонок */
+  .compact-5-name { font-size: 11px; }
+  .compact-5-name-area { padding: 6px 8px 8px; }
+  .compact-5-threat { font-size: 17px; top: 7px; left: 8px; }
+
+  /* дропдауны фильтров */
+  .filters.open { max-height: 400px; }
+}
+
+/* ══════════════════════════════════════════════════════
+   КАРУСЕЛЬ «ПО 1» (по тирам / фракциям) — десктоп
+   ══════════════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  .carousel-group-switch { padding: 10px 24px 16px; }
+  .carousel-group-btn { font-size: 10px; padding: 6px 16px; }
+
+  .carousel-shelf { margin-bottom: 36px; }
+  .carousel-shelf-header { padding: 0 24px 10px; }
+  .carousel-shelf-title { font-size: 12px; }
+  .carousel-shelf-count { font-size: 9px; }
+  .carousel-shelf-line { margin: 0 24px 12px; }
+
+  .carousel-shelf { position: relative; }
+
+  /* карточки крупнее и не привязаны к vw телефона */
+  .c-card { width: 300px; max-width: 300px; }
+  .c-card-name { font-size: 20px; }
+  .c-card-role { font-size: 11px; }
+  .c-card-threat-num { font-size: 28px; }
+  .c-face-radar svg { width: 128px !important; height: 128px !important; }
+  .c-card-sys, .c-back-sys { font-size: 8px; }
+  .c-face-faction, .c-back-faction { font-size: 8px; }
+
+  /* ── горизонтальный скролл: видимая полоса + курсор-рука ── */
+  .carousel-track {
+    padding: 6px 24px 18px;
+    cursor: grab;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(79,195,247,0.4) rgba(255,255,255,0.04);
+  }
+  .carousel-track::-webkit-scrollbar { display: block; height: 7px; }
+  .carousel-track::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 4px; }
+  .carousel-track::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.4); border-radius: 4px; }
+  .carousel-track::-webkit-scrollbar-thumb:hover { background: rgba(79,195,247,0.65); }
+  .carousel-track.dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+  .carousel-track.dragging .c-card { pointer-events: none; }
+
+  /* ── стрелки-навигация по полке ── */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-4px);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(79,195,247,0.3);
+    background: rgba(5,8,15,0.75);
+    backdrop-filter: blur(4px);
+    color: #4fc3f7;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .carousel-shelf:hover .carousel-nav { opacity: 1; }
+  .carousel-nav:hover { background: rgba(79,195,247,0.15); border-color: #4fc3f7; }
+  .carousel-nav.prev { left: 4px; }
+  .carousel-nav.next { right: 4px; }
+  .carousel-nav[disabled] { opacity: 0 !important; pointer-events: none; }
+}

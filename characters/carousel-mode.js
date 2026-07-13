@@ -154,12 +154,15 @@ function renderCarousel(chars, groupBy = "tier") {
         <div class="carousel-shelf-count">${items.length} ЗАПИСЕЙ</div>
       </div>
       <div class="carousel-shelf-line"></div>
+      <button type="button" class="carousel-nav prev" aria-label="Прокрутить назад">‹</button>
+      <button type="button" class="carousel-nav next" aria-label="Прокрутить вперёд">›</button>
       <div class="carousel-track ${items.length === 1 ? 'carousel-track--single' : ''}">
         ${items.map(c => buildCarouselCard(c, allChars.indexOf(c))).join("")}
       </div>
     </div>
   `).join("");
   attachCarouselEvents();
+  attachCarouselScrollControls();
 }
 
 function glitchFlip(card) {
@@ -190,6 +193,69 @@ function attachCarouselEvents() {
     card.addEventListener("touchmove", e => { if(Math.abs(e.touches[0].clientX-startX)>8||Math.abs(e.touches[0].clientY-startY)>8) moved=true; }, {passive:true});
     card.addEventListener("touchend", e => { if(!moved){e.preventDefault();glitchFlip(card);} });
     card.addEventListener("click", () => { if(!('ontouchstart' in window)) glitchFlip(card); });
+  });
+}
+
+/* Десктоп: колесо мыши, драг мышью и стрелки для горизонтального
+   скролла полок — на тачскрине им не пользуются, там свайп и так работает. */
+function attachCarouselScrollControls() {
+  document.querySelectorAll(".carousel-shelf").forEach(shelf => {
+    const track = shelf.querySelector(".carousel-track");
+    const prevBtn = shelf.querySelector(".carousel-nav.prev");
+    const nextBtn = shelf.querySelector(".carousel-nav.next");
+    if (!track) return;
+
+    const updateNavState = () => {
+      if (!prevBtn || !nextBtn) return;
+      const scrollable = track.scrollWidth > track.clientWidth + 4;
+      prevBtn.disabled = !scrollable || track.scrollLeft <= 4;
+      nextBtn.disabled = !scrollable || track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
+    };
+    track.addEventListener("scroll", updateNavState, { passive: true });
+    updateNavState();
+    window.addEventListener("resize", updateNavState);
+
+    const scrollByCard = dir => {
+      const card = track.querySelector(".c-card");
+      const step = card ? card.getBoundingClientRect().width + 12 : track.clientWidth * 0.8;
+      track.scrollBy({ left: dir * step, behavior: "smooth" });
+    };
+    prevBtn?.addEventListener("click", () => scrollByCard(-1));
+    nextBtn?.addEventListener("click", () => scrollByCard(1));
+
+    // колесо мыши -> горизонтальный скролл (только если есть чем скроллить)
+    track.addEventListener("wheel", e => {
+      if (track.scrollWidth <= track.clientWidth) return;
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      e.preventDefault();
+      track.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    // драг мышью
+    let isDown = false, dragged = false, startX = 0, startScroll = 0;
+    track.addEventListener("mousedown", e => {
+      isDown = true; dragged = false;
+      startX = e.clientX; startScroll = track.scrollLeft;
+      track.classList.add("dragging");
+    });
+    window.addEventListener("mousemove", e => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) dragged = true;
+      track.scrollLeft = startScroll - dx;
+    });
+    const endDrag = () => {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove("dragging");
+      if (dragged) {
+        // подавляем клик по карточке сразу после драга
+        const suppress = ev => { ev.stopPropagation(); track.removeEventListener("click", suppress, true); };
+        track.addEventListener("click", suppress, true);
+      }
+    };
+    window.addEventListener("mouseup", endDrag);
+    track.addEventListener("mouseleave", () => { if (isDown) endDrag(); });
   });
 }
 
