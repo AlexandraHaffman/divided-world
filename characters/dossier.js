@@ -32,7 +32,20 @@ const TIER_FILTER_COLORS = {
 
 const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
-const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner"};
+
+/* Порог, с которого персонаж считается легендарным — квалификация
+   считается сама по threat_level, вручную ничего добавлять не нужно. */
+const LEGENDARY_THREAT_THRESHOLD = 50;
+function isLegendaryThreat(c) {
+  return typeof c.threat_level === "number" && c.threat_level >= LEGENDARY_THREAT_THRESHOLD;
+}
+
+/* Реестр персонажей, для которых физически существует расширенная
+   HTML-страница досье (characters/legendary/<slug>.html). Кнопка
+   ссылки показывается только тем, кто и легендарен по угрозе, и есть
+   в этом реестре — так что при добавлении новой страницы просто
+   впиши сюда одну строку, без правки логики отображения. */
+const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner" };
 
 /* ══════════════════════════════════════════
    ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров + реакции (counterapi.dev v1)
@@ -472,7 +485,7 @@ function openDossier(idx) {
   const sc = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
   const scRgb = sc === "#5dd98a" ? "93,217,138" : sc === "#f87171" ? "248,113,113" : "100,116,139";
   const artUrl = c.avatar_web_full || c.avatar_web || "";
-  const legendarySlug = LEGENDARY_PAGES[c.name];
+  const legendarySlug = isLegendaryThreat(c) ? LEGENDARY_DOSSIER_SLUGS[c.name] : null;
   const stats = c.stats || {};
   const statRows = [
     ["Интеллект",         stats.intelligence],
@@ -494,7 +507,7 @@ function openDossier(idx) {
     <div class="dossier-art" style="--dr:${col.rgb}">
       <div class="dossier-faction-bar" ${factionBarStyle}></div>
       <button class="dossier-close" onclick="closeDossier()">← АРХИВ</button>
-      ${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ РАСШИРЕННОЕ ДОСЬЕ</a>` : ''}
+      ${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ ЛЕГЕНДАРНОЕ ДОСЬЕ</a>` : ''}
       <div class="dossier-art-bg">
         ${artUrl
           ? `<img src="${artUrl}" alt="${c.name}">`
