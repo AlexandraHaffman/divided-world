@@ -1,1 +1,429 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Курт Вистнер · Разделённый мир</title>
+<meta name="description" content="Досье. Спецблок. Курт Вистнер, Спаситель Аркадии.">
+<style>
+/* ═══════════════════════════════════════════════
+   КУРТ ВИСТНЕР · спецблок
+   Свет включён — ты наблюдатель.
+   Свет выключен — стекло становится зеркалом.
+   ═══════════════════════════════════════════════ */
+:root{
+  --edge:#0b9b73;
+  --edge-br:#00d493;
+  --ink:#0d1714;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#050a08;font-family:var(--sans);
+  -webkit-tap-highlight-color:transparent;user-select:none;touch-action:none;
+  -webkit-font-smoothing:antialiased}
+
+/* ── КОРИДОР ─────────────────────────────── */
+#hall{position:fixed;inset:0;z-index:0;overflow:hidden;background:#0a1110}
+#hall img{position:absolute;top:50%;left:50%;height:120%;min-width:120%;object-fit:cover;
+  transform:translate(-50%,-50%);transition:opacity 1.4s ease;will-change:transform}
+#hallDark{opacity:0}
+body.dark #hallLight{opacity:0}
+body.dark #hallDark{opacity:1}
+#veil{position:fixed;inset:0;z-index:1;pointer-events:none;transition:opacity 1.4s;opacity:0;
+  background:radial-gradient(75% 60% at 50% 50%,transparent 25%,rgba(3,8,6,.72) 100%)}
+body.dim #veil{opacity:.45}
+body.dark #veil{opacity:1}
+
+/* ── ЛЕНТА КАМЕР ─────────────────────────── */
+#track{position:fixed;top:0;left:0;height:100%;z-index:2;display:flex;align-items:center;
+  padding:0 12vw;gap:7vw;will-change:transform;
+  transition:transform .62s cubic-bezier(.22,.61,.36,1)}
+
+.cell{
+  position:relative;flex:none;width:min(500px,80vw);max-height:82vh;overflow-y:auto;
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);
+  border:1px solid rgba(255,255,255,.85);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 34px 90px -34px rgba(6,18,14,.65);
+  padding:28px 26px 30px;color:var(--ink);
+  transition:background 1.2s,color 1.2s,border-color 1.2s,box-shadow 1.2s,opacity .55s,transform .55s;
+  -webkit-overflow-scrolling:touch;touch-action:pan-y;
+}
+.cell::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--edge),transparent);opacity:.9}
+.cell.far{opacity:.3;transform:scale(.93)}
+body.dark .cell{background:rgba(13,24,20,.66);color:#e6efec;
+  border-color:rgba(120,165,150,.22);
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 34px 90px -34px rgba(0,0,0,.9)}
+
+/* отражение наблюдателя в стекле камеры */
+.cell::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
+  transition:opacity 1.6s ease;
+  background:radial-gradient(40% 30% at 68% 26%, rgba(190,225,212,.10), transparent 70%),
+             linear-gradient(200deg, rgba(200,235,222,.06), transparent 55%)}
+body.dark .cell::after{opacity:1}
+
+/* ── ТИПОГРАФИКА ─────────────────────────── */
+.no{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--edge);display:flex;justify-content:space-between;gap:12px;margin-bottom:16px}
+.no .g{opacity:.55;color:inherit}
+body.dark .no{color:var(--edge-br)}
+h1{font-size:clamp(30px,7vw,44px);font-weight:200;letter-spacing:-.02em;line-height:1;margin-bottom:6px}
+h1 em{display:block;font-style:normal;font-weight:500}
+h2{font-size:clamp(21px,4.4vw,27px);font-weight:200;letter-spacing:-.01em;line-height:1.15;margin-bottom:16px}
+.cell p{font-size:14.5px;font-weight:300;line-height:1.7;color:#2c3a35;margin-bottom:11px;max-width:56ch}
+body.dark .cell p{color:#aec2bb}
+.cell p:last-child{margin-bottom:0}
+.lede{font-size:16px;color:#1c2926}
+body.dark .lede{color:#cddbd5}
+.meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--edge);
+  margin-bottom:16px;line-height:1.7}
+body.dark .meta{color:var(--edge-br)}
+
+/* арты */
+.art{width:100%;margin-bottom:20px;position:relative;overflow:hidden;
+  border:1px solid rgba(11,155,115,.22);background:rgba(255,255,255,.3);aspect-ratio:16/10}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:opacity 1.4s ease}
+.art .alt{opacity:0}
+body.dark .art .alt{opacity:1}
+body.dark .art{background:rgba(0,0,0,.4);border-color:rgba(11,155,115,.4)}
+.art.ph{display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#8fa39c;text-align:center;padding:16px}
+/* чертежи — красим кодом */
+.art.bp{aspect-ratio:16/10;background:transparent;border:none}
+.art.bp img{object-fit:contain;mix-blend-mode:multiply;filter:contrast(2.3)}
+body.dark .art.bp img{filter:invert(1) contrast(2.3) sepia(.6) hue-rotate(100deg) saturate(3);
+  mix-blend-mode:screen}
+
+/* пометки на полях — второй слой */
+.note{display:none;margin:14px 0 0;padding-left:13px;border-left:1px solid var(--edge);
+  font-size:13px;font-weight:300;line-height:1.62;color:#5d6f69;max-width:54ch}
+.note::before{content:"на полях";display:block;font-family:var(--mono);font-size:8.5px;
+  letter-spacing:.18em;text-transform:uppercase;opacity:.6;margin-bottom:5px}
+body.dim .note,body.dark .note{display:block;animation:fade .9s ease-out}
+body.dark .note{color:#7fa093;border-left-color:var(--edge-br)}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}}
+
+/* вымарки — раскрываются только во тьме */
+.rd{background:currentColor;color:transparent;border-radius:2px;
+  padding:0 3px;transition:background .9s,color .9s}
+body.dark .rd{background:transparent;color:inherit;border-bottom:1px solid var(--edge-br)}
+
+/* скрытые камеры */
+.cell.hidden{display:none}
+body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
+@keyframes appear{from{opacity:0;transform:translateY(40px) scale(.9)}}
+
+/* список объектов */
+.obj{border-top:1px solid rgba(11,155,115,.18);padding:11px 0;display:flex;gap:12px;align-items:baseline}
+.obj:last-of-type{border-bottom:1px solid rgba(11,155,115,.18);margin-bottom:14px}
+.obj b{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--edge-br);flex:none;width:58px}
+.obj span{font-size:13.5px;font-weight:300;line-height:1.5}
+.obj i{font-style:normal;opacity:.6;font-size:12px}
+
+/* финальная дверь */
+.door{background:transparent!important;backdrop-filter:none;-webkit-backdrop-filter:none;
+  border:1px dashed rgba(11,155,115,.55)!important;box-shadow:none!important;text-align:center}
+.door::after{display:none}
+.door .q{font-size:19px;font-weight:300;line-height:1.5;margin-top:20px;color:var(--edge-br)}
+
+/* ── HUD ─────────────────────────────────── */
+#hud{position:fixed;z-index:20;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
+  padding:16px 18px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+  background:linear-gradient(transparent,rgba(5,12,9,.6))}
+#hud .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.7);white-space:nowrap}
+#sl{position:relative;flex:1;max-width:230px;height:28px;touch-action:none;cursor:pointer}
+#sl .rail{position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.35)}
+#sl .lit{position:absolute;top:50%;left:0;height:1px;background:var(--edge-br);
+  box-shadow:0 0 12px var(--edge-br);transition:width .3s}
+#sl .k{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
+  background:#fff;border:1px solid var(--edge-br);box-shadow:0 0 16px rgba(0,212,147,.75);
+  transition:left .3s}
+#lux{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#fff;
+  text-shadow:0 1px 5px rgba(0,0,0,.7);white-space:nowrap;min-width:52px}
+#pos{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:#fff;
+  text-shadow:0 1px 5px rgba(0,0,0,.7);margin-left:auto;white-space:nowrap}
+#nav{position:fixed;z-index:20;top:50%;transform:translateY(-50%);width:100%;
+  display:flex;justify-content:space-between;padding:0 8px;pointer-events:none}
+#nav button{pointer-events:auto;width:44px;height:44px;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);color:#fff;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:17px;line-height:1;
+  transition:background .2s}
+#nav button:active{background:rgba(255,255,255,.3)}
+#tip{position:fixed;z-index:20;top:calc(18px + env(safe-area-inset-top));left:0;right:0;
+  text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);text-shadow:0 1px 5px rgba(0,0,0,.7);
+  transition:opacity 1s}
+#tip.gone{opacity:0}
+#back{position:fixed;z-index:20;top:calc(14px + env(safe-area-inset-top));left:14px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.75);text-decoration:none;text-shadow:0 1px 5px rgba(0,0,0,.7)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div id="hall">
+  <img id="hallLight" src="hall-light.png" alt="">
+  <img id="hallDark"  src="hall-dark.png"  alt="">
+</div>
+<div id="veil"></div>
+
+<a id="back" href="../../index.html">← назад</a>
+<div id="tip">Свайп вбок · регулятор света внизу</div>
+
+<div id="track">
+
+  <!-- 01 ─────────────────────────────────── -->
+  <div class="cell">
+    <div class="no"><span>Камера 01</span><span class="g">открыто</span></div>
+    <div class="art">
+      <img src="portrait.png" alt="Курт Вистнер">
+      <img class="alt" src="portrait-2016.png" alt="Курт Вистнер, 2016">
+    </div>
+    <h1>Курт<em>Вистнер</em></h1>
+    <div class="meta">Спаситель Аркадии · инженер · мета-сила 0</div>
+    <p class="lede">«Проблемы человечества редко бывают сложными. Обычно они просто эмоциональны.»</p>
+    <p>Один из трёх основателей Аркадии. Создатель силового Купола и энергосистемы «Изумруд». Единственный человек в своём тире, не обладающий никакой мета-силой, — и один из самых опасных людей на планете.</p>
+    <p class="note">Обратите внимание на его ладонь. Он всегда стоит с той стороны стекла, где включён свет.</p>
+  </div>
+
+  <!-- 02 ─────────────────────────────────── -->
+  <div class="cell">
+    <div class="no"><span>Камера 02</span><span class="g">открыто</span></div>
+    <h2>Хронология</h2>
+
+    <p><b>13.11.1990.</b> Родился за поколение до Коллапса, в мире, который ещё считал себя устойчивым.</p>
+    <p class="note">Единственная дата в этом досье, которую он не выбирал сам.</p>
+
+    <p><b>До Коллапса.</b> Занимался мета-людьми задолго до того, как мир согласился считать их проблемой. Первым поставил вопрос, на который у человечества не нашлось ответа: что делать с силой, которая не подчиняется закону.</p>
+    <p class="note">В его ранних работах мета-люди не описаны ни как чудо, ни как угроза. Они описаны как <span class="rd">неучтённая переменная в устойчивой системе</span>. Слово «угроза» появится позже — когда под него потребуется бюджет.</p>
+
+    <p><b>2015–2019.</b> Санитарная очистка. Отлов нестабильных мета-людей по всей Европе под его личным руководством.</p>
+    <p><b>2019.</b> Программа прервана. Аркадии ещё не существует.</p>
+    <p class="note">Он никогда не отрицал своей роли в падении старого мира. Отрицание было бы неточностью, а точность для него важнее репутации. Это единственное, что мешает назвать его лжецом.</p>
+
+    <p><b>2020.</b> Бегство на Британские острова вместе с Элиасом Дорном.</p>
+    <p><b>2030.</b> Триумвират. Аркадия. Государство, где научный рационализм заменил идеологию и веру.</p>
+    <p class="note">Из троих Спасителей только он вышел из катастрофы с прибылью. Дорн потерял мир, который любил. Грей потерял людей, за которых отвечал. Вистнер получил <span class="rd">чистый лист и полномочия</span>.</p>
+
+    <p><b>Далее.</b> Купол. «Изумруд». «Атлант». Самая технологически развитая держава планеты — за одну человеческую жизнь.</p>
+    <p class="note">Всё, что он строит, работает. В этом и проблема: пока стена стоит, никто не спрашивает, кто её строил и на чём он потренировался.</p>
+  </div>
+
+  <!-- 03 ── СКРЫТАЯ ──────────────────────── -->
+  <div class="cell hidden">
+    <div class="no"><span>Камера 03</span><span class="g">доступа нет</span></div>
+    <div class="art">
+      <img src="specblock.png" alt="Спецблок">
+    </div>
+    <h2>Санитарная очистка</h2>
+    <div class="meta">13.11.2015 — 01.03.2019 · Европа · руководитель К. Вистнер</div>
+
+    <p class="lede">Программа началась в день его двадцатипятилетия. Он не отмечал.</p>
+    <p>Отлов нестабильных мета-людей — тех, кто не мог себя контролировать и уже успел кого-то убить. Он был единственным, кто вообще взялся за эту работу. И он был прав: почти каждый, кого он забрал, впоследствии доказал, что забрать его следовало.</p>
+    <p>Тюрьма в Граце. Стеклянные стены — по его личному требованию: объект должен быть виден постоянно.</p>
+
+    <div class="obj"><b>Объект 04</b><span>Валентина Блажек, 10 лет. Прага, операция «Тихий Сон», 14.05.2016. <i>Первое применение нейронного подавителя.</i></span></div>
+    <div class="obj"><b>Объект 09</b><span>Дариан Сорель. Марсель, 22.09.2018. <i>После серии незаконных экспериментов со светом.</i></span></div>
+    <div class="obj"><b>Объект 11</b><span>Амели Бертран. <i>Содержалась там же.</i></span></div>
+    <div class="obj"><b>Объект 14</b><span>Эмиль Грант, 5 лет. Грац, 15.01.2019. <i>«Начало исследований гравитационных аномалий объекта».</i></span></div>
+
+    <p>Он собрал их в одном здании. Держал рядом три года. Дал им время узнать друг друга.</p>
+    <p class="note">Сегодня эти четверо правят половиной Азии. Квартет Ракшасов познакомился в его тюрьме. Он не просто упустил их — он их <span class="rd">собрал</span>.</p>
+    <p class="note">В журналах наблюдений — сотни его записей. Ни в одной не упомянуто, что он посмотрел кому-то из них в глаза.</p>
+  </div>
+
+  <!-- 04 ── СКРЫТАЯ ──────────────────────── -->
+  <div class="cell hidden">
+    <div class="no"><span>Камера 04</span><span class="g">доступа нет</span></div>
+    <div class="art">
+      <img src="broken.png" alt="День Стеклянных Стен">
+    </div>
+    <h2>День Стеклянных Стен</h2>
+    <div class="meta">01.03.2019 · Грац</div>
+
+    <p class="lede">Стены выдержали. Расчёт был верен. Подвёл не материал.</p>
+    <p>Дверь открыл сотрудник спецблока. Его убедили, что происходящее аморально — и он согласился. Он был прав в том, что видел: за стеклом сидели дети.</p>
+    <p>Он ошибся только в одном: они действительно были опасны.</p>
+    <p>В ту ночь наружу вышли все. Четверо стали Ракшасами. Десяток самых нестабильных ушёл в Северную Африку и превратился в «Сломанных». Ни одного из них после этого не удалось поймать.</p>
+
+    <p class="note">Он называет это «самым тяжёлым поражением в моей карьере». Вслушайтесь в слово. Не «ошибка». Не «трагедия». <b>Поражение</b> — то, что случается с тем, кто играл и проиграл. О четырнадцати детях в этой формулировке нет ни слова, и он этого не замечает.</p>
+    <p class="note">И вот что он вынес из той ночи. Его стены устояли. Его расчёт устоял. Систему сломала <span class="rd">чужая жалость</span> — и мир заплатил за неё двумя фракциями. С тех пор он строит мир, из которого эмоцию нужно вычесть. Не потому что она слабость. Потому что однажды она уже победила.</p>
+  </div>
+
+  <!-- 05 ─────────────────────────────────── -->
+  <div class="cell">
+    <div class="no"><span>Камера 05</span><span class="g">открыто</span></div>
+    <div class="art bp"><img src="bp-dome.png" alt="Купол"></div>
+    <h2>Купол</h2>
+    <p>Силовое поле над Аркадией. Держит всё: ракеты, десант, погоду, Тенебриона. Ни одного пробоя за всё время существования.</p>
+    <p class="note">Купол держится не на героизме, а на подаче. Пока «Изумруд» даёт ток, стена стоит. Если ток прервётся, героизм не поможет никому — и он единственный, кто это понимает до конца.</p>
+
+    <div class="art bp" style="margin-top:22px"><img src="bp-reactor.png" alt="Изумруд"></div>
+    <h2>«Изумруд»</h2>
+    <p>Энергосистема, питающая государство. Три контура. Его шедевр — и то единственное, чем он позволяет себе гордиться вслух.</p>
+
+    <div class="art bp" style="margin-top:22px"><img src="bp-atlant.png" alt="Атлант"></div>
+    <h2>«Атлант»</h2>
+    <p>Проект, о котором известно только название и то, что он существует.</p>
+    <p class="note">Обратите внимание на чертёж. Он не недорисован — он <span class="rd">вырезан</span>. Линии обрываются там, где начинается то, чего вам знать не следует. Даже здесь, даже в его собственном досье.</p>
+  </div>
+
+  <!-- 06 ─────────────────────────────────── -->
+  <div class="cell">
+    <div class="no"><span>Камера 06</span><span class="g">открыто</span></div>
+    <div class="art ph">[арт: «Манта» над Белой зоной]</div>
+    <h2>Пилигримы</h2>
+    <div class="meta">Управление Внешних Ресурсов · куратор К. Вистнер</div>
+
+    <p class="lede">Герои Аркадии. Настоящие, без иронии.</p>
+    <p>Они спускаются в Белую зону — в радиоактивный ад, оставшийся от старого мира, — за изотопами, палладием, редкими металлами и довоенными архивами. Летают на «Мантах», белых скатах вертикального взлёта. За штурвалом всегда андроид серии PIL: человека сажать за управление слишком дорого.</p>
+    <p>Возвращаются не все. Тех, кто вернулся, встречают как астронавтов.</p>
+    <p>Управление возглавляет Мэтью Корсо — бывший полевой пилигрим, ныне полный киборг. Его сознание живёт в теле, спроектированном Вистнером. Корсо предан ему совершенно.</p>
+
+    <p class="note">Официально всё добытое распределяет Совет Специалистов. Официально.</p>
+    <p class="note">Самое ценное — довоенные алгоритмы, палладий, золото — до Совета не доходит. Оно уходит <span class="rd">в Уэльс</span>. Корсо, живущий в теле его конструкции, об этом, судя по всему, не знает.</p>
+  </div>
+
+  <!-- 07 ─────────────────────────────────── -->
+  <div class="cell">
+    <div class="no"><span>Камера 07</span><span class="g">открыто</span></div>
+    <div class="art bp"><img src="bp-network.png" alt="Разведсеть"></div>
+    <h2>Разведсеть</h2>
+    <p>Промышленный шпионаж по всему миру. Узлы, каналы, закладки. В системе нет ни одного имени — только номера: имена привязывают, а привязанность искажает расчёт.</p>
+
+    <div class="obj"><b>Актив 01</b><span>Единая Америка. Работает свыше двадцати лет. <i>Инженер. Женат. Не знает, что числится под номером.</i></span></div>
+    <div class="obj"><b>Актив 07</b><span>Forge. <i>Тишина 12 суток.</i></span></div>
+    <div class="obj"><b>Актив 09</b><span>Тенебрион. <i>Потерян.</i></span></div>
+
+    <p class="note">Актив №1 — это Уильям Купер. Он считает себя единственным. Он считает, что у них с Вистнером есть отношения.</p>
+    <p class="note">Список активов длиннее того, что вы видите. Гораздо длиннее. Каждый из них тоже считает себя <span class="rd">единственным</span>.</p>
+  </div>
+
+  <!-- 08 ── СКРЫТАЯ ──────────────────────── -->
+  <div class="cell hidden">
+    <div class="no"><span>Камера 08</span><span class="g">доступа нет</span></div>
+    <div class="art ph">[арт: шахты Уэльса]</div>
+    <h2>Уэльс</h2>
+    <div class="meta">2034 — по настоящее время · подземные лаборатории</div>
+
+    <p class="lede">Здесь заканчивается всё, что мы видели раньше.</p>
+    <p>Палладий пилигримов. Алгоритмы из Белой зоны. Технологии, добытые разведсетью. Всё, что должно было принадлежать Аркадии, стекается сюда — в заброшенные шахты, где нет ни Совета Специалистов, ни Триумвирата, ни отчётности.</p>
+    <p>О содержании работ не знает никто. Включая, судя по всему, Дорна и Грея.</p>
+
+    <p class="note">Он не крадёт ради денег — деньги ему не нужны. Он забирает лучшее туда, где никто не помешает довести это до конца. Он уже однажды позволил посторонним решать за него, что морально, а что нет. Больше он такой ошибки не допустит.</p>
+  </div>
+
+  <!-- 09 ── ДВЕРЬ ────────────────────────── -->
+  <div class="cell door">
+    <div class="no"><span>Конец коридора</span><span class="g">&nbsp;</span></div>
+    <h2>Он был прав</h2>
+    <p>Дети были опасны. Стены были нужны. Расчёт был верен.</p>
+    <p>Тот сотрудник открыл дверь по совести — и мир получил Ракшасов, «Сломанных» и всё, что за этим последовало.</p>
+    <p>Вистнер дверь бы не открыл. Никогда. Ни при каких обстоятельствах.</p>
+    <p class="q">А вы бы открыли?</p>
+  </div>
+
+</div>
+
+<div id="nav">
+  <button id="prev" aria-label="Назад">‹</button>
+  <button id="next" aria-label="Вперёд">›</button>
+</div>
+
+<div id="hud">
+  <span class="lbl">Свет</span>
+  <div id="sl" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="2" aria-valuenow="2" aria-label="Освещение коридора">
+    <div class="rail"></div><div class="lit"></div><div class="k"></div>
+  </div>
+  <span id="lux">100 лк</span>
+  <span id="pos">01 / 06</span>
+</div>
+
+<script>
+(function(){
+  const track = document.getElementById('track');
+  const body  = document.body;
+  const hallL = document.getElementById('hallLight');
+  const hallD = document.getElementById('hallDark');
+  const tip   = document.getElementById('tip');
+  const LUX   = ['0 лк','40 лк','100 лк'];
+
+  let i = 0, lux = 2, moved = false;
+
+  const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
+
+  function go(n){
+    const cs = cells();
+    i = Math.max(0, Math.min(cs.length - 1, n));
+    const c = cs[i];
+    const x = c.offsetLeft - (innerWidth - c.offsetWidth) / 2;
+    track.style.transform = `translateX(${-x}px)`;
+    cs.forEach((el, k) => el.classList.toggle('far', k !== i));
+    document.getElementById('pos').textContent =
+      String(i + 1).padStart(2,'0') + ' / ' + String(cs.length).padStart(2,'0');
+    const p = -x * 0.055;
+    hallL.style.transform = hallD.style.transform = `translate(calc(-50% + ${p}px), -50%)`;
+    if(!moved){ moved = true; tip.classList.add('gone'); }
+  }
+
+  function setLux(v){
+    lux = Math.max(0, Math.min(2, v));
+    body.classList.toggle('dim',  lux === 1);
+    body.classList.toggle('dark', lux === 0);
+    document.querySelector('#sl .k').style.left   = (lux * 50) + '%';
+    document.querySelector('#sl .lit').style.width = (lux * 50) + '%';
+    document.getElementById('lux').textContent = LUX[lux];
+    document.getElementById('sl').setAttribute('aria-valuenow', lux);
+    setTimeout(() => go(i), 80);
+  }
+
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.getElementById('prev').onclick = () => go(i - 1);
+
+  addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight') go(i + 1);
+    if(e.key === 'ArrowLeft')  go(i - 1);
+    if(e.key === 'ArrowUp')    setLux(lux + 1);
+    if(e.key === 'ArrowDown')  setLux(lux - 1);
+  });
+
+  // свайп по горизонтали (вертикальный оставляем камере — там скроллится текст)
+  let sx = null, sy = null;
+  addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
+  addEventListener('touchend', e => {
+    if(sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) go(i + (dx < 0 ? 1 : -1));
+    sx = sy = null;
+  }, {passive:true});
+
+  let lock = false;
+  addEventListener('wheel', e => {
+    if(lock) return;
+    lock = true; setTimeout(() => lock = false, 480);
+    go(i + ((e.deltaY > 0 || e.deltaX > 0) ? 1 : -1));
+  }, {passive:true});
+
+  const sl = document.getElementById('sl');
+  let dragging = false;
+  const fromX = x => {
+    const r = sl.getBoundingClientRect();
+    return Math.round((x - r.left) / r.width * 2);
+  };
+  sl.addEventListener('pointerdown', e => { dragging = true; sl.setPointerCapture(e.pointerId); setLux(fromX(e.clientX)); });
+  sl.addEventListener('pointermove', e => { if(dragging) setLux(fromX(e.clientX)); });
+  sl.addEventListener('pointerup',   () => dragging = false);
+
+  addEventListener('resize', () => go(i));
+  setLux(2); go(0);
+})();
+</script>
+</body>
+</html>
 
