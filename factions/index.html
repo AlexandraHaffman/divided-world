@@ -1,5 +1,331 @@
-<h1>⚔️ Фракции</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Терминал: Фракции — Разделённый мир</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
 
-<p>Раздел находится в разработке.</p>
+  :root {
+    --bg: #080c12;
+    --blue: #4fc3f7;
+    --text: #c8d8e8;
+    --text-dim: #5a7a9a;
+    --border: rgba(79,195,247,0.2);
+    --america: #4a9eff;
+    --tenebrion: #ff9d00;
+    --forge: #a8d8ff;
+    --arcadia: #2ecc71;
+    --rakshasy: #a55eea;
+    --white-zone: #94a3b8;
+    --quiet-harbor: #38bdf8;
+  }
 
-<a href="../index.html">← На главную</a>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+  }
+
+  .terminal-header {
+    padding: 40px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(8,12,18,0.6) 0%, transparent 100%);
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--blue); }
+
+  .terminal-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+
+  .terminal-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(79,195,247,0.4);
+  }
+
+  .terminal-title span { color: var(--blue); }
+
+  .faction-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 24px 16px 40px;
+  }
+
+  @media (min-width: 720px) {
+    .faction-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .faction-card {
+    border: 1px solid var(--card-color, var(--border));
+    background: rgba(13,19,32,0.82);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faction-card-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-color, var(--blue));
+    box-shadow: 0 0 16px var(--card-color, var(--blue));
+    z-index: 2;
+  }
+
+  .faction-art {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid var(--border);
+    background: rgba(17,24,39,0.6);
+  }
+
+  .faction-art-placeholder {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    background: rgba(17,24,39,0.6);
+  }
+
+  .faction-art-placeholder::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 60%,
+      color-mix(in srgb, var(--card-color, var(--blue)) 20%, transparent) 0%,
+      transparent 70%);
+  }
+
+  .faction-info { padding: 16px 18px 20px; }
+
+  .faction-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--card-color, var(--blue));
+    margin-bottom: 6px;
+  }
+
+  .faction-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .faction-ideology {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .faction-influence {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .influence-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+  }
+
+  .influence-bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .influence-fill {
+    height: 100%;
+    background: var(--card-color, var(--blue));
+    box-shadow: 0 0 6px var(--card-color, var(--blue));
+  }
+
+  .influence-val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--card-color, var(--blue));
+  }
+
+  .terminal-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header class="terminal-header">
+  <a href="../index.html" class="back-link">← НА ГЛАВНУЮ</a>
+  <div class="terminal-label">SYS.ACCESS.GRANTED // РЕЕСТР ФРАКЦИЙ</div>
+  <div class="terminal-title">⚔️ <span>ФРАКЦИИ</span></div>
+</header>
+
+<div class="faction-grid">
+
+  <div class="faction-card" style="--card-color: var(--america)">
+    <div class="faction-card-glow"></div>
+    <img class="faction-art" src="../data/images/factions/america.jpg" alt="Эмблема Единой Америки">
+    <div class="faction-info">
+      <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 15</div>
+      <div class="faction-name">ЕДИНАЯ АМЕРИКА</div>
+      <div class="faction-ideology">Технократическая сверхдержава, удерживающая контроль над полушарием.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:100%"></div></div>
+        <span class="influence-val">15</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="faction-card" style="--card-color: var(--tenebrion)">
+    <div class="faction-card-glow"></div>
+    <img class="faction-art" src="../data/images/factions/tenebrion.jpg" alt="Эмблема Тенебриона">
+    <div class="faction-info">
+      <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 14</div>
+      <div class="faction-name">ТЕНЕБРИОН</div>
+      <div class="faction-ideology">Теократический абсолютизм, воздвигнутый на руинах веры и тьмы.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:93%"></div></div>
+        <span class="influence-val">14</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="faction-card" style="--card-color: var(--forge)">
+    <div class="faction-card-glow"></div>
+    <img class="faction-art" src="../data/images/factions/forge.jpg" alt="Эмблема Forge">
+    <div class="faction-info">
+      <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 12</div>
+      <div class="faction-name">FORGE</div>
+      <div class="faction-ideology">Прогресс, технологическое развитие и восстановление справедливости.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:80%"></div></div>
+        <span class="influence-val">12</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="faction-card" style="--card-color: var(--arcadia)">
+    <div class="faction-card-glow"></div>
+    <div class="faction-art-placeholder">[ АРТ: АРКАДИЯ ]</div>
+    <div class="faction-info">
+      <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 10</div>
+      <div class="faction-name">АРКАДИЯ</div>
+      <div class="faction-ideology">Технократическая меритократия под непроницаемым Силовым Куполом.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:67%"></div></div>
+        <span class="influence-val">10</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="faction-card" style="--card-color: var(--rakshasy)">
+    <div class="faction-card-glow"></div>
+    <img class="faction-art" src="../data/images/factions/rakshasy.jpg" alt="Эмблема Ракшасов">
+    <div class="faction-info">
+      <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 10</div>
+      <div class="faction-name">РАКШАСЫ</div>
+      <div class="faction-ideology">Энтропия, контролируемый хаос и социальный дарвинизм.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:67%"></div></div>
+        <span class="influence-val">10</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="faction-card" style="--card-color: var(--quiet-harbor)">
+    <div class="faction-card-glow"></div>
+    <div class="faction-art-placeholder">[ АРТ: ТИХАЯ ГАВАНЬ ]</div>
+    <div class="faction-info">
+      <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 6</div>
+      <div class="faction-name">ТИХАЯ ГАВАНЬ</div>
+      <div class="faction-ideology">Гедонистический изоляционизм под защитой абсолютного контроля над водой.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:40%"></div></div>
+        <span class="influence-val">6</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="faction-card" style="--card-color: var(--white-zone)">
+    <div class="faction-card-glow"></div>
+    <img class="faction-art" src="../data/images/factions/white-zone.jpg" alt="Эмблема Белой Зоны">
+    <div class="faction-info">
+      <div class="faction-tag">СТАТУС: АНАРХИЯ</div>
+      <div class="faction-name">БЕЛАЯ ЗОНА</div>
+      <div class="faction-ideology">Радиоактивные пустоши, территории малых фракций и забытых богом городов.</div>
+      <div class="faction-influence">
+        <span class="influence-label">PWR</span>
+        <div class="influence-bar"><div class="influence-fill" style="width:20%"></div></div>
+        <span class="influence-val">—</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="terminal-footer">
+  SYS.RECORD // ЗЕМЛЯ • 2061 ГОД // ВСЕ ДАННЫЕ ЗАСЕКРЕЧЕНЫ
+</div>
+
+</body>
+</html>
