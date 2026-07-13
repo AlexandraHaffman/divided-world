@@ -32,7 +32,7 @@ const TIER_FILTER_COLORS = {
 
 const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
-const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn" };
+const LEGENDARY_PAGES = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner"};
 
 /* ══════════════════════════════════════════
    ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров + реакции (counterapi.dev v1)
