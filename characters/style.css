@@ -182,7 +182,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .compact-5-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,8,15,0.6) 0%,transparent 35%,transparent 100%);pointer-events:none;}
 .compact-5-threat{position:absolute;top:5px;left:6px;z-index:3;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:900;color:rgb(var(--cr));text-shadow:0 0 8px rgba(var(--cr),0.8),0 1px 4px rgba(0,0,0,0.9);line-height:1;}
 .compact-5-name-area{padding:4px 6px 6px;}
-.compact-5-name{font-size:8px;font-weight:700;color:var(--white);line-height:1.3;white-space:normal;word-break:break-word;}
+.compact-5-name{font-size:8px;font-weight:700;color:rgb(var(--cr));line-height:1.3;white-space:normal;word-break:break-word;text-shadow:0 0 6px rgba(var(--cr),0.35);}
 
 /* ── СИСТЕМА ТИРОВ ── */
 .char-card[data-tier="common"]{border-color:rgba(var(--cr),0.2);}
@@ -430,3 +430,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 .legendary-link{position:absolute;top:14px;right:14px;z-index:20;display:inline-block;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.08em;color:rgb(var(--dr));border:1px solid rgba(var(--dr),0.5);padding:5px 12px;border-radius:3px;text-decoration:none;background:rgba(5,8,15,0.6);backdrop-filter:blur(4px);}
 .legendary-link:active{background:rgba(var(--dr),0.25);}
+
+/* Стрелки-навигация карусели — только для десктопа, см. desktop.css */
+.carousel-nav{display:none;}
