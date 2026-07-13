@@ -112,8 +112,19 @@ body.dark .note{color:#7fa093;border-left-color:var(--edge-br)}
 body.dark .rd{background:transparent;color:inherit;border-bottom:1px solid var(--edge-br)}
 
 /* скрытые камеры */
-.cell.hidden{display:none}
-body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
+/* при свете скрытые камеры видны, но пусты */
+.cell.hidden > *:not(.no):not(.void){display:none}
+.cell.hidden .void{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:230px;text-align:center;gap:10px}
+.cell.hidden .void .ic{width:26px;height:26px;border:1px solid currentColor;opacity:.35;
+  transform:rotate(45deg)}
+.cell.hidden .void p{font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;opacity:.5;max-width:26ch;line-height:1.9}
+body.dark .cell.hidden > *{display:block}
+body.dark .cell.hidden .no{display:flex}
+body.dark .cell.hidden .void{display:none}
+body.dark .cell.hidden .art{display:block}
+body.dark .cell.hidden .obj{display:flex}
 @keyframes appear{from{opacity:0;transform:translateY(40px) scale(.9)}}
 
 /* список объектов */
@@ -128,6 +139,9 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
   border:1px dashed rgba(11,155,115,.55)!important;box-shadow:none!important;text-align:center}
 .door::after{display:none}
 .door .q{font-size:19px;font-weight:300;line-height:1.5;margin-top:20px;color:var(--edge-br)}
+.scold{display:none;margin-top:22px!important;padding-top:18px;border-top:1px solid rgba(11,155,115,.35);
+  font-size:13px!important;font-style:italic;color:#8fa8a0!important}
+body.show-scold .scold{display:block;animation:fade 1.2s ease-out}
 
 /* ── HUD ─────────────────────────────────── */
 #hud{position:fixed;z-index:20;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
@@ -167,8 +181,8 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
 <body>
 
 <div id="hall">
-  <img id="hallLight" src="hall-light.png" alt="">
-  <img id="hallDark"  src="hall-dark.png"  alt="">
+  <img id="hallLight" src="hall-light.PNG" alt="">
+  <img id="hallDark"  src="hall-dark.PNG"  alt="">
 </div>
 <div id="veil"></div>
 
@@ -181,8 +195,8 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
   <div class="cell">
     <div class="no"><span>Камера 01</span><span class="g">открыто</span></div>
     <div class="art">
-      <img src="portrait.png" alt="Курт Вистнер">
-      <img class="alt" src="portrait-2016.png" alt="Курт Вистнер, 2016">
+      <img src="portrait.PNG" alt="Курт Вистнер">
+      <img class="alt" src="portrait-2016.PNG" alt="Курт Вистнер, 2016">
     </div>
     <h1>Курт<em>Вистнер</em></h1>
     <div class="meta">Спаситель Аркадии · инженер · мета-сила 0</div>
@@ -216,9 +230,10 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
 
   <!-- 03 ── СКРЫТАЯ ──────────────────────── -->
   <div class="cell hidden">
-    <div class="no"><span>Камера 03</span><span class="g">доступа нет</span></div>
+    <div class="no"><span>Камера 03</span><span class="g" data-lit="пусто">доступа нет</span></div>
+    <div class="void"><span class="ic"></span><p>Камера пуста<br>Содержимое изъято</p></div>
     <div class="art">
-      <img src="specblock.png" alt="Спецблок">
+      <img src="specblock.PNG" alt="Спецблок">
     </div>
     <h2>Санитарная очистка</h2>
     <div class="meta">13.11.2015 — 01.03.2019 · Европа · руководитель К. Вистнер</div>
@@ -239,9 +254,10 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
 
   <!-- 04 ── СКРЫТАЯ ──────────────────────── -->
   <div class="cell hidden">
-    <div class="no"><span>Камера 04</span><span class="g">доступа нет</span></div>
+    <div class="no"><span>Камера 04</span><span class="g" data-lit="пусто">доступа нет</span></div>
+    <div class="void"><span class="ic"></span><p>Камера пуста<br>Содержимое изъято</p></div>
     <div class="art">
-      <img src="broken.png" alt="День Стеклянных Стен">
+      <img src="broken.PNG" alt="День Стеклянных Стен">
     </div>
     <h2>День Стеклянных Стен</h2>
     <div class="meta">01.03.2019 · Грац</div>
@@ -258,16 +274,16 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
   <!-- 05 ─────────────────────────────────── -->
   <div class="cell">
     <div class="no"><span>Камера 05</span><span class="g">открыто</span></div>
-    <div class="art bp"><img src="bp-dome.png" alt="Купол"></div>
+    <div class="art bp"><img src="bp-dome.PNG" alt="Купол"></div>
     <h2>Купол</h2>
     <p>Силовое поле над Аркадией. Держит всё: ракеты, десант, погоду, Тенебриона. Ни одного пробоя за всё время существования.</p>
     <p class="note">Купол держится не на героизме, а на подаче. Пока «Изумруд» даёт ток, стена стоит. Если ток прервётся, героизм не поможет никому — и он единственный, кто это понимает до конца.</p>
 
-    <div class="art bp" style="margin-top:22px"><img src="bp-reactor.png" alt="Изумруд"></div>
+    <div class="art bp" style="margin-top:22px"><img src="bp-reactor.PNG" alt="Изумруд"></div>
     <h2>«Изумруд»</h2>
     <p>Энергосистема, питающая государство. Три контура. Его шедевр — и то единственное, чем он позволяет себе гордиться вслух.</p>
 
-    <div class="art bp" style="margin-top:22px"><img src="bp-atlant.png" alt="Атлант"></div>
+    <div class="art bp" style="margin-top:22px"><img src="bp-atlant.PNG" alt="Атлант"></div>
     <h2>«Атлант»</h2>
     <p>Проект, о котором известно только название и то, что он существует.</p>
     <p class="note">Обратите внимание на чертёж. Он не недорисован — он <span class="rd">вырезан</span>. Линии обрываются там, где начинается то, чего вам знать не следует. Даже здесь, даже в его собственном досье.</p>
@@ -292,7 +308,7 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
   <!-- 07 ─────────────────────────────────── -->
   <div class="cell">
     <div class="no"><span>Камера 07</span><span class="g">открыто</span></div>
-    <div class="art bp"><img src="bp-network.png" alt="Разведсеть"></div>
+    <div class="art bp"><img src="bp-network.PNG" alt="Разведсеть"></div>
     <h2>Разведсеть</h2>
     <p>Промышленный шпионаж по всему миру. Узлы, каналы, закладки. В системе нет ни одного имени — только номера: имена привязывают, а привязанность искажает расчёт.</p>
 
@@ -306,7 +322,8 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
 
   <!-- 08 ── СКРЫТАЯ ──────────────────────── -->
   <div class="cell hidden">
-    <div class="no"><span>Камера 08</span><span class="g">доступа нет</span></div>
+    <div class="no"><span>Камера 08</span><span class="g" data-lit="пусто">доступа нет</span></div>
+    <div class="void"><span class="ic"></span><p>Камера пуста<br>Содержимое изъято</p></div>
     <div class="art ph">[арт: шахты Уэльса]</div>
     <h2>Уэльс</h2>
     <div class="meta">2034 — по настоящее время · подземные лаборатории</div>
@@ -326,6 +343,7 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
     <p>Тот сотрудник открыл дверь по совести — и мир получил Ракшасов, «Сломанных» и всё, что за этим последовало.</p>
     <p>Вистнер дверь бы не открыл. Никогда. Ни при каких обстоятельствах.</p>
     <p class="q">А вы бы открыли?</p>
+    <p class="scold" id="scold">Вы прошли коридор при полном свете. Три камеры остались осмотренными не до конца. Так его и читают — и уходят, восхищённые.</p>
   </div>
 
 </div>
@@ -353,7 +371,7 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
   const tip   = document.getElementById('tip');
   const LUX   = ['0 лк','40 лк','100 лк'];
 
-  let i = 0, lux = 2, moved = false;
+  let i = 0, lux = 2, moved = false, wentDark = false;
 
   const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
 
@@ -369,10 +387,13 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
     const p = -x * 0.055;
     hallL.style.transform = hallD.style.transform = `translate(calc(-50% + ${p}px), -50%)`;
     if(!moved){ moved = true; tip.classList.add('gone'); }
+    // укор на последней камере, если свет так и не выключали
+    body.classList.toggle('show-scold', !wentDark && i === cs.length - 1);
   }
 
   function setLux(v){
     lux = Math.max(0, Math.min(2, v));
+    if(lux === 0){ wentDark = true; body.classList.remove('show-scold'); }
     body.classList.toggle('dim',  lux === 1);
     body.classList.toggle('dark', lux === 0);
     document.querySelector('#sl .k').style.left   = (lux * 50) + '%';
@@ -426,4 +447,3 @@ body.dark .cell.hidden{display:block;animation:appear 1.1s ease-out}
 </script>
 </body>
 </html>
-
