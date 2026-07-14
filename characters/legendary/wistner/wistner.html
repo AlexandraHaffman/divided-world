@@ -120,7 +120,7 @@ body.dark .rd{background:transparent;color:inherit;border-bottom:1px solid var(-
 .cell.hidden .void .ic{width:26px;height:26px;border:1px solid currentColor;opacity:.35;transform:rotate(45deg)}
 .cell.hidden .void p{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
   opacity:.5;max-width:26ch;line-height:1.9}
-body.dark .cell.hidden > *{display:block}
+body.dark .cell.hidden > *:not(.void){display:block}
 body.dark .cell.hidden .no{display:flex}
 body.dark .cell.hidden .void{display:none}
 body.dark .cell.hidden .row{display:flex}
@@ -142,6 +142,14 @@ body.dark .cell.hidden .row{display:flex}
   font-size:13px!important;font-style:italic;color:#4a5c56!important}
 body.dark .scold{color:#8fa8a0!important}
 body.show-scold .scold{display:block;animation:fade 1.2s}
+
+.seal{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;
+  padding-bottom:18px;border-bottom:1px solid rgba(11,155,115,.2)}
+.seal img{width:72px;height:72px;object-fit:cover;border-radius:50%;
+  border:1px solid rgba(11,155,115,.4);box-shadow:0 6px 20px -6px rgba(0,0,0,.5)}
+.seal span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:#4a5c56;text-align:center}
+body.dark .seal span{color:#8fa39c}
 
 .cell.cover{text-align:center}
 .cover .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
@@ -295,6 +303,7 @@ body.dark .howto span{color:#8fa39c}
 
   <div class="cell" data-wing="2">
     <div class="no"><span>Аркадия · 01</span><span class="g">открыто</span></div>
+    <div class="seal"><img src="crest.PNG" alt="Герб Аркадии"><span>Правительство Аркадии · Триумвират Спасителей</span></div>
     <div class="art bp"><img src="bp-dome.PNG" alt="Купол"></div>
     <h2>Купол</h2>
     <p>Силовое поле над Британскими островами. Держит ракеты, десант, погоду и Тенебриона. Ни одного пробоя за всю историю.</p>
@@ -337,7 +346,7 @@ body.dark .howto span{color:#8fa39c}
   <div class="cell hidden" data-wing="2">
     <div class="no"><span>Аркадия · 04</span><span class="g">пусто</span></div>
     <div class="void"><span class="ic"></span><p>Данных нет<br>Объект не значится</p></div>
-    <div class="art ph">[арт: шахты Уэльса]</div>
+    <div class="art"><img src="wales.PNG" alt="Шахты Уэльса"></div>
     <h2>Уэльс</h2>
     <div class="meta">С 2034 года · подземные лаборатории</div>
     <p class="lede">Здесь заканчивается всё, что вы видели раньше.</p>
@@ -348,7 +357,7 @@ body.dark .howto span{color:#8fa39c}
 
   <div class="cell" data-wing="2">
     <div class="no"><span>Аркадия · 05</span><span class="g">открыто</span></div>
-    <div class="art ph">[арт: пустой кабинет]</div>
+    <div class="art"><img src="office.PNG" alt="Пустой кабинет"></div>
     <h2>Сегодня</h2>
     <div class="meta">2061 · Триумвират Спасителей · научный сектор</div>
     <p>Руководит наукой Аркадии. Развивает Купол и энергетическую инфраструктуру, управляет внешней разведкой, ведёт собственные исследования. Рассчитывает обеспечить государству окончательное технологическое превосходство над остальным миром.</p>
@@ -389,16 +398,21 @@ body.dark .howto span{color:#8fa39c}
   const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
 
   document.querySelectorAll('.art').forEach(box=>box.insertAdjacentHTML('beforeend','<div class="scan"></div>'));
-  document.querySelectorAll('.art img').forEach(img=>{
-    img.addEventListener('error',()=>{
-      const box=img.closest('.art');
-      if(!box||box.classList.contains('missing'))return;
-      box.classList.add('missing');
-      if(!box.querySelector('.sig')){
-        const s=document.createElement('div');
-        s.className='sig'; s.textContent=img.alt||'';
-        box.appendChild(s);
-      }
+  document.querySelectorAll('.art').forEach(box=>{
+    const imgs=[...box.querySelectorAll('img')];
+    if(!imgs.length)return;
+    let failed=0;
+    imgs.forEach(img=>{
+      img.addEventListener('error',()=>{
+        img.style.display='none';
+        if(++failed<imgs.length)return;
+        box.classList.add('missing');
+        if(!box.querySelector('.sig')){
+          const s=document.createElement('div');
+          s.className='sig'; s.textContent=imgs[0].alt||'';
+          box.appendChild(s);
+        }
+      });
     });
   });
 
