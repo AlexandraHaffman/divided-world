@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Терминал: Глобус — Разделённый мир</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+
+  :root {
+    --bg: #080c12;
+    --blue: #4fc3f7;
+    --text: #c8d8e8;
+    --text-dim: #5a7a9a;
+    --border: rgba(79,195,247,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    overflow: hidden;
+    position: fixed;
+    inset: 0;
+  }
+
+  /* Scanlines */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+  }
+
+  #stage { position: absolute; inset: 0; }
+  #glcanvas, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #overlay { touch-action: none; cursor: grab; }
+  #overlay.dragging { cursor: grabbing; }
+  #overlay.pointing { cursor: pointer; }
+
+  /* ── HEADER ── */
+  .hud-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 14px 18px 26px;
+    z-index: 10;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(8,12,18,0.92) 0%, rgba(8,12,18,0.55) 55%, transparent 100%);
+  }
+  .hud-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  }
+  .back-link {
+    pointer-events: auto;
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--blue); }
+  .hud-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+  }
+  .hud-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(16px, 4.5vw, 24px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(79,195,247,0.4);
+  }
+  .hud-title span { color: var(--blue); }
+  .hud-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-top: 5px;
+    min-height: 14px;
+    color: var(--text-dim);
+    transition: color 0.25s;
+    text-transform: uppercase;
+  }
+
+  /* ── ЛЕГЕНДА ── */
+  .legend {
+    position: absolute;
+    left: 12px;
+    top: 118px;
+    z-index: 20;
+    width: 210px;
+    max-height: calc(100% - 220px);
+    display: flex;
+    flex-direction: column;
+    background: rgba(10,16,26,0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .legend-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    user-select: none;
+  }
+  .legend-head:hover .legend-title { color: var(--blue); }
+  .legend-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    color: var(--text-dim);
+    transition: color .2s;
+  }
+  .legend-toggle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+  }
+  .legend-body { overflow-y: auto; padding: 6px 0; }
+  .legend.collapsed .legend-body { display: none; }
+  .legend-body::-webkit-scrollbar { width: 3px; }
+  .legend-body::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.3); }
+  .l-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: background .15s;
+    border-left: 2px solid transparent;
+  }
+  .l-item:hover { background: rgba(79,195,247,0.07); }
+  .l-item.active {
+    background: color-mix(in srgb, var(--fc) 12%, transparent);
+    border-left-color: var(--fc);
+  }
+  .l-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--fc);
+    box-shadow: 0 0 8px var(--fc);
+    flex-shrink: 0;
+  }
+  .l-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    color: var(--text);
+    line-height: 1.15;
+  }
+  .l-item.active .l-name { color: #fff; }
+  .l-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-top: 1px;
+  }
+
+  /* ── КАРТОЧКА ФРАКЦИИ ── */
+  .fcard {
+    position: absolute;
+    right: 12px;
+    top: 118px;
+    z-index: 30;
+    width: min(320px, calc(100vw - 24px));
+    max-height: calc(100% - 200px);
+    display: none;
+    flex-direction: column;
+    background: rgba(8,13,22,0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
+    border-top: 2px solid var(--fc);
+    box-shadow: 0 0 26px color-mix(in srgb, var(--fc) 25%, transparent), inset 0 0 22px color-mix(in srgb, var(--fc) 8%, transparent);
+    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    animation: cardIn .35s cubic-bezier(.2,.9,.3,1);
+  }
+  .fcard.open { display: flex; }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .fcard-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 40px 11px 14px;
+    border-bottom: 1px solid color-mix(in srgb, var(--fc) 40%, transparent);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .fcard-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--fc);
+    box-shadow: 0 0 10px var(--fc);
+    flex-shrink: 0;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 6px var(--fc); }
+    50%     { box-shadow: 0 0 16px var(--fc); }
+  }
+  .fcard-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    color: var(--fc);
+    text-shadow: 0 0 12px color-mix(in srgb, var(--fc) 60%, transparent);
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .fcard-close {
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 26px;
+    background: none;
+    border: none;
+    color: var(--fc);
+    font-size: 18px;
+    cursor: pointer;
+    opacity: .8;
+    transition: opacity .2s;
+  }
+  .fcard-close:hover { opacity: 1; }
+  .fcard-body { overflow-y: auto; padding: 12px 14px 14px; }
+  .fcard-body::-webkit-scrollbar { width: 3px; }
+  .fcard-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
+  .f-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--fc);
+    text-align: center;
+    padding: 4px;
+    margin-bottom: 10px;
+    background: rgba(2,4,9,0.85);
+    border-radius: 3px;
+    box-shadow: 0 0 8px color-mix(in srgb, var(--fc) 25%, transparent);
+  }
+  .f-row { margin-bottom: 10px; }
+  .f-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--fc);
+    background: rgba(2,4,9,0.85);
+    border-left: 2px solid var(--fc);
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+  }
+  .f-value {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text);
+    padding-left: 4px;
+  }
+  .f-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-left: 2px; }
+  .f-chip {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid var(--cc, var(--text-dim));
+    color: var(--cc, var(--text-dim));
+    background: rgba(2,4,9,0.7);
+  }
+  .f-chip.link { cursor: pointer; transition: all .15s; }
+  .f-chip.link:hover { background: color-mix(in srgb, var(--cc) 18%, transparent); box-shadow: 0 0 8px color-mix(in srgb, var(--cc) 40%, transparent); }
+  .f-chip.enemy { --cc: #ff5544; }
+
+  /* ── КНОПКИ УПРАВЛЕНИЯ ── */
+  .hud-controls {
+    position: absolute;
+    left: 12px;
+    bottom: 22px;
+    z-index: 20;
+    display: flex;
+    gap: 8px;
+  }
+  .hbtn {
+    width: 36px; height: 36px;
+    background: rgba(10,16,26,0.82);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    color: var(--blue);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hbtn:hover { border-color: var(--blue); background: rgba(79,195,247,0.1); box-shadow: 0 0 10px rgba(79,195,247,0.25); }
+  .hbtn.off { color: var(--text-dim); }
+
+  /* ── МАСШТАБНАЯ ЛИНЕЙКА ── */
+  .scalebar {
+    position: absolute;
+    right: 14px;
+    bottom: 24px;
+    z-index: 15;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+  }
+  .scale-line { height: 2px; background: var(--blue); opacity: .5; border-radius: 1px; transition: width .2s; }
+  .scale-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 1.5px;
+    color: var(--blue);
+    opacity: .55;
+  }
+
+  /* ── ПОДСКАЗКА ── */
+  .hint {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    z-index: 15;
+    pointer-events: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    background: rgba(8,12,18,0.7);
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: opacity 1.2s;
+  }
+  .hint.gone { opacity: 0; }
+
+  /* ── ЗАГРУЗКА ── */
+  #loader {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--bg);
+    transition: opacity .8s;
+  }
+  #loader.gone { opacity: 0; pointer-events: none; }
+  .load-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--blue);
+    animation: blink 1.1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: .35; } }
+  .load-ring {
+    width: 46px; height: 46px;
+    border: 1px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── МОБИЛЬНАЯ АДАПТАЦИЯ ── */
+  @media (max-width: 700px) {
+    .legend { top: 104px; width: 178px; }
+    .l-name { font-size: 11px; }
+    .fcard {
+      left: 10px; right: 10px;
+      top: auto; bottom: 0;
+      width: auto;
+      max-height: 52%;
+      border-bottom: none;
+    }
+    .hint { display: none; }
+    .hud-header { padding: 10px 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <canvas id="glcanvas"></canvas>
+  <canvas id="overlay"></canvas>
+</div>
+
+<div class="hud-header">
+  <a class="back-link" href="../index.html">◄ ТЕРМИНАЛ</a>
+  <div class="hud-label">ОРБИТАЛЬНЫЙ МОНИТОРИНГ // СЕТКА ФРАКЦИЙ // 2061 Н.Э.</div>
+  <div class="hud-title">ГЛОБАЛЬНАЯ КАРТА — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
+  <div class="hud-status" id="status">СИГНАЛ СТАБИЛЕН</div>
+</div>
+
+<div class="legend" id="legend">
+  <div class="legend-head" id="legendHead">
+    <div class="legend-title">РЕЕСТР ФРАКЦИЙ</div>
+    <div class="legend-toggle" id="legendToggle">–</div>
+  </div>
+  <div class="legend-body" id="legendBody"></div>
+</div>
+
+<div class="fcard" id="fcard">
+  <div class="fcard-head">
+    <div class="fcard-dot"></div>
+    <div class="fcard-name" id="fcName"></div>
+    <button class="fcard-close" id="fcClose">×</button>
+  </div>
+  <div class="fcard-body" id="fcBody"></div>
+</div>
+
+<div class="hud-controls">
+  <button class="hbtn" id="btnRotate" title="Автовращение">⏸</button>
+  <button class="hbtn" id="btnReset" title="Сброс вида">⟲</button>
+  <button class="hbtn" id="btnZoomIn" title="Приблизить">+</button>
+  <button class="hbtn" id="btnZoomOut" title="Отдалить">−</button>
+</div>
+
+<div class="scalebar">
+  <div class="scale-line" id="scaleLine"></div>
+  <div class="scale-text" id="scaleText"></div>
+</div>
+
+<div class="hint" id="hint">ПЕРЕТАСКИВАНИЕ — ВРАЩЕНИЕ &nbsp;·&nbsp; КОЛЕСО / ЩИПОК — МАСШТАБ &nbsp;·&nbsp; КЛИК ПО ТЕРРИТОРИИ — ДОСЬЕ</div>
+
+<div id="loader">
+  <div class="load-ring"></div>
+  <div class="load-text">ИНИЦИАЛИЗАЦИЯ ОРБИТАЛЬНОЙ СЕТКИ…</div>
+</div>
+
+<script src="data/land.js"></script>
+<script src="data/factions.js"></script>
+<script>
+(function(){
+"use strict";
+
+const FACTIONS = window.FACTIONS_DATA;
+const LAND     = window.LAND_DATA;
+const DEG = Math.PI / 180;
+
+// ═══════════════ ГЕОМЕТРИЯ ═══════════════
+// Сфера: x = cos(lat)·sin(lon), y = sin(lat), z = cos(lat)·cos(lon)
+function ll2xyz(lat, lon){
+  const la = lat * DEG, lo = lon * DEG, c = Math.cos(la);
+  return [c * Math.sin(lo), Math.sin(la), c * Math.cos(lo)];
+}
+
+// «Разворачивание» долгот кольца, чтобы не рвать полигон на антимеридиане
+function unwrapRing(ring){
+  const out = [];
+  let prev = null;
+  for (const [la, lo] of ring){
+    let L = lo;
+    if (prev !== null){
+      while (L - prev >  180) L -= 360;
+      while (L - prev < -180) L += 360;
+    }
+    out.push([la, L]);
+    prev = L;
+  }
+  return out;
+}
+
+const LAND_UW = LAND.map(unwrapRing);
+for (const f of FACTIONS) f.polysUW = (f.polys || []).map(unwrapRing);
+
+// Точка в полигоне (лучевой алгоритм) в координатах lat/«развёрнутая lon»
+function pointInRing(lat, lon, ring){
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++){
+    const [yi, xi] = ring[i], [yj, xj] = ring[j];
+    if ((yi > lat) !== (yj > lat) &&
+        lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function factionAt(lat, lon){
+  for (const f of FACTIONS){
+    for (const ring of f.polysUW){
+      for (const off of [-360, 0, 360]){
+        if (pointInRing(lat, lon + off, ring)) return f;
+      }
+    }
+  }
+  return null;
+}
+
+// ═══════════════ ТЕКСТУРА (equirectangular) ═══════════════
+// Территории запекаются в текстуру и натягиваются на сферу —
+// обрезки по горизонту нет вообще, значит нет и «кинжалов».
+const texCanvas = document.createElement('canvas');
+
+function hexRgb(h){
+  return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+}
+
+let texSize = 4096;
+function buildTexture(selectedKey){
+  const W = texSize, H = W / 2;
+  texCanvas.width = W; texCanvas.height = H;
+  const c = texCanvas.getContext('2d');
+  const X = lon => (lon + 180) / 360 * W;
+  const Y = lat => (90 - lat) / 180 * H;
+  const k = W / 4096; // масштаб штрихов
+
+  // Океан
+  const og = c.createLinearGradient(0, 0, 0, H);
+  og.addColorStop(0.00, '#040a12');
+  og.addColorStop(0.42, '#0a1826');
+  og.addColorStop(0.58, '#0a1826');
+  og.addColorStop(1.00, '#040a12');
+  c.fillStyle = og;
+  c.fillRect(0, 0, W, H);
+
+  // Градусная сетка
+  c.strokeStyle = 'rgba(90,150,255,0.055)';
+  c.lineWidth = Math.max(1, k);
+  for (let lo = -180; lo < 180; lo += 15){
+    c.beginPath(); c.moveTo(X(lo), 0); c.lineTo(X(lo), H); c.stroke();
+  }
+  for (let la = -75; la <= 75; la += 15){
+    c.beginPath(); c.moveTo(0, Y(la)); c.lineTo(W, Y(la)); c.stroke();
+  }
+  c.strokeStyle = 'rgba(90,170,255,0.10)';
+  c.beginPath(); c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); c.stroke(); // экватор
+
+  function tracePath(ringUW, dx){
+    c.beginPath();
+    for (let i = 0; i < ringUW.length; i++){
+      const [la, lo] = ringUW[i];
+      const x = X(lo) + dx, y = Y(la);
+      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    }
+    c.closePath();
+  }
+  const OFFS = [-W, 0, W];
+
+  // Суша
+  for (const ring of LAND_UW){
+    for (const dx of OFFS){ tracePath(ring, dx); c.fillStyle = '#152219'; c.fill(); }
+  }
+  // Свечение береговой линии
+  c.save();
+  c.strokeStyle = 'rgba(120,205,180,0.30)';
+  c.lineWidth = 1.6 * k;
+  c.shadowColor = 'rgba(90,190,230,0.55)';
+  c.shadowBlur = 7 * k;
+  for (const ring of LAND_UW){
+    for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+  }
+  c.restore();
+
+  // Территории фракций: сначала все заливки, потом все границы
+  const hasSel = !!selectedKey;
+  for (const f of FACTIONS){
+    if (!f.polysUW.length) continue;
+    const [r, g, b] = hexRgb(f.col);
+    const sel = f.key === selectedKey;
+    const alpha = sel ? 0.38 : (hasSel ? 0.10 : 0.20);
+    c.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+    for (const ring of f.polysUW){
+      for (const dx of OFFS){ tracePath(ring, dx); c.fill(); }
+    }
+  }
+  for (const f of FACTIONS){
+    if (!f.polysUW.length) continue;
+    const sel = f.key === selectedKey;
+    c.save();
+    c.strokeStyle = f.col;
+    c.globalAlpha = sel ? 1 : (hasSel ? 0.55 : 0.9);
+    c.lineWidth = (sel ? 6 : 3) * k;
+    c.shadowColor = f.col;
+    c.shadowBlur = (sel ? 30 : 15) * k;
+    for (const ring of f.polysUW){
+      for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+    }
+    c.restore();
+  }
+  return texCanvas;
+}
+
+// ═══════════════ WEBGL ═══════════════
+const glCanvas = document.getElementById('glcanvas');
+const gl = glCanvas.getContext('webgl', { antialias: false, alpha: false })
+        || glCanvas.getContext('experimental-webgl');
+
+const VSH = `
+attribute vec2 aPos;
+void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }
+`;
+
+const FSH = `
+precision highp float;
+uniform vec2  uRes;
+uniform vec3  uView;   // cx, cy (GL-координаты), R в px
+uniform mat3  uMinv;   // view -> world
+uniform sampler2D uTex;
+uniform float uTime;
+
+float hash21(vec2 p){
+  p = fract(p * vec2(123.34, 456.21));
+  p += dot(p, p + 45.32);
+  return fract(p.x * p.y);
+}
+
+float starLayer(vec2 fc, float cell, float thresh, float seedOff){
+  vec2 g = floor(fc / cell);
+  float h = hash21(g + seedOff);
+  if (h < thresh) return 0.0;
+  vec2 sp = (vec2(fract(h * 37.7), fract(h * 91.3)) * 0.6 + 0.2) * cell;
+  vec2 lp = fc - (g * cell + sp);
+  float d2 = dot(lp, lp);
+  float b = (h - thresh) / (1.0 - thresh);
+  float tw = 0.55 + 0.45 * sin(uTime * (0.6 + b * 2.2) + h * 87.0);
+  return (exp(-d2 * 1.5) + 0.22 * exp(-d2 * 0.12)) * b * tw;
+}
+
+vec3 spaceColor(vec2 fc){
+  // фоновая туманность
+  vec2 focus = vec2(uRes.x * 0.5, uRes.y * 0.55);
+  float rad = distance(fc, focus) / (max(uRes.x, uRes.y) * 0.85);
+  vec3 col = mix(vec3(0.030, 0.038, 0.092), vec3(0.010, 0.011, 0.038), clamp(rad, 0.0, 1.0));
+  // звёзды: два слоя гауссовых точек
+  col += vec3(0.62, 0.72, 0.95) * starLayer(fc, 26.0, 0.86, 0.0) * 0.9;
+  col += vec3(0.85, 0.90, 1.00) * starLayer(fc, 61.0, 0.90, 13.7);
+  return col;
+}
+
+void main(){
+  vec2 fc = gl_FragCoord.xy;
+  vec2 q = (fc - uView.xy) / uView.z;
+  float d = length(q);
+  float aa = 1.6 / uView.z;
+
+  vec3 atm = vec3(0.22, 0.52, 1.0);
+  vec3 outCol = spaceColor(fc) + atm * exp(-max(d - 1.0, 0.0) * 7.5) * 0.34;
+
+  if (d < 1.0 + aa){
+    float z = sqrt(max(1.0 - d * d, 0.0));
+    vec3 n = vec3(q, z);
+    vec3 w = uMinv * n;
+    float lon = atan(w.x, w.z);
+    vec2 tuv = vec2(lon / 6.28318530718 + 0.5, acos(clamp(w.y, -1.0, 1.0)) / 3.14159265359);
+    vec3 tex = texture2D(uTex, tuv).rgb;
+
+    // мягкий свет + лимбовое затемнение
+    vec3 L = normalize(vec3(-0.42, 0.34, 0.84));
+    float diff = 0.72 + 0.40 * max(dot(n, L), 0.0);
+    float rim = pow(1.0 - z, 3.0);
+    vec3 col = tex * diff + atm * rim * 0.38;
+
+    // сканирующий луч по долготе
+    float s = sin((lon - uTime * 0.13) * 0.5);
+    col += vec3(0.25, 0.7, 1.0) * exp(-s * s * 240.0) * 0.10 * z;
+
+    float m = smoothstep(1.0 + aa, 1.0 - aa, d);
+    gl_FragColor = vec4(mix(outCol, col, m), 1.0);
+  } else {
+    gl_FragColor = vec4(outCol, 1.0);
+  }
+}
+`;
+
+function compile(type, src){
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
+    throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+
+let prog, uni = {}, tex;
+function initGL(){
+  prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VSH));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FSH));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS))
+    throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'aPos');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  for (const name of ['uRes','uView','uMinv','uTex','uTime'])
+    uni[name] = gl.getUniformLocation(prog, name);
+
+  tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+  gl.uniform1i(uni.uTex, 0);
+}
+
+function uploadTexture(){
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texCanvas);
+  gl.generateMipmap(gl.TEXTURE_2D);
+  const ext = gl.getExtension('EXT_texture_filter_anisotropic');
+  if (ext) gl.texParameterf(gl.TEXTURE_2D, ext.TEXTURE_MAX_ANISOTROPY_EXT,
+    Math.min(8, gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));
+}
+
+// ═══════════════ СОСТОЯНИЕ КАМЕРЫ ═══════════════
+const overlay = document.getElementById('overlay');
+const octx = overlay.getContext('2d');
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+let W = 0, H = 0;             // CSS-пиксели
+let ry = 0.55, rx = 0.42;     // текущие углы
+let ty = 0.55, tx = 0.42;     // целевые углы
+let R = 100, tR = 100;        // радиус глобуса, px
+let baseR = 100;
+let autoRot = true;
+let vy = 0, vx = 0;           // инерция
+let time0 = performance.now();
+
+function resize(){
+  W = window.innerWidth; H = window.innerHeight;
+  glCanvas.width = W * dpr; glCanvas.height = H * dpr;
+  overlay.width = W * dpr; overlay.height = H * dpr;
+  gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+  const nb = Math.min(W, H) * 0.40;
+  if (baseR === 100){ R = tR = nb; }
+  baseR = nb;
+}
+window.addEventListener('resize', resize);
+
+// view = M · world;  M = Rx(rx) · Ry(ry)
+function viewMatrix(){
+  const ca = Math.cos(ry), sa = Math.sin(ry);
+  const cb = Math.cos(rx), sb = Math.sin(rx);
+  return {
+    r1: [ca, 0, sa],
+    r2: [sb * sa, cb, -sb * ca],
+    r3: [-cb * sa, sb, cb * ca],
+  };
+}
+function project(lat, lon, M){
+  const [x, y, z] = ll2xyz(lat, lon);
+  const vx3 = M.r1[0]*x + M.r1[1]*y + M.r1[2]*z;
+  const vy3 = M.r2[0]*x + M.r2[1]*y + M.r2[2]*z;
+  const vz3 = M.r3[0]*x + M.r3[1]*y + M.r3[2]*z;
+  return { x: W/2 + vx3 * R, y: H/2 - vy3 * R, z: vz3, vis: vz3 > 0.02 };
+}
+// обратная проекция: экран -> lat/lon (null вне сферы)
+function unproject(mx, my, M){
+  const qx = (mx - W/2) / R, qy = -(my - H/2) / R;
+  const d2 = qx*qx + qy*qy;
+  if (d2 > 1) return null;
+  const qz = Math.sqrt(1 - d2);
+  const wx = M.r1[0]*qx + M.r2[0]*qy + M.r3[0]*qz;
+  const wy = M.r1[1]*qx + M.r2[1]*qy + M.r3[1]*qz;
+  const wz = M.r1[2]*qx + M.r2[2]*qy + M.r3[2]*qz;
+  return { lat: Math.asin(Math.max(-1, Math.min(1, wy))) / DEG, lon: Math.atan2(wx, wz) / DEG };
+}
+
+// ═══════════════ UI: СТАТУС / ЛЕГЕНДА / КАРТОЧКА ═══════════════
+const statusEl = document.getElementById('status');
+const byName = {};
+for (const f of FACTIONS) byName[f.name] = f;
+
+let selectedKey = null;
+let hovKey = null;
+
+function setStatus(text, color){
+  statusEl.textContent = text || 'СИГНАЛ СТАБИЛЕН';
+  statusEl.style.color = color || '';
+}
+
+const legendBody = document.getElementById('legendBody');
+for (const f of FACTIONS){
+  const it = document.createElement('div');
+  it.className = 'l-item';
+  it.style.setProperty('--fc', f.col);
+  it.dataset.key = f.key;
+  it.innerHTML = `<div class="l-dot"></div><div><div class="l-name">${f.name}</div><div class="l-sub">${f.base || ''}</div></div>`;
+  it.addEventListener('click', () => select(f.key, true));
+  legendBody.appendChild(it);
+}
+const legend = document.getElementById('legend');
+document.getElementById('legendHead').addEventListener('click', () => {
+  legend.classList.toggle('collapsed');
+  document.getElementById('legendToggle').textContent = legend.classList.contains('collapsed') ? '+' : '–';
+});
+if (window.innerWidth <= 700){
+  legend.classList.add('collapsed');
+  document.getElementById('legendToggle').textContent = '+';
+}
+
+const fcard = document.getElementById('fcard');
+const fcName = document.getElementById('fcName');
+const fcBody = document.getElementById('fcBody');
+document.getElementById('fcClose').addEventListener('click', () => select(null));
+
+function chipHtml(name, enemy){
+  const f = byName[name];
+  const cls = 'f-chip' + (enemy ? ' enemy' : '') + (f ? ' link' : '');
+  const style = (!enemy && f) ? ` style="--cc:${f.col}"` : '';
+  const data = f ? ` data-goto="${f.key}"` : '';
+  return `<span class="${cls}"${style}${data}>${name}</span>`;
+}
+
+function openCard(f){
+  fcard.style.setProperty('--fc', f.col);
+  fcName.textContent = f.name;
+  let html = `<div class="f-badge">ДОСЬЕ ФРАКЦИИ // ДОСТУП РАЗРЕШЁН</div>`;
+  const rows = [['ЛИДЕР', f.leader], ['ИДЕОЛОГИЯ', f.ideo], ['ТЕРРИТОРИАЛЬНАЯ БАЗА', f.base]];
+  for (const [label, val] of rows){
+    if (!val) continue;
+    html += `<div class="f-row"><div class="f-label">${label}</div><div class="f-value">${val}</div></div>`;
+  }
+  if (f.allies && f.allies.length)
+    html += `<div class="f-row"><div class="f-label">СОЮЗНИКИ</div><div class="f-chips">${f.allies.map(n => chipHtml(n, false)).join('')}</div></div>`;
+  if (f.enemies && f.enemies.length)
+    html += `<div class="f-row"><div class="f-label">ПРОТИВНИКИ</div><div class="f-chips">${f.enemies.map(n => chipHtml(n, true)).join('')}</div></div>`;
+  fcBody.innerHTML = html;
+  fcBody.querySelectorAll('[data-goto]').forEach(el =>
+    el.addEventListener('click', () => select(el.dataset.goto, true)));
+  fcard.classList.add('open');
+}
+
+function shortestAngle(from, to){
+  let d = (to - from) % (2 * Math.PI);
+  if (d >  Math.PI) d -= 2 * Math.PI;
+  if (d < -Math.PI) d += 2 * Math.PI;
+  return from + d;
+}
+
+function flyTo(f){
+  ty = shortestAngle(ry, -f.clon * DEG);
+  tx = Math.max(-1.35, Math.min(1.35, f.clat * DEG));
+  if (tR < baseR * 1.25) tR = baseR * 1.5;
+  autoRot = false;
+  updateRotateBtn();
+}
+
+function select(key, fly){
+  selectedKey = key;
+  legendBody.querySelectorAll('.l-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.key === key));
+  if (key){
+    const f = FACTIONS.find(x => x.key === key);
+    openCard(f);
+    if (fly) flyTo(f);
+    setStatus('ОБЪЕКТ: ' + f.name, f.col);
+    if (window.innerWidth <= 700 && !legend.classList.contains('collapsed')){
+      legend.classList.add('collapsed');
+      document.getElementById('legendToggle').textContent = '+';
+    }
+  } else {
+    fcard.classList.remove('open');
+    setStatus();
+  }
+  buildTexture(selectedKey);
+  uploadTexture();
+}
+
+// ═══════════════ МАРКЕРЫ / ПОДПИСИ (2D-слой) ═══════════════
+function drawOverlay(t, M){
+  octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  octx.clearRect(0, 0, W, H);
+  const lodA = R <= baseR * 0.55 ? 0.45 : 1;
+
+  for (const f of FACTIONS){
+    const p = project(f.clat, f.clon, M);
+    if (!p.vis) continue;
+    const hot = f.key === hovKey || f.key === selectedKey;
+    const sz = (hot ? 5.6 : 4) * (f.polysUW.length ? 1 : 0.85);
+
+    octx.save();
+    octx.shadowColor = f.col;
+    // пульсирующие кольца
+    const seed = f.clon * 0.1;
+    const p1 = 0.5 + 0.5 * Math.sin(t * 0.9 + seed);
+    octx.strokeStyle = f.col;
+    octx.globalAlpha = (hot ? 0.6 : 0.25) * (0.4 + 0.6 * p1) * lodA;
+    octx.lineWidth = hot ? 1.4 : 0.8;
+    octx.beginPath(); octx.arc(p.x, p.y, sz + 5 + p1 * 4, 0, Math.PI * 2); octx.stroke();
+    const p2 = 0.5 + 0.5 * Math.sin(t * 0.9 + seed + Math.PI);
+    octx.globalAlpha = (hot ? 0.4 : 0.15) * (0.4 + 0.6 * p2) * lodA;
+    octx.beginPath(); octx.arc(p.x, p.y, sz + 2 + p2 * 2.5, 0, Math.PI * 2); octx.stroke();
+    // ядро
+    octx.globalAlpha = (hot ? 1 : 0.9) * lodA;
+    octx.fillStyle = f.col;
+    octx.shadowBlur = hot ? 24 : 12;
+    octx.beginPath(); octx.arc(p.x, p.y, sz, 0, Math.PI * 2); octx.fill();
+    octx.restore();
+
+    // подпись
+    const fs = Math.max(8.5, Math.min(12, R * 0.028));
+    const la = (hot ? 1 : 0.75) * lodA;
+    if (la > 0.05){
+      octx.save();
+      octx.font = `${hot ? 700 : 500} ${fs}px 'Share Tech Mono', monospace`;
+      octx.textAlign = 'center';
+      octx.textBaseline = 'top';
+      const tw = octx.measureText(f.name).width;
+      const py = p.y + sz + 6;
+      octx.globalAlpha = 0.82 * la;
+      octx.fillStyle = 'rgba(4,6,14,0.88)';
+      octx.fillRect(p.x - tw/2 - 4, py - 2, tw + 8, fs + 5);
+      octx.globalAlpha = la;
+      octx.fillStyle = hot ? '#ffffff' : f.col;
+      octx.shadowColor = '#000';
+      octx.shadowBlur = 4;
+      octx.fillText(f.name, p.x, py);
+      octx.restore();
+    }
+  }
+}
+
+// ═══════════════ МАСШТАБНАЯ ЛИНЕЙКА ═══════════════
+const scaleLine = document.getElementById('scaleLine');
+const scaleText = document.getElementById('scaleText');
+function updateScale(){
+  const kmPerPx = 6371 / R;
+  const targets = [100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 7500, 10000];
+  let best = targets[0];
+  for (const km of targets){
+    const px = km / kmPerPx;
+    if (px >= 40 && px <= 95){ best = km; break; }
+    if (px < 40) best = km;
+  }
+  scaleLine.style.width = Math.round(best / kmPerPx) + 'px';
+  const alt = Math.max(0, Math.round(6371 * (baseR * 2.4 / R)));
+  scaleText.textContent = (best >= 1000 ? (best/1000) + ' ТЫС КМ' : best + ' КМ') +
+    '  ·  ОРБИТА ' + (alt >= 1000 ? (alt/1000).toFixed(1) + ' ТЫС КМ' : alt + ' КМ');
+}
+
+// ═══════════════ ГЛАВНЫЙ ЦИКЛ ═══════════════
+function frame(now){
+  const t = (now - time0) / 1000;
+  if (autoRot) ty += 0.0032;
+  // инерция
+  if (Math.abs(vy) > 1e-5 || Math.abs(vx) > 1e-5){
+    ty += vy; tx += vx;
+    vy *= 0.94; vx *= 0.94;
+    tx = Math.max(-1.35, Math.min(1.35, tx));
+  }
+  ry += (ty - ry) * 0.09;
+  rx += (tx - rx) * 0.09;
+  R  += (tR - R) * 0.12;
+
+  const M = viewMatrix();
+
+  gl.uniform2f(uni.uRes, glCanvas.width, glCanvas.height);
+  gl.uniform3f(uni.uView, W/2 * dpr, glCanvas.height - H/2 * dpr, R * dpr);
+  // uMinv = M^T, column-major => столбцы = строки M
+  gl.uniformMatrix3fv(uni.uMinv, false, new Float32Array([
+    M.r1[0], M.r1[1], M.r1[2],
+    M.r2[0], M.r2[1], M.r2[2],
+    M.r3[0], M.r3[1], M.r3[2],
+  ]));
+  gl.uniform1f(uni.uTime, t);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+  drawOverlay(t, M);
+  updateScale();
+  requestAnimationFrame(frame);
+}
+
+// ═══════════════ ВВОД ═══════════════
+const pointers = new Map();
+let dragging = false, dragDist = 0, lastX = 0, lastY = 0, pinch0 = 0, pinchR0 = 0;
+let lastMoveT = 0, lastDX = 0, lastDY = 0;
+
+function speed(){ return 0.0048 * Math.min(W, H) / R; }
+
+overlay.addEventListener('pointerdown', e => {
+  overlay.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1){
+    dragging = true; dragDist = 0;
+    lastX = e.clientX; lastY = e.clientY;
+    vy = vx = 0;
+    autoRot = false; updateRotateBtn();
+    overlay.classList.add('dragging');
+  } else if (pointers.size === 2){
+    const pts = [...pointers.values()];
+    pinch0 = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    pinchR0 = tR;
+    dragging = false;
+  }
+});
+
+overlay.addEventListener('pointermove', e => {
+  if (pointers.has(e.pointerId)){
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  }
+  if (pointers.size === 2){
+    const pts = [...pointers.values()];
+    const d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    if (pinch0 > 0) tR = clampR(pinchR0 * d / pinch0);
+    return;
+  }
+  if (dragging){
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    const sp = speed();
+    ty += dx * sp; tx += dy * sp;
+    tx = Math.max(-1.35, Math.min(1.35, tx));
+    dragDist += Math.abs(dx) + Math.abs(dy);
+    lastDX = dx * sp; lastDY = dy * sp; lastMoveT = performance.now();
+    lastX = e.clientX; lastY = e.clientY;
+    return;
+  }
+  // hover
+  const M = viewMatrix();
+  const hit = hitTest(e.clientX, e.clientY, M);
+  hovKey = hit ? hit.key : null;
+  overlay.classList.toggle('pointing', !!hit);
+  if (hit) setStatus('ОБЪЕКТ: ' + hit.name, hit.col);
+  else if (selectedKey){
+    const f = FACTIONS.find(x => x.key === selectedKey);
+    setStatus('ОБЪЕКТ: ' + f.name, f.col);
+  } else setStatus();
+});
+
+overlay.addEventListener('pointerup', e => {
+  pointers.delete(e.pointerId);
+  if (dragging && pointers.size === 0){
+    dragging = false;
+    overlay.classList.remove('dragging');
+    // инерция, если отпустили в движении
+    if (performance.now() - lastMoveT < 60 && dragDist > 6){
+      vy = lastDX; vx = lastDY;
+    }
+    if (dragDist < 6){
+      const M = viewMatrix();
+      const hit = hitTest(e.clientX, e.clientY, M);
+      select(hit ? hit.key : null, false);
+    }
+  }
+  if (pointers.size < 2) pinch0 = 0;
+});
+overlay.addEventListener('pointercancel', e => {
+  pointers.delete(e.pointerId);
+  dragging = false;
+  overlay.classList.remove('dragging');
+});
+
+function clampR(r){
+  return Math.max(baseR * 0.45, Math.min(baseR * 9, r));
+}
+
+overlay.addEventListener('wheel', e => {
+  e.preventDefault();
+  tR = clampR(tR * (e.deltaY > 0 ? 0.9 : 1.11));
+}, { passive: false });
+
+// поиск объекта под курсором: сначала маркеры, потом территории
+function hitTest(cx, cy, M){
+  const rect = overlay.getBoundingClientRect();
+  const mx = cx - rect.left, my = cy - rect.top;
+  let best = null, bd = Infinity;
+  for (const f of FACTIONS){
+    const p = project(f.clat, f.clon, M);
+    if (!p.vis) continue;
+    const d = Math.hypot(mx - p.x, my - p.y);
+    if (d < 20 && d < bd){ bd = d; best = f; }
+  }
+  if (best) return best;
+  const ll = unproject(mx, my, M);
+  if (!ll) return null;
+  return factionAt(ll.lat, ll.lon);
+}
+
+// ═══════════════ КНОПКИ ═══════════════
+const btnRotate = document.getElementById('btnRotate');
+function updateRotateBtn(){
+  btnRotate.textContent = autoRot ? '⏸' : '▶';
+  btnRotate.classList.toggle('off', !autoRot);
+}
+btnRotate.addEventListener('click', () => { autoRot = !autoRot; updateRotateBtn(); });
+document.getElementById('btnReset').addEventListener('click', () => {
+  ty = shortestAngle(ry, 0.55); tx = 0.42; tR = baseR;
+  select(null);
+});
+document.getElementById('btnZoomIn').addEventListener('click', () => tR = clampR(tR * 1.35));
+document.getElementById('btnZoomOut').addEventListener('click', () => tR = clampR(tR / 1.35));
+
+// ═══════════════ СТАРТ ═══════════════
+function start(){
+  if (!gl){
+    document.querySelector('.load-text').textContent = 'ОШИБКА: WEBGL НЕДОСТУПЕН';
+    return;
+  }
+  resize();
+  R = tR = baseR;
+  initGL();
+  // Выбор разрешения текстуры под устройство
+  const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
+  const small = Math.min(screen.width, screen.height) < 500;
+  const touch = 'ontouchstart' in window;
+  texSize = small ? 2048 : (!touch && maxTex >= 8192 ? 8192 : Math.min(4096, maxTex));
+  try {
+    buildTexture(null);
+    // проверка, что браузер реально выделил холст такого размера
+    const px = texCanvas.getContext('2d').getImageData(texSize - 1, texSize / 2 - 1, 1, 1);
+    if (px.data[3] === 0) throw new Error('canvas alloc failed');
+  } catch (e) {
+    texSize = 4096;
+    buildTexture(null);
+  }
+  uploadTexture();
+  requestAnimationFrame(frame);
+  const loader = document.getElementById('loader');
+  loader.classList.add('gone');
+  setTimeout(() => loader.remove(), 900);
+  setTimeout(() => document.getElementById('hint').classList.add('gone'), 7000);
+  updateRotateBtn();
+}
+start();
+
+})();
+</script>
+</body>
+</html>
