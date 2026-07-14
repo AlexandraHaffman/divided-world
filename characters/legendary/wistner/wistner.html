@@ -7,656 +7,523 @@
 <link rel="icon" href="crest.webp">
 <style>
 /* ═══════════════════════════════════════════════
-   КУРТ ВИСТНЕР
-   Крыло I — АРХИВ (спецблок, Грац) → Дверь (01.03.2019) → Крыло II — АРКАДИЯ
-   Свет включён — ты наблюдатель. Выключен — стекло становится зеркалом.
+   КУРТ ВИСТНЕР — вертикальная лента
+   ИСТОРИЯ: свет коридора гаснет по мере прокрутки (свет → тьма).
+   НАСТОЯЩЕЕ: отдельный тёмный фон, опись построенного.
    ═══════════════════════════════════════════════ */
 :root{
   --edge:#0b9b73; --edge-br:#00d493; --ink:#0d1714;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,system-ui,sans-serif;
+  --bar:56px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:#050a08;font-family:var(--sans);
-  -webkit-tap-highlight-color:transparent;user-select:none;touch-action:none;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{min-height:100%;background:#050a08;font-family:var(--sans);color:var(--ink);
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 
-#hall{position:fixed;inset:0;z-index:0;overflow:hidden;
+/* ── ФОНЫ ── */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;
   background:radial-gradient(120% 70% at 50% 100%,rgba(11,155,115,.16),transparent 60%),
              linear-gradient(180deg,#050a08 0%,#0a1a15 55%,#0d221b 100%)}
-#hall img{position:absolute;top:50%;left:50%;height:120%;min-width:120%;object-fit:cover;
-  transform:translate(-50%,-50%);opacity:0;transition:opacity 1.5s ease;will-change:transform}
-#hall img.on{opacity:1}
-#veil{position:fixed;inset:0;z-index:1;pointer-events:none;transition:opacity 1.4s;opacity:0;
-  background:radial-gradient(75% 60% at 50% 50%,transparent 25%,rgba(3,8,6,.72) 100%)}
-body.dim #veil{opacity:.45}
-body.dark #veil{opacity:1}
+#bg img{position:absolute;top:50%;left:50%;height:110%;min-width:110%;object-fit:cover;
+  transform:translate(-50%,-50%);will-change:opacity;transition:opacity .4s linear}
+#bgDark{opacity:0}
+#bgPresent{position:absolute;inset:0;opacity:0;transition:opacity 1s;
+  background:radial-gradient(130% 80% at 50% 0%,rgba(11,155,115,.20),transparent 55%),
+             radial-gradient(100% 60% at 50% 100%,rgba(0,60,45,.35),transparent 60%),
+             linear-gradient(180deg,#04100c 0%,#08201a 60%,#0a2a20 100%)}
+body.present #bgLight,body.present #bgDark{opacity:0!important}
+body.present #bgPresent{opacity:1}
+#veil{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .4s linear;
+  background:radial-gradient(80% 60% at 50% 40%,transparent 20%,rgba(3,8,6,.7) 100%)}
 #grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 
-#track{position:fixed;top:0;left:0;height:100%;z-index:2;display:flex;align-items:center;
-  padding:0 12vw;gap:7vw;will-change:transform;transition:transform .62s cubic-bezier(.22,.61,.36,1)}
+/* ── ВЕРХНИЙ БАР ── */
+#bar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;gap:10px;
+  height:calc(var(--bar) + env(safe-area-inset-top));padding:env(safe-area-inset-top) 12px 0;
+  background:linear-gradient(180deg,rgba(4,10,8,.72),rgba(4,10,8,.32) 70%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#bar a,#bar button{font-family:var(--mono);color:#fff;background:transparent;border:none;cursor:pointer}
+#back{font-size:10px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  padding:7px 10px;border:1px solid rgba(255,255,255,.18);border-radius:16px;white-space:nowrap;flex:none}
+#modesw{display:flex;gap:2px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;padding:3px;margin:0 auto}
+#modesw button{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);
+  padding:7px 13px;border-radius:14px;transition:.25s;white-space:nowrap}
+#modesw button.on{background:var(--edge-br);color:#04150f;font-weight:600}
+#tools{display:flex;align-items:center;gap:8px;flex:none}
+#cctv{display:flex;align-items:center;gap:6px;font-size:9.5px;letter-spacing:.06em;color:rgba(255,255,255,.85)}
+#cctv .dot{width:6px;height:6px;border-radius:50%;background:#ff5252;box-shadow:0 0 8px #ff5252;
+  animation:pulse 1.6s ease-in-out infinite}
+#soundBtn{width:30px;height:30px;border-radius:50%;font-size:13px;
+  border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08)}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@media(max-width:640px){#cctv .date,#cctv .clk-date{display:none}#back span{display:none}
+  #back::before{content:"←"}}
 
-.cell{position:relative;flex:none;width:min(500px,80vw);max-height:82vh;overflow-y:auto;
-  background:rgba(255,255,255,.62);
-  backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);
-  border:1px solid rgba(255,255,255,.85);
-  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 34px 90px -34px rgba(6,18,14,.65);
-  padding:28px 26px 30px;color:var(--ink);
-  transition:background 1.2s,color 1.2s,border-color 1.2s,box-shadow 1.2s,opacity .55s,transform .55s;
-  -webkit-overflow-scrolling:touch;touch-action:pan-y}
-.cell::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--edge),transparent);opacity:.9}
-.cell::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.6s;
-  background:radial-gradient(40% 30% at 68% 26%,rgba(190,225,212,.10),transparent 70%),
-             linear-gradient(200deg,rgba(200,235,222,.06),transparent 55%)}
-body.dark .cell::after{opacity:1}
-.cell.far{opacity:.3;transform:scale(.93)}
-body.dark .cell{background:rgba(13,24,20,.66);color:#e6efec;border-color:rgba(120,165,150,.22);
-  box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 34px 90px -34px rgba(0,0,0,.9)}
+/* ── ЛЕНТА ── */
+.feed{position:relative;z-index:2;max-width:720px;margin:0 auto;
+  padding:calc(var(--bar) + env(safe-area-inset-top) + 20px) 20px 18vh}
+.feed[hidden]{display:none}
 
+/* ── КАРТОЧКА ── */
+.card{position:relative;background:rgba(255,255,255,.72);
+  backdrop-filter:blur(20px) saturate(1.1);-webkit-backdrop-filter:blur(20px) saturate(1.1);
+  border:1px solid rgba(255,255,255,.85);border-radius:14px;
+  box-shadow:0 30px 80px -40px rgba(6,18,14,.6);
+  padding:30px 28px 32px;margin-bottom:clamp(28px,7vh,72px);color:var(--ink);
+  transition:background 1.1s,color 1.1s,border-color 1.1s,box-shadow 1.1s}
+.card::before{content:"";position:absolute;left:24px;right:24px;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--edge),transparent);opacity:.7}
+body.night .card{background:rgba(13,24,20,.72);color:#e6efec;border-color:rgba(120,165,150,.24);
+  box-shadow:0 30px 80px -40px rgba(0,0,0,.9)}
+.card:last-child{margin-bottom:0}
+
+/* ── ТИПОГРАФИКА ── */
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--edge);margin-bottom:14px}
+body.night .kicker{color:var(--edge-br)}
 .no{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--edge);display:flex;justify-content:space-between;gap:12px;margin-bottom:16px}
+  color:var(--edge);display:flex;justify-content:space-between;gap:12px;margin-bottom:18px}
 .no .g{opacity:.6;display:inline-flex;align-items:center;gap:5px}
 .no .g::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;
   box-shadow:0 0 6px currentColor;animation:pulse 2.4s ease-in-out infinite}
-.hidden .no .g::before{animation:none;opacity:.3}
-.door .no .g::before{content:none}
-@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-body.dark .no{color:var(--edge-br)}
-h1{font-size:clamp(30px,7vw,44px);font-weight:200;letter-spacing:-.02em;line-height:1;margin-bottom:6px}
+body.night .no{color:var(--edge-br)}
+h1{font-size:clamp(34px,9vw,52px);font-weight:200;letter-spacing:-.02em;line-height:.98}
 h1 em{display:block;font-style:normal;font-weight:500}
-h2{font-size:clamp(21px,4.4vw,27px);font-weight:200;letter-spacing:-.01em;line-height:1.15;margin-bottom:16px}
-.cell p{font-size:14.5px;font-weight:300;line-height:1.7;color:#2c3a35;margin-bottom:11px;max-width:56ch}
-body.dark .cell p{color:#aec2bb}
-.cell p:last-child{margin-bottom:0}
-.lede{font-size:16px;color:#1c2926}
-body.dark .lede{color:#cddbd5}
-.meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--edge);margin-bottom:16px;line-height:1.7}
-body.dark .meta{color:var(--edge-br)}
+h2{font-size:clamp(24px,6vw,30px);font-weight:200;letter-spacing:-.01em;line-height:1.12;margin-bottom:18px}
+.card p{font-size:16px;font-weight:300;line-height:1.75;color:#2c3a35;margin-bottom:14px}
+body.night .card p{color:#b6c8c1}
+.card p:last-child{margin-bottom:0}
+.lede{font-size:18px;color:#1c2926;line-height:1.6}
+body.night .lede{color:#cddbd5}
+.role{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--edge);
+  line-height:1.7;margin-top:10px}
+body.night .role{color:var(--edge-br)}
+.meta{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:var(--edge);
+  line-height:1.7;margin-bottom:18px}
+body.night .meta{color:var(--edge-br)}
+.quote{font-size:18px;font-weight:300;line-height:1.55;color:#16241f;margin-bottom:20px;
+  padding-left:16px;border-left:2px solid var(--edge)}
+body.night .quote{color:#d7e4de;border-left-color:var(--edge-br)}
+.hook{font-size:17px;font-weight:400;line-height:1.55;color:#12332a;
+  margin-top:20px;padding-top:18px;border-top:1px solid rgba(11,155,115,.25)}
+body.night .hook{color:var(--edge-br)}
+.stamp-line{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(196,70,70,.7);margin-bottom:16px}
+body.night .stamp-line{color:rgba(255,130,130,.6)}
 
-.art{width:100%;margin-bottom:20px;position:relative;overflow:hidden;aspect-ratio:16/10;
-  border:1px solid rgba(11,155,115,.22);background:rgba(255,255,255,.3)}
+/* ── ИЗОБРАЖЕНИЯ ── */
+.art{position:relative;margin-bottom:22px;border-radius:10px;overflow:hidden;
+  border:1px solid rgba(11,155,115,.22);background:rgba(255,255,255,.25)}
+body.night .art{border-color:rgba(11,155,115,.4);background:rgba(0,0,0,.35)}
+.art img{display:block;width:100%;height:auto}
+.art.photo img{aspect-ratio:3/2;object-fit:cover}
+.art.bp{background:transparent;border:none}
+.art.bp img{max-height:70vh;object-fit:contain;margin:0 auto;
+  mix-blend-mode:multiply;filter:contrast(2.3)}
+body.night .art.bp img{filter:invert(1) contrast(2.3) sepia(.6) hue-rotate(100deg) saturate(3);
+  mix-blend-mode:screen}
 .art::before,.art::after{content:"";position:absolute;width:16px;height:16px;
-  border:1.5px solid var(--edge-br);opacity:.6;pointer-events:none;z-index:2}
-.art::before{top:7px;left:7px;border-right:none;border-bottom:none}
-.art::after{bottom:7px;right:7px;border-left:none;border-top:none}
-.art .scan{position:absolute;left:0;right:0;top:-30%;height:22%;pointer-events:none;z-index:1;
+  border:1.5px solid var(--edge-br);opacity:.55;pointer-events:none;z-index:2}
+.art::before{top:8px;left:8px;border-right:none;border-bottom:none}
+.art::after{bottom:8px;right:8px;border-left:none;border-top:none}
+.art .scan{position:absolute;left:0;right:0;top:-30%;height:20%;pointer-events:none;z-index:1;
   background:linear-gradient(rgba(255,255,255,0),rgba(190,225,212,.22),rgba(255,255,255,0));
   animation:scan 6s linear infinite}
-body.dark .art .scan{background:linear-gradient(rgba(0,0,0,0),rgba(0,212,147,.18),rgba(0,0,0,0))}
+body.night .art .scan{background:linear-gradient(rgba(0,0,0,0),rgba(0,212,147,.16),rgba(0,0,0,0))}
 @keyframes scan{0%{top:-30%}100%{top:110%}}
-.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.4s}
-.art .alt{opacity:0}
-body.dark .art .alt{opacity:1}
-body.dark .art{background:rgba(0,0,0,.4);border-color:rgba(11,155,115,.4)}
-.art.ph{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;
-  letter-spacing:.16em;text-transform:uppercase;color:#5c6f68;text-align:center;padding:16px}
-body.dark .art.ph{color:#8fa39c}
-.art.bp{background:transparent;border:none}
-.art.bp img{object-fit:contain;mix-blend-mode:multiply;filter:contrast(2.3)}
-body.dark .art.bp img{filter:invert(1) contrast(2.3) sepia(.6) hue-rotate(100deg) saturate(3);mix-blend-mode:screen}
 .art.missing img{display:none}
-.art.missing{display:flex;align-items:center;justify-content:center;
-  background:repeating-linear-gradient(135deg,rgba(11,155,115,.07) 0 2px,transparent 2px 14px),rgba(255,255,255,.3)}
-body.dark .art.missing{background:repeating-linear-gradient(135deg,rgba(0,212,147,.09) 0 2px,transparent 2px 14px),rgba(0,0,0,.4)}
+.art.missing{min-height:200px;display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(135deg,rgba(11,155,115,.07) 0 2px,transparent 2px 14px),rgba(255,255,255,.25)}
+body.night .art.missing{background:repeating-linear-gradient(135deg,rgba(0,212,147,.09) 0 2px,transparent 2px 14px),rgba(0,0,0,.35)}
 .art.missing .sig{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
   color:#5c6f68;text-align:center;padding:16px;z-index:2}
-body.dark .art.missing .sig{color:#8fa39c}
+body.night .art.missing .sig{color:#8fa39c}
 .art.missing .sig::before{content:"нет сигнала";display:block;font-size:8px;opacity:.55;
   margin-bottom:6px;letter-spacing:.22em}
 
-.note{display:none;margin:14px 0 0;padding-left:13px;border-left:1px solid var(--edge);
-  font-size:13px;font-weight:300;line-height:1.62;color:#4a5c56;max-width:54ch}
+/* ── ГЕРОЙ ── */
+.hero{margin-bottom:clamp(28px,7vh,72px)}
+.hero .frame{position:relative;border-radius:14px;overflow:hidden;
+  border:1px solid rgba(11,155,115,.25);box-shadow:0 30px 80px -40px rgba(6,18,14,.6)}
+.hero .frame img{display:block;width:100%;height:auto;max-height:74vh;object-fit:cover}
+.hero .frame.missing{min-height:60vh;display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(135deg,rgba(11,155,115,.08) 0 2px,transparent 2px 16px),rgba(8,20,16,.6)}
+.hero .frame.missing img{display:none}
+.hero .frame.missing .sig{font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:#8fa39c;text-align:center;padding:16px}
+.hero .frame.missing .sig::before{content:"нет сигнала";display:block;font-size:8px;opacity:.55;
+  margin-bottom:6px;letter-spacing:.22em}
+.hero .frame::before,.hero .frame::after{content:"";position:absolute;width:22px;height:22px;
+  border:1.5px solid var(--edge-br);opacity:.6;pointer-events:none;z-index:3}
+.hero .frame::before{top:12px;left:12px;border-right:none;border-bottom:none}
+.hero .frame::after{bottom:12px;right:12px;border-left:none;border-top:none}
+.hero .scrim{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,10,8,.45) 0%,transparent 28%,transparent 45%,rgba(4,10,8,.9) 100%)}
+.hero .head{position:absolute;left:0;right:0;bottom:0;padding:24px 22px;z-index:2}
+.hero .head .kicker{color:#9fe9cf;margin-bottom:10px}
+.hero .head h1{color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.6)}
+.hero .head .role{color:#bfeadd;margin-top:12px}
+
+/* ── ЗАМЕТКИ / РЕДАКЦИИ ── */
+.note{margin:16px 0 0;padding-left:14px;border-left:1px solid var(--edge);
+  font-size:14px;font-weight:300;line-height:1.65;color:#4a5c56;
+  opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s ease}
+.note.in{opacity:1;transform:none}
 .note::before{content:"на полях";display:block;font-family:var(--mono);font-size:8.5px;
-  letter-spacing:.18em;text-transform:uppercase;opacity:.6;margin-bottom:5px}
-body.dim .note,body.dark .note{display:block;animation:fade .9s ease-out}
-body.dark .note{color:#7fa093;border-left-color:var(--edge-br)}
-@keyframes fade{from{opacity:0;transform:translateY(5px)}}
-.rd{background:currentColor;color:transparent;border-radius:2px;padding:0 3px;transition:.9s;cursor:help}
+  letter-spacing:.18em;text-transform:uppercase;opacity:.6;margin-bottom:6px}
+body.night .note{color:#89a89c;border-left-color:var(--edge-br)}
+.rd{background:currentColor;color:transparent;border-radius:2px;padding:0 3px;cursor:help;transition:.5s}
 .rd:hover,.rd:active{background:transparent;color:inherit;transition:.15s}
-body.dark .rd{background:transparent;color:inherit;border-bottom:1px solid var(--edge-br)}
+body.night .rd{background:transparent;color:inherit;border-bottom:1px solid var(--edge-br)}
 
-.stamp{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;
-  text-transform:uppercase;color:rgba(196,70,70,.65);border:1.5px solid rgba(196,70,70,.5);
-  padding:5px 9px;border-radius:3px;transform:rotate(5deg);pointer-events:none;z-index:3}
-body.dark .stamp{color:rgba(255,130,130,.6);border-color:rgba(255,130,130,.45)}
-@media(max-width:560px){.stamp{display:none}}
-.stamp-line{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
-  color:rgba(196,70,70,.7);margin:0 auto 16px;text-align:center}
-body.dark .stamp-line{color:rgba(255,130,130,.6)}
-
-.hidden > *:not(.no):not(.void){display:none}
-.hidden .void{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:230px;text-align:center;gap:12px}
-.hidden .void .ic{width:26px;height:26px;border:1px solid currentColor;opacity:.35;transform:rotate(45deg)}
-.hidden .void p{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
-  opacity:.5;max-width:26ch;line-height:1.9}
-body.dark .hidden > *:not(.void){display:block}
-body.dark .hidden .no{display:flex}
-body.dark .hidden .void{display:none}
-body.dark .hidden .row{display:flex}
-
-.row{display:flex;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid rgba(11,155,115,.16)}
-.row:last-of-type{border-bottom:1px solid rgba(11,155,115,.16);margin-bottom:16px}
-.row b{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--edge-br);flex:none;width:52px}
-.row .who{font-size:14px;font-weight:400;line-height:1.45}
-.row .who i{display:block;font-style:normal;font-size:12px;font-weight:300;opacity:.62;margin-top:3px}
+/* ── СПИСКИ (Реестр, Разведсеть) ── */
+.row{display:flex;gap:14px;align-items:baseline;padding:14px 0;
+  border-top:1px solid rgba(11,155,115,.16)}
+.row:last-of-type{border-bottom:1px solid rgba(11,155,115,.16)}
+.rows{margin:8px 0 4px}
+.row b{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--edge-br);flex:none;width:46px}
+.row .who{font-size:15px;font-weight:400;line-height:1.45}
+.row .who i{display:block;font-style:normal;font-size:13px;font-weight:300;opacity:.62;margin-top:4px}
 .row .who u{display:block;text-decoration:none;font-family:var(--mono);font-size:10.5px;
-  letter-spacing:.05em;color:var(--edge-br);margin-top:5px}
+  letter-spacing:.04em;color:var(--edge-br);margin-top:6px}
 
-.door{background:transparent!important;backdrop-filter:none;-webkit-backdrop-filter:none;
-  border:1px dashed rgba(11,155,115,.55)!important;box-shadow:none!important;text-align:center}
-.door::after{display:none}
-.door .no{color:#066b50}
-.door .q{font-size:19px;font-weight:300;line-height:1.5;margin-top:20px;color:var(--edge-br)}
-.scold{display:none;margin-top:22px!important;padding-top:18px;border-top:1px solid rgba(11,155,115,.35);
-  font-size:13px!important;font-style:italic;color:#4a5c56!important}
-body.dark .scold{color:#8fa8a0!important}
-body.show-scold .scold{display:block;animation:fade 1.2s}
+/* ── ДВЕРЬ ── */
+.door .q{font-size:22px;font-weight:300;line-height:1.4;margin-top:24px;color:#0a8a66;text-align:center}
+body.night .door .q{color:var(--edge-br)}
+.door .scold{font-size:14px;font-style:italic;line-height:1.6;color:#5a6c66;
+  margin-top:20px;padding-top:18px;border-top:1px solid rgba(11,155,115,.3);text-align:center}
+body.night .door .scold{color:#8fa8a0}
 
-.seal{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:22px;
-  padding-bottom:18px;border-bottom:1px solid rgba(11,155,115,.2)}
-.seal img{width:72px;height:72px;object-fit:cover;border-radius:50%;
-  border:1px solid rgba(11,155,115,.4);box-shadow:0 6px 20px -6px rgba(0,0,0,.5)}
-.seal span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
-  color:#4a5c56;text-align:center}
-body.dark .seal span{color:#8fa39c}
-
-.cell.cover{text-align:center}
-.cover .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--edge);opacity:.85;margin-bottom:14px}
-body.dark .cover .kicker{color:var(--edge-br)}
-.cover h1{margin:0 auto 14px}
-.cover p{margin-left:auto;margin-right:auto}
-.howto{display:flex;flex-direction:column;gap:9px;margin-top:22px;padding-top:18px;
-  border-top:1px solid rgba(11,155,115,.25)}
-.howto span{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:#4a5c56;
-  display:flex;align-items:center;justify-content:center;gap:8px}
-.howto b{color:var(--edge-br);font-weight:600}
-body.dark .howto span{color:#8fa39c}
-
-#modesw{position:fixed;z-index:22;top:calc(50px + env(safe-area-inset-top));left:50%;
-  transform:translateX(-50%);display:flex;gap:2px;background:rgba(4,12,10,.55);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:3px}
-#modesw button{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(255,255,255,.6);background:transparent;border:none;padding:7px 15px;border-radius:16px;
-  cursor:pointer;transition:.25s;white-space:nowrap}
-#modesw button.on{background:var(--edge-br);color:#04150f;font-weight:600}
-
-body.mode-present #track,body.mode-present #steps,body.mode-present #tip{display:none!important}
-#present{display:none;position:fixed;inset:0;z-index:2;align-items:center;justify-content:center;
-  padding:96px 18px 110px}
-body.mode-present #present{display:flex}
-.dossier{width:min(940px,94vw);max-height:100%;display:flex;flex-direction:column;padding:0;overflow:hidden}
-.dhead{display:flex;align-items:center;gap:16px;padding:22px 26px;flex:none;
-  border-bottom:1px solid rgba(11,155,115,.2)}
-.dhead img{width:50px;height:50px;border-radius:50%;object-fit:cover;flex:none;
-  border:1px solid rgba(11,155,115,.4);box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
-.dhead .kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--edge);opacity:.85;margin-bottom:4px}
-body.dark .dhead .kicker{color:var(--edge-br)}
-.dhead h1{font-size:clamp(21px,3.6vw,28px);margin-bottom:0}
-.dhead h1 em{display:inline;font-weight:500;margin-left:6px}
-.dbody{display:flex;flex:1;min-height:0}
-.dtabs{display:flex;flex-direction:column;gap:2px;flex:none;width:190px;padding:16px 10px;
-  border-right:1px solid rgba(11,155,115,.16);overflow-y:auto}
-.dtabs button{text-align:left;background:transparent;border:none;border-left:2px solid transparent;
-  color:inherit;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;
-  padding:10px 12px;cursor:pointer;opacity:.55;transition:.25s;line-height:1.4}
-.dtabs button:hover{opacity:.85}
-.dtabs button.on{opacity:1;color:var(--edge-br);border-left-color:var(--edge-br);background:rgba(11,155,115,.1)}
-.dpanels{flex:1;overflow-y:auto;padding:22px 26px 26px;-webkit-overflow-scrolling:touch}
-.dpanel{display:none}
-.dpanel.on{display:block;animation:fade .5s ease-out}
-.dpanel p{max-width:none}
-.dpanel .note{max-width:54ch}
-.dpanel .art:first-child,.dpanel .seal + .art{margin-top:0}
-@media(max-width:680px){
-  .dossier{max-height:88vh}
-  .dhead img{width:40px;height:40px}
-  .dbody{flex-direction:column}
-  .dtabs{flex-direction:row;width:100%;overflow-x:auto;overflow-y:hidden;border-right:none;
-    border-bottom:1px solid rgba(11,155,115,.16);padding:10px 12px;gap:4px}
-  .dtabs button{border-left:none;border-bottom:2px solid transparent;white-space:nowrap;padding:8px 10px}
-  .dtabs button.on{border-bottom-color:var(--edge-br);border-left-color:transparent}
-  .dpanels{padding:18px 18px 22px}
-}
-#hud{position:fixed;z-index:20;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
-  padding:16px 18px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
-  background:linear-gradient(transparent,rgba(5,12,9,.6))}
-#hud .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.7);white-space:nowrap}
-#sl{position:relative;flex:1;max-width:210px;height:28px;touch-action:none;cursor:pointer}
-#sl .rail{position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,.35)}
-#sl .lit{position:absolute;top:50%;left:0;height:1px;background:var(--edge-br);box-shadow:0 0 12px var(--edge-br);transition:width .3s}
-#sl .k{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
-  background:#fff;border:1px solid var(--edge-br);box-shadow:0 0 16px rgba(0,212,147,.75);transition:left .3s}
-#lux,#pos{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#fff;
-  text-shadow:0 1px 5px rgba(0,0,0,.7);white-space:nowrap}
-#pos{margin-left:auto}
-#soundBtn{flex:none;width:30px;height:30px;border-radius:50%;cursor:pointer;
-  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);color:#fff;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:13px;line-height:1}
-#soundBtn:active{background:rgba(255,255,255,.3)}
-#steps{display:flex;gap:6px;align-items:center}
-#steps button{width:6px;height:6px;padding:0;border-radius:3px;border:none;cursor:pointer;
-  background:rgba(255,255,255,.35);transition:.3s}
-#steps button.on{width:16px;background:var(--edge-br);box-shadow:0 0 8px var(--edge-br)}
-@media(max-width:520px){#steps{display:none}}
-#nav{position:fixed;z-index:20;top:50%;transform:translateY(-50%);width:100%;display:flex;
-  justify-content:space-between;padding:0 8px;pointer-events:none}
-#nav button{pointer-events:auto;width:44px;height:44px;border-radius:50%;cursor:pointer;
-  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);color:#fff;
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:17px;line-height:1}
-#nav button:active{background:rgba(255,255,255,.3)}
-#tip{position:fixed;z-index:20;top:calc(18px + env(safe-area-inset-top));left:0;right:0;
-  display:flex;justify-content:center;pointer-events:none;transition:opacity 1s}
-#tip span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  color:#fff;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.14);padding:7px 16px;border-radius:20px}
-#tip.gone{opacity:0}
-#back{position:fixed;z-index:21;top:calc(14px + env(safe-area-inset-top));left:14px;
-  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:#fff;text-decoration:none;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);padding:7px 14px;border-radius:20px}
-
-#cctv{position:fixed;z-index:21;top:calc(14px + env(safe-area-inset-top));right:14px;
-  display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
-  color:#fff;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.14);padding:7px 12px;border-radius:20px;white-space:nowrap}
-#cctv .dot{width:6px;height:6px;border-radius:50%;flex:none;background:#ff5252;box-shadow:0 0 8px #ff5252;
-  animation:pulse 1.6s ease-in-out infinite}
-@media(max-width:560px){#cctv .date{display:none}}
+/* ── ПЕЧАТЬ НАСТОЯЩЕГО ── */
+.seal{display:flex;align-items:center;gap:14px;margin-bottom:20px;
+  padding-bottom:18px;border-bottom:1px solid rgba(11,155,115,.22)}
+.seal img{width:52px;height:52px;object-fit:cover;border-radius:50%;flex:none;
+  border:1px solid rgba(11,155,115,.4);box-shadow:0 6px 18px -6px rgba(0,0,0,.5)}
+.seal span{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:#8fa39c;line-height:1.5}
 
 #boot{position:fixed;inset:0;z-index:60;background:#000;pointer-events:none;
   animation:bootFlicker 1.1s ease-out forwards}
-@keyframes bootFlicker{
-  0%{opacity:1} 8%{opacity:.15} 13%{opacity:.85} 19%{opacity:.05}
-  27%{opacity:1} 38%{opacity:0} 100%{opacity:0}
-}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}#boot{display:none}}
+@keyframes bootFlicker{0%{opacity:1}8%{opacity:.15}13%{opacity:.85}19%{opacity:.05}
+  27%{opacity:1}38%{opacity:0}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}
+  #boot{display:none}.note{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 
 <div id="boot"></div>
 
-<div id="hall">
-  <img id="hallLight" class="on" src="hall-light.webp" alt="">
-  <img id="hallDark"  data-src="hall-dark.webp" alt="">
-  <img id="cityLight" data-src="city-light.webp" alt="">
-  <img id="cityDark"  data-src="city-dark.webp" alt="">
+<div id="bg">
+  <img id="bgLight" src="hall-light.webp" alt="">
+  <img id="bgDark" data-src="hall-dark.webp" alt="">
+  <div id="bgPresent"></div>
 </div>
 <div id="veil"></div>
 <div id="grain"></div>
 
-<a id="back" href="../../index.html">← назад</a>
-<div id="tip"><span>Свайп вбок · регулятор света внизу</span></div>
-<div id="modesw">
-  <button data-mode="history" class="on">История</button>
-  <button data-mode="present">Настоящее</button>
-</div>
-<div id="cctv"><span class="dot"></span><span class="date">CAM · </span><span id="clock"></span></div>
-
-<div id="track">
-
-  <div class="cell cover" data-wing="1">
-    <div class="no"><span>Досье · 00</span><span class="g">открыто</span></div>
-    <p class="kicker" data-t="cover.kicker">Архив спецблока «Грац» · Курт Вистнер</p>
-    <p class="stamp-line" data-t="cover.stamp">Личное дело · ограниченный доступ</p>
-    <h1 data-t="name">Курт<em>Вистнер</em></h1>
-    <p class="lede" data-t="cover.lede">Он был прав в каждом прогнозе — и ошибся в одном: думал, что этого достаточно.</p>
-    <p data-t="cover.p1">Это досье устроено как коридор его дела. Слева — стекло, за которым он держал угрозу. Справа — государство, которое он из этого построил. Между ними — дверь, которую однажды открыли без него.</p>
-    <div class="howto">
-      <span data-t="cover.howto1"><b>‹ ›</b>шаг по коридору — свайп, стрелки или колесо мыши</span>
-      <span data-t="cover.howto2"><b>свет</b>внизу — на полной яркости часть архива скрыта</span>
-    </div>
+<header id="bar">
+  <a id="back" href="../../index.html"><span>← назад</span></a>
+  <div id="modesw">
+    <button data-mode="history" class="on">История</button>
+    <button data-mode="present">Настоящее</button>
   </div>
-
-  <div class="cell" data-wing="1">
-    <div class="no"><span>Камера 01</span><span class="g">открыто</span></div>
-    <div class="art">
-      <img src="portrait.webp" alt="Курт Вистнер" loading="lazy">
-      <img class="alt" data-src="portrait-2016.webp" alt="Курт Вистнер, 2016">
-    </div>
-    <h1 data-t="name">Курт<em>Вистнер</em></h1>
-    <div class="meta" data-t="cam1.meta">Спаситель Аркадии · инженер · мета-сила 0</div>
-    <p class="lede" data-t="cam1.lede">«Проблемы человечества редко бывают сложными. Обычно они просто эмоциональны.»</p>
-    <p data-t="cam1.p1">Один из трёх основателей Аркадии. Создатель силового Купола и энергосистемы «Изумруд». Единственный человек своего тира без мета-силы — и один из самых опасных людей планеты.</p>
-    <p class="note" data-t="cam1.note1">Посмотрите на его ладонь. Он всегда стоит с той стороны стекла, где включён свет.</p>
+  <div id="tools">
+    <span id="cctv"><span class="dot"></span><span class="date">CAM · </span><span id="clock"></span></span>
+    <button id="soundBtn" aria-label="Звук" title="Звук">🔇</button>
   </div>
+</header>
 
-  <div class="cell" data-wing="1">
-    <div class="no"><span>Камера 02</span><span class="g">открыто</span></div>
-    <h2 data-t="cam2.h2">Правота</h2>
-    <p class="lede" data-t="cam2.lede">Он увидел это раньше всех и не смог отвести взгляд.</p>
-    <p data-t="cam2.p1">В мире появилась сила, на которую не действует ни закон, ни договор, ни граница, ни угроза наказания. Один человек мог сжечь квартал и уйти по воздуху. Другой — обрушить климат целого континента. Их нельзя было ни судить, ни посадить, ни остановить, ни переубедить.</p>
-    <p data-t="cam2.p2">Пока политики называли это чудом, а газеты — новой эрой, Вистнер сделал единственный трезвый вывод: это не эра. Это отказ системы. И он будет нарастать.</p>
-    <p data-t="cam2.p3">Он не искал власти и не мстил за близких. Личной причины у него не было — и это, если вдуматься, страшнее любой личной причины. Он просто оказался единственным взрослым в комнате, полной восхищённых людей.</p>
-    <p class="note" data-t="cam2.note1">Его не послушали. Мир решил, что всё как-нибудь устроится, — и через несколько лет перестал существовать. Вистнер <span class="rd">ни разу не ошибся в прогнозе</span>. Он ошибся в другом: думал, что достаточно быть правым.</p>
-  </div>
+<!-- ═══════════ ИСТОРИЯ ═══════════ -->
+<main id="history" class="feed">
 
-  <div class="cell" data-wing="1">
-    <div class="no"><span>Камера 03</span><span class="g">открыто</span></div>
-    <div class="art"><img src="specblock.webp" alt="Спецблок" loading="lazy"></div>
-    <h2 data-t="cam3.h2">Метод</h2>
-    <div class="meta" data-t="cam3.meta">Санитарная очистка · 13.11.2015 — 01.03.2019 · Европа</div>
-    <p data-t="cam3.p1">Ни облав, ни штурмовых групп, ни боёв на улицах. Сканеры, аналитика, тихий подъезд, врач, инъекция. Люди в белых халатах, спокойные, с планшетами.</p>
-    <p data-t="cam3.p2">Программа называлась <b>санитарной</b>. Не карательной, не силовой — санитарной. Как будто речь о гигиене.</p>
-    <p data-t="cam3.p3">Слово выбирал он лично.</p>
-    <p data-t="cam3.p4">Пункт содержания — Грац. Стеклянные стены по его требованию: объект должен быть виден постоянно, наблюдение не должно прерываться.</p>
-    <p class="note" data-t="cam3.note1">Программа началась 13 ноября 2015 года — в день его рождения. В документах это никак не отмечено. Вероятно, он просто не счёл дату значимой. Вероятно.</p>
-    <p class="note" data-t="cam3.note2">Он приходил в блок регулярно и всегда с планшетом. В журналах — сотни его записей. Ни одна не сообщает, что он посмотрел кому-нибудь из них <span class="rd">в глаза</span>.</p>
-  </div>
-
-  <div class="cell hidden" data-wing="1">
-    <div class="no"><span>Камера 04</span><span class="g">пусто</span></div>
-    <div class="void"><span class="ic"></span><p data-t="cam4.void">Камера пуста<br>Содержимое изъято</p></div>
-    <h2 data-t="cam4.h2">Реестр</h2>
-    <div class="meta" data-t="cam4.meta">Спецблок «Грац» · содержавшиеся лица</div>
-
-    <div class="row"><b>04</b><span class="who" data-t="cam4.row1">Валентина Блажек<i>10 лет. Прага, 14.05.2016. Операция «Тихий Сон». Первое применение нейронного подавителя.</i><u>Сегодня: Квартет Ракшасов</u></span></div>
-    <div class="row"><b>09</b><span class="who" data-t="cam4.row2">Дариан Сорель<i>Марсель, 22.09.2018. После серии незаконных экспериментов со светом.</i><u>Сегодня: Квартет Ракшасов</u></span></div>
-    <div class="row"><b>11</b><span class="who" data-t="cam4.row3">Амели Бертран<i>Содержалась там же.</i><u>Сегодня: Квартет Ракшасов</u></span></div>
-    <div class="row"><b>14</b><span class="who" data-t="cam4.row4">Эмиль Грант<i>5 лет. Грац, 15.01.2019. «Начало исследований гравитационных аномалий объекта».</i><u>Сегодня: Квартет Ракшасов</u></span></div>
-    <div class="row"><b>—</b><span class="who" data-t="cam4.row5">Маркус Кросс<i>Ребёнок. Курс препаратов-подавителей. Мета-ген заблокирован на клеточном уровне. Последствия необратимы.</i><u>Сегодня: Хозяин бурь · угроза 56</u></span></div>
-    <div class="row"><b>—</b><span class="who" data-t="cam4.row6">Лоренц Вейр<i>Полевой переводчик санитарных миссий. Сканер зафиксировал аномалию. Разбираться не стали.</i><u>Сегодня: Смотрящий в Бездну</u></span></div>
-
-    <p class="note" data-t="cam4.note1">Четверо из этого списка сегодня правят половиной Азии. Они познакомились здесь. Он держал их три года в соседних камерах и <span class="rd">сам дал им время узнать друг друга</span>.</p>
-    <p class="note" data-t="cam4.note2">Вейр не был опасен. Сканер сработал, система не стала разбираться, и он провёл в стекле те же годы, что и остальные. Сегодня у него культ в сибирской тайге. Единственная строка, где Вистнер ошибся, — <span class="rd">и она тоже стала фракцией</span>.</p>
-  </div>
-
-  <div class="cell door" data-wing="1">
-    <div class="no"><span>Дверь</span><span class="g">01.03.2019</span></div>
-    <h2 data-t="door.h2">День Стеклянных Стен</h2>
-    <p data-t="door.p1">Стены выдержали. Расчёт был верен. Подвёл не материал.</p>
-    <p data-t="door.p2">Дверь открыл сотрудник спецблока. Его убедили, что происходящее аморально, — и он согласился. В том, что он видел, он не ошибался: за стеклом сидели дети.</p>
-    <p data-t="door.p3">Он ошибся в одном. Они действительно были опасны.</p>
-    <p data-t="door.p4">Наружу вышли все. Четверо стали Ракшасами. Самые нестабильные ушли в Северную Африку — и разгребать это пришлось Маркусу Кроссу, которого тот же Вистнер держал здесь ребёнком.</p>
-    <p class="note" data-t="door.note1">Он называет это «самым тяжёлым поражением в моей карьере». Вслушайтесь. Не «ошибка». Не «трагедия». <b>Поражение</b> — то, что случается с тем, кто играл и проиграл. Четырнадцати детей в этой формулировке нет, и он этого не замечает.</p>
-    <p class="note" data-t="door.note2">Его стены устояли. Его расчёт устоял. Систему сломала <span class="rd">чужая жалость</span>. С тех пор он строит мир, из которого эмоцию нужно вычесть, — не потому что она слабость, а потому что однажды она уже победила.</p>
-    <p class="q" data-t="door.q">А вы бы открыли дверь?</p>
-    <p class="scold" data-t="door.scold">Вы прошли Архив при полном свете. Одна камера так и осталась для вас пустой.</p>
-  </div>
-
-</div>
-
-<div id="present">
-  <div class="dossier cell">
-    <span class="stamp">Триумвират · допуск 1</span>
-    <div class="dhead">
-      <img src="crest.webp" alt="Герб Аркадии">
-      <div>
-        <p class="kicker" data-t="dossier.kicker">Правительство Аркадии · Триумвират Спасителей</p>
-        <h1 style="margin-bottom:0" data-t="dossier.title">Аркадия<em>сегодня</em></h1>
+  <section class="hero">
+    <div class="frame">
+      <img src="hero-history.webp" data-fallback="portrait-2016.webp" alt="Курт Вистнер">
+      <div class="scrim"></div>
+      <div class="head">
+        <p class="kicker" data-t="intro.kicker"></p>
+        <h1 data-t="name"></h1>
+        <p class="role" data-t="intro.role"></p>
       </div>
     </div>
-    <div class="dbody">
-      <nav class="dtabs">
-        <button class="on" data-panel="dome">01 · Купол</button>
-        <button data-panel="reactor">02 · Изумруд</button>
-        <button data-panel="atlant">03 · Атлант</button>
-        <button data-panel="pilgrims">04 · Пилигримы</button>
-        <button data-panel="network">05 · Разведсеть</button>
-        <button data-panel="wales">06 · Уэльс</button>
-        <button data-panel="today">07 · Сегодня</button>
-      </nav>
-      <div class="dpanels">
+    <div class="card">
+      <p class="stamp-line" data-t="intro.stamp"></p>
+      <p class="quote" data-t="intro.quote"></p>
+      <p data-t="intro.p1"></p>
+      <p data-t="intro.p2"></p>
+      <p class="hook" data-t="intro.hook"></p>
+      <p class="note" data-t="intro.note"></p>
+    </div>
+  </section>
 
-        <div class="dpanel on" data-panel="dome">
-          <div class="no"><span>Досье · 01</span><span class="g">открыто</span></div>
-          <div class="art bp"><img src="bp-dome.webp" alt="Купол" loading="lazy"></div>
-          <h2 data-t="dome.h2">Купол</h2>
-          <p data-t="dome.p1">Силовое поле над Британскими островами. Держит ракеты, десант, погоду и Тенебриона. Ни одного пробоя за всю историю.</p>
-          <p class="note" data-t="dome.note1">Купол держится не на героизме, а на подаче. Пока «Изумруд» даёт ток, стена стоит. Он единственный, кто понимает это до конца, — и потому единственный, кто по-настоящему боится.</p>
-        </div>
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Правота</span><span class="g">открыто</span></div>
+      <h2 data-t="cam2.h2"></h2>
+      <p class="lede" data-t="cam2.lede"></p>
+      <p data-t="cam2.p1"></p>
+      <p data-t="cam2.p2"></p>
+      <p data-t="cam2.p3"></p>
+      <p class="note" data-t="cam2.note1"></p>
+    </div>
+  </section>
 
-        <div class="dpanel" data-panel="reactor">
-          <div class="no"><span>Досье · 02</span><span class="g">открыто</span></div>
-          <div class="art bp"><img src="bp-reactor.webp" alt="Изумруд" loading="lazy"></div>
-          <h2 data-t="reactor.h2">«Изумруд»</h2>
-          <div class="meta" data-t="reactor.meta">Подземная сеть · с 20.04.2028 · охлаждение — глубокие озёра Шотландии</div>
-          <p data-t="reactor.p1">Энергосистема государства. Три контура. Его шедевр — и единственное, чем он позволяет себе гордиться вслух.</p>
-        </div>
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Метод</span><span class="g">открыто</span></div>
+      <div class="art photo"><img src="specblock.webp" alt="Спецблок" loading="lazy"></div>
+      <h2 data-t="cam3.h2"></h2>
+      <div class="meta" data-t="cam3.meta"></div>
+      <p data-t="cam3.p1"></p>
+      <p data-t="cam3.p2"></p>
+      <p data-t="cam3.p3"></p>
+      <p data-t="cam3.p4"></p>
+      <p class="note" data-t="cam3.note1"></p>
+      <p class="note" data-t="cam3.note2"></p>
+    </div>
+  </section>
 
-        <div class="dpanel" data-panel="atlant">
-          <div class="no"><span>Досье · 03</span><span class="g">открыто</span></div>
-          <div class="art bp"><img src="bp-atlant.webp" alt="Атлант" loading="lazy"></div>
-          <h2 data-t="atlant.h2">«Атлант»</h2>
-          <div class="meta" data-t="atlant.meta">Запущен 05.05.2035 · массовое производство андроидов</div>
-          <p data-t="atlant.p1">Официально — то, что избавило Аркадию от труда. Андроиды «Атланта» строят, убирают, водят, обслуживают; отдельная линия — серия PIL, что летает с Пилигримами. Инфраструктурный проект, не более.</p>
-          <p data-t="atlant.p2">На его же расчётах основаны законы, которые принимает Совет Специалистов. Официально — как справочная система: считает, подсказывает, не решает.</p>
-          <p class="note" data-t="atlant.note1">Посмотрите на чертёж. Он не недорисован — он <span class="rd">вырезан</span>. Тело прорисовано до последнего шва. Обрывается он именно там, где кончается андроид и начинается то, что в этом досье никто не называет прямо: кто в Совете Специалистов на самом деле считает — люди или машина.</p>
-        </div>
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Реестр</span><span class="g">содержавшиеся лица</span></div>
+      <h2 data-t="cam4.h2"></h2>
+      <div class="meta" data-t="cam4.meta"></div>
+      <p class="lede" data-t="cam4.lede"></p>
+      <div class="rows">
+        <div class="row"><b>04</b><span class="who" data-t="cam4.row1"></span></div>
+        <div class="row"><b>09</b><span class="who" data-t="cam4.row2"></span></div>
+        <div class="row"><b>11</b><span class="who" data-t="cam4.row3"></span></div>
+        <div class="row"><b>14</b><span class="who" data-t="cam4.row4"></span></div>
+        <div class="row"><b>—</b><span class="who" data-t="cam4.row5"></span></div>
+        <div class="row"><b>—</b><span class="who" data-t="cam4.row6"></span></div>
+      </div>
+      <p class="note" data-t="cam4.note1"></p>
+      <p class="note" data-t="cam4.note2"></p>
+    </div>
+  </section>
 
-        <div class="dpanel" data-panel="pilgrims">
-          <div class="no"><span>Досье · 04</span><span class="g">открыто</span></div>
-          <div class="art"><img src="manta.webp" alt="«Манта» над Белой зоной" loading="lazy"></div>
-          <h2 data-t="pilgrims.h2">Пилигримы</h2>
-          <div class="meta" data-t="pilgrims.meta">Управление Внешних Ресурсов · куратор К. Вистнер</div>
-          <p class="lede" data-t="pilgrims.lede">Герои Аркадии. Настоящие, без иронии.</p>
-          <p data-t="pilgrims.p1">Они спускаются в Белую зону — в радиоактивный ад старого мира — за изотопами, палладием, редкими металлами и довоенными архивами. Летают на «Мантах», белых скатах вертикального взлёта; за штурвалом всегда андроид серии PIL — одна из линий «Атланта», отданная Пилигримам. Возвращаются не все. Вернувшихся встречают как астронавтов.</p>
-          <p data-t="pilgrims.p2">Управление возглавляет Мэтью Корсо — бывший полевой пилигрим, ныне полный киборг. Его сознание живёт в теле, спроектированном Вистнером. Корсо предан ему совершенно.</p>
-          <p class="note" data-t="pilgrims.note1">Официально всё добытое распределяет Совет Специалистов. Официально.</p>
-          <p class="note" data-t="pilgrims.note2">Довоенные алгоритмы, палладий, золото до Совета не доходят. Они уходят <span class="rd">в Уэльс</span>. Корсо, живущий в теле его конструкции, об этом, судя по всему, не знает.</p>
-        </div>
+  <section class="chap door" id="doorSection">
+    <div class="card">
+      <div class="no"><span>Дверь</span><span class="g" data-t="door.meta"></span></div>
+      <h2 data-t="door.h2"></h2>
+      <p data-t="door.p1"></p>
+      <p data-t="door.p2"></p>
+      <p data-t="door.p3"></p>
+      <p data-t="door.p4"></p>
+      <p class="note" data-t="door.note1"></p>
+      <p class="note" data-t="door.note2"></p>
+      <p class="q" data-t="door.q"></p>
+      <p class="scold" data-t="door.scold"></p>
+    </div>
+  </section>
 
-        <div class="dpanel" data-panel="network">
-          <div class="no"><span>Досье · 05</span><span class="g">открыто</span></div>
-          <div class="art bp"><img src="bp-network.webp" alt="Разведсеть" loading="lazy"></div>
-          <h2 data-t="network.h2">Разведсеть</h2>
-          <p data-t="network.p1">Промышленный шпионаж по всему миру. Узлы, каналы, закладки. В системе нет ни одного имени — только номера: имена привязывают, а привязанность искажает расчёт.</p>
-          <div class="row"><b>01</b><span class="who" data-t="network.row1">Единая Америка<i>Работает свыше двадцати лет. Инженер. Женат.</i></span></div>
-          <div class="row"><b>07</b><span class="who" data-t="network.row2">Forge<i>Тишина 12 суток.</i></span></div>
-          <div class="row"><b>09</b><span class="who" data-t="network.row3">Тенебрион<i>Потерян.</i></span></div>
-          <p class="note" data-t="network.note1">Актив 01 — Уильям Купер. Он считает, что у них с Вистнером есть отношения.</p>
-          <p class="note" data-t="network.note2">Список длиннее того, что вы видите. Каждый в нём тоже считает себя <span class="rd">единственным</span>.</p>
-        </div>
+</main>
 
-        <div class="dpanel hidden" data-panel="wales">
-          <div class="no"><span>Досье · 06</span><span class="g">пусто</span></div>
-          <div class="void"><span class="ic"></span><p data-t="wales.void">Данных нет<br>Объект не значится</p></div>
-          <div class="art"><img src="wales.webp" alt="Шахты Уэльса" loading="lazy"></div>
-          <h2 data-t="wales.h2">Уэльс</h2>
-          <div class="meta" data-t="wales.meta">С 2034 года · подземные лаборатории</div>
-          <p class="lede" data-t="wales.lede">Здесь заканчивается всё, что вы видели раньше.</p>
-          <p data-t="wales.p1">Палладий пилигримов. Алгоритмы из Белой зоны. Технологии разведсети. Всё, что должно было принадлежать Аркадии, стекается в заброшенные шахты, где нет ни Совета Специалистов, ни Триумвирата, ни отчётности.</p>
-          <p data-t="wales.p2">О содержании работ не знает никто. Включая, судя по всему, Дорна и Грея.</p>
-          <p class="note" data-t="wales.note1">Он не крадёт ради денег — деньги ему не нужны. Он забирает лучшее туда, где никто не помешает довести дело до конца. Однажды он уже позволил постороннему решить за него, что морально. <span class="rd">Больше не позволит.</span></p>
-        </div>
+<!-- ═══════════ НАСТОЯЩЕЕ ═══════════ -->
+<main id="present" class="feed" hidden>
 
-        <div class="dpanel" data-panel="today">
-          <div class="no"><span>Досье · 07</span><span class="g">открыто</span></div>
-          <div class="art"><img src="office.webp" alt="Пустой кабинет" loading="lazy"></div>
-          <h2 data-t="today.h2">Сегодня</h2>
-          <div class="meta" data-t="today.meta">2061 · Триумвират Спасителей · научный сектор</div>
-          <p data-t="today.p1">Руководит наукой Аркадии. Развивает Купол и энергетическую инфраструктуру, управляет внешней разведкой, ведёт собственные исследования. Рассчитывает обеспечить государству окончательное технологическое превосходство над остальным миром.</p>
-          <p data-t="today.p2">В его кабинете нет ни одной личной вещи. Ни фотографии, ни книги, ни чашки. Стеклянный стол, кресло, окно на белый город.</p>
-          <p data-t="today.p3">Ему семьдесят один год. Он работает каждый день.</p>
-          <p class="note" data-t="today.note1">Всё, что он построил, работает. Купол держит. «Изумруд» даёт ток. Государство стоит. Он был прав тогда — и он прав сейчас.</p>
-          <p class="note" data-t="today.note2">Он только больше никогда не оставит дверь <span class="rd">там, где до неё сможет дотянуться человек</span>.</p>
-        </div>
-
+  <section class="hero">
+    <div class="frame">
+      <img src="hero-present.webp" data-fallback="portrait.webp" alt="Курт Вистнер сегодня">
+      <div class="scrim"></div>
+      <div class="head">
+        <p class="kicker" data-t="present.seal"></p>
+        <h1 data-t="present.title"></h1>
+        <p class="role" data-t="present.role"></p>
       </div>
     </div>
-  </div>
-</div>
+    <div class="card">
+      <div class="seal"><img src="crest.webp" alt="Герб Аркадии"><span data-t="present.seal"></span></div>
+      <p data-t="present.p1"></p>
+      <p data-t="present.p2"></p>
+    </div>
+  </section>
 
-<div id="nav">
-  <button id="prev" aria-label="Назад">‹</button>
-  <button id="next" aria-label="Вперёд">›</button>
-</div>
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 01</span><span class="g">открыто</span></div>
+      <div class="art bp"><img src="bp-dome.webp" alt="Купол" loading="lazy"></div>
+      <h2 data-t="dome.h2"></h2>
+      <p data-t="dome.p1"></p>
+      <p class="note" data-t="dome.note1"></p>
+    </div>
+  </section>
 
-<div id="hud">
-  <span class="lbl">Свет</span>
-  <div id="sl" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="2" aria-valuenow="2">
-    <div class="rail"></div><div class="lit"></div><div class="k"></div>
-  </div>
-  <span id="lux">100 лк</span>
-  <div id="steps"></div>
-  <span id="pos">01 / 09</span>
-  <button id="soundBtn" aria-label="Звук" title="Звук">🔇</button>
-</div>
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 02</span><span class="g">открыто</span></div>
+      <div class="art bp"><img src="bp-reactor.webp" alt="Изумруд" loading="lazy"></div>
+      <h2 data-t="reactor.h2"></h2>
+      <div class="meta" data-t="reactor.meta"></div>
+      <p data-t="reactor.p1"></p>
+    </div>
+  </section>
+
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 03</span><span class="g">открыто</span></div>
+      <div class="art bp"><img src="bp-atlant.webp" alt="Атлант" loading="lazy"></div>
+      <h2 data-t="atlant.h2"></h2>
+      <div class="meta" data-t="atlant.meta"></div>
+      <p data-t="atlant.p1"></p>
+      <p data-t="atlant.p2"></p>
+      <p class="note" data-t="atlant.note1"></p>
+    </div>
+  </section>
+
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 04</span><span class="g">открыто</span></div>
+      <div class="art photo"><img src="manta.webp" alt="«Манта» над Белой зоной" loading="lazy"></div>
+      <h2 data-t="pilgrims.h2"></h2>
+      <div class="meta" data-t="pilgrims.meta"></div>
+      <p class="lede" data-t="pilgrims.lede"></p>
+      <p data-t="pilgrims.p1"></p>
+      <p data-t="pilgrims.p2"></p>
+      <p class="note" data-t="pilgrims.note1"></p>
+      <p class="note" data-t="pilgrims.note2"></p>
+    </div>
+  </section>
+
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 05</span><span class="g">открыто</span></div>
+      <div class="art bp"><img src="bp-network.webp" alt="Разведсеть" loading="lazy"></div>
+      <h2 data-t="network.h2"></h2>
+      <p data-t="network.p1"></p>
+      <div class="rows">
+        <div class="row"><b>01</b><span class="who" data-t="network.row1"></span></div>
+        <div class="row"><b>07</b><span class="who" data-t="network.row2"></span></div>
+        <div class="row"><b>09</b><span class="who" data-t="network.row3"></span></div>
+      </div>
+      <p class="note" data-t="network.note1"></p>
+      <p class="note" data-t="network.note2"></p>
+    </div>
+  </section>
+
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 06</span><span class="g">не значится</span></div>
+      <div class="art photo"><img src="wales.webp" alt="Шахты Уэльса" loading="lazy"></div>
+      <h2 data-t="wales.h2"></h2>
+      <div class="meta" data-t="wales.meta"></div>
+      <p class="lede" data-t="wales.lede"></p>
+      <p data-t="wales.p1"></p>
+      <p data-t="wales.p2"></p>
+      <p class="note" data-t="wales.note1"></p>
+    </div>
+  </section>
+
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 07</span><span class="g">открыто</span></div>
+      <div class="art photo"><img src="office.webp" alt="Пустой кабинет" loading="lazy"></div>
+      <h2 data-t="today.h2"></h2>
+      <div class="meta" data-t="today.meta"></div>
+      <p data-t="today.p1"></p>
+      <p data-t="today.p2"></p>
+      <p data-t="today.p3"></p>
+      <p class="note" data-t="today.note1"></p>
+      <p class="note" data-t="today.note2"></p>
+    </div>
+  </section>
+
+</main>
+
 <audio id="theme" src="theme.mp3" loop preload="none"></audio>
 
 <script src="wistner-content.js"></script>
 <script>
 (function(){
+  const body=document.body;
+
+  // ── контент ──
   if(typeof CONTENT!=='undefined'){
     document.querySelectorAll('[data-t]').forEach(el=>{
       const v=CONTENT[el.dataset.t];
       if(v!=null) el.innerHTML=v;
     });
   }
-  const track=document.getElementById('track'), body=document.body;
-  const tip=document.getElementById('tip');
-  const steps=document.getElementById('steps');
-  const pos=document.getElementById('pos');
-  const bg={hallLight:document.getElementById('hallLight'),hallDark:document.getElementById('hallDark'),
-            cityLight:document.getElementById('cityLight'),cityDark:document.getElementById('cityDark')};
-  const LUX=['0 лк','40 лк','100 лк'];
-  const PANELS=['dome','reactor','atlant','pilgrims','network','wales','today'];
-  let i=0, lux=2, moved=false, wentDark=false, mode='history', panel='dome';
 
-  const load = el => { if(el && el.dataset.src){ el.src = el.dataset.src; delete el.dataset.src; } };
-  const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
-
-  const clockEl=document.getElementById('clock');
-  const pad2=n=>String(n).padStart(2,'0');
-  function tick(){
-    const d=new Date();
-    clockEl.textContent=pad2(d.getDate())+'.'+pad2(d.getMonth()+1)+'.'+d.getFullYear()+
-      ' '+pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds());
-  }
-  tick(); setInterval(tick,1000);
-
-  document.querySelectorAll('.art').forEach(box=>box.insertAdjacentHTML('beforeend','<div class="scan"></div>'));
-  document.querySelectorAll('.art').forEach(box=>{
-    const imgs=[...box.querySelectorAll('img')];
-    if(!imgs.length)return;
-    let failed=0;
-    imgs.forEach(img=>{
-      img.addEventListener('error',()=>{
-        img.style.display='none';
-        if(++failed<imgs.length)return;
-        box.classList.add('missing');
-        if(!box.querySelector('.sig')){
-          const s=document.createElement('div');
-          s.className='sig'; s.textContent=imgs[0].alt||'';
-          box.appendChild(s);
-        }
-      });
-    });
+  // ── битые изображения → fallback → «нет сигнала» ──
+  document.querySelectorAll('.art,.hero .frame').forEach(box=>{
+    const img=box.querySelector('img'); if(!img)return;
+    const onFail=()=>{
+      if(img.dataset.fallback){ const f=img.dataset.fallback; delete img.dataset.fallback; img.src=f; return; }
+      box.classList.add('missing');
+      if(!box.querySelector('.sig')){
+        const s=document.createElement('div'); s.className='sig'; s.textContent=img.alt||''; box.appendChild(s);
+      }
+    };
+    img.addEventListener('error',onFail);
+    // изображение могло упасть ещё до навешивания обработчика
+    if(img.complete && img.naturalWidth===0) onFail();
   });
+  document.querySelectorAll('.art').forEach(b=>b.insertAdjacentHTML('beforeend','<div class="scan"></div>'));
 
-  function buildSteps(){
-    steps.innerHTML='';
-    cells().forEach((c,k)=>{
-      const b=document.createElement('button');
-      b.setAttribute('aria-label','К пункту '+(k+1));
-      b.onclick=()=>go(k);
-      steps.appendChild(b);
-    });
-  }
+  // ── CCTV-часы ──
+  const clockEl=document.getElementById('clock'), pad=n=>String(n).padStart(2,'0');
+  (function tick(){const d=new Date();
+    clockEl.innerHTML='<span class="clk-date">'+pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()+' </span>'
+      +pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+    setTimeout(tick,1000);})();
 
-  function bgFor(wing){
-    const key = (wing==='2'?'city':'hall') + (lux===0?'Dark':'Light');
-    Object.entries(bg).forEach(([k,el])=>{
-      if(k===key){ load(el); el.classList.add('on'); } else el.classList.remove('on');
-    });
-  }
+  // ── проявление заметок при прокрутке ──
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.2});
+    document.querySelectorAll('.note').forEach(n=>io.observe(n));
+  } else { document.querySelectorAll('.note').forEach(n=>n.classList.add('in')); }
 
-  function go(n){
-    const cs=cells();
-    i=Math.max(0,Math.min(cs.length-1,n));
-    const c=cs[i];
-    const x=c.offsetLeft-(innerWidth-c.offsetWidth)/2;
-    track.style.transform=`translateX(${-x}px)`;
-    cs.forEach((el,k)=>el.classList.toggle('far',k!==i));
-    pos.textContent=String(i+1).padStart(2,'0')+' / '+String(cs.length).padStart(2,'0');
-    [...steps.children].forEach((b,k)=>b.classList.toggle('on',k===i));
-    bgFor('1');
-    const p=-x*0.05;
-    Object.values(bg).forEach(el=>el.style.transform=`translate(calc(-50% + ${p}px),-50%)`);
-    if(!moved){ moved=true; tip.classList.add('gone'); }
-    body.classList.toggle('show-scold', !wentDark && c.classList.contains('door'));
+  // ── свет → тьма по прокрутке (Истории) ──
+  const bgLight=document.getElementById('bgLight'), bgDark=document.getElementById('bgDark'),
+        veil=document.getElementById('veil'), door=document.getElementById('doorSection');
+  if(bgDark.dataset.src){ bgDark.src=bgDark.dataset.src; delete bgDark.dataset.src; }
+  let mode='history', endY=1, ticking=false;
+  const measure=()=>{ endY=Math.max(1, door.getBoundingClientRect().top + window.scrollY - innerHeight*0.5); };
+  function paint(){
+    ticking=false;
+    if(mode!=='history')return;
+    const p=Math.max(0,Math.min(1, window.scrollY/endY));
+    bgLight.style.opacity=(1-p); bgDark.style.opacity=p; veil.style.opacity=p*0.75;
+    body.classList.toggle('night', p>0.55);
   }
+  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(paint);}},{passive:true});
+  addEventListener('resize',()=>{measure();paint();});
 
-  function showPanel(name){
-    panel=name;
-    const idx=PANELS.indexOf(name);
-    document.querySelectorAll('.dpanel').forEach(p=>p.classList.toggle('on',p.dataset.panel===name));
-    document.querySelectorAll('.dtabs button').forEach(b=>b.classList.toggle('on',b.dataset.panel===name));
-    pos.textContent=String(idx+1).padStart(2,'0')+' / '+String(PANELS.length).padStart(2,'0');
-  }
-  function panelStep(d){
-    showPanel(PANELS[Math.max(0,Math.min(PANELS.length-1,PANELS.indexOf(panel)+d))]);
-  }
-  document.querySelectorAll('.dtabs button').forEach(b=>b.onclick=()=>showPanel(b.dataset.panel));
-
+  // ── переключатель режимов ──
+  const histFeed=document.getElementById('history'), presFeed=document.getElementById('present');
   function setMode(m){
     mode=m;
-    body.classList.toggle('mode-present',m==='present');
     document.querySelectorAll('#modesw button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
-    bgFor(m==='present'?'2':'1');
-    if(m==='present') showPanel(panel); else go(i);
-    if(!moved){ moved=true; tip.classList.add('gone'); }
+    if(m==='present'){
+      histFeed.hidden=true; presFeed.hidden=false;
+      body.classList.add('present'); body.classList.add('night');
+      window.scrollTo(0,0);
+    } else {
+      presFeed.hidden=true; histFeed.hidden=false;
+      body.classList.remove('present');
+      window.scrollTo(0,0);
+      measure(); paint();
+    }
   }
   document.querySelectorAll('#modesw button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 
-  function setLux(v){
-    lux=Math.max(0,Math.min(2,v));
-    if(lux===0){ wentDark=true; body.classList.remove('show-scold'); }
-    if(lux<2){ load(bg.hallDark); load(bg.cityDark);
-      document.querySelectorAll('.art .alt').forEach(load); }
-    body.classList.toggle('dim', lux===1);
-    body.classList.toggle('dark', lux===0);
-    document.querySelector('#sl .k').style.left=(lux*50)+'%';
-    document.querySelector('#sl .lit').style.width=(lux*50)+'%';
-    document.getElementById('lux').textContent=LUX[lux];
-    setTimeout(()=>mode==='history'?go(i):bgFor('2'),80);
-  }
-
-  document.getElementById('next').onclick=()=>mode==='history'?go(i+1):panelStep(1);
-  document.getElementById('prev').onclick=()=>mode==='history'?go(i-1):panelStep(-1);
-  addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight')mode==='history'?go(i+1):panelStep(1);
-    if(e.key==='ArrowLeft')mode==='history'?go(i-1):panelStep(-1);
-    if(e.key==='ArrowUp')setLux(lux+1); if(e.key==='ArrowDown')setLux(lux-1);
-  });
-  let sx=null,sy=null;
-  addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
-  addEventListener('touchend',e=>{
-    if(sx===null||mode!=='history')return;
-    const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
-    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)) go(i+(dx<0?1:-1));
-    sx=sy=null;
-  },{passive:true});
-  let lock=false;
-  addEventListener('wheel',e=>{
-    if(lock||mode!=='history')return; lock=true; setTimeout(()=>lock=false,480);
-    go(i+((e.deltaY>0||e.deltaX>0)?1:-1));
-  },{passive:true});
-
-  const sl=document.getElementById('sl'); let dr=false;
-  const fromX=x=>{const r=sl.getBoundingClientRect();return Math.round((x-r.left)/r.width*2);};
-  sl.addEventListener('pointerdown',e=>{dr=true;sl.setPointerCapture(e.pointerId);setLux(fromX(e.clientX));});
-  sl.addEventListener('pointermove',e=>{if(dr)setLux(fromX(e.clientX));});
-  sl.addEventListener('pointerup',()=>dr=false);
-
+  // ── звук ──
   const theme=document.getElementById('theme'), soundBtn=document.getElementById('soundBtn');
   let soundOn=false;
-  soundBtn.onclick=()=>{
-    soundOn=!soundOn;
-    if(soundOn){
-      theme.play().then(()=>soundBtn.textContent='🔊').catch(()=>{soundOn=false;soundBtn.textContent='🔇';});
-    } else { theme.pause(); soundBtn.textContent='🔇'; }
-  };
+  soundBtn.onclick=()=>{ soundOn=!soundOn;
+    if(soundOn){ theme.play().then(()=>soundBtn.textContent='🔊').catch(()=>{soundOn=false;soundBtn.textContent='🔇';}); }
+    else { theme.pause(); soundBtn.textContent='🔇'; } };
   theme.addEventListener('error',()=>console.log('Audio failed to load. Check theme.mp3 exists next to wistner.html.'));
 
-  addEventListener('resize',()=>{if(mode==='history')go(i);});
-  buildSteps(); setLux(2); go(0); setMode('history');
+  // ── старт ──
+  addEventListener('load',()=>{measure();paint();});
+  measure(); paint();
 })();
 </script>
 </body>
