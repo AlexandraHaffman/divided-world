@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Курт Вистнер · Разделённый мир</title>
+<link rel="icon" href="crest.PNG">
 <style>
 /* ═══════════════════════════════════════════════
    КУРТ ВИСТНЕР
@@ -111,8 +112,18 @@ body.dark .art.missing .sig{color:#8fa39c}
 body.dim .note,body.dark .note{display:block;animation:fade .9s ease-out}
 body.dark .note{color:#7fa093;border-left-color:var(--edge-br)}
 @keyframes fade{from{opacity:0;transform:translateY(5px)}}
-.rd{background:currentColor;color:transparent;border-radius:2px;padding:0 3px;transition:.9s}
+.rd{background:currentColor;color:transparent;border-radius:2px;padding:0 3px;transition:.9s;cursor:help}
+.rd:hover,.rd:active{background:transparent;color:inherit;transition:.15s}
 body.dark .rd{background:transparent;color:inherit;border-bottom:1px solid var(--edge-br)}
+
+.stamp{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:rgba(196,70,70,.65);border:1.5px solid rgba(196,70,70,.5);
+  padding:5px 9px;border-radius:3px;transform:rotate(5deg);pointer-events:none;z-index:3}
+body.dark .stamp{color:rgba(255,130,130,.6);border-color:rgba(255,130,130,.45)}
+@media(max-width:560px){.stamp{display:none}}
+.stamp-line{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(196,70,70,.7);margin:0 auto 16px;text-align:center}
+body.dark .stamp-line{color:rgba(255,130,130,.6)}
 
 .hidden > *:not(.no):not(.void){display:none}
 .hidden .void{display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -243,10 +254,27 @@ body.dark .dhead .kicker{color:var(--edge-br)}
   font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
   color:#fff;text-decoration:none;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);padding:7px 14px;border-radius:20px}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+#cctv{position:fixed;z-index:21;top:calc(14px + env(safe-area-inset-top));right:14px;
+  display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  color:#fff;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);padding:7px 12px;border-radius:20px;white-space:nowrap}
+#cctv .dot{width:6px;height:6px;border-radius:50%;flex:none;background:#ff5252;box-shadow:0 0 8px #ff5252;
+  animation:pulse 1.6s ease-in-out infinite}
+@media(max-width:560px){#cctv .date{display:none}}
+
+#boot{position:fixed;inset:0;z-index:60;background:#000;pointer-events:none;
+  animation:bootFlicker 1.1s ease-out forwards}
+@keyframes bootFlicker{
+  0%{opacity:1} 8%{opacity:.15} 13%{opacity:.85} 19%{opacity:.05}
+  27%{opacity:1} 38%{opacity:0} 100%{opacity:0}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}#boot{display:none}}
 </style>
 </head>
 <body>
+
+<div id="boot"></div>
 
 <div id="hall">
   <img id="hallLight" class="on" src="hall-light.PNG" alt="">
@@ -263,12 +291,14 @@ body.dark .dhead .kicker{color:var(--edge-br)}
   <button data-mode="history" class="on">История</button>
   <button data-mode="present">Настоящее</button>
 </div>
+<div id="cctv"><span class="dot"></span><span class="date">CAM · </span><span id="clock"></span></div>
 
 <div id="track">
 
   <div class="cell cover" data-wing="1">
     <div class="no"><span>Досье · 00</span><span class="g">открыто</span></div>
     <p class="kicker">Архив спецблока «Грац» · Курт Вистнер</p>
+    <p class="stamp-line">Личное дело · ограниченный доступ</p>
     <h1>Курт<em>Вистнер</em></h1>
     <p class="lede">Он был прав в каждом прогнозе — и ошибся в одном: думал, что этого достаточно.</p>
     <p>Это досье устроено как коридор его дела. Слева — стекло, за которым он держал угрозу. Справа — государство, которое он из этого построил. Между ними — дверь, которую однажды открыли без него.</p>
@@ -348,6 +378,7 @@ body.dark .dhead .kicker{color:var(--edge-br)}
 
 <div id="present">
   <div class="dossier cell">
+    <span class="stamp">Триумвират · допуск 1</span>
     <div class="dhead">
       <img src="crest.PNG" alt="Герб Аркадии">
       <div>
@@ -472,6 +503,15 @@ body.dark .dhead .kicker{color:var(--edge-br)}
 
   const load = el => { if(el && el.dataset.src){ el.src = el.dataset.src; delete el.dataset.src; } };
   const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
+
+  const clockEl=document.getElementById('clock');
+  const pad2=n=>String(n).padStart(2,'0');
+  function tick(){
+    const d=new Date();
+    clockEl.textContent=pad2(d.getDate())+'.'+pad2(d.getMonth()+1)+'.'+d.getFullYear()+
+      ' '+pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds());
+  }
+  tick(); setInterval(tick,1000);
 
   document.querySelectorAll('.art').forEach(box=>box.insertAdjacentHTML('beforeend','<div class="scan"></div>'));
   document.querySelectorAll('.art').forEach(box=>{
