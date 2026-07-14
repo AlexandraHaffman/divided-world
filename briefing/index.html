@@ -161,7 +161,7 @@
           <button class="scan-tab active" data-cat="mental"><span class="num">01</span>МЕНТАЛЬНОЕ</button>
           <button class="scan-tab" data-cat="physical"><span class="num">02</span>ФИЗИЧЕСКОЕ</button>
           <button class="scan-tab" data-cat="energetic"><span class="num">03</span>ЭНЕРГЕТ.</button>
-          <button class="scan-tab" data-cat="environmental"><span class="num">04</span>СРЕДОВОЕ</button>
+          <button class="scan-tab" data-cat="environmental"><span class="num">04</span>ПРИРОДНОЕ</button>
         </div>
         <div class="scan-readout">
           <div class="r-head" id="scanHead">// МЕНТАЛЬНОЕ</div>
@@ -172,54 +172,34 @@
   </section>
 
   <!-- ══════════════ 03 — ЦЕПЬ КАТАСТРОФ ══════════════ -->
-  <section class="collapse" id="sec-2" data-section="2">
-    <div class="collapse-head">
-      <div class="sec-marker reveal">03 // ЦЕПЬ КАТАСТРОФ</div>
-      <h2 class="sec-title reveal" style="font-size:clamp(28px,9vw,40px)">СТАРЫЙ МИР<br><span class="hl">НЕ ВЫДЕРЖАЛ</span></h2>
+  <section class="brief-section" id="sec-2" data-section="2">
+    <div class="sec-marker reveal">03 // ЦЕПЬ КАТАСТРОФ</div>
+    <h2 class="sec-title reveal" style="font-size:clamp(28px,9vw,40px)">СТАРЫЙ МИР<br><span class="hl">НЕ ВЫДЕРЖАЛ</span></h2>
+
+    <div class="collapse-viewport reveal" id="collapseViewport">
+      <div class="collapse-track" id="collapseTrack">
+        <img class="collapse-img" id="collapseImg" src="./assets/collapse-timeline.webp"
+             alt="Четыре этапа катастрофы" width="2508" height="627" loading="lazy" decoding="async">
+      </div>
+      <div class="collapse-vignette"></div>
+      <div class="collapse-hud">
+        <span class="stage-code" id="collapseCode">01 // ПОЯВЛЕНИЕ</span>
+        <span class="stage-of" id="collapseOf">STAGE 1 / 4</span>
+      </div>
+      <div class="collapse-progress"><div class="fill" id="collapseFill"></div></div>
+      <div class="img-fallback">VISUAL DATA UNAVAILABLE</div>
     </div>
 
-    <!-- sticky panorama -->
-    <div class="collapse-sticky">
-      <div class="collapse-viewport" id="collapseViewport">
-        <div class="collapse-track" id="collapseTrack" style="position:absolute;top:0;left:0;height:100%;">
-          <img class="collapse-img" id="collapseImg" src="./assets/collapse-timeline.webp"
-               alt="Четыре этапа катастрофы" width="2508" height="627" loading="lazy" decoding="async">
-        </div>
-        <svg class="collapse-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <line x1="0" y1="0.5" x2="100" y2="0.5" stroke="rgba(79,195,247,0.2)" stroke-width="0.4"/>
-        </svg>
-        <div class="collapse-vignette"></div>
-        <div class="collapse-hud">
-          <span class="stage-code" id="collapseCode">01 // ПОЯВЛЕНИЕ</span>
-          <span class="stage-of" id="collapseOf">STAGE 1 / 4</span>
-        </div>
-        <div class="collapse-progress"><div class="fill" id="collapseFill"></div></div>
-        <div class="img-fallback">VISUAL DATA UNAVAILABLE</div>
-      </div>
+    <div class="collapse-tabs reveal" id="collapseTabs">
+      <button class="collapse-tab active" data-step="0"><span class="num">01</span>ПОЯВЛЕНИЕ</button>
+      <button class="collapse-tab" data-step="1"><span class="num">02</span>КОНТРОЛЬ</button>
+      <button class="collapse-tab" data-step="2" data-crisis><span class="num">03</span>КРИЗИС</button>
+      <button class="collapse-tab" data-step="3"><span class="num">04</span>РАЗДЕЛЕНИЕ</button>
     </div>
 
-    <!-- scroll steps -->
-    <div class="collapse-steps" id="collapseSteps">
-      <div class="collapse-step active" data-step="0">
-        <div class="st-code">01 // ПОЯВЛЕНИЕ</div>
-        <div class="st-title">Появление</div>
-        <p class="st-text">Мета-люди стали фактором, к которому старый мир оказался не готов.</p>
-      </div>
-      <div class="collapse-step" data-step="1">
-        <div class="st-code">02 // КОНТРОЛЬ</div>
-        <div class="st-title">Контроль</div>
-        <p class="st-text">Государства начали изучать, использовать и изолировать их.</p>
-      </div>
-      <div class="collapse-step" data-step="2" data-crisis>
-        <div class="st-code">03 // КРИЗИС</div>
-        <div class="st-title">Кризис</div>
-        <p class="st-text">Восстания, мета-всплески и войны разрушили прежний баланс сил.</p>
-      </div>
-      <div class="collapse-step" data-step="3">
-        <div class="st-code">04 // РАЗДЕЛЕНИЕ</div>
-        <div class="st-title">Разделение</div>
-        <p class="st-text">На руинах старого порядка возникли новые государства и системы власти.</p>
-      </div>
+    <div class="collapse-readout reveal" id="collapseReadout">
+      <div class="r-head" id="collapseHead">// ПОЯВЛЕНИЕ</div>
+      <div class="r-text" id="collapseText">Мета-люди стали фактором, к которому старый мир оказался не готов.</div>
     </div>
   </section>
 
@@ -240,34 +220,35 @@
           <defs>
             <filter id="mapSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="26"/></filter>
           </defs>
-          <!-- STABLE (blue/white): North America + Europe -->
+          <!-- STABLE (blue/white): Единая Америка (обе Америки) + Тенебрион (Европа) -->
           <g data-zone="stable" class="on">
-            <ellipse cx="300" cy="300" rx="220" ry="180" fill="#bfe6ff" opacity="0.28" filter="url(#mapSoft)"/>
-            <ellipse cx="900" cy="280" rx="150" ry="120" fill="#bfe6ff" opacity="0.28" filter="url(#mapSoft)"/>
+            <ellipse cx="488" cy="418" rx="200" ry="150" fill="#bfe6ff" opacity="0.26" filter="url(#mapSoft)"/>
+            <ellipse cx="901" cy="220" rx="150" ry="110" fill="#bfe6ff" opacity="0.28" filter="url(#mapSoft)"/>
           </g>
-          <!-- CLOSED (blue): ringed zones top-right + bottom-right -->
+          <!-- CLOSED (blue): Аркадия (купол) + Австралийский протекторат (бункеры) -->
           <g data-zone="closed">
-            <circle cx="1300" cy="160" r="180" fill="none" stroke="#4fc3f7" stroke-width="4" opacity="0.7"/>
-            <circle cx="1300" cy="160" r="120" fill="#4fc3f7" opacity="0.14" filter="url(#mapSoft)"/>
-            <circle cx="1560" cy="690" r="140" fill="none" stroke="#4fc3f7" stroke-width="4" opacity="0.7"/>
-            <circle cx="1560" cy="690" r="90" fill="#4fc3f7" opacity="0.14" filter="url(#mapSoft)"/>
+            <circle cx="827" cy="188" r="80" fill="none" stroke="#4fc3f7" stroke-width="4" opacity="0.75"/>
+            <circle cx="827" cy="188" r="52" fill="#4fc3f7" opacity="0.14" filter="url(#mapSoft)"/>
+            <circle cx="1458" cy="601" r="118" fill="none" stroke="#4fc3f7" stroke-width="4" opacity="0.75"/>
+            <circle cx="1458" cy="601" r="80" fill="#4fc3f7" opacity="0.14" filter="url(#mapSoft)"/>
           </g>
-          <!-- FRONTIER (amber): Middle East / Central Asia -->
+          <!-- FRONTIER (amber): Экваториальная сеть (Африка) + Ближний Восток -->
           <g data-zone="frontier">
-            <ellipse cx="1120" cy="380" rx="180" ry="120" fill="#ff9d00" opacity="0.22" filter="url(#mapSoft)"/>
-            <path d="M980 360 L1120 340 L1260 400" fill="none" stroke="#ff9d00" stroke-width="3" stroke-dasharray="10 12" opacity="0.7"/>
+            <ellipse cx="920" cy="460" rx="150" ry="140" fill="#ff9d00" opacity="0.22" filter="url(#mapSoft)"/>
+            <ellipse cx="1040" cy="314" rx="110" ry="90" fill="#ff9d00" opacity="0.2" filter="url(#mapSoft)"/>
+            <path d="M960 430 L1040 340 L1150 300" fill="none" stroke="#ff9d00" stroke-width="3" stroke-dasharray="10 12" opacity="0.6"/>
           </g>
-          <!-- COLLAPSE (red): South America + Antarctica -->
+          <!-- COLLAPSE (red): Белая зона (север Евразии, анархия) -->
           <g data-zone="collapse">
-            <ellipse cx="490" cy="610" rx="130" ry="150" fill="#ff4d4d" opacity="0.28" filter="url(#mapSoft)"/>
-            <ellipse cx="720" cy="870" rx="180" ry="70" fill="#ff4d4d" opacity="0.24" filter="url(#mapSoft)"/>
+            <ellipse cx="1231" cy="146" rx="210" ry="105" fill="#ff4d4d" opacity="0.24" filter="url(#mapSoft)"/>
+            <ellipse cx="1231" cy="146" rx="120" ry="60" fill="#ff4d4d" opacity="0.18" filter="url(#mapSoft)"/>
           </g>
-          <!-- ANOMALOUS (purple): vortices -->
+          <!-- ANOMALOUS (purple): Ракшасы (Индия/Центр. Азия) + океанский вихрь -->
           <g data-zone="anomalous">
-            <circle cx="1180" cy="720" r="30" fill="none" stroke="#a55eea" stroke-width="3" opacity="0.8"/>
-            <circle cx="1180" cy="720" r="55" fill="none" stroke="#a55eea" stroke-width="2" opacity="0.5"/>
-            <circle cx="1180" cy="720" r="80" fill="#a55eea" opacity="0.16" filter="url(#mapSoft)"/>
-            <circle cx="780" cy="90" r="60" fill="#a55eea" opacity="0.18" filter="url(#mapSoft)"/>
+            <circle cx="1231" cy="345" r="34" fill="none" stroke="#a55eea" stroke-width="3" opacity="0.85"/>
+            <circle cx="1231" cy="345" r="60" fill="none" stroke="#a55eea" stroke-width="2" opacity="0.5"/>
+            <circle cx="1231" cy="345" r="88" fill="#a55eea" opacity="0.16" filter="url(#mapSoft)"/>
+            <circle cx="1207" cy="575" r="66" fill="#a55eea" opacity="0.18" filter="url(#mapSoft)"/>
           </g>
         </svg>
       </div>

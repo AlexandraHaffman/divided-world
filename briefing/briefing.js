@@ -28,7 +28,7 @@
     mental:        { head: '// МЕНТАЛЬНОЕ',     text: 'Воздействие на восприятие, память, эмоции и сознание.',                         scan: 'MENTAL',    obj: '04-M' },
     physical:      { head: '// ФИЗИЧЕСКОЕ',     text: 'Изменение силы, скорости, прочности и регенерации.',                            scan: 'PHYSICAL',  obj: '04-P' },
     energetic:     { head: '// ЭНЕРГЕТИЧЕСКОЕ', text: 'Управление светом, температурой, электричеством и другими формами энергии.',    scan: 'ENERGETIC', obj: '04-E' },
-    environmental: { head: '// СРЕДОВОЕ',       text: 'Воздействие на материю, гравитацию, погоду и окружающее пространство.',          scan: 'ENVIRON.',  obj: '04-S' }
+    environmental: { head: '// ПРИРОДНОЕ',       text: 'Воздействие на материю, гравитацию, погоду и окружающее пространство.',          scan: 'NATURE',    obj: '04-N' }
   };
   var scanTabs = $$('.scan-tab');
   var scanZones = $$('.scan-svg [data-zone]');
@@ -48,11 +48,11 @@
 
   /* ---------- 04 — World zones map ---------- */
   var ZONES = {
-    stable:    { head: '// СТАБИЛЬНЫЕ СИСТЕМЫ', text: 'Города, институты, экономика, армия и централизованная власть.',              status: 'STABLE',   c: '#bfe6ff', f: 0.26 },
-    closed:    { head: '// ЗАКРЫТЫЕ СИСТЕМЫ',   text: 'Изолированные общества, контролирующие доступ и информацию.',                 status: 'CLOSED',   c: '#4fc3f7', f: 0.80 },
-    frontier:  { head: '// ФРОНТИР',            text: 'Пограничные территории, где власть остаётся нестабильной.',                   status: 'FRONTIER', c: '#ff9d00', f: 0.66 },
-    collapse:  { head: '// ЗОНЫ РАСПАДА',       text: 'Руины, малые группировки, аномалии и отсутствие единой власти.',             status: 'COLLAPSE', c: '#ff4d4d', f: 0.30 },
-    anomalous: { head: '// АНОМАЛЬНЫЕ РЕГИОНЫ', text: 'Территории, физически изменённые деятельностью сильнейших мета-людей.',       status: 'ANOMALY',  c: '#a55eea', f: 0.70 }
+    stable:    { head: '// СТАБИЛЬНЫЕ СИСТЕМЫ', text: 'Города, институты, экономика, армия и централизованная власть.',              status: 'STABLE',   c: '#bfe6ff', f: 0.36 },
+    closed:    { head: '// ЗАКРЫТЫЕ СИСТЕМЫ',   text: 'Изолированные общества, контролирующие доступ и информацию.',                 status: 'CLOSED',   c: '#4fc3f7', f: 0.84 },
+    frontier:  { head: '// ФРОНТИР',            text: 'Пограничные территории, где власть остаётся нестабильной.',                   status: 'FRONTIER', c: '#ff9d00', f: 0.57 },
+    collapse:  { head: '// ЗОНЫ РАСПАДА',       text: 'Руины, малые группировки, аномалии и отсутствие единой власти.',             status: 'COLLAPSE', c: '#ff4d4d', f: 0.74 },
+    anomalous: { head: '// АНОМАЛЬНЫЕ РЕГИОНЫ', text: 'Территории, физически изменённые деятельностью сильнейших мета-людей.',       status: 'ANOMALY',  c: '#a55eea', f: 0.73 }
   };
   var zoneTabs = $$('.zone-tab');
   var zoneGroups = $$('.zones-svg [data-zone]');
@@ -86,37 +86,38 @@
   if (zonesMap.complete && zonesMap.naturalWidth) initZones();
   else zonesMap.addEventListener('load', initZones);
 
-  /* ---------- 03 — Collapse scrollytelling ---------- */
-  var CODES = ['01 // ПОЯВЛЕНИЕ', '02 // КОНТРОЛЬ', '03 // КРИЗИС', '04 // РАЗДЕЛЕНИЕ'];
-  var steps = $$('.collapse-step');
+  /* ---------- 03 — Collapse timeline (tap stepper) ---------- */
+  var STAGES = [
+    { code: '01 // ПОЯВЛЕНИЕ',   head: '// ПОЯВЛЕНИЕ',   text: 'Мета-люди стали фактором, к которому старый мир оказался не готов.' },
+    { code: '02 // КОНТРОЛЬ',    head: '// КОНТРОЛЬ',    text: 'Государства начали изучать, использовать и изолировать их.' },
+    { code: '03 // КРИЗИС',      head: '// КРИЗИС',      text: 'Восстания, мета-всплески и войны разрушили прежний баланс сил.' },
+    { code: '04 // РАЗДЕЛЕНИЕ',  head: '// РАЗДЕЛЕНИЕ',  text: 'На руинах старого порядка возникли новые государства и системы власти.' }
+  ];
+  var cTabs = $$('.collapse-tab');
   var cViewport = $('#collapseViewport'), cTrack = $('#collapseTrack'), cImg = $('#collapseImg');
   var cCode = $('#collapseCode'), cOf = $('#collapseOf'), cFill = $('#collapseFill');
+  var cHead = $('#collapseHead'), cText = $('#collapseText'), cReadout = $('#collapseReadout');
   var curStep = -1;
 
   function setStep(i) {
     if (i === curStep) return;
     curStep = i;
-    steps.forEach(function (s) { s.classList.toggle('active', +s.dataset.step === i); });
-    // pan panorama
+    var d = STAGES[i], crisis = (i === 2);
+    cTabs.forEach(function (t) { t.classList.toggle('active', +t.dataset.step === i); });
     if (cImg.offsetWidth && cViewport.offsetWidth) {
       var maxShift = cImg.offsetWidth - cViewport.offsetWidth;
-      var tx = -(i / 3) * maxShift;
-      cTrack.style.transform = 'translateX(' + tx + 'px)';
+      cTrack.style.transform = 'translateX(' + (-(i / 3) * maxShift) + 'px)';
     }
-    var crisis = (i === 2);
-    cCode.textContent = CODES[i];
+    cCode.textContent = d.code;
     cCode.classList.toggle('crisis', crisis);
     cOf.textContent = 'STAGE ' + (i + 1) + ' / 4';
     cFill.style.width = ((i + 1) / 4 * 100) + '%';
     cFill.classList.toggle('crisis', crisis);
+    cHead.textContent = d.head;
+    cText.textContent = d.text;
+    cReadout.classList.toggle('crisis', crisis);
   }
-
-  var stepObs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) setStep(+e.target.dataset.step);
-    });
-  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-  steps.forEach(function (s) { stepObs.observe(s); });
+  cTabs.forEach(function (t) { t.addEventListener('click', function () { setStep(+t.dataset.step); }); });
   function initCollapse() { if (curStep === -1) setStep(0); }
   if (cImg.complete && cImg.naturalWidth) initCollapse();
   else cImg.addEventListener('load', initCollapse);

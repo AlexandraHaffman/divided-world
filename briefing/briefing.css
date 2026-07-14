@@ -363,10 +363,10 @@ body {
    ============================================================ */
 .scanner {
   display: grid;
-  grid-template-columns: minmax(120px, 150px) 1fr;
+  grid-template-columns: minmax(122px, 140px) 1fr;
   gap: 14px;
   margin-top: 22px;
-  align-items: start;
+  align-items: stretch;
 }
 .scan-frame {
   position: relative;
@@ -418,7 +418,7 @@ body {
   color: var(--text-dim); display: flex; justify-content: space-between;
 }
 
-.scan-panel { min-width: 0; }
+.scan-panel { min-width: 0; display: flex; flex-direction: column; }
 .scan-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-bottom: 12px; }
 .scan-tab {
   font-family: var(--font-body);
@@ -451,43 +451,34 @@ body {
 .scan-readout {
   border-left: 2px solid var(--blue);
   padding: 4px 0 4px 12px;
-  min-height: 88px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .scan-readout .r-head {
   font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px;
-  color: var(--blue); margin-bottom: 8px;
+  color: var(--blue); margin-bottom: 10px;
 }
 .scan-readout .r-text {
-  font-size: 15px; line-height: 1.5; color: var(--text);
+  font-size: 16px; line-height: 1.5; color: var(--text);
   transition: opacity 0.3s ease;
 }
 
 /* ============================================================
-   SECTION 03 — Collapse timeline (scrollytelling)
+   SECTION 03 — Collapse timeline (tap stepper)
    ============================================================ */
-.collapse {
-  position: relative;
-  padding: 40px 0 0;
-  max-width: none;
-}
-.collapse-head { padding: 0 16px; max-width: 560px; margin: 0 auto; }
-
-.collapse-sticky {
-  position: sticky;
-  top: var(--bar-h);
-  z-index: 5;
-  margin-top: 20px;
-  padding: 0 12px;
-}
 .collapse-viewport {
   position: relative;
-  height: 40svh;
-  min-height: 260px;
-  max-height: 380px;
+  height: 42svh;
+  min-height: 220px;
+  max-height: 320px;
+  margin-top: 22px;
   border: 1px solid var(--border);
   overflow: hidden;
   background: #05070b;
 }
+.collapse-track { position: absolute; top: 0; left: 0; height: 100%; }
 .collapse-img {
   position: absolute;
   top: 0; left: 0;
@@ -498,7 +489,6 @@ body {
   transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
-.collapse-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .collapse-vignette {
   position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background:
@@ -525,32 +515,55 @@ body {
 }
 .collapse-progress .fill.crisis { background: var(--red); box-shadow: 0 0 8px var(--red); }
 
-.collapse-steps { position: relative; z-index: 4; padding: 0 16px; max-width: 560px; margin: 0 auto; }
-.collapse-step {
-  min-height: 62svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 20px 0;
+.collapse-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 12px;
 }
-.collapse-step .st-code {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px;
-  color: var(--text-dim); margin-bottom: 10px;
-  transition: color 0.4s;
+.collapse-tab {
+  font-family: var(--font-body);
+  font-weight: 700; font-size: 10px; letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: rgba(13, 19, 32, 0.6);
+  border: 1px solid var(--border);
+  padding: 9px 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
-.collapse-step.active .st-code { color: var(--blue); }
-.collapse-step.active[data-crisis] .st-code { color: var(--red); }
-.collapse-step .st-title {
-  font-family: var(--font-head); font-weight: 700; font-size: 20px;
-  letter-spacing: 1px; color: var(--white); text-transform: uppercase;
-  margin-bottom: 10px; line-height: 1.1;
+.collapse-tab .num {
+  display: block; font-family: var(--font-mono); font-size: 8px;
+  color: var(--blue-dim); margin-bottom: 4px; letter-spacing: 1px;
 }
-.collapse-step .st-text { font-size: 16px; line-height: 1.55; color: var(--text); max-width: 38ch; }
-.collapse-step {
-  opacity: 0.32;
-  transition: opacity 0.5s ease;
+.collapse-tab:hover { border-color: var(--blue); color: var(--text); }
+.collapse-tab.active {
+  color: var(--white); border-color: var(--blue);
+  background: var(--blue-glow); box-shadow: inset 0 0 14px rgba(79,195,247,0.12);
 }
-.collapse-step.active { opacity: 1; }
+.collapse-tab.active .num { color: var(--blue); }
+.collapse-tab.active[data-crisis] {
+  border-color: var(--red); background: rgba(255,77,77,0.1);
+  box-shadow: inset 0 0 14px rgba(255,77,77,0.12);
+}
+.collapse-tab.active[data-crisis] .num { color: var(--red); }
+
+.collapse-readout {
+  margin-top: 14px;
+  border-left: 2px solid var(--blue);
+  padding: 4px 0 4px 12px;
+  transition: border-color 0.4s;
+}
+.collapse-readout.crisis { border-left-color: var(--red); }
+.collapse-readout .r-head {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px;
+  color: var(--blue); margin-bottom: 8px; transition: color 0.4s;
+}
+.collapse-readout.crisis .r-head { color: var(--red); }
+.collapse-readout .r-text { font-size: 16px; line-height: 1.55; color: var(--text); max-width: 42ch; }
 
 /* ============================================================
    SECTION 04 — World zones map
