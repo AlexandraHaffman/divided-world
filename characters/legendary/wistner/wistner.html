@@ -257,7 +257,6 @@ body.night .door .scold{color:#8fa8a0}
       <p data-t="intro.p1"></p>
       <p data-t="intro.p2"></p>
       <p class="hook" data-t="intro.hook"></p>
-      <p class="note" data-t="intro.note"></p>
     </div>
   </section>
 
@@ -269,7 +268,6 @@ body.night .door .scold{color:#8fa8a0}
       <p data-t="cam2.p1"></p>
       <p data-t="cam2.p2"></p>
       <p data-t="cam2.p3"></p>
-      <p class="note" data-t="cam2.note1"></p>
     </div>
   </section>
 
@@ -282,9 +280,6 @@ body.night .door .scold{color:#8fa8a0}
       <p data-t="cam3.p1"></p>
       <p data-t="cam3.p2"></p>
       <p data-t="cam3.p3"></p>
-      <p data-t="cam3.p4"></p>
-      <p class="note" data-t="cam3.note1"></p>
-      <p class="note" data-t="cam3.note2"></p>
     </div>
   </section>
 
@@ -302,8 +297,7 @@ body.night .door .scold{color:#8fa8a0}
         <div class="row"><b>—</b><span class="who" data-t="cam4.row5"></span></div>
         <div class="row"><b>—</b><span class="who" data-t="cam4.row6"></span></div>
       </div>
-      <p class="note" data-t="cam4.note1"></p>
-      <p class="note" data-t="cam4.note2"></p>
+      <p data-t="cam4.p1"></p>
     </div>
   </section>
 
@@ -315,8 +309,6 @@ body.night .door .scold{color:#8fa8a0}
       <p data-t="door.p2"></p>
       <p data-t="door.p3"></p>
       <p data-t="door.p4"></p>
-      <p class="note" data-t="door.note1"></p>
-      <p class="note" data-t="door.note2"></p>
       <p class="q" data-t="door.q"></p>
       <p class="scold" data-t="door.scold"></p>
     </div>
@@ -350,7 +342,7 @@ body.night .door .scold{color:#8fa8a0}
       <div class="art bp"><img src="bp-dome.webp" alt="Купол" loading="lazy"></div>
       <h2 data-t="dome.h2"></h2>
       <p data-t="dome.p1"></p>
-      <p class="note" data-t="dome.note1"></p>
+      <p data-t="dome.p2"></p>
     </div>
   </section>
 
@@ -372,7 +364,6 @@ body.night .door .scold{color:#8fa8a0}
       <div class="meta" data-t="atlant.meta"></div>
       <p data-t="atlant.p1"></p>
       <p data-t="atlant.p2"></p>
-      <p class="note" data-t="atlant.note1"></p>
     </div>
   </section>
 
@@ -385,37 +376,29 @@ body.night .door .scold{color:#8fa8a0}
       <p class="lede" data-t="pilgrims.lede"></p>
       <p data-t="pilgrims.p1"></p>
       <p data-t="pilgrims.p2"></p>
-      <p class="note" data-t="pilgrims.note1"></p>
-      <p class="note" data-t="pilgrims.note2"></p>
     </div>
   </section>
 
   <section class="chap">
     <div class="card">
-      <div class="no"><span>Досье · 05</span><span class="g">открыто</span></div>
-      <div class="art bp"><img src="bp-network.webp" alt="Разведсеть" loading="lazy"></div>
-      <h2 data-t="network.h2"></h2>
-      <p data-t="network.p1"></p>
-      <div class="rows">
-        <div class="row"><b>01</b><span class="who" data-t="network.row1"></span></div>
-        <div class="row"><b>07</b><span class="who" data-t="network.row2"></span></div>
-        <div class="row"><b>09</b><span class="who" data-t="network.row3"></span></div>
-      </div>
-      <p class="note" data-t="network.note1"></p>
-      <p class="note" data-t="network.note2"></p>
-    </div>
-  </section>
-
-  <section class="chap">
-    <div class="card">
-      <div class="no"><span>Досье · 06</span><span class="g">не значится</span></div>
+      <div class="no"><span>Досье · 05</span><span class="g">не значится</span></div>
       <div class="art photo"><img src="wales.webp" alt="Шахты Уэльса" loading="lazy"></div>
       <h2 data-t="wales.h2"></h2>
       <div class="meta" data-t="wales.meta"></div>
       <p class="lede" data-t="wales.lede"></p>
       <p data-t="wales.p1"></p>
       <p data-t="wales.p2"></p>
-      <p class="note" data-t="wales.note1"></p>
+    </div>
+  </section>
+
+  <section class="chap">
+    <div class="card">
+      <div class="no"><span>Досье · 06</span><span class="g">открыто</span></div>
+      <div class="art photo"><img src="arcane.webp" alt="«Аркан»" loading="lazy"></div>
+      <h2 data-t="arcane.h2"></h2>
+      <div class="meta" data-t="arcane.meta"></div>
+      <p data-t="arcane.p1"></p>
+      <p data-t="arcane.p2"></p>
     </div>
   </section>
 
@@ -428,14 +411,12 @@ body.night .door .scold{color:#8fa8a0}
       <p data-t="today.p1"></p>
       <p data-t="today.p2"></p>
       <p data-t="today.p3"></p>
-      <p class="note" data-t="today.note1"></p>
-      <p class="note" data-t="today.note2"></p>
     </div>
   </section>
 
 </main>
 
-<audio id="theme" src="theme.mp3" loop preload="none"></audio>
+<audio id="theme" loop preload="none"></audio>
 
 <script src="wistner-content.js"></script>
 <script>
@@ -510,16 +491,26 @@ body.night .door .scold{color:#8fa8a0}
       window.scrollTo(0,0);
       measure(); paint();
     }
+    if(window.switchAudioForMode) window.switchAudioForMode(m);
   }
   document.querySelectorAll('#modesw button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 
-  // ── звук ──
+  // ── звук: свой трек для каждого режима, с откатом на общий theme.mp3 ──
+  const TRACKS={history:['theme-history.mp3','theme.mp3'], present:['theme-present.mp3','theme.mp3']};
   const theme=document.getElementById('theme'), soundBtn=document.getElementById('soundBtn');
-  let soundOn=false;
+  let soundOn=false, audMode='history', tryIdx=0;
+  function setSrc(){
+    const list=TRACKS[audMode]||[];
+    if(tryIdx>=list.length) return;         // ни один файл не подошёл — тишина
+    theme.src=list[tryIdx];
+    if(soundOn) theme.play().catch(()=>{}); // ошибки ловит слушатель 'error'
+  }
+  function playMode(m){ audMode=m; tryIdx=0; setSrc(); }
+  theme.addEventListener('error',()=>{ tryIdx++; setSrc(); });
   soundBtn.onclick=()=>{ soundOn=!soundOn;
-    if(soundOn){ theme.play().then(()=>soundBtn.textContent='🔊').catch(()=>{soundOn=false;soundBtn.textContent='🔇';}); }
-    else { theme.pause(); soundBtn.textContent='🔇'; } };
-  theme.addEventListener('error',()=>console.log('Audio failed to load. Check theme.mp3 exists next to wistner.html.'));
+    if(soundOn){ soundBtn.textContent='🔊'; playMode(mode); }
+    else { soundBtn.textContent='🔇'; theme.pause(); } };
+  window.switchAudioForMode=(m)=>{ if(soundOn) playMode(m); };
 
   // ── старт ──
   addEventListener('load',()=>{measure();paint();});
