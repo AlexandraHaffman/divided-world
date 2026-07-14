@@ -29,10 +29,14 @@ body{min-height:100%;background:#050a08;font-family:var(--sans);color:var(--ink)
 #bg img{position:absolute;top:50%;left:50%;height:110%;min-width:110%;object-fit:cover;
   transform:translate(-50%,-50%);will-change:opacity;transition:opacity .4s linear}
 #bgDark{opacity:0}
-#bgPresent{position:absolute;inset:0;opacity:0;transition:opacity 1s;
+#bgPresent{position:absolute;inset:0;opacity:0;transition:opacity 1s;overflow:hidden;
+  background:#04100c}
+#bgPresent img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.85) brightness(.7)}
+#bgPresent::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(130% 80% at 50% 0%,rgba(11,155,115,.20),transparent 55%),
              radial-gradient(100% 60% at 50% 100%,rgba(0,60,45,.35),transparent 60%),
-             linear-gradient(180deg,#04100c 0%,#08201a 60%,#0a2a20 100%)}
+             linear-gradient(180deg,rgba(4,16,12,.5) 0%,rgba(8,32,26,.55) 60%,rgba(10,42,32,.8) 100%)}
 body.present #bgLight,body.present #bgDark{opacity:0!important}
 body.present #bgPresent{opacity:1}
 #veil{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .4s linear;
@@ -232,7 +236,7 @@ body.night .door .scold{color:#8fa8a0}
 <div id="bg">
   <img id="bgLight" src="hall-light.webp" alt="">
   <img id="bgDark" data-src="hall-dark.webp" alt="">
-  <div id="bgPresent"></div>
+  <div id="bgPresent"><img src="present-bg.webp" alt=""></div>
 </div>
 <div id="veil"></div>
 <div id="grain"></div>
