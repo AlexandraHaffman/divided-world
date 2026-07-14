@@ -58,7 +58,7 @@ body.dark .cell{background:rgba(13,24,20,.66);color:#e6efec;border-color:rgba(12
 .no .g{opacity:.6;display:inline-flex;align-items:center;gap:5px}
 .no .g::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;
   box-shadow:0 0 6px currentColor;animation:pulse 2.4s ease-in-out infinite}
-.cell.hidden .no .g::before{animation:none;opacity:.3}
+.hidden .no .g::before{animation:none;opacity:.3}
 .door .no .g::before{content:none}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 body.dark .no{color:var(--edge-br)}
@@ -114,16 +114,16 @@ body.dark .note{color:#7fa093;border-left-color:var(--edge-br)}
 .rd{background:currentColor;color:transparent;border-radius:2px;padding:0 3px;transition:.9s}
 body.dark .rd{background:transparent;color:inherit;border-bottom:1px solid var(--edge-br)}
 
-.cell.hidden > *:not(.no):not(.void){display:none}
-.cell.hidden .void{display:flex;flex-direction:column;align-items:center;justify-content:center;
+.hidden > *:not(.no):not(.void){display:none}
+.hidden .void{display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-height:230px;text-align:center;gap:12px}
-.cell.hidden .void .ic{width:26px;height:26px;border:1px solid currentColor;opacity:.35;transform:rotate(45deg)}
-.cell.hidden .void p{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+.hidden .void .ic{width:26px;height:26px;border:1px solid currentColor;opacity:.35;transform:rotate(45deg)}
+.hidden .void p{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
   opacity:.5;max-width:26ch;line-height:1.9}
-body.dark .cell.hidden > *:not(.void){display:block}
-body.dark .cell.hidden .no{display:flex}
-body.dark .cell.hidden .void{display:none}
-body.dark .cell.hidden .row{display:flex}
+body.dark .hidden > *:not(.void){display:block}
+body.dark .hidden .no{display:flex}
+body.dark .hidden .void{display:none}
+body.dark .hidden .row{display:flex}
 
 .row{display:flex;gap:12px;align-items:baseline;padding:12px 0;border-top:1px solid rgba(11,155,115,.16)}
 .row:last-of-type{border-bottom:1px solid rgba(11,155,115,.16);margin-bottom:16px}
@@ -164,11 +164,51 @@ body.dark .cover .kicker{color:var(--edge-br)}
 .howto b{color:var(--edge-br);font-weight:600}
 body.dark .howto span{color:#8fa39c}
 
-#wing{position:fixed;z-index:20;top:calc(50px + env(safe-area-inset-top));left:0;right:0;
-  display:flex;justify-content:center;pointer-events:none}
-#wing span{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
-  color:#fff;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.14);padding:7px 16px;border-radius:20px;white-space:nowrap}
+#modesw{position:fixed;z-index:22;top:calc(50px + env(safe-area-inset-top));left:50%;
+  transform:translateX(-50%);display:flex;gap:2px;background:rgba(4,12,10,.55);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:3px}
+#modesw button{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);background:transparent;border:none;padding:7px 15px;border-radius:16px;
+  cursor:pointer;transition:.25s;white-space:nowrap}
+#modesw button.on{background:var(--edge-br);color:#04150f;font-weight:600}
+
+body.mode-present #track,body.mode-present #steps,body.mode-present #tip{display:none!important}
+#present{display:none;position:fixed;inset:0;z-index:2;align-items:center;justify-content:center;
+  padding:96px 18px 110px}
+body.mode-present #present{display:flex}
+.dossier{width:min(940px,94vw);max-height:100%;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.dhead{display:flex;align-items:center;gap:16px;padding:22px 26px;flex:none;
+  border-bottom:1px solid rgba(11,155,115,.2)}
+.dhead img{width:50px;height:50px;border-radius:50%;object-fit:cover;flex:none;
+  border:1px solid rgba(11,155,115,.4);box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
+.dhead .kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--edge);opacity:.85;margin-bottom:4px}
+body.dark .dhead .kicker{color:var(--edge-br)}
+.dhead h1{font-size:clamp(21px,3.6vw,28px);margin-bottom:0}
+.dhead h1 em{display:inline;font-weight:500;margin-left:6px}
+.dbody{display:flex;flex:1;min-height:0}
+.dtabs{display:flex;flex-direction:column;gap:2px;flex:none;width:190px;padding:16px 10px;
+  border-right:1px solid rgba(11,155,115,.16);overflow-y:auto}
+.dtabs button{text-align:left;background:transparent;border:none;border-left:2px solid transparent;
+  color:inherit;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  padding:10px 12px;cursor:pointer;opacity:.55;transition:.25s;line-height:1.4}
+.dtabs button:hover{opacity:.85}
+.dtabs button.on{opacity:1;color:var(--edge-br);border-left-color:var(--edge-br);background:rgba(11,155,115,.1)}
+.dpanels{flex:1;overflow-y:auto;padding:22px 26px 26px;-webkit-overflow-scrolling:touch}
+.dpanel{display:none}
+.dpanel.on{display:block;animation:fade .5s ease-out}
+.dpanel .art:first-child,.dpanel .seal + .art{margin-top:0}
+@media(max-width:680px){
+  .dossier{max-height:88vh}
+  .dhead img{width:40px;height:40px}
+  .dbody{flex-direction:column}
+  .dtabs{flex-direction:row;width:100%;overflow-x:auto;overflow-y:hidden;border-right:none;
+    border-bottom:1px solid rgba(11,155,115,.16);padding:10px 12px;gap:4px}
+  .dtabs button{border-left:none;border-bottom:2px solid transparent;white-space:nowrap;padding:8px 10px}
+  .dtabs button.on{border-bottom-color:var(--edge-br);border-left-color:transparent}
+  .dpanels{padding:18px 18px 22px}
+}
 #hud{position:fixed;z-index:20;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
   padding:16px 18px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
   background:linear-gradient(transparent,rgba(5,12,9,.6))}
@@ -219,7 +259,10 @@ body.dark .howto span{color:#8fa39c}
 
 <a id="back" href="../../index.html">← назад</a>
 <div id="tip"><span>Свайп вбок · регулятор света внизу</span></div>
-<div id="wing"><span>Крыло I · Архив</span></div>
+<div id="modesw">
+  <button data-mode="history" class="on">История</button>
+  <button data-mode="present">Настоящее</button>
+</div>
 
 <div id="track">
 
@@ -301,72 +344,103 @@ body.dark .howto span{color:#8fa39c}
     <p class="scold">Вы прошли Архив при полном свете. Одна камера так и осталась для вас пустой.</p>
   </div>
 
-  <div class="cell" data-wing="2">
-    <div class="no"><span>Аркадия · 01</span><span class="g">открыто</span></div>
-    <div class="seal"><img src="crest.PNG" alt="Герб Аркадии"><span>Правительство Аркадии · Триумвират Спасителей</span></div>
-    <div class="art bp"><img src="bp-dome.PNG" alt="Купол"></div>
-    <h2>Купол</h2>
-    <p>Силовое поле над Британскими островами. Держит ракеты, десант, погоду и Тенебриона. Ни одного пробоя за всю историю.</p>
-    <p class="note">Купол держится не на героизме, а на подаче. Пока «Изумруд» даёт ток, стена стоит. Он единственный, кто понимает это до конца, — и потому единственный, кто по-настоящему боится.</p>
+</div>
 
-    <div class="art bp" style="margin-top:24px"><img src="bp-reactor.PNG" alt="Изумруд"></div>
-    <h2>«Изумруд»</h2>
-    <p>Энергосистема государства. Три контура. Его шедевр — и единственное, чем он позволяет себе гордиться вслух.</p>
+<div id="present">
+  <div class="dossier cell">
+    <div class="dhead">
+      <img src="crest.PNG" alt="Герб Аркадии">
+      <div>
+        <p class="kicker">Правительство Аркадии · Триумвират Спасителей</p>
+        <h1 style="margin-bottom:0">Аркадия<em>сегодня</em></h1>
+      </div>
+    </div>
+    <div class="dbody">
+      <nav class="dtabs">
+        <button class="on" data-panel="dome">01 · Купол</button>
+        <button data-panel="reactor">02 · Изумруд</button>
+        <button data-panel="atlant">03 · Атлант</button>
+        <button data-panel="pilgrims">04 · Пилигримы</button>
+        <button data-panel="network">05 · Разведсеть</button>
+        <button data-panel="wales">06 · Уэльс</button>
+        <button data-panel="today">07 · Сегодня</button>
+      </nav>
+      <div class="dpanels">
 
-    <div class="art bp" style="margin-top:24px"><img src="bp-atlant.PNG" alt="Атлант"></div>
-    <h2>«Атлант»</h2>
-    <p>Известны название и факт существования.</p>
-    <p class="note">Посмотрите на чертёж. Он не недорисован — он <span class="rd">вырезан</span>. Линии обрываются там, где начинается то, чего вам знать не следует. Даже в его собственном досье.</p>
+        <div class="dpanel on" data-panel="dome">
+          <div class="no"><span>Досье · 01</span><span class="g">открыто</span></div>
+          <div class="art bp"><img src="bp-dome.PNG" alt="Купол"></div>
+          <h2>Купол</h2>
+          <p>Силовое поле над Британскими островами. Держит ракеты, десант, погоду и Тенебриона. Ни одного пробоя за всю историю.</p>
+          <p class="note">Купол держится не на героизме, а на подаче. Пока «Изумруд» даёт ток, стена стоит. Он единственный, кто понимает это до конца, — и потому единственный, кто по-настоящему боится.</p>
+        </div>
+
+        <div class="dpanel" data-panel="reactor">
+          <div class="no"><span>Досье · 02</span><span class="g">открыто</span></div>
+          <div class="art bp"><img src="bp-reactor.PNG" alt="Изумруд"></div>
+          <h2>«Изумруд»</h2>
+          <p>Энергосистема государства. Три контура. Его шедевр — и единственное, чем он позволяет себе гордиться вслух.</p>
+        </div>
+
+        <div class="dpanel" data-panel="atlant">
+          <div class="no"><span>Досье · 03</span><span class="g">открыто</span></div>
+          <div class="art bp"><img src="bp-atlant.PNG" alt="Атлант"></div>
+          <h2>«Атлант»</h2>
+          <p>Известны название и факт существования.</p>
+          <p class="note">Посмотрите на чертёж. Он не недорисован — он <span class="rd">вырезан</span>. Линии обрываются там, где начинается то, чего вам знать не следует. Даже в его собственном досье.</p>
+        </div>
+
+        <div class="dpanel" data-panel="pilgrims">
+          <div class="no"><span>Досье · 04</span><span class="g">открыто</span></div>
+          <div class="art ph">[арт: «Манта» над Белой зоной]</div>
+          <h2>Пилигримы</h2>
+          <div class="meta">Управление Внешних Ресурсов · куратор К. Вистнер</div>
+          <p class="lede">Герои Аркадии. Настоящие, без иронии.</p>
+          <p>Они спускаются в Белую зону — в радиоактивный ад старого мира — за изотопами, палладием, редкими металлами и довоенными архивами. Летают на «Мантах», белых скатах вертикального взлёта; за штурвалом всегда андроид серии PIL. Возвращаются не все. Вернувшихся встречают как астронавтов.</p>
+          <p>Управление возглавляет Мэтью Корсо — бывший полевой пилигрим, ныне полный киборг. Его сознание живёт в теле, спроектированном Вистнером. Корсо предан ему совершенно.</p>
+          <p class="note">Официально всё добытое распределяет Совет Специалистов. Официально.</p>
+          <p class="note">Довоенные алгоритмы, палладий, золото до Совета не доходят. Они уходят <span class="rd">в Уэльс</span>. Корсо, живущий в теле его конструкции, об этом, судя по всему, не знает.</p>
+        </div>
+
+        <div class="dpanel" data-panel="network">
+          <div class="no"><span>Досье · 05</span><span class="g">открыто</span></div>
+          <div class="art bp"><img src="bp-network.PNG" alt="Разведсеть"></div>
+          <h2>Разведсеть</h2>
+          <p>Промышленный шпионаж по всему миру. Узлы, каналы, закладки. В системе нет ни одного имени — только номера: имена привязывают, а привязанность искажает расчёт.</p>
+          <div class="row"><b>01</b><span class="who">Единая Америка<i>Работает свыше двадцати лет. Инженер. Женат.</i></span></div>
+          <div class="row"><b>07</b><span class="who">Forge<i>Тишина 12 суток.</i></span></div>
+          <div class="row"><b>09</b><span class="who">Тенебрион<i>Потерян.</i></span></div>
+          <p class="note">Актив 01 — Уильям Купер. Он считает, что у них с Вистнером есть отношения.</p>
+          <p class="note">Список длиннее того, что вы видите. Каждый в нём тоже считает себя <span class="rd">единственным</span>.</p>
+        </div>
+
+        <div class="dpanel hidden" data-panel="wales">
+          <div class="no"><span>Досье · 06</span><span class="g">пусто</span></div>
+          <div class="void"><span class="ic"></span><p>Данных нет<br>Объект не значится</p></div>
+          <div class="art"><img src="wales.PNG" alt="Шахты Уэльса"></div>
+          <h2>Уэльс</h2>
+          <div class="meta">С 2034 года · подземные лаборатории</div>
+          <p class="lede">Здесь заканчивается всё, что вы видели раньше.</p>
+          <p>Палладий пилигримов. Алгоритмы из Белой зоны. Технологии разведсети. Всё, что должно было принадлежать Аркадии, стекается в заброшенные шахты, где нет ни Совета Специалистов, ни Триумвирата, ни отчётности.</p>
+          <p>О содержании работ не знает никто. Включая, судя по всему, Дорна и Грея.</p>
+          <p class="note">Он не крадёт ради денег — деньги ему не нужны. Он забирает лучшее туда, где никто не помешает довести дело до конца. Однажды он уже позволил постороннему решить за него, что морально. <span class="rd">Больше не позволит.</span></p>
+        </div>
+
+        <div class="dpanel" data-panel="today">
+          <div class="no"><span>Досье · 07</span><span class="g">открыто</span></div>
+          <div class="art"><img src="office.PNG" alt="Пустой кабинет"></div>
+          <h2>Сегодня</h2>
+          <div class="meta">2061 · Триумвират Спасителей · научный сектор</div>
+          <p>Руководит наукой Аркадии. Развивает Купол и энергетическую инфраструктуру, управляет внешней разведкой, ведёт собственные исследования. Рассчитывает обеспечить государству окончательное технологическое превосходство над остальным миром.</p>
+          <p>В его кабинете нет ни одной личной вещи. Ни фотографии, ни книги, ни чашки. Стеклянный стол, кресло, окно на белый город.</p>
+          <p>Ему семьдесят один год. Он работает каждый день.</p>
+          <p class="note">Всё, что он построил, работает. Купол держит. «Изумруд» даёт ток. Государство стоит. Он был прав тогда — и он прав сейчас.</p>
+          <p class="note">Он только больше никогда не оставит дверь <span class="rd">там, где до неё сможет дотянуться человек</span>.</p>
+        </div>
+
+      </div>
+    </div>
   </div>
-
-  <div class="cell" data-wing="2">
-    <div class="no"><span>Аркадия · 02</span><span class="g">открыто</span></div>
-    <div class="art ph">[арт: «Манта» над Белой зоной]</div>
-    <h2>Пилигримы</h2>
-    <div class="meta">Управление Внешних Ресурсов · куратор К. Вистнер</div>
-    <p class="lede">Герои Аркадии. Настоящие, без иронии.</p>
-    <p>Они спускаются в Белую зону — в радиоактивный ад старого мира — за изотопами, палладием, редкими металлами и довоенными архивами. Летают на «Мантах», белых скатах вертикального взлёта; за штурвалом всегда андроид серии PIL. Возвращаются не все. Вернувшихся встречают как астронавтов.</p>
-    <p>Управление возглавляет Мэтью Корсо — бывший полевой пилигрим, ныне полный киборг. Его сознание живёт в теле, спроектированном Вистнером. Корсо предан ему совершенно.</p>
-    <p class="note">Официально всё добытое распределяет Совет Специалистов. Официально.</p>
-    <p class="note">Довоенные алгоритмы, палладий, золото до Совета не доходят. Они уходят <span class="rd">в Уэльс</span>. Корсо, живущий в теле его конструкции, об этом, судя по всему, не знает.</p>
-  </div>
-
-  <div class="cell" data-wing="2">
-    <div class="no"><span>Аркадия · 03</span><span class="g">открыто</span></div>
-    <div class="art bp"><img src="bp-network.PNG" alt="Разведсеть"></div>
-    <h2>Разведсеть</h2>
-    <p>Промышленный шпионаж по всему миру. Узлы, каналы, закладки. В системе нет ни одного имени — только номера: имена привязывают, а привязанность искажает расчёт.</p>
-    <div class="row"><b>01</b><span class="who">Единая Америка<i>Работает свыше двадцати лет. Инженер. Женат.</i></span></div>
-    <div class="row"><b>07</b><span class="who">Forge<i>Тишина 12 суток.</i></span></div>
-    <div class="row"><b>09</b><span class="who">Тенебрион<i>Потерян.</i></span></div>
-    <p class="note">Актив 01 — Уильям Купер. Он считает, что у них с Вистнером есть отношения.</p>
-    <p class="note">Список длиннее того, что вы видите. Каждый в нём тоже считает себя <span class="rd">единственным</span>.</p>
-  </div>
-
-  <div class="cell hidden" data-wing="2">
-    <div class="no"><span>Аркадия · 04</span><span class="g">пусто</span></div>
-    <div class="void"><span class="ic"></span><p>Данных нет<br>Объект не значится</p></div>
-    <div class="art"><img src="wales.PNG" alt="Шахты Уэльса"></div>
-    <h2>Уэльс</h2>
-    <div class="meta">С 2034 года · подземные лаборатории</div>
-    <p class="lede">Здесь заканчивается всё, что вы видели раньше.</p>
-    <p>Палладий пилигримов. Алгоритмы из Белой зоны. Технологии разведсети. Всё, что должно было принадлежать Аркадии, стекается в заброшенные шахты, где нет ни Совета Специалистов, ни Триумвирата, ни отчётности.</p>
-    <p>О содержании работ не знает никто. Включая, судя по всему, Дорна и Грея.</p>
-    <p class="note">Он не крадёт ради денег — деньги ему не нужны. Он забирает лучшее туда, где никто не помешает довести дело до конца. Однажды он уже позволил постороннему решить за него, что морально. <span class="rd">Больше не позволит.</span></p>
-  </div>
-
-  <div class="cell" data-wing="2">
-    <div class="no"><span>Аркадия · 05</span><span class="g">открыто</span></div>
-    <div class="art"><img src="office.PNG" alt="Пустой кабинет"></div>
-    <h2>Сегодня</h2>
-    <div class="meta">2061 · Триумвират Спасителей · научный сектор</div>
-    <p>Руководит наукой Аркадии. Развивает Купол и энергетическую инфраструктуру, управляет внешней разведкой, ведёт собственные исследования. Рассчитывает обеспечить государству окончательное технологическое превосходство над остальным миром.</p>
-    <p>В его кабинете нет ни одной личной вещи. Ни фотографии, ни книги, ни чашки. Стеклянный стол, кресло, окно на белый город.</p>
-    <p>Ему семьдесят один год. Он работает каждый день.</p>
-    <p class="note">Всё, что он построил, работает. Купол держит. «Изумруд» даёт ток. Государство стоит. Он был прав тогда — и он прав сейчас.</p>
-    <p class="note">Он только больше никогда не оставит дверь <span class="rd">там, где до неё сможет дотянуться человек</span>.</p>
-  </div>
-
 </div>
 
 <div id="nav">
@@ -387,12 +461,14 @@ body.dark .howto span{color:#8fa39c}
 <script>
 (function(){
   const track=document.getElementById('track'), body=document.body;
-  const tip=document.getElementById('tip'), wingL=document.querySelector('#wing span');
+  const tip=document.getElementById('tip');
   const steps=document.getElementById('steps');
+  const pos=document.getElementById('pos');
   const bg={hallLight:document.getElementById('hallLight'),hallDark:document.getElementById('hallDark'),
             cityLight:document.getElementById('cityLight'),cityDark:document.getElementById('cityDark')};
   const LUX=['0 лк','40 лк','100 лк'];
-  let i=0, lux=2, moved=false, wentDark=false;
+  const PANELS=['dome','reactor','atlant','pilgrims','network','wales','today'];
+  let i=0, lux=2, moved=false, wentDark=false, mode='history', panel='dome';
 
   const load = el => { if(el && el.dataset.src){ el.src = el.dataset.src; delete el.dataset.src; } };
   const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
@@ -440,17 +516,36 @@ body.dark .howto span{color:#8fa39c}
     const x=c.offsetLeft-(innerWidth-c.offsetWidth)/2;
     track.style.transform=`translateX(${-x}px)`;
     cs.forEach((el,k)=>el.classList.toggle('far',k!==i));
-    document.getElementById('pos').textContent=
-      String(i+1).padStart(2,'0')+' / '+String(cs.length).padStart(2,'0');
+    pos.textContent=String(i+1).padStart(2,'0')+' / '+String(cs.length).padStart(2,'0');
     [...steps.children].forEach((b,k)=>b.classList.toggle('on',k===i));
-    const wing=c.dataset.wing||'1';
-    wingL.textContent = wing==='2' ? 'Крыло II · Аркадия' : 'Крыло I · Архив';
-    bgFor(wing);
+    bgFor('1');
     const p=-x*0.05;
     Object.values(bg).forEach(el=>el.style.transform=`translate(calc(-50% + ${p}px),-50%)`);
     if(!moved){ moved=true; tip.classList.add('gone'); }
     body.classList.toggle('show-scold', !wentDark && c.classList.contains('door'));
   }
+
+  function showPanel(name){
+    panel=name;
+    const idx=PANELS.indexOf(name);
+    document.querySelectorAll('.dpanel').forEach(p=>p.classList.toggle('on',p.dataset.panel===name));
+    document.querySelectorAll('.dtabs button').forEach(b=>b.classList.toggle('on',b.dataset.panel===name));
+    pos.textContent=String(idx+1).padStart(2,'0')+' / '+String(PANELS.length).padStart(2,'0');
+  }
+  function panelStep(d){
+    showPanel(PANELS[Math.max(0,Math.min(PANELS.length-1,PANELS.indexOf(panel)+d))]);
+  }
+  document.querySelectorAll('.dtabs button').forEach(b=>b.onclick=()=>showPanel(b.dataset.panel));
+
+  function setMode(m){
+    mode=m;
+    body.classList.toggle('mode-present',m==='present');
+    document.querySelectorAll('#modesw button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+    bgFor(m==='present'?'2':'1');
+    if(m==='present') showPanel(panel); else go(i);
+    if(!moved){ moved=true; tip.classList.add('gone'); }
+  }
+  document.querySelectorAll('#modesw button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 
   function setLux(v){
     lux=Math.max(0,Math.min(2,v));
@@ -462,26 +557,27 @@ body.dark .howto span{color:#8fa39c}
     document.querySelector('#sl .k').style.left=(lux*50)+'%';
     document.querySelector('#sl .lit').style.width=(lux*50)+'%';
     document.getElementById('lux').textContent=LUX[lux];
-    setTimeout(()=>go(i),80);
+    setTimeout(()=>mode==='history'?go(i):bgFor('2'),80);
   }
 
-  document.getElementById('next').onclick=()=>go(i+1);
-  document.getElementById('prev').onclick=()=>go(i-1);
+  document.getElementById('next').onclick=()=>mode==='history'?go(i+1):panelStep(1);
+  document.getElementById('prev').onclick=()=>mode==='history'?go(i-1):panelStep(-1);
   addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight')go(i+1); if(e.key==='ArrowLeft')go(i-1);
+    if(e.key==='ArrowRight')mode==='history'?go(i+1):panelStep(1);
+    if(e.key==='ArrowLeft')mode==='history'?go(i-1):panelStep(-1);
     if(e.key==='ArrowUp')setLux(lux+1); if(e.key==='ArrowDown')setLux(lux-1);
   });
   let sx=null,sy=null;
   addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
   addEventListener('touchend',e=>{
-    if(sx===null)return;
+    if(sx===null||mode!=='history')return;
     const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)) go(i+(dx<0?1:-1));
     sx=sy=null;
   },{passive:true});
   let lock=false;
   addEventListener('wheel',e=>{
-    if(lock)return; lock=true; setTimeout(()=>lock=false,480);
+    if(lock||mode!=='history')return; lock=true; setTimeout(()=>lock=false,480);
     go(i+((e.deltaY>0||e.deltaX>0)?1:-1));
   },{passive:true});
 
@@ -491,8 +587,8 @@ body.dark .howto span{color:#8fa39c}
   sl.addEventListener('pointermove',e=>{if(dr)setLux(fromX(e.clientX));});
   sl.addEventListener('pointerup',()=>dr=false);
 
-  addEventListener('resize',()=>go(i));
-  buildSteps(); setLux(2); go(0);
+  addEventListener('resize',()=>{if(mode==='history')go(i);});
+  buildSteps(); setLux(2); go(0); setMode('history');
 })();
 </script>
 </body>
