@@ -148,6 +148,35 @@
 
   .ph{border:1px dashed rgba(var(--dr),0.5);background:rgba(var(--dr),0.05);color:rgba(var(--dr),0.9);
     font-size:11px;padding:12px;text-align:center;border-radius:4px;}
+
+  /* ══════════════════════════════════════════════════════
+     ДЕСКТОП (≥880px): страница версталась только под телефон —
+     без ограничения ширины фото в шапке обрезалось (object-fit:cover
+     против широкого-но-невысокого блока съедал лицо сверху), а текст
+     растягивался на весь монитор. Ограничиваем колонку и поднимаем
+     точку обрезки фото к лицу, мобильная вёрстка не трогается.
+     ══════════════════════════════════════════════════════ */
+  @media (min-width:880px){
+    section{max-width:700px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px;}
+
+    .hero-img-wrap img{object-position:center 15%;}
+    .hero-content{padding:24px 24px 32px;}
+    .hero-name{font-size:44px;}
+    .hero-role{font-size:15px;}
+
+    .intro-text{font-size:17px;}
+
+    .bio-track{display:grid;grid-template-columns:repeat(2,1fr);overflow:visible;padding:4px 0;margin:0;}
+    .bio-card{width:auto;max-width:none;}
+    .bio-card-body{height:auto;max-height:260px;}
+
+    .dir-card-body-inner{font-size:15px;}
+
+    .relations-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
+    .relations-grid .relation{margin-bottom:24px;}
+
+    .mansion-text, .philosophy-text{font-size:16px;}
+  }
 </style>
 </head>
 <body>
@@ -254,6 +283,7 @@
 <section>
   <div class="sec-eyebrow">ОТНОШЕНИЯ</div>
 
+  <div class="relations-grid">
   <div class="relation" style="--rc:var(--dr)">
     <div class="relation-portrait"><img src="01A74B83-8A81-4168-983E-193CBB08EB98.png" alt="Курт Вистнер"></div>
     <div>
@@ -284,6 +314,7 @@
       <div class="relation-name">Артур Остерман</div>
       <div class="relation-text">Противник Дорна ещё со времён старого мира, ныне — духовный и политический лидер Тенебриона. Рассматривает Аркадию как временное препятствие на пути к процветанию теократической державы.</div>
     </div>
+  </div>
   </div>
 </section>
 

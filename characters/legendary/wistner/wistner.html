@@ -212,6 +212,17 @@ body.night .door .scold{color:#8fa8a0}
   27%{opacity:1}38%{opacity:0}100%{opacity:0}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}
   #boot{display:none}.note{opacity:1;transform:none}}
+
+/* ── ДЕСКТОП: портретные фото в шапке резались по вертикали ──
+   ширина рамки была привязана к колонке (720px), а высота — к
+   max-height:74vh, так что на широких экранах box становился шире,
+   чем портретное фото, и cover срезал верх (лицо). Сужаем рамку под
+   портретную пропорцию и поднимаем точку обрезки — мобильная
+   вёрстка не трогается. */
+@media(min-width:880px){
+  .hero .frame{max-width:560px;margin:0 auto;}
+  .hero .frame img{object-position:center 12%;}
+}
 </style>
 </head>
 <body>
