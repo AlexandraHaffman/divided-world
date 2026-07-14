@@ -19,7 +19,9 @@
 html,body{height:100%;overflow:hidden;background:#050a08;font-family:var(--sans);
   -webkit-tap-highlight-color:transparent;user-select:none;touch-action:none;-webkit-font-smoothing:antialiased}
 
-#hall{position:fixed;inset:0;z-index:0;overflow:hidden;background:#0a1110}
+#hall{position:fixed;inset:0;z-index:0;overflow:hidden;
+  background:radial-gradient(120% 70% at 50% 100%,rgba(11,155,115,.16),transparent 60%),
+             linear-gradient(180deg,#050a08 0%,#0a1a15 55%,#0d221b 100%)}
 #hall img{position:absolute;top:50%;left:50%;height:120%;min-width:120%;object-fit:cover;
   transform:translate(-50%,-50%);opacity:0;transition:opacity 1.5s ease;will-change:transform}
 #hall img.on{opacity:1}
@@ -27,6 +29,8 @@ html,body{height:100%;overflow:hidden;background:#050a08;font-family:var(--sans)
   background:radial-gradient(75% 60% at 50% 50%,transparent 25%,rgba(3,8,6,.72) 100%)}
 body.dim #veil{opacity:.45}
 body.dark #veil{opacity:1}
+#grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 
 #track{position:fixed;top:0;left:0;height:100%;z-index:2;display:flex;align-items:center;
   padding:0 12vw;gap:7vw;will-change:transform;transition:transform .62s cubic-bezier(.22,.61,.36,1)}
@@ -51,7 +55,12 @@ body.dark .cell{background:rgba(13,24,20,.66);color:#e6efec;border-color:rgba(12
 
 .no{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--edge);display:flex;justify-content:space-between;gap:12px;margin-bottom:16px}
-.no .g{opacity:.55}
+.no .g{opacity:.6;display:inline-flex;align-items:center;gap:5px}
+.no .g::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;
+  box-shadow:0 0 6px currentColor;animation:pulse 2.4s ease-in-out infinite}
+.cell.hidden .no .g::before{animation:none;opacity:.3}
+.door .no .g::before{content:none}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 body.dark .no{color:var(--edge-br)}
 h1{font-size:clamp(30px,7vw,44px);font-weight:200;letter-spacing:-.02em;line-height:1;margin-bottom:6px}
 h1 em{display:block;font-style:normal;font-weight:500}
@@ -66,18 +75,37 @@ body.dark .meta{color:var(--edge-br)}
 
 .art{width:100%;margin-bottom:20px;position:relative;overflow:hidden;aspect-ratio:16/10;
   border:1px solid rgba(11,155,115,.22);background:rgba(255,255,255,.3)}
+.art::before,.art::after{content:"";position:absolute;width:16px;height:16px;
+  border:1.5px solid var(--edge-br);opacity:.6;pointer-events:none;z-index:2}
+.art::before{top:7px;left:7px;border-right:none;border-bottom:none}
+.art::after{bottom:7px;right:7px;border-left:none;border-top:none}
+.art .scan{position:absolute;left:0;right:0;top:-30%;height:22%;pointer-events:none;z-index:1;
+  background:linear-gradient(rgba(255,255,255,0),rgba(190,225,212,.22),rgba(255,255,255,0));
+  animation:scan 6s linear infinite}
+body.dark .art .scan{background:linear-gradient(rgba(0,0,0,0),rgba(0,212,147,.18),rgba(0,0,0,0))}
+@keyframes scan{0%{top:-30%}100%{top:110%}}
 .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.4s}
 .art .alt{opacity:0}
 body.dark .art .alt{opacity:1}
 body.dark .art{background:rgba(0,0,0,.4);border-color:rgba(11,155,115,.4)}
 .art.ph{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;
-  letter-spacing:.16em;text-transform:uppercase;color:#8fa39c;text-align:center;padding:16px}
+  letter-spacing:.16em;text-transform:uppercase;color:#5c6f68;text-align:center;padding:16px}
+body.dark .art.ph{color:#8fa39c}
 .art.bp{background:transparent;border:none}
 .art.bp img{object-fit:contain;mix-blend-mode:multiply;filter:contrast(2.3)}
 body.dark .art.bp img{filter:invert(1) contrast(2.3) sepia(.6) hue-rotate(100deg) saturate(3);mix-blend-mode:screen}
+.art.missing img{display:none}
+.art.missing{display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(135deg,rgba(11,155,115,.07) 0 2px,transparent 2px 14px),rgba(255,255,255,.3)}
+body.dark .art.missing{background:repeating-linear-gradient(135deg,rgba(0,212,147,.09) 0 2px,transparent 2px 14px),rgba(0,0,0,.4)}
+.art.missing .sig{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:#5c6f68;text-align:center;padding:16px;z-index:2}
+body.dark .art.missing .sig{color:#8fa39c}
+.art.missing .sig::before{content:"нет сигнала";display:block;font-size:8px;opacity:.55;
+  margin-bottom:6px;letter-spacing:.22em}
 
 .note{display:none;margin:14px 0 0;padding-left:13px;border-left:1px solid var(--edge);
-  font-size:13px;font-weight:300;line-height:1.62;color:#5d6f69;max-width:54ch}
+  font-size:13px;font-weight:300;line-height:1.62;color:#4a5c56;max-width:54ch}
 .note::before{content:"на полях";display:block;font-family:var(--mono);font-size:8.5px;
   letter-spacing:.18em;text-transform:uppercase;opacity:.6;margin-bottom:5px}
 body.dim .note,body.dark .note{display:block;animation:fade .9s ease-out}
@@ -108,14 +136,31 @@ body.dark .cell.hidden .row{display:flex}
 .door{background:transparent!important;backdrop-filter:none;-webkit-backdrop-filter:none;
   border:1px dashed rgba(11,155,115,.55)!important;box-shadow:none!important;text-align:center}
 .door::after{display:none}
+.door .no{color:#066b50}
 .door .q{font-size:19px;font-weight:300;line-height:1.5;margin-top:20px;color:var(--edge-br)}
 .scold{display:none;margin-top:22px!important;padding-top:18px;border-top:1px solid rgba(11,155,115,.35);
-  font-size:13px!important;font-style:italic;color:#8fa8a0!important}
+  font-size:13px!important;font-style:italic;color:#4a5c56!important}
+body.dark .scold{color:#8fa8a0!important}
 body.show-scold .scold{display:block;animation:fade 1.2s}
 
-#wing{position:fixed;z-index:20;top:calc(50px + env(safe-area-inset-top));left:0;right:0;text-align:center;
-  font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
-  color:rgba(255,255,255,.6);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.cell.cover{text-align:center}
+.cover .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--edge);opacity:.85;margin-bottom:14px}
+body.dark .cover .kicker{color:var(--edge-br)}
+.cover h1{margin:0 auto 14px}
+.cover p{margin-left:auto;margin-right:auto}
+.howto{display:flex;flex-direction:column;gap:9px;margin-top:22px;padding-top:18px;
+  border-top:1px solid rgba(11,155,115,.25)}
+.howto span{font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:#4a5c56;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.howto b{color:var(--edge-br);font-weight:600}
+body.dark .howto span{color:#8fa39c}
+
+#wing{position:fixed;z-index:20;top:calc(50px + env(safe-area-inset-top));left:0;right:0;
+  display:flex;justify-content:center;pointer-events:none}
+#wing span{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;
+  color:#fff;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);padding:7px 16px;border-radius:20px;white-space:nowrap}
 #hud{position:fixed;z-index:20;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;
   padding:16px 18px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
   background:linear-gradient(transparent,rgba(5,12,9,.6))}
@@ -129,19 +174,27 @@ body.show-scold .scold{display:block;animation:fade 1.2s}
 #lux,#pos{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#fff;
   text-shadow:0 1px 5px rgba(0,0,0,.7);white-space:nowrap}
 #pos{margin-left:auto}
+#steps{display:flex;gap:6px;align-items:center}
+#steps button{width:6px;height:6px;padding:0;border-radius:3px;border:none;cursor:pointer;
+  background:rgba(255,255,255,.35);transition:.3s}
+#steps button.on{width:16px;background:var(--edge-br);box-shadow:0 0 8px var(--edge-br)}
+@media(max-width:520px){#steps{display:none}}
 #nav{position:fixed;z-index:20;top:50%;transform:translateY(-50%);width:100%;display:flex;
   justify-content:space-between;padding:0 8px;pointer-events:none}
 #nav button{pointer-events:auto;width:44px;height:44px;border-radius:50%;cursor:pointer;
   background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);color:#fff;
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:17px;line-height:1}
 #nav button:active{background:rgba(255,255,255,.3)}
-#tip{position:fixed;z-index:20;top:calc(18px + env(safe-area-inset-top));left:0;right:0;text-align:center;
-  font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(255,255,255,.7);text-shadow:0 1px 5px rgba(0,0,0,.7);transition:opacity 1s}
+#tip{position:fixed;z-index:20;top:calc(18px + env(safe-area-inset-top));left:0;right:0;
+  display:flex;justify-content:center;pointer-events:none;transition:opacity 1s}
+#tip span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.14);padding:7px 16px;border-radius:20px}
 #tip.gone{opacity:0}
 #back{position:fixed;z-index:21;top:calc(14px + env(safe-area-inset-top));left:14px;
   font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:rgba(255,255,255,.75);text-decoration:none;text-shadow:0 1px 5px rgba(0,0,0,.7)}
+  color:#fff;text-decoration:none;background:rgba(4,12,10,.5);backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);padding:7px 14px;border-radius:20px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -154,12 +207,25 @@ body.show-scold .scold{display:block;animation:fade 1.2s}
   <img id="cityDark"  data-src="city-dark.PNG" alt="">
 </div>
 <div id="veil"></div>
+<div id="grain"></div>
 
 <a id="back" href="../../index.html">← назад</a>
-<div id="tip">Свайп вбок · регулятор света внизу</div>
-<div id="wing">Крыло I · Архив</div>
+<div id="tip"><span>Свайп вбок · регулятор света внизу</span></div>
+<div id="wing"><span>Крыло I · Архив</span></div>
 
 <div id="track">
+
+  <div class="cell cover" data-wing="1">
+    <div class="no"><span>Досье · 00</span><span class="g">открыто</span></div>
+    <p class="kicker">Архив спецблока «Грац» · Курт Вистнер</p>
+    <h1>Курт<em>Вистнер</em></h1>
+    <p class="lede">Он был прав в каждом прогнозе — и ошибся в одном: думал, что этого достаточно.</p>
+    <p>Это досье устроено как коридор его дела. Слева — стекло, за которым он держал угрозу. Справа — государство, которое он из этого построил. Между ними — дверь, которую однажды открыли без него.</p>
+    <div class="howto">
+      <span><b>‹ ›</b>шаг по коридору — свайп, стрелки или колесо мыши</span>
+      <span><b>свет</b>внизу — на полной яркости часть архива скрыта</span>
+    </div>
+  </div>
 
   <div class="cell" data-wing="1">
     <div class="no"><span>Камера 01</span><span class="g">открыто</span></div>
@@ -305,13 +371,15 @@ body.show-scold .scold{display:block;animation:fade 1.2s}
     <div class="rail"></div><div class="lit"></div><div class="k"></div>
   </div>
   <span id="lux">100 лк</span>
+  <div id="steps"></div>
   <span id="pos">01 / 09</span>
 </div>
 
 <script>
 (function(){
   const track=document.getElementById('track'), body=document.body;
-  const tip=document.getElementById('tip'), wingL=document.getElementById('wing');
+  const tip=document.getElementById('tip'), wingL=document.querySelector('#wing span');
+  const steps=document.getElementById('steps');
   const bg={hallLight:document.getElementById('hallLight'),hallDark:document.getElementById('hallDark'),
             cityLight:document.getElementById('cityLight'),cityDark:document.getElementById('cityDark')};
   const LUX=['0 лк','40 лк','100 лк'];
@@ -319,6 +387,30 @@ body.show-scold .scold{display:block;animation:fade 1.2s}
 
   const load = el => { if(el && el.dataset.src){ el.src = el.dataset.src; delete el.dataset.src; } };
   const cells = () => [...track.children].filter(c => getComputedStyle(c).display !== 'none');
+
+  document.querySelectorAll('.art').forEach(box=>box.insertAdjacentHTML('beforeend','<div class="scan"></div>'));
+  document.querySelectorAll('.art img').forEach(img=>{
+    img.addEventListener('error',()=>{
+      const box=img.closest('.art');
+      if(!box||box.classList.contains('missing'))return;
+      box.classList.add('missing');
+      if(!box.querySelector('.sig')){
+        const s=document.createElement('div');
+        s.className='sig'; s.textContent=img.alt||'';
+        box.appendChild(s);
+      }
+    });
+  });
+
+  function buildSteps(){
+    steps.innerHTML='';
+    cells().forEach((c,k)=>{
+      const b=document.createElement('button');
+      b.setAttribute('aria-label','К пункту '+(k+1));
+      b.onclick=()=>go(k);
+      steps.appendChild(b);
+    });
+  }
 
   function bgFor(wing){
     const key = (wing==='2'?'city':'hall') + (lux===0?'Dark':'Light');
@@ -336,6 +428,7 @@ body.show-scold .scold{display:block;animation:fade 1.2s}
     cs.forEach((el,k)=>el.classList.toggle('far',k!==i));
     document.getElementById('pos').textContent=
       String(i+1).padStart(2,'0')+' / '+String(cs.length).padStart(2,'0');
+    [...steps.children].forEach((b,k)=>b.classList.toggle('on',k===i));
     const wing=c.dataset.wing||'1';
     wingL.textContent = wing==='2' ? 'Крыло II · Аркадия' : 'Крыло I · Архив';
     bgFor(wing);
@@ -385,7 +478,7 @@ body.show-scold .scold{display:block;animation:fade 1.2s}
   sl.addEventListener('pointerup',()=>dr=false);
 
   addEventListener('resize',()=>go(i));
-  setLux(2); go(0);
+  buildSteps(); setLux(2); go(0);
 })();
 </script>
 </body>
