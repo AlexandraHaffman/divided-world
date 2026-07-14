@@ -48,12 +48,9 @@ function isLegendaryThreat(c) {
 const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner" };
 
 /* ══════════════════════════════════════════
-   ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров + реакции (counterapi.dev v1)
-   ТОП читает только реально открывавшихся персонажей (их slug'и копятся
-   в localStorage), маленькими пачками — иначе rate-limit даёт нули.
+   ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров (counterapi.dev v1)
    ══════════════════════════════════════════ */
 const COUNTER_NS = "divided-world-chars";
-const VIEWED_KEY = "dw-viewed-slugs";
 
 async function counterUp(key) {
   try {
@@ -62,27 +59,6 @@ async function counterUp(key) {
     return typeof data.count === "number" ? data.count : null;
   } catch (e) { return null; }
 }
-/* Возвращает null (а не 0), когда запрос реально не удался — 0 должно
-   означать «счётчик существует и равен нулю», а не «сервис не ответил»,
-   иначе showTopViewed() не отличит рейт-лимит от «пока нет данных». */
-async function counterGet(key) {
-  try {
-    const res = await fetch(`https://api.counterapi.dev/v1/${COUNTER_NS}/${encodeURIComponent(key)}`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return typeof data.count === "number" ? data.count : null;
-  } catch (e) { return null; }
-}
-
-function getViewedSlugs() {
-  try { return JSON.parse(localStorage.getItem(VIEWED_KEY)) || []; }
-  catch (e) { return []; }
-}
-function addViewedSlug(slug) {
-  const set = new Set(getViewedSlugs());
-  set.add(slug);
-  try { localStorage.setItem(VIEWED_KEY, JSON.stringify([...set])); } catch (e) {}
-}
 
 function injectFeedbackStyles() {
   if (document.getElementById("feedback-styles")) return;
@@ -90,97 +66,13 @@ function injectFeedbackStyles() {
   style.id = "feedback-styles";
   style.textContent = `
     .dossier-view-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a6a80;letter-spacing:0.1em;margin-top:8px;}
-    #top-viewed-overlay{position:fixed;inset:0;z-index:1200;background:rgba(5,8,15,0.93);
-      backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
-    .top-viewed-box{max-width:360px;width:100%;background:rgba(8,13,24,0.97);
-      border:1px solid rgba(79,195,247,0.3);border-radius:6px;padding:20px;
-      font-family:'Share Tech Mono',monospace;color:#b8cfe0;}
-    .top-viewed-title{font-size:10px;letter-spacing:0.2em;color:#4a6a80;margin-bottom:14px;text-transform:uppercase;}
-    .top-viewed-row{display:flex;justify-content:space-between;padding:7px 0;
-      border-bottom:1px solid rgba(79,195,247,0.1);font-size:13px;}
-    .top-viewed-row b{color:#4fc3f7;font-weight:700;}
-    .top-viewed-empty{font-size:12px;color:#4a6a80;line-height:1.6;}
-    .top-viewed-close{margin-top:16px;width:100%;padding:10px;background:transparent;
-      border:1px solid rgba(79,195,247,0.3);color:#4fc3f7;font-family:'Share Tech Mono',monospace;
-      letter-spacing:0.15em;cursor:pointer;border-radius:3px;text-transform:uppercase;}
-    .top-viewed-close:active{background:rgba(79,195,247,0.1);}
   `;
   document.head.appendChild(style);
-}
-
-/* Кнопка «ТОП» встраивается в ряд .filter-toggles-row сразу после «Мета-люди».
-   Класс .sort-toggle — тот же, что у соседних кнопок, поэтому стиль совпадает 1:1. */
-function injectTopButton() {
-  if (document.getElementById("top-viewed-btn")) return;
-  const meta = document.getElementById("meta-toggle");
-  if (!meta || !meta.parentNode) return;
-  const btn = document.createElement("button");
-  btn.id = "top-viewed-btn";
-  btn.className = "sort-toggle";
-  btn.innerHTML = `🏆 ТОП`;
-  btn.addEventListener("click", showTopViewed);
-  meta.parentNode.insertBefore(btn, meta.nextSibling);
-}
-
-/* Меньше параллельных запросов + пауза между пачками — раньше 6 счётчиков
-   разом нередко били по рейт-лимиту counterapi.dev, и ТОП всегда выглядел
-   пустым, даже если досье реально открывали. */
-async function getCountsBatched(slugs, batchSize = 3, delayMs = 300) {
-  const out = [];
-  for (let i = 0; i < slugs.length; i += batchSize) {
-    const batch = slugs.slice(i, i + batchSize);
-    const chunk = await Promise.all(batch.map(async slug => ({
-      slug, n: await counterGet(`view-${slug}`)
-    })));
-    out.push(...chunk);
-    if (i + batchSize < slugs.length) await new Promise(r => setTimeout(r, delayMs));
-  }
-  return out;
-}
-
-async function showTopViewed() {
-  const btn = document.getElementById("top-viewed-btn");
-  const original = btn.innerHTML;
-  btn.innerHTML = "…";
-  btn.disabled = true;
-
-  const viewedSlugs = getViewedSlugs().filter(slug => allChars.some(c => c._slug === slug));
-  const counts = await getCountsBatched(viewedSlugs);
-  const allFailed = viewedSlugs.length > 0 && counts.every(r => r.n === null);
-
-  const nameBySlug = Object.fromEntries(allChars.map(c => [c._slug, c.name]));
-  const rows = counts
-    .filter(r => typeof r.n === "number" && r.n > 0)
-    .map(r => ({ name: nameBySlug[r.slug] || r.slug, n: r.n }))
-    .sort((a, b) => b.n - a.n)
-    .slice(0, 10);
-
-  btn.innerHTML = original;
-  btn.disabled = false;
-
-  const emptyMsg = allFailed
-    ? "Сервис счётчиков сейчас недоступен.<br>Попробуй обновить страницу чуть позже."
-    : "Пока нет данных.<br>Открой несколько досье — и они появятся здесь.";
-
-  const overlay = document.createElement("div");
-  overlay.id = "top-viewed-overlay";
-  overlay.innerHTML = `
-    <div class="top-viewed-box">
-      <div class="top-viewed-title">Самые открываемые досье</div>
-      ${rows.length
-        ? rows.map((t, i) => `<div class="top-viewed-row"><span>${i + 1}. ${t.name}</span><b>${t.n}</b></div>`).join("")
-        : `<div class="top-viewed-empty">${emptyMsg}</div>`}
-      <button class="top-viewed-close">Закрыть</button>
-    </div>`;
-  document.body.appendChild(overlay);
-  overlay.querySelector(".top-viewed-close").addEventListener("click", () => overlay.remove());
-  overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
 }
 
 async function incrementViewCounter(c) {
   const el = document.getElementById("dossier-view-count");
   if (!el || !c._slug) return;
-  addViewedSlug(c._slug);
   el.textContent = "";
   const n = await counterUp(`view-${c._slug}`);
   if (n !== null) el.textContent = `👁 ПРОСМОТРОВ: ${n}`;
@@ -435,7 +327,6 @@ async function loadCharacters() {
     buildTierFilters();
     renderGrid(currentFiltered);
     document.getElementById("count-total").textContent = allChars.length;
-    injectTopButton();
   } catch (e) {
     document.getElementById("grid").innerHTML =
       `<div class="empty-state">ОШИБКА: ${e.message}<br><br>Попробуйте обновить страницу через минуту.</div>`;
@@ -622,8 +513,6 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeDossier();
     if (typeof closeCompare === "function") closeCompare();
-    const ov = document.getElementById("top-viewed-overlay");
-    if (ov) ov.remove();
   }
 });
 

@@ -78,6 +78,23 @@ function pluralRu(n, one, few, many) {
   return many;
 }
 
+/* Пол персонажа для согласования по роду: 'f' | 'm' (по умолчанию мужской). */
+function genderOf(c) {
+  return /^жен/i.test((c && c.gender || "").trim()) ? "f" : "m";
+}
+
+/* Короткое имя — только личное имя без фамилии, для повторных упоминаний.
+   Одиночные имена («Маро», «Барон») и эпитеты-словосочетания, где второе
+   слово со строчной буквы («Смотрящий в бездну», «Вестник тишины»), не
+   режем — там сокращать нечего и получится нелепо. */
+function firstNameRu(c) {
+  const n = (c && c.name || "").trim();
+  const parts = n.split(/\s+/);
+  if (parts.length < 2) return n;
+  if (!/^[А-ЯЁA-Z]/.test(parts[1])) return n;
+  return parts[0];
+}
+
 /* ══════════════════════════════════════════
    ЦВЕТА: разведение совпадающих фракций
    ══════════════════════════════════════════ */
@@ -218,7 +235,7 @@ const PHRASE_BANK_PATH = "analysis-phrases.json";
 let phraseBankPromise = null;
 const FALLBACK_PHRASES = {
   combat_leader: ["⚔ <b>{name}</b> сильнее в прямом столкновении."],
-  shadow_leader: ["🌑 <b>{name}</b> — теневой игрок: тень и хаос на его стороне."],
+  shadow_leader: ["🌑 <b>{name}</b> — теневой игрок: тень и хаос на {g|name|его|её} стороне."],
   mind_leader: ["🧠 <b>{name}</b> действует умом и влиянием, а не силой."],
   stat_gap: ["↔ Наибольшая пропасть — в {stat}: {hi} против {lo} (<b>{name}</b> впереди)."],
   specialist_generalist: ["◆ <b>{specialist}</b> — узкий специалист с резкими пиками, <b>{generalist}</b> ровнее и универсальнее."],
@@ -226,7 +243,7 @@ const FALLBACK_PHRASES = {
   close_power: ["⚖ <b>{a}</b> и <b>{b}</b> подозрительно близки по силе — исход решит случай."],
   same_faction: ["👥 {names} — из одной фракции ({faction}), это скорее внутреннее соперничество."],
   tier_gap: ["🎖 <b>{highName}</b> ({highTier}) на голову выше по значимости, чем <b>{lowName}</b> ({lowTier})."],
-  status_mix: ["💀 <b>{deadName}</b> уже мёртв — сравнение с живым <b>{aliveName}</b> скорее теоретическое."],
+  status_mix: ["💀 <b>{deadName}</b> уже {g|deadName|мёртв|мертва} — сравнение с живым <b>{aliveName}</b> скорее теоретическое."],
   threat_gap: ["📈 Разница в угрозе — {diff} пунктов в пользу <b>{name}</b>."]
 };
 
@@ -239,12 +256,45 @@ function loadPhraseBank() {
   return phraseBankPromise;
 }
 
-/* Взять случайный шаблон из категории и подставить переменные {ключ} */
-function pickPhrase(bank, category, vars) {
+/* Случайный шаблон из категории (без подстановки — её делает renderPhrase). */
+function pickTemplate(bank, category) {
   const arr = (bank && bank[category] && bank[category].length) ? bank[category] : (FALLBACK_PHRASES[category] || []);
   if (!arr.length) return null;
-  let tpl = arr[Math.floor(Math.random() * arr.length)];
-  Object.keys(vars || {}).forEach(k => { tpl = tpl.split(`{${k}}`).join(vars[k]); });
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/* Рендер одной фразы с учётом:
+   • имён-слотов (slots: имя-слота → индекс персонажа) — при ПЕРВОМ упоминании
+     персонажа в блоке подставляется полное имя, при повторном — только личное
+     имя (общий Set `seen` копится между строками в порядке показа);
+   • гендерных токенов {g|слот|муж|жен} — форма выбирается по полу персонажа,
+     привязанного к слоту;
+   • группы имён (groupIdxs) для {names} и обычных подстановок (extra). */
+function renderPhrase(tpl, entry, chars, seen) {
+  const slots = entry.slots || {};
+  const extra = entry.extra || {};
+
+  const nameFor = idx => {
+    const c = chars[idx];
+    if (seen.has(idx)) return firstNameRu(c);
+    seen.add(idx);
+    return c.name;
+  };
+
+  // 1) гендерные токены {g|слот|муж.форма|жен.форма} — не расходуют «упоминание»
+  tpl = tpl.replace(/\{g\|([a-zA-Zа-яёА-ЯЁ]+)\|([^|}]*)\|([^}]*)\}/g, (_, slot, m, f) => {
+    const idx = slots[slot];
+    return (idx != null && genderOf(chars[idx]) === "f") ? f : m;
+  });
+
+  // 2) обычные токены слева направо — так «первое упоминание» = порядку чтения
+  tpl = tpl.replace(/\{([a-zA-Z]+)\}/g, (whole, key) => {
+    if (key in slots) return nameFor(slots[key]);
+    if (key === "names" && entry.groupIdxs) return joinNamesRu(entry.groupIdxs.map(nameFor));
+    if (key in extra) return String(extra[key]);
+    return whole;
+  });
+
   return tpl;
 }
 
@@ -266,10 +316,11 @@ function joinNamesRu(names) {
 const TIER_RANK = { divine: 0, legendary: 1, epic: 2, rare: 3, common: 4 };
 
 /* Авто-вердикт словами: собираем ВСЕ сработавшие условия, перемешиваем,
-   показываем до 5 — каждый раз с новой случайной формулировкой из банка. */
+   показываем до 5 — каждый раз с новой случайной формулировкой из банка.
+   Имена вводятся полностью один раз, потом сокращаются; формы согласуются
+   по полу. */
 async function autoVerdictLines(chars) {
   const bank = await loadPhraseBank();
-  const nm = i => chars[i].name;
   const triggered = [];
 
   const soloLeader = keys => {
@@ -281,9 +332,9 @@ async function autoVerdictLines(chars) {
   };
 
   let li;
-  if ((li = soloLeader(["combat","meta_power"])) !== null)        triggered.push({ cat: "combat_leader", vars: { name: nm(li) } });
-  if ((li = soloLeader(["stealth","unpredictability"])) !== null) triggered.push({ cat: "shadow_leader", vars: { name: nm(li) } });
-  if ((li = soloLeader(["intelligence","influence"])) !== null)   triggered.push({ cat: "mind_leader", vars: { name: nm(li) } });
+  if ((li = soloLeader(["combat","meta_power"])) !== null)        triggered.push({ cat: "combat_leader", slots: { name: li } });
+  if ((li = soloLeader(["stealth","unpredictability"])) !== null) triggered.push({ cat: "shadow_leader", slots: { name: li } });
+  if ((li = soloLeader(["intelligence","influence"])) !== null)   triggered.push({ cat: "mind_leader", slots: { name: li } });
 
   // наибольший разрыв по одному стату
   const gapDefs = [
@@ -294,14 +345,14 @@ async function autoVerdictLines(chars) {
   gapDefs.forEach(([lbl, k]) => {
     const vals = chars.map(c => st(c, k));
     const hi = Math.max(...vals), lo = Math.min(...vals), d = hi - lo;
-    if (d > gap.d) gap = { d, lbl, hi, lo, who: nm(vals.indexOf(hi)) };
+    if (d > gap.d) gap = { d, lbl, hi, lo, whoIdx: vals.indexOf(hi) };
   });
-  if (gap.d >= 4) triggered.push({ cat: "stat_gap", vars: { stat: gap.lbl, hi: gap.hi, lo: gap.lo, name: gap.who } });
+  if (gap.d >= 4) triggered.push({ cat: "stat_gap", slots: { name: gap.whoIdx }, extra: { stat: gap.lbl, hi: gap.hi, lo: gap.lo } });
 
   // специалист vs универсал
   const sp = chars.map(statSpread);
   const gi = sp.indexOf(Math.max(...sp)), lI = sp.indexOf(Math.min(...sp));
-  if (gi !== lI) triggered.push({ cat: "specialist_generalist", vars: { specialist: nm(gi), generalist: nm(lI) } });
+  if (gi !== lI) triggered.push({ cat: "specialist_generalist", slots: { specialist: gi, generalist: lI } });
 
   // доминирование ИЛИ подозрительное равенство сил
   const ps = chars.map(powerScore);
@@ -309,17 +360,17 @@ async function autoVerdictLines(chars) {
   const rest = ps.filter((_, i) => i !== pidx);
   const second = rest.length ? Math.max(...rest) : 0;
   if (pmax > 0 && pmax >= second * 1.4) {
-    triggered.push({ cat: "dominance", vars: { name: nm(pidx) } });
+    triggered.push({ cat: "dominance", slots: { name: pidx } });
   } else if (pmax > 0 && second > 0 && (pmax - second) / pmax < 0.08) {
     const sorted = chars.map((c, i) => ({ i, p: ps[i] })).sort((a, b) => b.p - a.p);
-    triggered.push({ cat: "close_power", vars: { a: nm(sorted[0].i), b: nm(sorted[1].i) } });
+    triggered.push({ cat: "close_power", slots: { a: sorted[0].i, b: sorted[1].i } });
   }
 
   // общая фракция
   const factionGroups = {};
   chars.forEach((c, i) => { const f = c.faction || "—"; (factionGroups[f] = factionGroups[f] || []).push(i); });
   Object.entries(factionGroups).forEach(([f, idxs]) => {
-    if (idxs.length >= 2) triggered.push({ cat: "same_faction", vars: { faction: f, names: joinNamesRu(idxs.map(nm)) } });
+    if (idxs.length >= 2) triggered.push({ cat: "same_faction", groupIdxs: idxs, extra: { faction: f } });
   });
 
   // разрыв тиров (например legendary против common)
@@ -328,23 +379,26 @@ async function autoVerdictLines(chars) {
   const minR = Math.min(...ranks), maxR = Math.max(...ranks);
   if (maxR - minR >= 2) {
     const hiI = ranks.indexOf(minR), loI = ranks.indexOf(maxR);
-    triggered.push({ cat: "tier_gap", vars: { highName: nm(hiI), lowName: nm(loI), highTier: tiers[hiI].toUpperCase(), lowTier: tiers[loI].toUpperCase() } });
+    triggered.push({ cat: "tier_gap", slots: { highName: hiI, lowName: loI }, extra: { highTier: tiers[hiI].toUpperCase(), lowTier: tiers[loI].toUpperCase() } });
   }
 
   // живой против мёртвого
   const deadFlags = chars.map((c, i) => ({ i, dead: (c.status || "").trim() === "Мёртв" }));
   const deadOnes = deadFlags.filter(x => x.dead), aliveOnes = deadFlags.filter(x => !x.dead);
   if (deadOnes.length && aliveOnes.length) {
-    triggered.push({ cat: "status_mix", vars: { deadName: nm(deadOnes[0].i), aliveName: nm(aliveOnes[0].i) } });
+    triggered.push({ cat: "status_mix", slots: { deadName: deadOnes[0].i, aliveName: aliveOnes[0].i } });
   }
 
   // разрыв по чистой угрозе (threat_level)
   const threats = chars.map(c => c.threat_level || 0);
   const tmax = Math.max(...threats), tmin = Math.min(...threats), tdiff = tmax - tmin;
-  if (tdiff >= 15) triggered.push({ cat: "threat_gap", vars: { name: nm(threats.indexOf(tmax)), diff: tdiff } });
+  if (tdiff >= 15) triggered.push({ cat: "threat_gap", slots: { name: threats.indexOf(tmax) }, extra: { diff: tdiff, pts: pluralRu(tdiff, "пункт", "пункта", "пунктов") } });
 
+  const seen = new Set();
   const chosen = shuffleArr(triggered).slice(0, 5);
-  return chosen.map(t => pickPhrase(bank, t.cat, t.vars)).filter(Boolean);
+  return chosen
+    .map(t => { const tpl = pickTemplate(bank, t.cat); return tpl ? renderPhrase(tpl, t, chars, seen) : null; })
+    .filter(Boolean);
 }
 
 /* ── Радар с наложением (пунктир для разведённых цветов) ── */
@@ -417,10 +471,29 @@ function buildDuelBlock(chars, cols) {
     const p1 = 100 - p0;
     const lead = p0 >= p1 ? 0 : 1;
     const diff = Math.abs(p0 - p1);
+    const w = `<b>${chars[lead].name}</b>`;
+    const f = genderOf(chars[lead]) === "f";
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
     let verdict;
-    if (diff < 8)       verdict = "почти равны — решит случай и условия";
-    else if (diff < 24) verdict = `перевес у <b>${chars[lead].name}</b>`;
-    else                verdict = `уверенная победа <b>${chars[lead].name}</b>`;
+    if (diff < 8) {
+      verdict = pick([
+        "почти равны — исход решит случай и условия",
+        "силы зеркальны: в реальном бою всё решат нервы",
+        "паритет — любой перекос, и чаша качнётся в другую сторону"
+      ]);
+    } else if (diff < 24) {
+      verdict = pick([
+        `небольшой перевес у ${w}`,
+        `${w} вероятнее возьмёт верх`,
+        `в затяжной схватке ${w} скорее дожмёт соперника`
+      ]);
+    } else {
+      verdict = pick([
+        `уверенная победа ${w}`,
+        `${w} выйдет ${f ? "победительницей" : "победителем"} без особого труда`,
+        `здесь ${w} — безоговорочн${f ? "ая фаворитка" : "ый фаворит"}, разрыв огромен`
+      ]);
+    }
     return `<div class="compare-verdict">
       <div class="cv-title">SYS.DUEL // ВЕРОЯТНЫЙ ИСХОД</div>
       <div class="cv-duel-nums">
