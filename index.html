@@ -146,12 +146,73 @@
     50% { opacity: 0.3; }
   }
 
+  /* ── INTRO BUTTON ── */
+  .intro-section { padding: 20px 16px 0; }
+
+  .intro-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(90deg, rgba(79,195,247,0.12), rgba(13,19,32,0.7));
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--blue);
+    color: var(--text);
+    text-decoration: none;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .intro-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 3px;
+    background: var(--blue);
+    box-shadow: 0 0 12px var(--blue);
+  }
+
+  .intro-btn:hover, .intro-btn:active {
+    background: linear-gradient(90deg, rgba(79,195,247,0.2), rgba(13,19,32,0.8));
+  }
+
+  .intro-btn-icon { font-size: 22px; flex-shrink: 0; }
+
+  .intro-btn-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .intro-btn-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #fff;
+  }
+
+  .intro-btn-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+  }
+
+  .intro-btn-arrow {
+    font-size: 18px;
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+
   /* ── NAV ── */
   .nav-section { padding: 20px 16px 0; }
 
   .nav-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
   }
 
@@ -162,10 +223,10 @@
     color: var(--text);
     font-family: 'Rajdhani', sans-serif;
     font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 2px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 16px 10px;
+    padding: 14px 6px;
     cursor: pointer;
     transition: all 0.2s;
     text-align: center;
@@ -181,7 +242,7 @@
 
   .btn-icon {
     display: block;
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 6px;
   }
 
@@ -451,22 +512,16 @@
   </div>
 </header>
 
-<!-- NAV -->
-<div class="nav-section">
-  <div class="nav-grid">
-    <a href="characters/index.html" class="nav-btn">
-      <span class="btn-icon">👤</span>ПЕРСОНАЖИ
-    </a>
-    <a href="factions/index.html" class="nav-btn">
-      <span class="btn-icon">🛡️</span>ФРАКЦИИ
-    </a>
-    <a href="locations/index.html" class="nav-btn">
-      <span class="btn-icon">🗺️</span>ЛОКАЦИИ
-    </a>
-    <a href="timeline/index.html" class="nav-btn">
-      <span class="btn-icon">📜</span>ИСТОРИЯ
-    </a>
-  </div>
+<!-- INTRO -->
+<div class="intro-section">
+  <a href="intro/index.html" class="intro-btn">
+    <span class="intro-btn-icon">📡</span>
+    <span class="intro-btn-text">
+      <span class="intro-btn-title">БРИФИНГ</span>
+      <span class="intro-btn-sub">Краткая сводка по миру и системе</span>
+    </span>
+    <span class="intro-btn-arrow">→</span>
+  </a>
 </div>
 
 <!-- FACTION SLIDER -->
@@ -581,6 +636,21 @@
 
   </div>
   <div class="slider-dots" id="sliderDots"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav-section">
+  <div class="nav-grid">
+    <a href="characters/index.html" class="nav-btn">
+      <span class="btn-icon">👤</span>ПЕРСОНАЖИ
+    </a>
+    <a href="locations/index.html" class="nav-btn">
+      <span class="btn-icon">🗺️</span>ЛОКАЦИИ
+    </a>
+    <a href="timeline/index.html" class="nav-btn">
+      <span class="btn-icon">📜</span>ИСТОРИЯ
+    </a>
+  </div>
 </div>
 
 <!-- STATS -->
