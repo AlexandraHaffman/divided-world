@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080c12">
+<title>Брифинг // Разделённый мир</title>
+<link rel="preload" as="image" href="./assets/earth-2061.webp">
+<link rel="stylesheet" href="briefing.css">
+</head>
+<body class="briefing-page">
+
+<!-- ══════════════ STICKY TOP BAR ══════════════ -->
+<header class="brief-bar">
+  <div class="brief-bar-row">
+    <a href="../index.html" class="brief-back"><span class="arrow">←</span>НАЗАД</a>
+    <div>
+      <div class="brief-bar-title">БРИФИНГ <b>// 2061</b></div>
+      <div class="brief-bar-sys">SYS.BRIEFING // PUBLIC CLEARANCE</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ PROGRESS RAIL ══════════════ -->
+<nav class="brief-progress" aria-hidden="true" id="progressRail">
+  <span class="p-count" id="progressCount">01 / 04</span>
+  <span class="p-dot active" data-i="0"></span>
+  <span class="p-dot" data-i="1"></span>
+  <span class="p-dot" data-i="2"></span>
+  <span class="p-dot" data-i="3"></span>
+</nav>
+
+<main>
+
+  <!-- ══════════════ 01 — ГДЕ МЫ / ЗЕМЛЯ ══════════════ -->
+  <section class="brief-section sec-earth" id="sec-0" data-section="0">
+    <div class="earth-stage">
+      <img class="earth-img" id="earthImg" src="./assets/earth-2061.webp"
+           alt="Земля из космоса, 2061 год" width="1122" height="1402"
+           fetchpriority="high" decoding="async">
+      <div class="img-fallback">VISUAL DATA UNAVAILABLE</div>
+      <div class="earth-veil"></div>
+
+      <!-- interface overlay -->
+      <svg class="earth-svg" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="mkGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#4fc3f7" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#4fc3f7" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- orbital arcs -->
+        <ellipse class="orbit-line" cx="250" cy="600" rx="230" ry="230"
+                 fill="none" stroke="rgba(79,195,247,0.28)" stroke-width="1"
+                 stroke-dasharray="3 7"/>
+        <ellipse class="orbit-line" cx="250" cy="600" rx="300" ry="298"
+                 fill="none" stroke="rgba(79,195,247,0.16)" stroke-width="1"
+                 stroke-dasharray="2 12"/>
+        <!-- radar ring + sweep -->
+        <g transform="translate(250,600)">
+          <circle r="70" fill="none" stroke="rgba(79,195,247,0.35)" stroke-width="1"/>
+          <circle r="46" fill="none" stroke="rgba(79,195,247,0.22)" stroke-width="1"/>
+          <circle r="22" fill="none" stroke="rgba(79,195,247,0.18)" stroke-width="1"/>
+          <line x1="-70" y1="0" x2="70" y2="0" stroke="rgba(79,195,247,0.15)" stroke-width="1"/>
+          <line x1="0" y1="-70" x2="0" y2="70" stroke="rgba(79,195,247,0.15)" stroke-width="1"/>
+          <line class="radar-sweep" x1="0" y1="0" x2="0" y2="-70"
+                stroke="rgba(79,195,247,0.6)" stroke-width="1.5"/>
+        </g>
+        <!-- glowing markers -->
+        <g class="earth-marker"><circle cx="292" cy="470" r="9" fill="url(#mkGlow)"/><circle cx="292" cy="470" r="2" fill="#fff"/></g>
+        <g class="earth-marker"><circle cx="330" cy="560" r="8" fill="url(#mkGlow)"/><circle cx="330" cy="560" r="2" fill="#fff"/></g>
+        <g class="earth-marker"><circle cx="210" cy="640" r="8" fill="url(#mkGlow)"/><circle cx="210" cy="640" r="2" fill="#8fd8ff"/></g>
+        <g class="earth-marker"><circle cx="300" cy="700" r="7" fill="url(#mkGlow)"/><circle cx="300" cy="700" r="1.6" fill="#fff"/></g>
+        <g class="earth-marker"><circle cx="150" cy="540" r="7" fill="url(#mkGlow)"/><circle cx="150" cy="540" r="1.6" fill="#ffb060"/></g>
+        <!-- coordinate ticks -->
+        <path d="M300 462 h26 M326 462 v10" fill="none" stroke="rgba(79,195,247,0.5)" stroke-width="0.8"/>
+        <text class="earth-caption" x="329" y="459">GLOBAL NETWORK: OFFLINE</text>
+        <path d="M338 560 h22" fill="none" stroke="rgba(79,195,247,0.4)" stroke-width="0.8"/>
+        <text class="earth-caption" x="256" y="600" text-anchor="start">OLD BORDERS: OBSOLETE</text>
+        <text class="earth-caption" x="20" y="700">ACTIVE SYSTEMS: MULTIPLE</text>
+        <text class="earth-caption" x="20" y="712">GRID REF 41.6N // 2061.07</text>
+      </svg>
+
+      <!-- headline text over the free space -->
+      <div class="earth-text">
+        <div class="sec-marker reveal">01 // ТЕКУЩЕЕ СОСТОЯНИЕ</div>
+        <h1 class="earth-hero reveal">ЗЕМЛЯ.<span class="hl">2061 ГОД.</span></h1>
+        <p class="sec-body reveal">Старый мировой порядок разрушен. Планета разделена между новыми державами, закрытыми территориями и зонами распада.</p>
+        <div class="sys-line reveal"><span class="live"></span>СТАТУС ЦИВИЛИЗАЦИИ: ФРАГМЕНТИРОВАНА</div>
+      </div>
+
+      <div class="earth-scrollhint">
+        <span>ПРОКРУТИТЕ</span>
+        <span class="chev">▼</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 02 — МЕТА-ФАКТОР ══════════════ -->
+  <section class="brief-section" id="sec-1" data-section="1">
+    <div class="sec-marker reveal">02 // МЕТА-ФАКТОР</div>
+    <h2 class="sec-title reveal" style="font-size:clamp(26px,8vw,36px)">ЧЕЛОВЕК<br>БОЛЬШЕ НЕ ЯВЛЯЕТСЯ<br><span class="hl">ПРЕДЕЛОМ</span></h2>
+    <p class="sec-body reveal">В мире появились люди, чьи способности выходят за пределы человеческой биологии. Они способны воздействовать на разум, материю, энергию и окружающую среду.</p>
+    <p class="sec-body dim reveal">Большинство мета-людей не являются живым оружием. Но сильнейшие из них способны менять судьбу городов, государств и целых регионов.</p>
+
+    <div class="scanner reveal">
+      <!-- scanner frame -->
+      <div class="scan-frame" id="scanFrame">
+        <img class="scan-human" src="./assets/meta-human.webp" alt="Схема мета-человека"
+             width="589" height="1334" loading="lazy" decoding="async">
+        <div class="img-fallback">NO SIGNAL</div>
+        <svg class="scan-svg" viewBox="0 0 100 226" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="3.4"/>
+            </filter>
+            <radialGradient id="zg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#8fe0ff" stop-opacity="0.95"/>
+              <stop offset="60%" stop-color="#4fc3f7" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#4fc3f7" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <!-- MENTAL: head + brain + upper spine -->
+          <g data-zone="mental" class="on">
+            <circle cx="50" cy="15" r="15" fill="url(#zg)" filter="url(#soft)"/>
+            <rect x="46" y="24" width="8" height="20" rx="4" fill="url(#zg)" filter="url(#soft)"/>
+          </g>
+          <!-- PHYSICAL: whole contour + limbs -->
+          <g data-zone="physical">
+            <ellipse cx="50" cy="120" rx="30" ry="96" fill="url(#zg)" opacity="0.5" filter="url(#soft)"/>
+            <circle cx="16" cy="120" r="10" fill="url(#zg)" filter="url(#soft)"/>
+            <circle cx="84" cy="120" r="10" fill="url(#zg)" filter="url(#soft)"/>
+            <circle cx="38" cy="176" r="10" fill="url(#zg)" filter="url(#soft)"/>
+            <circle cx="62" cy="176" r="10" fill="url(#zg)" filter="url(#soft)"/>
+          </g>
+          <!-- ENERGETIC: chest, heart, spine, hands -->
+          <g data-zone="energetic">
+            <circle cx="50" cy="58" r="15" fill="url(#zg)" filter="url(#soft)"/>
+            <rect x="47" y="30" width="6" height="70" rx="3" fill="url(#zg)" filter="url(#soft)"/>
+            <circle cx="14" cy="122" r="9" fill="url(#zg)" filter="url(#soft)"/>
+            <circle cx="86" cy="122" r="9" fill="url(#zg)" filter="url(#soft)"/>
+          </g>
+          <!-- ENVIRONMENTAL: rings + surrounding field -->
+          <g data-zone="environmental">
+            <circle cx="50" cy="113" r="42" fill="none" stroke="#4fc3f7" stroke-width="0.7" opacity="0.7"/>
+            <circle cx="50" cy="113" r="55" fill="none" stroke="#4fc3f7" stroke-width="0.6" opacity="0.5" stroke-dasharray="2 4"/>
+            <circle cx="50" cy="113" r="68" fill="none" stroke="#4fc3f7" stroke-width="0.5" opacity="0.35" stroke-dasharray="1 6"/>
+            <circle cx="50" cy="113" r="80" fill="url(#zg)" opacity="0.18" filter="url(#soft)"/>
+          </g>
+        </svg>
+        <div class="scan-line"></div>
+        <div class="scan-meta" id="scanMeta">OBJ.CLASS: META<br>SCAN: MENTAL</div>
+        <div class="scan-obj"><span>ID-███</span><span id="scanObj">04-M</span></div>
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+      </div>
+
+      <!-- category controls + readout -->
+      <div class="scan-panel">
+        <div class="scan-tabs" id="scanTabs">
+          <button class="scan-tab active" data-cat="mental"><span class="num">01</span>МЕНТАЛЬНОЕ</button>
+          <button class="scan-tab" data-cat="physical"><span class="num">02</span>ФИЗИЧЕСКОЕ</button>
+          <button class="scan-tab" data-cat="energetic"><span class="num">03</span>ЭНЕРГЕТ.</button>
+          <button class="scan-tab" data-cat="environmental"><span class="num">04</span>СРЕДОВОЕ</button>
+        </div>
+        <div class="scan-readout">
+          <div class="r-head" id="scanHead">// МЕНТАЛЬНОЕ</div>
+          <div class="r-text" id="scanText">Воздействие на восприятие, память, эмоции и сознание.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 03 — ЦЕПЬ КАТАСТРОФ ══════════════ -->
+  <section class="collapse" id="sec-2" data-section="2">
+    <div class="collapse-head">
+      <div class="sec-marker reveal">03 // ЦЕПЬ КАТАСТРОФ</div>
+      <h2 class="sec-title reveal" style="font-size:clamp(28px,9vw,40px)">СТАРЫЙ МИР<br><span class="hl">НЕ ВЫДЕРЖАЛ</span></h2>
+    </div>
+
+    <!-- sticky panorama -->
+    <div class="collapse-sticky">
+      <div class="collapse-viewport" id="collapseViewport">
+        <div class="collapse-track" id="collapseTrack" style="position:absolute;top:0;left:0;height:100%;">
+          <img class="collapse-img" id="collapseImg" src="./assets/collapse-timeline.webp"
+               alt="Четыре этапа катастрофы" width="2508" height="627" loading="lazy" decoding="async">
+        </div>
+        <svg class="collapse-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="0" y1="0.5" x2="100" y2="0.5" stroke="rgba(79,195,247,0.2)" stroke-width="0.4"/>
+        </svg>
+        <div class="collapse-vignette"></div>
+        <div class="collapse-hud">
+          <span class="stage-code" id="collapseCode">01 // ПОЯВЛЕНИЕ</span>
+          <span class="stage-of" id="collapseOf">STAGE 1 / 4</span>
+        </div>
+        <div class="collapse-progress"><div class="fill" id="collapseFill"></div></div>
+        <div class="img-fallback">VISUAL DATA UNAVAILABLE</div>
+      </div>
+    </div>
+
+    <!-- scroll steps -->
+    <div class="collapse-steps" id="collapseSteps">
+      <div class="collapse-step active" data-step="0">
+        <div class="st-code">01 // ПОЯВЛЕНИЕ</div>
+        <div class="st-title">Появление</div>
+        <p class="st-text">Мета-люди стали фактором, к которому старый мир оказался не готов.</p>
+      </div>
+      <div class="collapse-step" data-step="1">
+        <div class="st-code">02 // КОНТРОЛЬ</div>
+        <div class="st-title">Контроль</div>
+        <p class="st-text">Государства начали изучать, использовать и изолировать их.</p>
+      </div>
+      <div class="collapse-step" data-step="2" data-crisis>
+        <div class="st-code">03 // КРИЗИС</div>
+        <div class="st-title">Кризис</div>
+        <p class="st-text">Восстания, мета-всплески и войны разрушили прежний баланс сил.</p>
+      </div>
+      <div class="collapse-step" data-step="3">
+        <div class="st-code">04 // РАЗДЕЛЕНИЕ</div>
+        <div class="st-title">Разделение</div>
+        <p class="st-text">На руинах старого порядка возникли новые государства и системы власти.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 04 — ТИПЫ ТЕРРИТОРИЙ ══════════════ -->
+  <section class="brief-section" id="sec-3" data-section="3">
+    <div class="sec-marker reveal">04 // ТИПЫ ТЕРРИТОРИЙ</div>
+    <h2 class="sec-title reveal" style="font-size:clamp(26px,8vw,38px)">МИР БЕЗ<br><span class="hl">ЕДИНОГО БУДУЩЕГО</span></h2>
+    <p class="sec-body reveal">После катастроф человечество не смогло создать новую общую систему. Одни общества выбрали технологии и контроль. Другие — веру, изоляцию, восстановление, личную власть сверхлюдей или простое выживание.</p>
+
+    <div class="zones-map-wrap reveal" id="zonesWrap">
+      <div class="zones-track" id="zonesTrack" style="position:absolute;top:0;left:0;height:100%;">
+        <img class="zones-map" id="zonesMap" src="./assets/world-zones.webp"
+             alt="Аналитическая карта состояния территорий" width="1672" height="941"
+             loading="lazy" decoding="async"
+             style="height:100%;width:auto;max-width:none;object-fit:cover;position:static;">
+        <svg class="zones-svg" id="zonesSvg" viewBox="0 0 1672 941" preserveAspectRatio="none"
+             style="width:auto;height:100%;position:absolute;top:0;left:0;">
+          <defs>
+            <filter id="mapSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="26"/></filter>
+          </defs>
+          <!-- STABLE (blue/white): North America + Europe -->
+          <g data-zone="stable" class="on">
+            <ellipse cx="300" cy="300" rx="220" ry="180" fill="#bfe6ff" opacity="0.28" filter="url(#mapSoft)"/>
+            <ellipse cx="900" cy="280" rx="150" ry="120" fill="#bfe6ff" opacity="0.28" filter="url(#mapSoft)"/>
+          </g>
+          <!-- CLOSED (blue): ringed zones top-right + bottom-right -->
+          <g data-zone="closed">
+            <circle cx="1300" cy="160" r="180" fill="none" stroke="#4fc3f7" stroke-width="4" opacity="0.7"/>
+            <circle cx="1300" cy="160" r="120" fill="#4fc3f7" opacity="0.14" filter="url(#mapSoft)"/>
+            <circle cx="1560" cy="690" r="140" fill="none" stroke="#4fc3f7" stroke-width="4" opacity="0.7"/>
+            <circle cx="1560" cy="690" r="90" fill="#4fc3f7" opacity="0.14" filter="url(#mapSoft)"/>
+          </g>
+          <!-- FRONTIER (amber): Middle East / Central Asia -->
+          <g data-zone="frontier">
+            <ellipse cx="1120" cy="380" rx="180" ry="120" fill="#ff9d00" opacity="0.22" filter="url(#mapSoft)"/>
+            <path d="M980 360 L1120 340 L1260 400" fill="none" stroke="#ff9d00" stroke-width="3" stroke-dasharray="10 12" opacity="0.7"/>
+          </g>
+          <!-- COLLAPSE (red): South America + Antarctica -->
+          <g data-zone="collapse">
+            <ellipse cx="490" cy="610" rx="130" ry="150" fill="#ff4d4d" opacity="0.28" filter="url(#mapSoft)"/>
+            <ellipse cx="720" cy="870" rx="180" ry="70" fill="#ff4d4d" opacity="0.24" filter="url(#mapSoft)"/>
+          </g>
+          <!-- ANOMALOUS (purple): vortices -->
+          <g data-zone="anomalous">
+            <circle cx="1180" cy="720" r="30" fill="none" stroke="#a55eea" stroke-width="3" opacity="0.8"/>
+            <circle cx="1180" cy="720" r="55" fill="none" stroke="#a55eea" stroke-width="2" opacity="0.5"/>
+            <circle cx="1180" cy="720" r="80" fill="#a55eea" opacity="0.16" filter="url(#mapSoft)"/>
+            <circle cx="780" cy="90" r="60" fill="#a55eea" opacity="0.18" filter="url(#mapSoft)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="zones-dim"></div>
+      <div class="zones-hud">
+        <span>MAP.ANALYSIS // TERRITORY STATE</span>
+        <span class="z-status" id="zonesStatus">STABLE</span>
+      </div>
+      <div class="img-fallback">VISUAL DATA UNAVAILABLE</div>
+    </div>
+
+    <div class="zones-tabs reveal" id="zonesTabs">
+      <button class="zone-tab active" data-zone="stable"     style="--c:#bfe6ff"><span class="swatch"></span>СТАБИЛЬНЫЕ</button>
+      <button class="zone-tab" data-zone="closed"     style="--c:#4fc3f7"><span class="swatch"></span>ЗАКРЫТЫЕ</button>
+      <button class="zone-tab" data-zone="frontier"   style="--c:#ff9d00"><span class="swatch"></span>ФРОНТИР</button>
+      <button class="zone-tab" data-zone="collapse"   style="--c:#ff4d4d"><span class="swatch"></span>РАСПАД</button>
+      <button class="zone-tab" data-zone="anomalous"  style="--c:#a55eea"><span class="swatch"></span>АНОМАЛИИ</button>
+    </div>
+
+    <div class="zones-readout reveal" id="zonesReadout" style="--c:#bfe6ff">
+      <div class="r-head" id="zonesHead">// СТАБИЛЬНЫЕ СИСТЕМЫ</div>
+      <div class="r-text" id="zonesText">Города, институты, экономика, армия и централизованная власть.</div>
+    </div>
+  </section>
+
+  <!-- ══════════════ FINAL ══════════════ -->
+  <section class="brief-final" id="sec-final">
+    <div class="f-marker reveal">// КОНЕЦ ПЕРЕДАЧИ</div>
+    <h2 class="f-title reveal">КРАТКАЯ СВОДКА<br>ЗАВЕРШЕНА</h2>
+    <div class="brief-summary reveal">
+      <span class="ln key">ЗЕМЛЯ, 2061 ГОД.</span>
+      <span class="ln">ПРЕЖНИЙ МИРОВОЙ ПОРЯДОК УНИЧТОЖЕН.</span>
+      <span class="ln">МЕТА-ЛЮДИ ИЗМЕНИЛИ БАЛАНС СИЛ,</span>
+      <span class="ln">НО НЕ ЗАМЕНИЛИ ЧЕЛОВЕЧЕСТВО.</span>
+      <span class="ln key">У РАЗНЫХ ЧАСТЕЙ МИРА</span>
+      <span class="ln key">БОЛЬШЕ НЕТ ОБЩЕГО БУДУЩЕГО.</span>
+    </div>
+    <a href="../index.html" class="brief-return reveal"><span class="arrow">←</span> ВЕРНУТЬСЯ В ТЕРМИНАЛ</a>
+  </section>
+
+  <div class="brief-foot">SYS.BRIEFING // ЗЕМЛЯ • 2061 ГОД // ДОСТУП: PUBLIC</div>
+</main>
+
+<script src="briefing.js"></script>
+</body>
+</html>
