@@ -235,6 +235,10 @@ body.dark .dhead .kicker{color:var(--edge-br)}
 #lux,#pos{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#fff;
   text-shadow:0 1px 5px rgba(0,0,0,.7);white-space:nowrap}
 #pos{margin-left:auto}
+#soundBtn{flex:none;width:30px;height:30px;border-radius:50%;cursor:pointer;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);color:#fff;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:13px;line-height:1}
+#soundBtn:active{background:rgba(255,255,255,.3)}
 #steps{display:flex;gap:6px;align-items:center}
 #steps button{width:6px;height:6px;padding:0;border-radius:3px;border:none;cursor:pointer;
   background:rgba(255,255,255,.35);transition:.3s}
@@ -492,7 +496,9 @@ body.dark .dhead .kicker{color:var(--edge-br)}
   <span id="lux">100 лк</span>
   <div id="steps"></div>
   <span id="pos">01 / 09</span>
+  <button id="soundBtn" aria-label="Звук" title="Звук">🔇</button>
 </div>
+<audio id="theme" src="theme.mp3" loop preload="none"></audio>
 
 <script>
 (function(){
@@ -631,6 +637,16 @@ body.dark .dhead .kicker{color:var(--edge-br)}
   sl.addEventListener('pointerdown',e=>{dr=true;sl.setPointerCapture(e.pointerId);setLux(fromX(e.clientX));});
   sl.addEventListener('pointermove',e=>{if(dr)setLux(fromX(e.clientX));});
   sl.addEventListener('pointerup',()=>dr=false);
+
+  const theme=document.getElementById('theme'), soundBtn=document.getElementById('soundBtn');
+  let soundOn=false;
+  soundBtn.onclick=()=>{
+    soundOn=!soundOn;
+    if(soundOn){
+      theme.play().then(()=>soundBtn.textContent='🔊').catch(()=>{soundOn=false;soundBtn.textContent='🔇';});
+    } else { theme.pause(); soundBtn.textContent='🔇'; }
+  };
+  theme.addEventListener('error',()=>console.log('Audio failed to load. Check theme.mp3 exists next to wistner.html.'));
 
   addEventListener('resize',()=>{if(mode==='history')go(i);});
   buildSteps(); setLux(2); go(0); setMode('history');
