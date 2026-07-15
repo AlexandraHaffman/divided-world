@@ -41,5 +41,27 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BE8B8969-77BD-4AC3-9DA1-A2E16034E946.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4D6DFACD-EA81-44B5-9F60-64EDB7326A3F.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-04T11:57:02.428Z"
+  "exported_at": "2026-07-04T11:57:02.428Z",
+  "relations": [
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "свидетель рождения нового мира"
+    },
+    {
+      "to": "Райан Янсенс",
+      "type": "ally",
+      "label": "мальчик из бункера"
+    },
+    {
+      "to": "Элиас Дорн",
+      "type": "enemy",
+      "label": "объект её давней охоты"
+    },
+    {
+      "to": "Маро",
+      "type": "enemy",
+      "label": "дело об уничтоженном поезде"
+    }
+  ]
 }

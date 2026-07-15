@@ -39,5 +39,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/11D1CC4F-84A4-4C94-995A-CC2FFE78A960.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A2364369-5155-44BB-827A-68FE1D4591F6.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-07T19:09:38.481Z"
+  "exported_at": "2026-07-07T19:09:38.481Z",
+  "relations": [
+    {
+      "to": "Смотрящий в бездну",
+      "type": "ally",
+      "label": "дал его силе смысл"
+    },
+    {
+      "to": "Дух Леса",
+      "type": "ally",
+      "label": "научил понимать лес"
+    }
+  ]
 }

@@ -39,5 +39,27 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/11294BB9-CE31-48BB-BCFC-3E76BD48689F.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BF9633B1-C26A-4303-81F9-5463F6875430.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-14T22:09:14.484Z"
+  "exported_at": "2026-07-14T22:09:14.484Z",
+  "relations": [
+    {
+      "to": "Эмили Грей",
+      "type": "love",
+      "label": "старая любовь, которую он спас"
+    },
+    {
+      "to": "Эрик Сэнд",
+      "type": "ally",
+      "label": "спутник поневоле"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "ally",
+      "label": "богиня, поработившая его"
+    },
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "искренне уважаемый Апостол"
+    }
+  ]
 }

@@ -38,5 +38,47 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A8E1C5AF-14EF-4F7C-BB2E-C744C3E019C0.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0B6B0D1D-2E75-4C46-BE56-C8106D49E5AE.png",
   "tier": "legendary",
-  "exported_at": "2026-07-01T07:09:51.399Z"
+  "exported_at": "2026-07-01T07:09:51.399Z",
+  "relations": [
+    {
+      "to": "Элиас Дорн",
+      "type": "ally",
+      "label": "сооснователь Аркадии"
+    },
+    {
+      "to": "Юлиан Грей",
+      "type": "ally",
+      "label": "сооснователь Аркадии"
+    },
+    {
+      "to": "Уильям Купер",
+      "type": "ally",
+      "label": "протеже в Единой Америке"
+    },
+    {
+      "to": "Валентина Блажек",
+      "type": "enemy",
+      "label": "бывшая узница спецблока"
+    },
+    {
+      "to": "Дариан Сорель",
+      "type": "enemy",
+      "label": "бывший узник"
+    },
+    {
+      "to": "Эмиль Грант",
+      "type": "enemy",
+      "label": "бывший узник"
+    },
+    {
+      "to": "Маркус Кросс",
+      "type": "enemy",
+      "label": "жертва его экспериментов"
+    },
+    {
+      "to": "Смотрящий в бездну",
+      "type": "enemy",
+      "label": "бывший узник мета-тюрьмы"
+    }
+  ]
 }

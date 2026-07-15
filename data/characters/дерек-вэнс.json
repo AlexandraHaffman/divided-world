@@ -38,5 +38,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B9368955-4729-4C0C-A767-EA30686F2B42.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/CFABE759-81CF-4D1F-A86B-46836766A6AB.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-30T18:25:14.268Z"
+  "exported_at": "2026-06-30T18:25:14.268Z",
+  "relations": [
+    {
+      "to": "Харпер Вэнс",
+      "type": "family",
+      "label": "младшая сестра"
+    },
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "служит, презирая"
+    }
+  ]
 }

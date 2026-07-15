@@ -37,5 +37,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C919AEF8-4CB4-427E-B2A3-F77B88B5B7E8.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0D21C6D1-5C7A-4025-8116-6F3028D1AAB6.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-30T15:35:34.460Z"
+  "exported_at": "2026-06-30T15:35:34.460Z",
+  "relations": [
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "шантажистка, которой он служит"
+    },
+    {
+      "to": "Джулиан Восс",
+      "type": "ally",
+      "label": "прикрывает его эксперименты"
+    }
+  ]
 }

@@ -38,5 +38,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BA9FB608-C627-424F-B426-92B6BCFC1311.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BCC66E46-4894-406C-A955-A83F65E8B6D6.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-27T05:12:52.620Z"
+  "exported_at": "2026-06-27T05:12:52.620Z",
+  "relations": [
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "охраняемая персона"
+    }
+  ]
 }

@@ -41,5 +41,42 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A8EF8BDF-C887-4F22-99E3-F82990510B10.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F0A6032F-944B-4DAC-A38F-2142C574E29F.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-14T09:03:55.597Z"
+  "exported_at": "2026-07-14T09:03:55.597Z",
+  "relations": [
+    {
+      "to": "Дариан Сорель",
+      "type": "ally",
+      "label": "приятельство и азартные игры"
+    },
+    {
+      "to": "Амели Бертран",
+      "type": "ally",
+      "label": "взаимные провокации"
+    },
+    {
+      "to": "Эмиль Грант",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Аша Наир",
+      "type": "ally",
+      "label": "держит её индийское направление"
+    },
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "тайная сделка: кровь в обмен на тщеславие"
+    },
+    {
+      "to": "Курт Вистнер",
+      "type": "enemy",
+      "label": "пленил её первым блокиратором"
+    },
+    {
+      "to": "Артур Остерман",
+      "type": "enemy",
+      "label": "Война в тени"
+    }
+  ]
 }

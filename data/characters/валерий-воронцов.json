@@ -37,5 +37,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B0B8C4B9-090E-4858-8314-72241A375C5E.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/09832310-5A4D-42DC-9CBC-B077B165D929.png",
   "tier": "common",
-  "exported_at": "2026-06-23T20:16:48.251Z"
+  "exported_at": "2026-06-23T20:16:48.251Z",
+  "relations": [
+    {
+      "to": "Люцифер",
+      "type": "enemy",
+      "label": "война Титанов с Пищевой цепью"
+    }
+  ]
 }

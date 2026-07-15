@@ -37,5 +37,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AF32072F-0D73-4FCC-B2BF-5462BAA92F11.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B1C8D6E5-8FC5-4C54-B58B-0978B512A2D8.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-02T16:46:14.979Z"
+  "exported_at": "2026-07-02T16:46:14.979Z",
+  "relations": [
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "указал ей путь"
+    }
+  ]
 }

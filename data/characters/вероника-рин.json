@@ -39,5 +39,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/BFE6CD97-F082-4A80-8A50-7CAD9F40530E.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/93ED1AD6-48DC-4112-9F74-8D298866FB27.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-30T20:18:43.609Z"
+  "exported_at": "2026-06-30T20:18:43.609Z",
+  "relations": [
+    {
+      "to": "Деймон Мур",
+      "type": "ally",
+      "label": "выросла в Крыле нового дня"
+    }
+  ]
 }

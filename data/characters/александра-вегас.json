@@ -39,5 +39,27 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5AE861A9-E73F-490C-BA2E-9B13AE4F1884.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C9F63431-C04D-4EAC-BAC7-1A29C7D75249.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-04T21:50:58.112Z"
+  "exported_at": "2026-07-04T21:50:58.112Z",
+  "relations": [
+    {
+      "to": "Деймон Мур",
+      "type": "ally",
+      "label": "куратор"
+    },
+    {
+      "to": "Адриан Гилберт",
+      "type": "ally",
+      "label": "служит его режиму"
+    },
+    {
+      "to": "Борич Дивац",
+      "type": "ally",
+      "label": "прикрыл её в последнем бою"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "enemy",
+      "label": "цель, которую она сразила"
+    }
+  ]
 }

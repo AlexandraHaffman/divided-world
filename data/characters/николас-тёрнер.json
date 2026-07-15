@@ -41,5 +41,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/88778E33-62A1-4E99-AD2D-655D5185213C.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4EFDC2F8-69E4-4DCB-840C-E45AF1CC6CEF.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-05T11:14:20.281Z"
+  "exported_at": "2026-07-05T11:14:20.281Z",
+  "relations": [
+    {
+      "to": "Нимфея Эленис",
+      "type": "enemy",
+      "label": "символ системы, предавшей его"
+    }
+  ]
 }

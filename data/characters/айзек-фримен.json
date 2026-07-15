@@ -39,5 +39,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0834C8B8-EFC4-4C2C-9178-C82099A9C9C1.jpeg",
   "avatar_web_full": "https://alexandrahaffman.github.io/divided-world/data/images/characters/A534F6B6-11EC-4B0A-B470-9D500ADD6777.jpeg",
   "tier": "common",
-  "exported_at": "2026-07-01T07:48:18.608Z"
+  "exported_at": "2026-07-01T07:48:18.608Z",
+  "relations": [
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "уступает ей последнее слово"
+    }
+  ]
 }

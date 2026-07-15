@@ -38,5 +38,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/7A2D2990-3CB0-415B-887B-A5AD072F0A62.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/75AD4569-FF61-452A-BE56-E426AF2D45EF.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-01T18:09:19.511Z"
+  "exported_at": "2026-07-01T18:09:19.511Z",
+  "relations": [
+    {
+      "to": "Ричард Уолш",
+      "type": "ally",
+      "label": "возглавил его безопасность"
+    },
+    {
+      "to": "Айша Хан",
+      "type": "ally",
+      "label": "пакт о ненападении"
+    },
+    {
+      "to": "Саманта Чен",
+      "type": "ally",
+      "label": "битвы за бюджеты"
+    }
+  ]
 }

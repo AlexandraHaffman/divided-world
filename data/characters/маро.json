@@ -42,5 +42,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AF7BC85E-BB4B-49EB-A104-4F5C15DD7B97.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/606F1413-6431-4362-91CF-DDE466F220B0.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-06T11:59:51.301Z"
+  "exported_at": "2026-07-06T11:59:51.301Z",
+  "relations": [
+    {
+      "to": "Бьянка Скардино",
+      "type": "love",
+      "label": "многолетний роман"
+    },
+    {
+      "to": "Ольга Гончарова",
+      "type": "enemy",
+      "label": "следователь Тенебриона"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "ally",
+      "label": "присоединился к восстанию Натали"
+    }
+  ]
 }

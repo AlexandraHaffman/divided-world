@@ -39,5 +39,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B994DB9A-CC4E-4C85-BE99-7A85C51746C3.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/76511299-B33C-42A8-A961-5481E8C08AD4.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-02T15:47:08.623Z"
+  "exported_at": "2026-07-02T15:47:08.623Z",
+  "relations": [
+    {
+      "to": "Виктор Афанасьев",
+      "type": "ally",
+      "label": "командир охраны Ковчега"
+    },
+    {
+      "to": "Мария Жданова",
+      "type": "ally",
+      "label": "глава Ковчега"
+    }
+  ]
 }

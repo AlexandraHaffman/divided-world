@@ -38,5 +38,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8F3E463C-DA3C-42C5-966F-C5FF617ABCAD.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/DB3FD475-C41D-475B-9D64-F9A4CA5450A9.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-28T09:46:25.421Z"
+  "exported_at": "2026-06-28T09:46:25.421Z",
+  "relations": [
+    {
+      "to": "Деннис Картер",
+      "type": "ally",
+      "label": "соратник со смешанными чувствами"
+    }
+  ]
 }

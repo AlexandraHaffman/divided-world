@@ -39,5 +39,52 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/CB26C36A-6EA2-42B5-841B-5665AF3765BC.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FDC40B46-170F-45E2-A1D4-117D2625A7C6.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-10T04:40:12.490Z"
+  "exported_at": "2026-07-10T04:40:12.490Z",
+  "relations": [
+    {
+      "to": "Кавита Рао",
+      "type": "love",
+      "label": "фаворитка гарема"
+    },
+    {
+      "to": "Амели Бертран",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Валентина Блажек",
+      "type": "ally",
+      "label": "приятельство и азартные игры"
+    },
+    {
+      "to": "Эмиль Грант",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Кристиан Фогель",
+      "type": "ally",
+      "label": "наместник в Дали"
+    },
+    {
+      "to": "Стефан Дюпон",
+      "type": "ally",
+      "label": "личный посланник Квартета"
+    },
+    {
+      "to": "Курт Вистнер",
+      "type": "enemy",
+      "label": "тюремщик из Граца"
+    },
+    {
+      "to": "Артур Остерман",
+      "type": "enemy",
+      "label": "Война в тени"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "enemy",
+      "label": "разгромила его оплот"
+    }
+  ]
 }

@@ -38,5 +38,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B449F9C6-CD5D-4A90-8B8E-3E54DB24B150.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AF8A4087-04B9-47EC-AADE-446C1C56315E.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-06T08:30:04.082Z"
+  "exported_at": "2026-07-06T08:30:04.082Z",
+  "relations": [
+    {
+      "to": "Тенебриа",
+      "type": "enemy",
+      "label": "изгнала его на Восток"
+    }
+  ]
 }

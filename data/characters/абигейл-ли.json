@@ -38,5 +38,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/15AC19FD-C45A-44B8-94A5-CBB0B8C9532A.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FD1F044B-131B-4497-B084-111A52F3B960.jpeg",
   "tier": "rare",
-  "exported_at": "2026-06-27T12:15:21.671Z"
+  "exported_at": "2026-06-27T12:15:21.671Z",
+  "relations": [
+    {
+      "to": "Нимфея Эленис",
+      "type": "love",
+      "label": "безответная любовь"
+    }
+  ]
 }

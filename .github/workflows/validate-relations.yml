@@ -1,0 +1,17 @@
+name: Валидация связей персонажей
+
+on:
+  push:
+    paths:
+      - "data/characters/**"
+      - "data/factions.json"
+      - "scripts/validate_relations.py"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Проверка relations
+        run: python3 scripts/validate_relations.py

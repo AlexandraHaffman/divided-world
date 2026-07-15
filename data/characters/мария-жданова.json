@@ -36,5 +36,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AFF2994B-65BD-4466-B2C8-E068A86C7787.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4822C508-5302-4099-8DB6-CAE674F0E46A.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-30T07:28:27.011Z"
+  "exported_at": "2026-06-30T07:28:27.011Z",
+  "relations": [
+    {
+      "to": "Виктор Афанасьев",
+      "type": "ally",
+      "label": "начальник охраны Ковчега"
+    },
+    {
+      "to": "Рауль Рамирес",
+      "type": "ally",
+      "label": "наёмник на службе Ковчега"
+    },
+    {
+      "to": "Люцифер",
+      "type": "enemy",
+      "label": "напал на Ковчег"
+    }
+  ]
 }

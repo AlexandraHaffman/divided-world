@@ -37,5 +37,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FAAC188D-C0C6-4E82-877C-A9928DB80436.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/664537A6-11C1-4DE5-B157-085D845DD339.jpeg",
   "tier": "common",
-  "exported_at": "2026-07-03T06:56:35.357Z"
+  "exported_at": "2026-07-03T06:56:35.357Z",
+  "relations": [
+    {
+      "to": "Ричард Уолш",
+      "type": "ally",
+      "label": "Совет директоров"
+    }
+  ]
 }

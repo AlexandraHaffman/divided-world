@@ -39,5 +39,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/19CBA877-FCB9-4129-8583-26AAA1DF5651.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F254E751-A1EF-48F5-8FE9-B6E2D98A8AB4.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-03T06:11:59.342Z"
+  "exported_at": "2026-07-03T06:11:59.342Z",
+  "relations": [
+    {
+      "to": "Курт Вистнер",
+      "type": "ally",
+      "label": "покровитель"
+    },
+    {
+      "to": "Деннис Картер",
+      "type": "ally",
+      "label": "тайно обслуживает его механику"
+    }
+  ]
 }

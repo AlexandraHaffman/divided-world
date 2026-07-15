@@ -40,5 +40,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0FEAB1F6-C1B3-4E2C-B25E-9ED39B478261.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F298514C-CC97-45A3-8F06-5A3433329C86.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-05T12:37:01.677Z"
+  "exported_at": "2026-07-05T12:37:01.677Z",
+  "relations": [
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "покровитель и наставник"
+    }
+  ]
 }

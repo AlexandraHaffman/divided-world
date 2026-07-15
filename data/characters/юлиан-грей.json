@@ -39,5 +39,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5234C63E-1A27-4012-8F1D-2DC77993113C.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/DEF8FA78-7D2A-4BD2-9573-8751DAE15BE2.png",
   "tier": "epic",
-  "exported_at": "2026-06-23T21:19:14.929Z"
+  "exported_at": "2026-06-23T21:19:14.929Z",
+  "relations": [
+    {
+      "to": "Эмили Грей",
+      "type": "love",
+      "label": "невеста"
+    },
+    {
+      "to": "Курт Вистнер",
+      "type": "ally",
+      "label": "сооснователь Аркадии"
+    },
+    {
+      "to": "Элиас Дорн",
+      "type": "ally",
+      "label": "жертва его срыва"
+    }
+  ]
 }

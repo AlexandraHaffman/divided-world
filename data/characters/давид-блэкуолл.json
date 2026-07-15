@@ -38,5 +38,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8CA5EC00-6F91-4A5B-A358-1C6DCFA7A3BA.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/EC8F526E-D644-4118-96AC-90DBF2D8AF06.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-03T06:55:25.097Z"
+  "exported_at": "2026-07-03T06:55:25.097Z",
+  "relations": [
+    {
+      "to": "Ричард Уолш",
+      "type": "ally",
+      "label": "друг, проверенный временем"
+    }
+  ]
 }

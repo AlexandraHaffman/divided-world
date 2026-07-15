@@ -37,5 +37,42 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F83B5CC0-D0E9-4662-ACB2-C70BDBA4E433.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/3F2BAE6B-8E11-4E8C-9822-A7757C117422.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-14T22:52:09.177Z"
+  "exported_at": "2026-07-14T22:52:09.177Z",
+  "relations": [
+    {
+      "to": "Амели Бертран",
+      "type": "love",
+      "label": "одержим ею"
+    },
+    {
+      "to": "Дариан Сорель",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Валентина Блажек",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Сюй Лэй",
+      "type": "ally",
+      "label": "единственный, кому позволено спорить"
+    },
+    {
+      "to": "Курт Вистнер",
+      "type": "enemy",
+      "label": "тюрьма в Граце"
+    },
+    {
+      "to": "Артур Остерман",
+      "type": "enemy",
+      "label": "Война в тени"
+    },
+    {
+      "to": "Ричард Уолш",
+      "type": "enemy",
+      "label": "война с Forge"
+    }
+  ]
 }

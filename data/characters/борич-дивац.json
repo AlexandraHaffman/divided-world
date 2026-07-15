@@ -38,5 +38,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C5F79E49-B91D-4C0A-B098-D150742ECCEE.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FEFC1435-C843-405D-8774-85E6D1A8187A.jpeg",
   "tier": "common",
-  "exported_at": "2026-07-12T11:21:15.714Z"
+  "exported_at": "2026-07-12T11:21:15.714Z",
+  "relations": [
+    {
+      "to": "Адриан Гилберт",
+      "type": "ally",
+      "label": "вытащил его из огня"
+    },
+    {
+      "to": "Александра Вегас",
+      "type": "ally",
+      "label": "боевая соратница Кризиса"
+    }
+  ]
 }

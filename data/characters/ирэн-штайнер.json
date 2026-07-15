@@ -35,5 +35,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E66275CA-E17B-4441-B368-57A744F444AC.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/851C7A30-C4BE-49DA-BAF6-A742C54F94E3.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-02T14:41:16.080Z"
+  "exported_at": "2026-07-02T14:41:16.080Z",
+  "relations": [
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "вернул её к жизни"
+    }
+  ]
 }

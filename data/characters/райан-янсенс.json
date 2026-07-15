@@ -38,5 +38,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/2EE568BE-A3E8-4AD0-835A-AF9320B89D5B.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/70EF3D11-19A9-44A8-9100-A5762074BA07.jpeg",
   "tier": "rare",
-  "exported_at": "2026-07-12T11:21:05.199Z"
+  "exported_at": "2026-07-12T11:21:05.199Z",
+  "relations": [
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "гость его бункера"
+    },
+    {
+      "to": "Ольга Гончарова",
+      "type": "ally",
+      "label": "гостья его бункера"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "ally",
+      "label": "девчонка, которую он выхаживал"
+    }
+  ]
 }

@@ -40,5 +40,57 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/2C41A19D-4070-47FE-A7A2-10CDBBCD6934.jpeg",
   "tier": "divine",
-  "exported_at": "2026-06-25T20:08:20.546Z"
+  "exported_at": "2026-06-25T20:08:20.546Z",
+  "relations": [
+    {
+      "to": "Артур Остерман",
+      "type": "ally",
+      "label": "архитектор её культа"
+    },
+    {
+      "to": "Кристина Новак",
+      "type": "ally",
+      "label": "близкая подруга"
+    },
+    {
+      "to": "Эмили Грей",
+      "type": "family",
+      "label": "старшая сестра"
+    },
+    {
+      "to": "Эрик Сэнд",
+      "type": "ally",
+      "label": "спас её и был одарён мощью"
+    },
+    {
+      "to": "Джон Гарстон",
+      "type": "ally",
+      "label": "порабощённый эмиссар"
+    },
+    {
+      "to": "Марина Элеонора Геррера",
+      "type": "ally",
+      "label": "жрица Вечного Взора"
+    },
+    {
+      "to": "Райан Янсенс",
+      "type": "ally",
+      "label": "выхаживал её в бункере"
+    },
+    {
+      "to": "Деймон Мур",
+      "type": "enemy",
+      "label": "бывший куратор"
+    },
+    {
+      "to": "Александра Вегас",
+      "type": "enemy",
+      "label": "агент, сразивший её"
+    },
+    {
+      "to": "Дариан Сорель",
+      "type": "enemy",
+      "label": "лично разгромила Ракшасов"
+    }
+  ]
 }

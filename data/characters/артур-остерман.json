@@ -37,5 +37,72 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B39B88D-7167-48A5-B512-1FC2F572B4F5.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A4408787-2925-4278-9368-7E298B5BCC2F.png",
   "tier": "legendary",
-  "exported_at": "2026-07-01T05:57:32.111Z"
+  "exported_at": "2026-07-01T05:57:32.111Z",
+  "relations": [
+    {
+      "to": "Ирэн Штайнер",
+      "type": "ally",
+      "label": "единственная, с кем он не Апостол"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "ally",
+      "label": "богиня, которую он создал"
+    },
+    {
+      "to": "Ольга Гончарова",
+      "type": "ally",
+      "label": "соратница со времён Коллапса"
+    },
+    {
+      "to": "Анаиса Аскирион",
+      "type": "ally",
+      "label": "его протеже на южной границе"
+    },
+    {
+      "to": "Катарина Меланье",
+      "type": "ally",
+      "label": "приняла Исповедь по его слову"
+    },
+    {
+      "to": "Лилит Блэквуд",
+      "type": "ally",
+      "label": "страж внутренней безопасности"
+    },
+    {
+      "to": "Джон Гарстон",
+      "type": "ally",
+      "label": "эмиссар Когорты"
+    },
+    {
+      "to": "Эрик Сэнд",
+      "type": "ally",
+      "label": "привёз к нему Натали"
+    },
+    {
+      "to": "Райан Янсенс",
+      "type": "ally",
+      "label": "мальчик, укрывший его в бункере"
+    },
+    {
+      "to": "Дариан Сорель",
+      "type": "enemy",
+      "label": "Война в тени"
+    },
+    {
+      "to": "Амели Бертран",
+      "type": "enemy",
+      "label": "Война в тени"
+    },
+    {
+      "to": "Валентина Блажек",
+      "type": "enemy",
+      "label": "Война в тени"
+    },
+    {
+      "to": "Эмиль Грант",
+      "type": "enemy",
+      "label": "Война в тени"
+    }
+  ]
 }

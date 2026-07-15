@@ -40,5 +40,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/28C1C4A0-8A00-40F1-9383-E4B1481AF389.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4EE51D19-59E2-4B28-BF03-5555D7F06204.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-10T03:19:24.630Z"
+  "exported_at": "2026-07-10T03:19:24.630Z",
+  "relations": [
+    {
+      "to": "Лилия Спасская",
+      "type": "family",
+      "label": "сестра-близнец"
+    },
+    {
+      "to": "Маркус Кросс",
+      "type": "ally",
+      "label": "уважительное соседство"
+    }
+  ]
 }

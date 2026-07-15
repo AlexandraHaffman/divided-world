@@ -38,5 +38,37 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/1036E191-2A99-43DF-B07D-EFB4DE2D30C0.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/EFB8BFE0-7995-45AB-9645-986768DD3AB3.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-07T20:27:51.130Z"
+  "exported_at": "2026-07-07T20:27:51.130Z",
+  "relations": [
+    {
+      "to": "Адриан Гилберт",
+      "type": "ally",
+      "label": "преемник"
+    },
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "воспитанница программы"
+    },
+    {
+      "to": "Эва Найт",
+      "type": "ally",
+      "label": "лучшая ученица"
+    },
+    {
+      "to": "Вероника Рин",
+      "type": "ally",
+      "label": "воспитанница Крыла"
+    },
+    {
+      "to": "Александра Вегас",
+      "type": "ally",
+      "label": "его агент"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "enemy",
+      "label": "восставшее оружие"
+    }
+  ]
 }

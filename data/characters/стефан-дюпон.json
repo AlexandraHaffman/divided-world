@@ -37,5 +37,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/00449105-3896-4A3F-AE73-BF39854E2AE3.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B35662CD-BBA8-4477-9606-CE16BE045530.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-12T11:20:16.261Z"
+  "exported_at": "2026-07-12T11:20:16.261Z",
+  "relations": [
+    {
+      "to": "Дариан Сорель",
+      "type": "ally",
+      "label": "посланник Квартета"
+    }
+  ]
 }

@@ -37,5 +37,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/524BD9A2-9A2D-412C-BE61-7AD1A3052290.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/CBEFAFA9-48C6-4977-B978-A46BF060D8B8.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-27T12:17:47.097Z"
+  "exported_at": "2026-06-27T12:17:47.097Z",
+  "relations": [
+    {
+      "to": "Джейсон МакКензи",
+      "type": "ally",
+      "label": "холодный пакт о ненападении"
+    },
+    {
+      "to": "Саманта Чен",
+      "type": "ally",
+      "label": "баталии за гуманитарные бюджеты"
+    },
+    {
+      "to": "Ричард Уолш",
+      "type": "ally",
+      "label": "Совет директоров"
+    }
+  ]
 }

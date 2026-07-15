@@ -36,5 +36,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0CA8D8F2-4E46-49AC-98C2-A23B6E77E24E.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/86EAC597-5FA1-4855-A45C-C63203352B10.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-30T08:50:17.674Z"
+  "exported_at": "2026-06-30T08:50:17.674Z",
+  "relations": [
+    {
+      "to": "Мария Жданова",
+      "type": "ally",
+      "label": "руководитель Ковчега"
+    },
+    {
+      "to": "Рауль Рамирес",
+      "type": "ally",
+      "label": "наёмник под его началом"
+    },
+    {
+      "to": "Люцифер",
+      "type": "enemy",
+      "label": "рейдеры, разорившие Ковчег"
+    }
+  ]
 }

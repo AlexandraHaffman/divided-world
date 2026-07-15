@@ -41,5 +41,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/D84D0460-0CD2-4484-833F-FC2CF489AC5A.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4970BA6D-F4CF-4662-B2A6-3BDBED508E3F.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-07T19:09:31.727Z"
+  "exported_at": "2026-07-07T19:09:31.727Z",
+  "relations": [
+    {
+      "to": "Смотрящий в бездну",
+      "type": "ally",
+      "label": "принёс порядок и смысл"
+    },
+    {
+      "to": "Вестник Тишины",
+      "type": "ally",
+      "label": "младший лидер Триумвирата"
+    }
+  ]
 }

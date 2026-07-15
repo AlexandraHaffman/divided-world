@@ -41,12 +41,10 @@
     "Хозяйка Тихой гавани"
   ],
 
-  "relations": {
-    "partners": [],
-    "family": ["Лилия Спасская"],
-    "allies": [],
-    "enemies": []
-  },
+  "relations": [
+    { "to": "Лилия Спасская", "type": "family", "label": "сестра-близнец" },
+    { "to": "Маркус Кросс", "type": "ally", "label": "уважительное соседство" }
+  ],
 
   "images": {
     "obsidian": "Portrait_Ulyana_Spasskaya.jpg",

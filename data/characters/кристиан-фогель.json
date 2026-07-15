@@ -37,5 +37,17 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B815AA9B-B641-4219-9F0E-84C5D88DD357.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C7D8EDD5-E59A-4D0A-8FDA-D9F63A90FFE7.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-12T11:19:55.701Z"
+  "exported_at": "2026-07-12T11:19:55.701Z",
+  "relations": [
+    {
+      "to": "Дариан Сорель",
+      "type": "ally",
+      "label": "сюзерен, подаривший Дали"
+    },
+    {
+      "to": "Маро",
+      "type": "enemy",
+      "label": "пережил его ментальную атаку"
+    }
+  ]
 }

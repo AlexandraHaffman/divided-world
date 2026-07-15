@@ -37,5 +37,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/89E30AE6-C402-43AE-9916-84AF8486E18B.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/9C853769-5979-475A-8333-3D478A12616B.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-30T09:17:59.077Z"
+  "exported_at": "2026-06-30T09:17:59.077Z",
+  "relations": [
+    {
+      "to": "Нимфея Эленис",
+      "type": "ally",
+      "label": "кумир и покровительница"
+    }
+  ]
 }

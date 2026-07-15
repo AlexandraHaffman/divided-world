@@ -35,5 +35,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FB9F39E2-52AA-4AFC-8C71-836611C08332.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/75D369C6-F26F-44FE-8B4F-28F7F66E003B.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-12T12:23:48.695Z"
+  "exported_at": "2026-07-12T12:23:48.695Z",
+  "relations": [
+    {
+      "to": "Эмиль Грант",
+      "type": "ally",
+      "label": "командует его полевыми силами"
+    }
+  ]
 }

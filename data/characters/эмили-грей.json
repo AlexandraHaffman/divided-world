@@ -38,5 +38,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/3054195D-272F-4FBB-B57A-8D17F77FDC08.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/36D7CACD-0A34-4E91-BBF0-25FD1451710A.png",
   "tier": "rare",
-  "exported_at": "2026-07-01T07:24:14.878Z"
+  "exported_at": "2026-07-01T07:24:14.878Z",
+  "relations": [
+    {
+      "to": "Юлиан Грей",
+      "type": "love",
+      "label": "жених"
+    },
+    {
+      "to": "Тенебриа",
+      "type": "family",
+      "label": "младшая сестра"
+    },
+    {
+      "to": "Джон Гарстон",
+      "type": "ally",
+      "label": "спас её из-под замка"
+    }
+  ]
 }

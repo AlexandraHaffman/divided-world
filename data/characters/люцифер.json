@@ -36,5 +36,27 @@
   "avatar_web": "https://alexandrahaffman.github.io/divided-world/data/images/characters/B8199503-6097-4356-8B14-0E7B6E09F282.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B42E4F2-11CB-432A-9FFE-B4502B9B52B9.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-29T10:14:00.882Z"
+  "exported_at": "2026-06-29T10:14:00.882Z",
+  "relations": [
+    {
+      "to": "Мария Жданова",
+      "type": "enemy",
+      "label": "разорил Ковчег"
+    },
+    {
+      "to": "Виктор Афанасьев",
+      "type": "enemy",
+      "label": "охрана Ковчега"
+    },
+    {
+      "to": "Валерий Воронцов",
+      "type": "enemy",
+      "label": "война с Титанами"
+    },
+    {
+      "to": "Бьянка Скардино",
+      "type": "enemy",
+      "label": "набеги на Гарнизон"
+    }
+  ]
 }

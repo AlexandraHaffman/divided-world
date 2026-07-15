@@ -37,5 +37,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F254ADB9-8242-4A0C-8577-A8015ECCA77D.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/3CF5EF09-F365-4A45-8BF8-2603577F4FCB.png",
   "tier": "common",
-  "exported_at": "2026-06-26T17:24:19.575Z"
+  "exported_at": "2026-06-26T17:24:19.575Z",
+  "relations": [
+    {
+      "to": "Ричард Уолш",
+      "type": "family",
+      "label": "отец"
+    },
+    {
+      "to": "Клара Уолш",
+      "type": "family",
+      "label": "мать"
+    },
+    {
+      "to": "Дариан Сорель",
+      "type": "enemy",
+      "label": "искалечил её зрение"
+    }
+  ]
 }

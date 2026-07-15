@@ -39,5 +39,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AD456BE7-25E6-4BF8-8F90-815F5AD2E63E.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/F8EE3410-3CD7-4692-BFE7-F6C5CED15502.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-06T21:47:04.892Z"
+  "exported_at": "2026-07-06T21:47:04.892Z",
+  "relations": [
+    {
+      "to": "Ульяна Спасская",
+      "type": "family",
+      "label": "сестра-близнец"
+    }
+  ]
 }

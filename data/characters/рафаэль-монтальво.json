@@ -36,5 +36,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/9020CCDC-213B-4A5D-BF79-28D9558B43AD.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/EABE6DE4-C966-4DA2-960D-40F10713C21A.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-29T17:06:36.893Z"
+  "exported_at": "2026-06-29T17:06:36.893Z",
+  "relations": [
+    {
+      "to": "Михаэль Иннос",
+      "type": "ally",
+      "label": "главнокомандующий Небесным хором"
+    }
+  ]
 }

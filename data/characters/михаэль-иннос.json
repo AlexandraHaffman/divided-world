@@ -36,5 +36,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/65C1B316-90FF-410A-93C5-3632F02B0596.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/D3E8A436-211A-4977-BFD0-D285ECE87A88.jpeg",
   "tier": "rare",
-  "exported_at": "2026-06-29T13:24:10.864Z"
+  "exported_at": "2026-06-29T13:24:10.864Z",
+  "relations": [
+    {
+      "to": "Эмилия Эверетт",
+      "type": "ally",
+      "label": "корпус «Солнце» под его началом"
+    },
+    {
+      "to": "Рафаэль Монтальво",
+      "type": "ally",
+      "label": "корпус «Луна» под его началом"
+    },
+    {
+      "to": "Джонас Блейк",
+      "type": "ally",
+      "label": "корпус «Земля» под его началом"
+    }
+  ]
 }

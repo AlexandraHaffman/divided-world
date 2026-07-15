@@ -38,5 +38,27 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AA6E2D00-481B-4679-9241-2087D50BD1CA.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A87996A1-179B-4EB7-97C7-7D66DA155C03.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-12T11:18:55.946Z"
+  "exported_at": "2026-07-12T11:18:55.946Z",
+  "relations": [
+    {
+      "to": "Дариан Сорель",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Валентина Блажек",
+      "type": "ally",
+      "label": "взаимные провокации"
+    },
+    {
+      "to": "Эмиль Грант",
+      "type": "ally",
+      "label": "Квартет"
+    },
+    {
+      "to": "Артур Остерман",
+      "type": "enemy",
+      "label": "Война в тени"
+    }
+  ]
 }

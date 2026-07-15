@@ -38,5 +38,22 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C0DBBAE8-00F3-428F-BFDD-AEEAAFF2493B.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/003C5369-2EB0-4448-84AF-B9429DDD34D0.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-30T19:50:06.267Z"
+  "exported_at": "2026-06-30T19:50:06.267Z",
+  "relations": [
+    {
+      "to": "Саманта Чен",
+      "type": "ally",
+      "label": "взаимное уважение"
+    },
+    {
+      "to": "Ричард Уолш",
+      "type": "ally",
+      "label": "Совет директоров"
+    },
+    {
+      "to": "Амели Бертран",
+      "type": "enemy",
+      "label": "погубила её брата"
+    }
+  ]
 }

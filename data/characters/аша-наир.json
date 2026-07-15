@@ -39,5 +39,12 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/DEE788D3-08D7-458B-8ED4-3EF8226FA3E3.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A8052DEC-8DF5-4E58-B1F7-3B237373901A.jpeg",
   "tier": "epic",
-  "exported_at": "2026-07-12T12:20:06.848Z"
+  "exported_at": "2026-07-12T12:20:06.848Z",
+  "relations": [
+    {
+      "to": "Валентина Блажек",
+      "type": "ally",
+      "label": "формальный сюзерен"
+    }
+  ]
 }
