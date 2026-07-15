@@ -463,7 +463,10 @@
     align-items: center;
     justify-content: center;
     gap: 14px;
-    background: var(--bg);
+    background:
+      linear-gradient(rgba(8,12,18,0.72), rgba(8,12,18,0.9)),
+      url('../data/images/backgrounds/bg-map.webp') center/cover no-repeat,
+      var(--bg);
     transition: opacity .8s;
   }
   #loader.gone { opacity: 0; pointer-events: none; }
@@ -495,6 +498,8 @@
     justify-content: center;
     background:
       radial-gradient(circle at 50% 40%, rgba(20,32,52,0.6), transparent 60%),
+      linear-gradient(rgba(8,12,18,0.75), rgba(8,12,18,0.92)),
+      url('../data/images/backgrounds/bg-map.webp') center/cover no-repeat,
       var(--bg);
     transition: opacity .35s;
   }
@@ -621,9 +626,9 @@
 
 <div class="hud-header">
   <a class="back-link" href="../index.html">◄ ТЕРМИНАЛ</a>
-  <div class="hud-label">ОРБИТАЛЬНЫЙ МОНИТОРИНГ // СЕТКА ФРАКЦИЙ // 2061 Н.Э.</div>
+  <div class="hud-label">ORBITAL MONITORING // FACTION GRID // 2061 CE</div>
   <div class="hud-title">ГЛОБАЛЬНАЯ КАРТА — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
-  <div class="hud-status" id="status">СИГНАЛ СТАБИЛЕН</div>
+  <div class="hud-status" id="status">SIGNAL STABLE</div>
 </div>
 
 <div class="legend" id="legend">
@@ -659,7 +664,7 @@
 
 <div id="loader">
   <div class="load-ring"></div>
-  <div class="load-text">ИНИЦИАЛИЗАЦИЯ ОРБИТАЛЬНОЙ СЕТКИ…</div>
+  <div class="load-text">INITIALIZING ORBITAL GRID…</div>
 </div>
 
 <div id="gate">
@@ -1092,7 +1097,7 @@ window.addEventListener('resize', layoutPanels);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutPanels);
 
 function setStatus(text, color){
-  statusEl.textContent = text || 'СИГНАЛ СТАБИЛЕН';
+  statusEl.textContent = text || 'SIGNAL STABLE';
   statusEl.style.color = color || '';
 }
 
@@ -1769,7 +1774,7 @@ document.getElementById('btnZoomOut').addEventListener('click', () => tR = clamp
 // ═══════════════ СТАРТ ═══════════════
 function start(){
   if (!gl){
-    document.querySelector('.load-text').textContent = 'ОШИБКА: WEBGL НЕДОСТУПЕН';
+    document.querySelector('.load-text').textContent = 'ERROR: WEBGL UNAVAILABLE';
     return;
   }
   resize();

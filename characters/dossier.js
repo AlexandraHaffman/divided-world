@@ -33,6 +33,20 @@ const TIER_FILTER_COLORS = {
 const REPO = "AlexandraHaffman/divided-world";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
 
+/* Краткие пояснения характеристик — всплывают по наведению на название
+   статы (радар, ползунки в досье, «перетягивание каната» в сравнении).
+   Общий словарь, чтобы формулировка не расходилась между режимами. */
+const STAT_INFO = {
+  intelligence:     "Скорость мышления, эрудиция и способность к анализу и стратегии.",
+  combat:           "Боевые навыки, физическая мощь и эффективность в прямом столкновении.",
+  influence:        "Авторитет, связи и способность управлять решениями других.",
+  meta_power:       "Мощь мета-способностей относительно других мета-людей.",
+  cruelty:          "Готовность причинять боль и пренебрежение чужими страданиями.",
+  will:             "Устойчивость к давлению, страху, боли и манипуляциям.",
+  stealth:          "Умение оставаться незамеченным и действовать в тени.",
+  unpredictability: "Хаотичность решений и поведения — трудно просчитать наперёд."
+};
+
 /* Порог, с которого персонаж считается легендарным — квалификация
    считается сама по threat_level, вручную ничего добавлять не нужно. */
 const LEGENDARY_THREAT_THRESHOLD = 50;
@@ -118,10 +132,8 @@ function metaGlowHTML(c) {
 }
 
 function buildRadar(stats, rgb, size = 70) {
-  const vals = [
-    stats.intelligence || 0, stats.combat || 0, stats.influence || 0,
-    stats.cruelty || 0, stats.will || 0, stats.stealth || 0, stats.unpredictability || 0
-  ];
+  const RADAR_KEYS = ["intelligence","combat","influence","cruelty","will","stealth","unpredictability"];
+  const vals = RADAR_KEYS.map(k => stats[k] || 0);
   const EMOJI = ["🧠","⚔","👑","🔪","🛡","🌑","🎲"];
   const n = 7, cx = size/2, cy = size/2, R = size * 0.33;
   const angles = Array.from({length: n}, (_, i) => (Math.PI*2*i/n) - Math.PI/2);
@@ -139,8 +151,13 @@ function buildRadar(stats, rgb, size = 70) {
   });
   const labels = size > 90 ? angles.map((a, i) => {
     const lx = cx + (R+13)*Math.cos(a), ly = cy + (R+13)*Math.sin(a);
-    return `<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="middle" font-size="9">${EMOJI[i]}</text>`
-         + `<text x="${lx.toFixed(1)}" y="${(ly+14).toFixed(1)}" text-anchor="middle" font-size="7" fill="rgba(${rgb},0.7)" font-family="Share Tech Mono,monospace" font-weight="700">${vals[i]}</text>`;
+    const tip = STAT_INFO[RADAR_KEYS[i]] || "";
+    return `<g class="radar-axis-label">
+      ${tip ? `<title>${tip}</title>` : ""}
+      <circle cx="${lx.toFixed(1)}" cy="${(ly+4).toFixed(1)}" r="11" fill="transparent"/>
+      <text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="middle" font-size="9">${EMOJI[i]}</text>
+      <text x="${lx.toFixed(1)}" y="${(ly+14).toFixed(1)}" text-anchor="middle" font-size="7" fill="rgba(${rgb},0.7)" font-family="Share Tech Mono,monospace" font-weight="700">${vals[i]}</text>
+    </g>`;
   }).join("") : "";
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="overflow:visible">
     <defs><filter id="rg${size}"><feGaussianBlur stdDeviation="1.5"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
@@ -344,14 +361,14 @@ function openDossier(idx) {
   const legendarySlug = isLegendaryThreat(c) ? LEGENDARY_DOSSIER_SLUGS[c.name] : null;
   const stats = c.stats || {};
   const statRows = [
-    ["Интеллект",         stats.intelligence],
-    ["Боевые",            stats.combat],
-    ["Влияние",           stats.influence],
-    ["Мета-сила",         stats.meta_power],
-    ["Жестокость",        stats.cruelty],
-    ["Воля",              stats.will],
-    ["Скрытность",        stats.stealth],
-    ["Непредсказуемость", stats.unpredictability]
+    ["Интеллект",         stats.intelligence,     "intelligence"],
+    ["Боевые",            stats.combat,            "combat"],
+    ["Влияние",           stats.influence,         "influence"],
+    ["Мета-сила",         stats.meta_power,        "meta_power"],
+    ["Жестокость",        stats.cruelty,           "cruelty"],
+    ["Воля",              stats.will,              "will"],
+    ["Скрытность",        stats.stealth,           "stealth"],
+    ["Непредсказуемость", stats.unpredictability,  "unpredictability"]
   ];
   const radar = buildRadar(stats, col.rgb, 150);
 
@@ -367,7 +384,7 @@ function openDossier(idx) {
       <div class="dossier-art-bg">
         ${artUrl
           ? `<img src="${artUrl}" alt="${c.name}">`
-          : `<div class="art-placeholder"><span class="art-placeholder-text" style="--dr:${col.rgb}">[ ПОРТРЕТ ЗАСЕКРЕЧЕН ]</span></div>`
+          : `<div class="art-placeholder"><span class="art-placeholder-text" style="--dr:${col.rgb}">[ PORTRAIT CLASSIFIED ]</span></div>`
         }
       </div>
       <div class="dossier-art-gradient"></div>
@@ -379,7 +396,7 @@ function openDossier(idx) {
         </div>
       </div>` : ''}
       <div class="dossier-art-info">
-        <div class="dossier-sys">SYS.RECORD // ПЕРСОНАЖ #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
+        <div class="dossier-sys">SYS.RECORD // SUBJECT #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
         <div class="dossier-faction-label">${c.faction || '—'}${c.subfaction && c.subfaction !== c.faction ? ` · ${c.subfaction}` : ''}</div>
         <div class="dossier-name">${c.name}</div>
         <div class="dossier-role">${c.role || ''}</div>
@@ -412,9 +429,9 @@ function openDossier(idx) {
           <div class="stat-bars">
             ${statRows
               .filter(([l, v]) => v !== undefined && !(l === "Мета-сила" && (v || 0) === 0))
-              .map(([l, v]) => `
+              .map(([l, v, key]) => `
                 <div class="stat-row">
-                  <div class="stat-name">${l}</div>
+                  <div class="stat-name" data-tip="${STAT_INFO[key] || ''}">${l}</div>
                   <div class="stat-track"><div class="stat-fill" style="width:${Math.min((v||0)/10*100,100)}%"></div></div>
                   <div class="stat-val">${v || 0}</div>
                 </div>`)

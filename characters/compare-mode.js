@@ -417,7 +417,12 @@ function buildCompareRadar(chars, cols, size = 220) {
   ).join("");
   const labels = angles.map((a, i) => {
     const lx = cx + (R+17)*Math.cos(a), ly = cy + (R+17)*Math.sin(a);
-    return `<text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="middle" font-size="12">${EMOJI[i]}</text>`;
+    const tip = (typeof STAT_INFO !== "undefined" && STAT_INFO[keys[i]]) || "";
+    return `<g class="radar-axis-label">
+      ${tip ? `<title>${tip}</title>` : ""}
+      <circle cx="${lx.toFixed(1)}" cy="${(ly+4).toFixed(1)}" r="12" fill="transparent"/>
+      <text x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="middle" font-size="12">${EMOJI[i]}</text>
+    </g>`;
   }).join("");
   const order = chars.map((c, i) => i).sort((a, b) => {
     const sum = c => keys.reduce((s, k) => s + ((c.stats && c.stats[k]) || 0), 0);
@@ -440,7 +445,7 @@ function buildCompareRadar(chars, cols, size = 220) {
 }
 
 /* ── «Перетягивание каната» ── */
-function buildTugRow(label, vals, cols) {
+function buildTugRow(label, vals, cols, tip) {
   const sum = vals.reduce((a, b) => a + b, 0);
   const max = Math.max(...vals);
   const tie = vals.every(v => v === max);
@@ -456,7 +461,7 @@ function buildTugRow(label, vals, cols) {
     return `<div class="compare-tug-seg${isWinner ? ' winner' : ''}" style="width:${w}%;background:${bg}"></div>`;
   }).join("");
   return `<div class="compare-stat-row">
-    <div class="compare-stat-label">${label}</div>
+    <div class="compare-stat-label"${tip ? ` data-tip="${tip}"` : ""}>${label}</div>
     <div class="compare-tug-nums">${numsHTML}</div>
     <div class="compare-tug-track">${segsHTML}</div>
   </div>`;
@@ -686,7 +691,7 @@ async function openCompare() {
   // ── Детальные характеристики ──
   const statsHTML = statDefs.map(([label, key]) => {
     const vals = chars.map(c => st(c, key));
-    return buildTugRow(label, vals, cols);
+    return buildTugRow(label, vals, cols, STAT_INFO[key]);
   }).join("");
 
   document.getElementById("compare-inner").innerHTML = `

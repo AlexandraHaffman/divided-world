@@ -38,17 +38,17 @@ function buildCarouselCard(c, idx) {
   const radarFace = buildRadar(stats, col.rgb, 120);
 
   const statsHTML = [
-    ["Интеллект",   stats.intelligence],
-    ["Боевые",      stats.combat],
-    ["Влияние",     stats.influence],
-    ["Жестокость",  stats.cruelty],
-    ["Воля",        stats.will],
-    ["Скрытность",  stats.stealth],
-    ["Непредсказ.", stats.unpredictability],
-    ["Мета-сила",   stats.meta_power]
-  ].filter(([, v]) => v > 0).map(([l, v]) =>
+    ["Интеллект",   stats.intelligence,     "intelligence"],
+    ["Боевые",      stats.combat,           "combat"],
+    ["Влияние",     stats.influence,        "influence"],
+    ["Жестокость",  stats.cruelty,          "cruelty"],
+    ["Воля",        stats.will,             "will"],
+    ["Скрытность",  stats.stealth,          "stealth"],
+    ["Непредсказ.", stats.unpredictability, "unpredictability"],
+    ["Мета-сила",   stats.meta_power,       "meta_power"]
+  ].filter(([, v]) => v > 0).map(([l, v, key]) =>
     `<div class="c-stat-row">
-      <span class="c-stat-name">${l}</span>
+      <span class="c-stat-name" data-tip="${STAT_INFO[key] || ''}">${l}</span>
       <div class="c-stat-track"><div class="c-stat-fill" style="width:${Math.min(v/10*100,100)}%"></div></div>
       <span class="c-stat-val">${v}</span>
     </div>`
@@ -112,7 +112,7 @@ function buildCarouselCard(c, idx) {
       <div class="c-card-bar"></div>
       <div class="c-back-header">
         <div>
-          <div class="c-back-sys">SYS.RECORD // ДОСЬЕ</div>
+          <div class="c-back-sys">SYS.RECORD // DOSSIER</div>
           <div class="c-back-name">${c.name}</div>
           <div class="c-back-role">${c.role || ""}</div>
         </div>
@@ -188,11 +188,16 @@ function glitchFlip(card) {
 
 function attachCarouselEvents() {
   document.querySelectorAll(".c-card").forEach(card => {
-    let startX, startY, moved = false;
+    let startX, startY, moved = false, lastTouch = 0;
     card.addEventListener("touchstart", e => { startX=e.touches[0].clientX; startY=e.touches[0].clientY; moved=false; }, {passive:true});
     card.addEventListener("touchmove", e => { if(Math.abs(e.touches[0].clientX-startX)>8||Math.abs(e.touches[0].clientY-startY)>8) moved=true; }, {passive:true});
-    card.addEventListener("touchend", e => { if(!moved){e.preventDefault();glitchFlip(card);} });
-    card.addEventListener("click", () => { if(!('ontouchstart' in window)) glitchFlip(card); });
+    card.addEventListener("touchend", e => { if(!moved){e.preventDefault(); lastTouch=Date.now(); glitchFlip(card);} });
+    // Клик мышью (десктоп). Игнорируем «синтетический» клик сразу после тача,
+    // чтобы на телефоне переворот не срабатывал дважды.
+    card.addEventListener("click", () => {
+      if (Date.now() - lastTouch < 700) return;
+      glitchFlip(card);
+    });
   });
 }
 
@@ -231,18 +236,21 @@ function attachCarouselScrollControls() {
       track.scrollLeft += e.deltaY;
     }, { passive: false });
 
-    // драг мышью
+    // драг мышью.
+    // ВАЖНО: класс .dragging (а с ним pointer-events:none на карточках)
+    // навешиваем только когда пользователь реально потянул, а не сразу по
+    // нажатию. Иначе цель click уходит с карточки на трек и переворот
+    // (glitchFlip) на десктопе не срабатывает.
     let isDown = false, dragged = false, startX = 0, startScroll = 0;
     track.addEventListener("mousedown", e => {
       isDown = true; dragged = false;
       startX = e.clientX; startScroll = track.scrollLeft;
-      track.classList.add("dragging");
     });
     window.addEventListener("mousemove", e => {
       if (!isDown) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 4) dragged = true;
-      track.scrollLeft = startScroll - dx;
+      if (Math.abs(dx) > 4 && !dragged) { dragged = true; track.classList.add("dragging"); }
+      if (dragged) track.scrollLeft = startScroll - dx;
     });
     const endDrag = () => {
       if (!isDown) return;
