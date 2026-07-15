@@ -1,5 +1,1497 @@
-<h1>📜 История</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Терминал: Хронология — Разделённый мир</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
 
-<p>Раздел находится в разработке.</p>
+  :root {
+    --bg: #080c12;
+    --bg2: rgba(13,19,32,0.85);
+    --blue: #4fc3f7;
+    --amber: #ffb340;
+    --amber-dim: rgba(255,179,64,0.25);
+    --text: #c8d8e8;
+    --text-dim: #5a7a9a;
+    --border: rgba(255,179,64,0.18);
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Rajdhani', sans-serif;
+  }
 
-<a href="../index.html">← На главную</a>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* фон: виньетка + слабая сетка */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(255,179,64,0.05), transparent 55%),
+      repeating-linear-gradient(90deg, transparent 0 119px, rgba(120,150,200,0.025) 119px 120px),
+      repeating-linear-gradient(0deg, transparent 0 119px, rgba(120,150,200,0.02) 119px 120px);
+  }
+  /* scanlines */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+  }
+
+  /* ── ТИКЕР ── */
+  .ticker {
+    flex-shrink: 0;
+    height: 27px;
+    overflow: hidden;
+    background: linear-gradient(90deg, #06070c, #0b0d14, #06070c);
+    border-bottom: 1px solid var(--amber-dim);
+    position: relative;
+    z-index: 20;
+  }
+  .ticker-track {
+    display: flex;
+    align-items: center;
+    height: 27px;
+    white-space: nowrap;
+    width: max-content;
+    animation: tick 40s linear infinite;
+  }
+  @keyframes tick { to { transform: translateX(-50%); } }
+  .tick-item {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--amber);
+    opacity: .65;
+    letter-spacing: 1px;
+    padding: 0 20px;
+  }
+  .tick-sep { color: rgba(255,179,64,0.25); }
+
+  /* ── ШАПКА ── */
+  .hd {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 30;
+    padding: 10px 16px 10px;
+    background: linear-gradient(180deg, rgba(8,12,18,0.97), rgba(8,12,18,0.88));
+    border-bottom: 1px solid var(--border);
+  }
+  .hd::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity: .5;
+  }
+  .hd-r1 { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .back-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: color .2s;
+    flex-shrink: 0;
+  }
+  .back-link:hover { color: var(--amber); }
+  .hd-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(13px, 3.4vw, 19px);
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 24px rgba(255,179,64,0.35);
+  }
+  .hd-title span { color: var(--amber); }
+  .hd-label {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 2.5px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  .hd-r2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 9px;
+    flex-wrap: wrap;
+  }
+  .mode-sw { display: flex; gap: 0; flex-shrink: 0; }
+  .mbtn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    padding: 7px 14px;
+    background: rgba(10,14,22,0.8);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .18s;
+    text-transform: uppercase;
+  }
+  .mbtn + .mbtn { border-left: none; }
+  .mbtn.on {
+    color: var(--amber);
+    background: rgba(255,179,64,0.08);
+    box-shadow: inset 0 -2px 0 var(--amber), 0 0 12px rgba(255,179,64,0.12);
+    font-weight: 700;
+  }
+  .mbtn:hover:not(.on) { color: var(--text); }
+
+  .search-wrap { position: relative; flex: 1; min-width: 140px; max-width: 320px; }
+  .search {
+    width: 100%;
+    background: rgba(6,9,15,0.9);
+    border: 1px solid var(--border);
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 7px 26px 7px 10px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .search:focus { border-color: var(--amber); box-shadow: 0 0 12px rgba(255,179,64,0.15); }
+  .search::placeholder { color: var(--text-dim); }
+  .search-x {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    display: none;
+  }
+  .search-x:hover { color: var(--amber); }
+
+  .zoom-ctl {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .zbtn {
+    width: 30px; height: 30px;
+    background: rgba(10,14,22,0.8);
+    border: 1px solid var(--border);
+    color: var(--amber);
+    font-family: var(--mono);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .zbtn:hover { background: rgba(255,179,64,0.1); }
+  .zpct {
+    min-width: 52px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: .5px;
+  }
+  .zpct:hover { color: var(--amber); }
+
+  .hd-r3 {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 9px;
+    flex-wrap: wrap;
+  }
+  .fchip {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .15s;
+    opacity: .3;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .fchip.on { opacity: 1; box-shadow: 0 0 7px currentColor; }
+  .fchip:active { transform: scale(.94); }
+  .fchip-all {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .8px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: all .15s;
+    user-select: none;
+  }
+  .fchip-all:hover { color: var(--amber); border-color: var(--amber); }
+  .found {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  /* ── СКРОЛЛ-ОБЛАСТЬ ── */
+  .scroller {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    z-index: 5;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-x pan-y;
+  }
+  .scroller::-webkit-scrollbar { width: 5px; height: 5px; }
+  .scroller::-webkit-scrollbar-thumb { background: rgba(255,179,64,0.25); border-radius: 3px; }
+  .scroller::-webkit-scrollbar-corner { background: transparent; }
+  .content { width: max-content; min-width: 100%; }
+
+  /* ── ЛЕНТА ── */
+  .feed { padding: 4px 16px 30px; max-width: 860px; margin: 0 auto; min-width: 0; }
+  .year-hd {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0 6px;
+    background: linear-gradient(180deg, var(--bg) 78%, transparent);
+  }
+  .year-num {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--amber);
+    text-shadow: 0 0 14px rgba(255,179,64,0.5);
+  }
+  .year-count {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+  .year-hd::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,179,64,0.35), transparent);
+  }
+  .frow { display: flex; gap: 10px; margin-bottom: 7px; }
+  .fspine {
+    width: 14px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .fspine::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 0; bottom: -7px;
+    width: 1px;
+    background: rgba(120,150,200,0.13);
+  }
+  .fdot {
+    position: absolute;
+    left: 3px; top: 16px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 8px var(--c);
+  }
+  .frow .card { flex: 1; min-width: 0; }
+
+  /* ── СЕТКА ── */
+  .grid { padding-bottom: 30px; }
+  .g-head { display: flex; position: sticky; top: 0; z-index: 12; }
+  .g-ycol {
+    width: 44px;
+    flex-shrink: 0;
+    position: sticky;
+    left: 0;
+    z-index: 13;
+    background: #0a0e16;
+    border-right: 1px solid rgba(255,179,64,0.25);
+  }
+  .g-head .g-ycol { border-bottom: 2px solid rgba(255,179,64,0.5); }
+  .g-fh {
+    width: 210px;
+    flex-shrink: 0;
+    padding: 10px 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--c);
+    background: #0a0e16;
+    border-bottom: 2px solid var(--c);
+    border-left: 1px solid rgba(120,150,200,0.08);
+    text-shadow: 0 0 10px var(--c);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .g-row { display: flex; border-bottom: 1px solid rgba(120,150,200,0.07); }
+  .g-year {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--amber);
+  }
+  .g-cell {
+    width: 210px;
+    flex-shrink: 0;
+    padding: 5px 5px 5px 15px;
+    border-left: 1px solid rgba(120,150,200,0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+  }
+  .g-cell .card { font-size: 0.94em; }
+  /* эпохи: вертикальные шины */
+  .g-cell.ep { background: linear-gradient(90deg, rgba(var(--ep), 0.05), transparent 65%); }
+  .ep-bar {
+    position: absolute;
+    left: 5px;
+    width: 3px;
+    background: rgba(var(--ep), 0.65);
+    box-shadow: 0 0 7px rgba(var(--ep), 0.45);
+    pointer-events: none;
+  }
+  .ep-bar.mid { top: 0; bottom: 0; }
+  .ep-bar.start { top: 22px; bottom: 0; }
+  .ep-bar.end { top: 0; height: 22px; }
+  .ep-tick {
+    position: absolute;
+    left: 5px;
+    width: 11px;
+    height: 2px;
+    background: rgba(var(--ep), 0.7);
+    pointer-events: none;
+  }
+  .ep-tick.start { top: 21px; }
+  .ep-tick.end { top: 21px; }
+
+  /* ── КАРТОЧКА ── */
+  .card {
+    position: relative;
+    border: 1px solid color-mix(in srgb, var(--c) 26%, transparent);
+    background: linear-gradient(148deg, color-mix(in srgb, var(--c) 9%, #0a0d14) 0%, #080b11 100%);
+    padding: 7px 9px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s, transform .1s;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--c);
+    opacity: .55;
+  }
+  .card:hover {
+    border-color: color-mix(in srgb, var(--c) 70%, transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--c) 22%, transparent);
+  }
+  .card:active { transform: scale(.985); }
+  .c-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .c-fac {
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--c);
+  }
+  .c-rank { display: flex; gap: 2px; }
+  .c-rp { width: 4px; height: 4px; border-radius: 1px; background: var(--c); opacity: .18; }
+  .c-rp.f { opacity: 1; box-shadow: 0 0 3px var(--c); }
+  .c-badge {
+    font-family: var(--mono);
+    font-size: 7.5px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .c-badge.start { background: color-mix(in srgb, var(--c) 16%, transparent); color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); }
+  .c-badge.end { background: #161a24; color: #7a8699; border: 1px solid #2a3040; }
+  .c-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+    margin-bottom: 3px;
+  }
+  .c-text {
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--c) 42%, #c8d8e8);
+  }
+  .c-bot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px solid color-mix(in srgb, var(--c) 14%, transparent);
+  }
+  .c-date {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .5px;
+    color: color-mix(in srgb, var(--c) 75%, #fff0);
+    opacity: .9;
+  }
+  .c-ico { font-size: 11px; opacity: .65; }
+  .c-chars {
+    font-size: 9px;
+    font-style: italic;
+    color: color-mix(in srgb, var(--c) 40%, transparent);
+    margin-top: 2px;
+  }
+  .c-dur {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    color: color-mix(in srgb, var(--c) 60%, transparent);
+    margin-top: 3px;
+  }
+
+  /* подсветка при прыжке к карточке */
+  .card.flash { box-shadow: 0 0 0 2px var(--c), 0 0 22px var(--c); }
+
+  /* ── МИНИ-КАРТА ЛЕТ ── */
+  .mmap {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 25;
+    height: 58px;
+    background: linear-gradient(180deg, rgba(6,9,14,0.97), #05070b);
+    border-top: 1px solid var(--amber-dim);
+    padding: 6px 14px 4px;
+    user-select: none;
+  }
+  .mm-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    height: 32px;
+    position: relative;
+    cursor: pointer;
+  }
+  .mm-col { flex: 1; display: flex; flex-direction: column-reverse; min-width: 2px; opacity: .8; transition: opacity .15s; }
+  .mm-col:hover { opacity: 1; }
+  .mm-col.dim { opacity: .22; }
+  .mm-seg { width: 100%; }
+  .mm-base { height: 1px; background: rgba(120,150,200,0.2); width: 100%; }
+  .mm-win {
+    position: absolute;
+    top: -3px; bottom: -3px;
+    border: 1px solid var(--amber);
+    background: rgba(255,179,64,0.07);
+    box-shadow: 0 0 10px rgba(255,179,64,0.25);
+    pointer-events: none;
+    transition: left .12s, width .12s;
+  }
+  .mm-axis {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 7.5px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-top: 3px;
+  }
+  .mm-tip {
+    position: absolute;
+    bottom: 62px;
+    transform: translateX(-50%);
+    background: rgba(8,11,17,0.95);
+    border: 1px solid var(--amber-dim);
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--amber);
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    pointer-events: none;
+    white-space: nowrap;
+    display: none;
+    z-index: 30;
+  }
+
+  /* ── МОДАЛКА ── */
+  .mbg {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(2,4,8,0.82);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    animation: fadeIn .18s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } }
+  .modal {
+    width: 100%;
+    max-width: 420px;
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--c) 13%, #070a10) 0%, #06080d 100%);
+    border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--c) 18%, transparent), 0 26px 70px rgba(0,0,0,.9), 0 0 44px color-mix(in srgb, var(--c) 22%, transparent);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    animation: popIn .22s cubic-bezier(.18,.9,.33,1.2);
+    position: relative;
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(.9); } }
+  .m-bar { height: 3px; background: linear-gradient(90deg, var(--c), color-mix(in srgb, var(--c) 25%, transparent), transparent); flex-shrink: 0; }
+  .m-inner { overflow-y: auto; padding: 16px 18px 20px; }
+  .m-inner::-webkit-scrollbar { width: 3px; }
+  .m-inner::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--c) 40%, transparent); }
+  .m-close {
+    position: absolute;
+    top: 8px; right: 12px;
+    font-size: 20px;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    z-index: 5;
+    line-height: 1;
+  }
+  .m-close:hover { color: #fff; }
+  .m-fac {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--c);
+    margin-bottom: 8px;
+    padding-right: 26px;
+  }
+  .m-fac-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 8px var(--c); }
+  .m-type { margin-left: auto; opacity: .6; letter-spacing: 1px; }
+  .m-epoch {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    margin-bottom: 9px;
+  }
+  .m-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .m-div { height: 1px; background: linear-gradient(90deg, var(--c), transparent); opacity: .5; margin-bottom: 12px; }
+  .m-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--c) 30%, #d6e2ee);
+    margin-bottom: 14px;
+  }
+  .m-meta { display: flex; flex-direction: column; gap: 6px; }
+  .m-row { display: flex; gap: 10px; align-items: baseline; }
+  .m-k {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: color-mix(in srgb, var(--c) 55%, transparent);
+    flex-shrink: 0;
+    min-width: 86px;
+  }
+  .m-v {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: color-mix(in srgb, var(--c) 55%, #e6eef6);
+    letter-spacing: .3px;
+  }
+  .m-v .stars { letter-spacing: 2px; color: var(--c); }
+
+  /* ── ВОРОТА ДОСТУПА ── */
+  #gate {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(20,32,52,0.6), transparent 60%),
+      var(--bg);
+    transition: opacity .35s;
+  }
+  #gate.ok { opacity: 0; pointer-events: none; }
+  .gate-box {
+    position: relative;
+    width: min(400px, calc(100vw - 40px));
+    padding: 34px 28px 28px;
+    background: rgba(10,16,26,0.9);
+    border: 1px solid rgba(79,195,247,0.2);
+    border-top: 2px solid var(--blue);
+    box-shadow: 0 0 40px rgba(79,195,247,0.14);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    text-align: center;
+  }
+  #gate.shake .gate-box { animation: shake .4s; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-9px); }
+    40%,80% { transform: translateX(9px); }
+  }
+  .gate-icon { font-size: 30px; margin-bottom: 14px; }
+  .gate-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+  .gate-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  #gateForm { display: flex; flex-direction: column; gap: 12px; }
+  #gateInput {
+    width: 100%;
+    background: rgba(2,4,9,0.85);
+    border: 1px solid rgba(79,195,247,0.2);
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 15px;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 13px 12px;
+    outline: none;
+  }
+  #gateInput:focus { border-color: var(--blue); box-shadow: 0 0 14px rgba(79,195,247,0.25); }
+  #gateBtn {
+    background: rgba(79,195,247,0.1);
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 12px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  #gateBtn:hover { background: rgba(79,195,247,0.2); }
+  .gate-err {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #ff5544;
+    min-height: 14px;
+    margin-top: 14px;
+    text-transform: uppercase;
+  }
+  .gate-back {
+    position: absolute;
+    top: 16px; left: 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-decoration: none;
+  }
+  .gate-back:hover { color: var(--blue); }
+
+  #boot {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--amber);
+    animation: blink 1.1s step-end infinite;
+    z-index: 4;
+  }
+  @keyframes blink { 50% { opacity: .35; } }
+
+  @media (max-width: 700px) {
+    .hd-label { display: none; }
+    .feed { padding: 4px 10px 30px; }
+    .g-fh, .g-cell { width: 180px; }
+    .zpct { min-width: 44px; }
+    .found { width: 100%; margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<div class="hd">
+  <div class="hd-r1">
+    <a class="back-link" href="../index.html">◄ ТЕРМИНАЛ</a>
+    <div class="hd-title">ХРОНОЛОГИЯ — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
+    <div class="hd-label" id="hdLabel">АРХИВ // 1999–2061</div>
+  </div>
+  <div class="hd-r2">
+    <div class="mode-sw">
+      <button class="mbtn on" id="btnFeed">☰ ЛЕНТА</button>
+      <button class="mbtn" id="btnGrid">⊞ СЕТКА</button>
+    </div>
+    <div class="search-wrap">
+      <input class="search" id="search" type="text" placeholder="ПОИСК ПО АРХИВУ…" autocomplete="off" spellcheck="false">
+      <span class="search-x" id="searchX">×</span>
+    </div>
+    <div class="zoom-ctl">
+      <button class="zbtn" id="zOut" title="Уменьшить">−</button>
+      <div class="zpct" id="zPct" title="Сбросить масштаб">100%</div>
+      <button class="zbtn" id="zIn" title="Увеличить">+</button>
+    </div>
+  </div>
+  <div class="hd-r3" id="chips"></div>
+</div>
+
+<div class="scroller" id="scroller">
+  <div class="content" id="content"><div id="boot">РАСШИФРОВКА АРХИВА…</div></div>
+</div>
+
+<div class="mmap">
+  <div class="mm-bars" id="mmBars"><div class="mm-win" id="mmWin"></div></div>
+  <div class="mm-axis" id="mmAxis"></div>
+  <div class="mm-tip" id="mmTip"></div>
+</div>
+
+<div id="gate">
+  <a class="gate-back" href="../index.html">◄ ТЕРМИНАЛ</a>
+  <div class="gate-box">
+    <div class="gate-icon">🔒</div>
+    <div class="gate-title">ДОСТУП К СТРАНИЦЕ ОГРАНИЧЕН</div>
+    <div class="gate-sub">Введите код доступа</div>
+    <form id="gateForm" autocomplete="off">
+      <input id="gateInput" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="• • • • • • •" aria-label="Код доступа">
+      <button id="gateBtn" type="submit">Подтвердить</button>
+    </form>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+// ═══════════════ КОНФИГ ФРАКЦИЙ (палитра сайта/глобуса) ═══════════════
+const FACTIONS = [
+  { key: "Тенебрион",           col: "#ff9d00" },
+  { key: "Единая Америка",      col: "#00d4ff" },
+  { key: "Аркадия",             col: "#2ecc71" },
+  { key: "Forge",               col: "#74b9ff" },
+  { key: "Ракшасы",             col: "#a55eea" },
+  { key: "Белая зона",          col: "#c8c8c8" },
+  { key: "Экваториальная сеть", col: "#e8c382" },
+];
+const FALLBACK = { key: "?", col: "#8899aa" };
+const facOf = name => FACTIONS.find(f => f.key === name) || FALLBACK;
+
+const TYPE_ICONS = {
+  war:"⚔️", politics:"🏛️", meta:"⚡", ritual:"🔮", love:"💫",
+  birth:"🌱", death:"💀", alliance:"🤝", betrayal:"🗡️",
+  discovery:"🔬", crime:"🔫", religion:"✝️", art:"🎭",
+  economics:"💰", disaster:"🌪️", escape:"🏃", mystery:"🌀", other:"📌"
+};
+const TYPE_RU = {
+  war:"ВОЙНА", politics:"ПОЛИТИКА", meta:"МЕТА", ritual:"РИТУАЛ", love:"СВЯЗИ",
+  birth:"РОЖДЕНИЕ", death:"СМЕРТЬ", alliance:"СОЮЗ", betrayal:"ПРЕДАТЕЛЬСТВО",
+  discovery:"ОТКРЫТИЕ", crime:"ПРЕСТУПЛЕНИЕ", religion:"РЕЛИГИЯ", art:"ИСКУССТВО",
+  economics:"ЭКОНОМИКА", disaster:"КАТАСТРОФА", escape:"ПОБЕГ", mystery:"ТАЙНА", other:"ПРОЧЕЕ"
+};
+
+// ═══════════════ СОСТОЯНИЕ ═══════════════
+const S = {
+  mode: "feed",
+  filters: new Set(FACTIONS.map(f => f.key)),
+  query: "",
+  scale: parseFloat(localStorage.getItem("dw_tl_zoom")) || 1,
+};
+S.scale = Math.min(2.5, Math.max(0.4, S.scale));
+
+let ALL = [];        // все события (с эпохами)
+let yearAnchors = []; // [{year, el}] для мини-карты
+let minYear = 1999, maxYear = 2061;
+
+// ═══════════════ УТИЛИТЫ ═══════════════
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+
+function parseDMY(s){
+  if (!s) return null;
+  const p = String(s).trim().split(".");
+  if (p.length !== 3) return null;
+  const d = new Date(+p[2], +p[1] - 1, +p[0]);
+  return isNaN(d) ? null : d;
+}
+function plural(n, f1, f2, f5){
+  const m = n % 100;
+  if (m >= 11 && m <= 19) return n + " " + f5;
+  const r = n % 10;
+  if (r === 1) return n + " " + f1;
+  if (r >= 2 && r <= 4) return n + " " + f2;
+  return n + " " + f5;
+}
+// точная длительность с русскими падежами
+function calcDuration(s1, s2){
+  const d1 = parseDMY(s1), d2 = parseDMY(s2);
+  if (!d1 || !d2 || d2 <= d1) return "";
+  let y = d2.getFullYear() - d1.getFullYear();
+  let m = d2.getMonth() - d1.getMonth();
+  let d = d2.getDate() - d1.getDate();
+  if (d < 0){ m--; d += new Date(d2.getFullYear(), d2.getMonth(), 0).getDate(); }
+  if (m < 0){ y--; m += 12; }
+  const parts = [];
+  if (y) parts.push(plural(y, "год", "года", "лет"));
+  if (m) parts.push(plural(m, "месяц", "месяца", "месяцев"));
+  if (d && !y) parts.push(plural(d, "день", "дня", "дней"));
+  return parts.join(", ") || "менее дня";
+}
+
+// ═══════════════ ЭПОХИ ═══════════════
+// события с одинаковыми title+faction и endYear образуют «эпоху»:
+// первая запись — начало, последняя — завершение
+function buildEpochs(events){
+  const byKey = {}, singles = [];
+  for (const e of events){
+    if (e.title && e.endYear){
+      const k = e.title + "|||" + (e.faction || "");
+      (byKey[k] || (byKey[k] = [])).push(e);
+    } else singles.push({ ...e });
+  }
+  const res = [...singles];
+  for (const [k, arr] of Object.entries(byKey)){
+    arr.sort((a, b) => a.year - b.year);
+    const meta = {
+      _ekey: k,
+      _epStart: arr[0].year,
+      _epEnd: arr[0].endYear,
+      _durStr: calcDuration(arr[0].date, arr[0].endDate),
+    };
+    arr.forEach((e, i) => {
+      const role = i === 0 ? "start" : (i === arr.length - 1 ? "end" : "mid");
+      res.push({ ...e, ...meta, _role: arr.length === 1 ? "start" : role });
+    });
+  }
+  // порядковые номера записей внутри фракции
+  res.sort((a, b) => a.year - b.year || String(a.date).split(".").reverse().join("").localeCompare(String(b.date).split(".").reverse().join("")));
+  const idx = {};
+  for (const e of res){
+    idx[e.faction] = (idx[e.faction] || 0) + 1;
+    e._num = idx[e.faction];
+  }
+  res.forEach((e, i) => e._id = i);
+  return res;
+}
+
+// ═══════════════ ФИЛЬТРАЦИЯ ═══════════════
+function visibleEvents(){
+  const q = S.query.trim().toLowerCase();
+  return ALL.filter(e => {
+    if (!S.filters.has(e.faction)) return false;
+    if (!q) return true;
+    return (e.text || "").toLowerCase().includes(q)
+        || (e.title || "").toLowerCase().includes(q)
+        || String(e.year).includes(q)
+        || (e.chars || []).some(c => c.toLowerCase().includes(q))
+        || (e.loc || []).some(l => l.toLowerCase().includes(q));
+  });
+}
+
+// ═══════════════ КАРТОЧКА ═══════════════
+function cardEl(e, compact){
+  const f = facOf(e.faction);
+  const div = document.createElement("div");
+  div.className = "card";
+  div.style.setProperty("--c", f.col);
+  div.dataset.id = e._id;
+  if (e._ekey && e._role !== "mid"){ div.dataset.ekey = e._ekey; div.dataset.role = e._role; }
+
+  let badge = "";
+  if (e._role === "start" && e._ekey) badge = `<span class="c-badge start" data-jump="end">⚡ НАЧАЛО ЭПОХИ</span>`;
+  else if (e._role === "end") badge = `<span class="c-badge end" data-jump="start">🔘 КОНЕЦ ЭПОХИ</span>`;
+
+  const rank = Array.from({length:5}, (_, i) => `<span class="c-rp${i < e.rank ? " f" : ""}"></span>`).join("");
+  const chars = (!compact && e.chars && e.chars.length)
+    ? `<div class="c-chars">👤 ${esc(e.chars.join(", "))}</div>` : "";
+  const dur = (e._role === "end" && e._durStr)
+    ? `<div class="c-dur">⏱ ${esc(e._durStr)} (${e._epStart}—${e._epEnd})</div>` : "";
+
+  div.innerHTML = `
+    <div class="c-top">
+      <span class="c-fac">${esc(e.faction || "—")}</span>
+      <span class="c-rank">${rank}</span>
+      ${badge}
+    </div>
+    ${e.title ? `<div class="c-title">${esc(e.title)}</div>` : ""}
+    <div class="c-text">${esc(e.text || "")}</div>
+    ${chars}${dur}
+    <div class="c-bot">
+      <span class="c-date">${esc(e.date || String(e.year))}</span>
+      <span class="c-ico">${TYPE_ICONS[e.type] || "📌"}</span>
+    </div>`;
+
+  div.addEventListener("click", ev => {
+    const j = ev.target.closest("[data-jump]");
+    if (j && e._ekey){ ev.stopPropagation(); jumpToEpoch(e._ekey, j.dataset.jump); return; }
+    openModal(e);
+  });
+  return div;
+}
+
+function jumpToEpoch(ekey, role){
+  const el = content.querySelector(`.card[data-ekey="${CSS.escape(ekey)}"][data-role="${role}"]`);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.classList.add("flash");
+  setTimeout(() => el.classList.remove("flash"), 1600);
+}
+
+// ═══════════════ МОДАЛКА ═══════════════
+function openModal(e){
+  const f = facOf(e.faction);
+  const bg = document.createElement("div");
+  bg.className = "mbg";
+  const hasTitle = !!(e.title && e.title.trim());
+  let epoch = "";
+  if (e._role === "start" && e._ekey)
+    epoch = `<div class="m-epoch" style="background:color-mix(in srgb,var(--c) 15%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 40%,transparent)">⚡ НАЧАЛО ЭПОХИ</div>`;
+  else if (e._role === "end")
+    epoch = `<div class="m-epoch" style="background:#161a24;color:#7a8699;border:1px solid #2a3040">🔘 ЗАВЕРШЕНИЕ ЭПОХИ</div>`;
+  else if (e._role === "mid")
+    epoch = `<div class="m-epoch" style="background:#12151d;color:#8a96a9;border:1px solid #262c3a">◈ ХОД ЭПОХИ</div>`;
+
+  const rows = [];
+  const row = (k, v) => rows.push(`<div class="m-row"><span class="m-k">${k}</span><span class="m-v">${v}</span></div>`);
+  row("ГОД", e.endYear ? `${e.year} — ${e.endYear}` : String(e.year));
+  if (e.date) row("ДАТА", esc(e.date));
+  row("РАНГ", `<span class="stars">${"★".repeat(e.rank)}${"☆".repeat(5 - e.rank)}</span>`);
+  if (e._durStr) row("ДЛИТЕЛЬНОСТЬ", esc(e._durStr) + ` (${e._epStart} — ${e._epEnd})`);
+  if (e.chars && e.chars.length) row("ПЕРСОНАЖИ", esc(e.chars.join(", ")));
+  if (e.loc && e.loc.length) row("ЛОКАЦИЯ", esc(e.loc.join(", ")));
+  row("ЗАПИСЬ", `#${e._num} // ${esc(e.faction || "—")}`);
+
+  bg.innerHTML = `
+    <div class="modal" style="--c:${f.col}">
+      <div class="m-bar"></div>
+      <span class="m-close">×</span>
+      <div class="m-inner">
+        <div class="m-fac"><span class="m-fac-dot"></span>${esc((e.faction || "—").toUpperCase())}
+          <span class="m-type">${TYPE_ICONS[e.type] || "📌"} ${TYPE_RU[e.type] || esc(String(e.type).toUpperCase())}</span></div>
+        ${epoch}
+        <div class="m-title">${esc(hasTitle ? e.title : e.text)}</div>
+        <div class="m-div"></div>
+        ${hasTitle && e.text ? `<div class="m-text">${esc(e.text)}</div>` : ""}
+        <div class="m-meta">${rows.join("")}</div>
+      </div>
+    </div>`;
+  bg.addEventListener("click", ev => { if (ev.target === bg || ev.target.classList.contains("m-close")) bg.remove(); });
+  const onEsc = ev => { if (ev.key === "Escape"){ bg.remove(); document.removeEventListener("keydown", onEsc); } };
+  document.addEventListener("keydown", onEsc);
+  document.body.appendChild(bg);
+}
+
+// ═══════════════ РЕНДЕР: ЛЕНТА ═══════════════
+const content = $("content");
+const scroller = $("scroller");
+
+function renderFeed(evs){
+  const wrap = document.createElement("div");
+  wrap.className = "feed";
+  const byYear = {};
+  for (const e of evs) (byYear[e.year] || (byYear[e.year] = [])).push(e);
+  yearAnchors = [];
+  for (const year of Object.keys(byYear).map(Number).sort((a, b) => a - b)){
+    const hd = document.createElement("div");
+    hd.className = "year-hd";
+    hd.dataset.year = year;
+    hd.innerHTML = `<span class="year-num">${year}</span><span class="year-count">${plural(byYear[year].length, "ЗАПИСЬ", "ЗАПИСИ", "ЗАПИСЕЙ").toUpperCase()}</span>`;
+    wrap.appendChild(hd);
+    yearAnchors.push({ year, el: hd });
+    for (const e of byYear[year]){
+      const f = facOf(e.faction);
+      const row = document.createElement("div");
+      row.className = "frow";
+      row.innerHTML = `<div class="fspine" style="--c:${f.col}"><div class="fdot"></div></div>`;
+      row.appendChild(cardEl(e, false));
+      wrap.appendChild(row);
+    }
+  }
+  return wrap;
+}
+
+// ═══════════════ РЕНДЕР: СЕТКА ═══════════════
+function renderGrid(evs){
+  const AF = FACTIONS.filter(f => S.filters.has(f.key));
+  const wrap = document.createElement("div");
+  wrap.className = "grid";
+
+  const head = document.createElement("div");
+  head.className = "g-head";
+  head.innerHTML = `<div class="g-ycol"></div>` +
+    AF.map(f => `<div class="g-fh" style="--c:${f.col}">${esc(f.key)}</div>`).join("");
+  wrap.appendChild(head);
+
+  const byYear = {};
+  for (const e of evs){
+    (byYear[e.year] || (byYear[e.year] = {}));
+    (byYear[e.year][e.faction] || (byYear[e.year][e.faction] = [])).push(e);
+  }
+  const years = Object.keys(byYear).map(Number).sort((a, b) => a - b);
+
+  // диапазоны эпох для вертикальных шин
+  const epochs = {};
+  for (const e of evs){
+    if (e._ekey && e._role === "start"){
+      const c = facOf(e.faction).col;
+      epochs[e._ekey] = {
+        s: e._epStart, e: e._epEnd, faction: e.faction,
+        rgb: [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)).join(","),
+      };
+    }
+  }
+  const epochAt = (faction, year) => {
+    for (const ep of Object.values(epochs))
+      if (ep.faction === faction && year >= ep.s && year <= ep.e) return ep;
+    return null;
+  };
+
+  yearAnchors = [];
+  for (const year of years){
+    const row = document.createElement("div");
+    row.className = "g-row";
+    row.dataset.year = year;
+    const yc = document.createElement("div");
+    yc.className = "g-ycol g-year";
+    yc.textContent = year;
+    row.appendChild(yc);
+    for (const f of AF){
+      const cell = document.createElement("div");
+      cell.className = "g-cell";
+      const ep = epochAt(f.key, year);
+      if (ep){
+        cell.classList.add("ep");
+        cell.style.setProperty("--ep", ep.rgb);
+        const isS = year === ep.s, isE = year === ep.e;
+        const bar = document.createElement("div");
+        bar.className = "ep-bar " + (isS ? "start" : isE ? "end" : "mid");
+        cell.appendChild(bar);
+        if (isS || isE){
+          const t = document.createElement("div");
+          t.className = "ep-tick " + (isS ? "start" : "end");
+          cell.appendChild(t);
+        }
+      }
+      for (const e of (byYear[year][f.key] || [])) cell.appendChild(cardEl(e, true));
+      row.appendChild(cell);
+    }
+    wrap.appendChild(row);
+    yearAnchors.push({ year, el: row });
+  }
+  return wrap;
+}
+
+// ═══════════════ РЕНДЕР ═══════════════
+function render(){
+  const evs = visibleEvents();
+  content.innerHTML = "";
+  content.appendChild(S.mode === "feed" ? renderFeed(evs) : renderGrid(evs));
+  $("found").textContent = S.query.trim() || S.filters.size < FACTIONS.length
+    ? "НАЙДЕНО: " + evs.length : "ЗАПИСЕЙ: " + evs.length;
+  buildMinimap(evs);
+  measureAnchors();
+  updateMmapWindow();
+}
+
+// ═══════════════ ЗУМ (главное: никогда не сбрасывается) ═══════════════
+const zoomOk = CSS.supports("zoom", "1");
+
+function applyZoom(){
+  if (zoomOk){
+    content.style.zoom = S.scale;
+  } else {
+    content.style.transformOrigin = "0 0";
+    content.style.transform = `scale(${S.scale})`;
+    content.style.width = (100 / S.scale) + "%";
+  }
+  $("zPct").textContent = Math.round(S.scale * 100) + "%";
+  localStorage.setItem("dw_tl_zoom", String(S.scale));
+}
+
+// зум с якорем: точка контента под (cx, cy) остаётся на месте
+function setZoom(ns, cx, cy){
+  ns = Math.min(2.5, Math.max(0.4, ns));
+  if (Math.abs(ns - S.scale) < 1e-4) return;
+  const r = scroller.getBoundingClientRect();
+  if (cx === undefined){ cx = r.left + r.width / 2; cy = r.top + r.height / 2; }
+  const ox = cx - r.left, oy = cy - r.top;
+  const px = (scroller.scrollLeft + ox) / S.scale;
+  const py = (scroller.scrollTop + oy) / S.scale;
+  S.scale = ns;
+  applyZoom();
+  scroller.scrollLeft = px * ns - ox;
+  scroller.scrollTop = py * ns - oy;
+  measureAnchors();
+  updateMmapWindow();
+}
+
+$("zIn").addEventListener("click", () => setZoom(S.scale * 1.18));
+$("zOut").addEventListener("click", () => setZoom(S.scale / 1.18));
+$("zPct").addEventListener("click", () => setZoom(1));
+
+// ctrl/cmd + колесо — зум к курсору
+scroller.addEventListener("wheel", e => {
+  if (!e.ctrlKey && !e.metaKey) return;
+  e.preventDefault();
+  setZoom(S.scale * (e.deltaY > 0 ? 0.92 : 1.09), e.clientX, e.clientY);
+}, { passive: false });
+
+// щипок на тач-экране — зум к центру щипка
+let pinchD0 = 0, pinchS0 = 1;
+scroller.addEventListener("touchstart", e => {
+  if (e.touches.length === 2){
+    pinchD0 = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    pinchS0 = S.scale;
+  }
+}, { passive: true });
+scroller.addEventListener("touchmove", e => {
+  if (e.touches.length !== 2 || !pinchD0) return;
+  e.preventDefault();
+  const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+  const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+  setZoom(pinchS0 * (d / pinchD0), cx, cy);
+}, { passive: false });
+scroller.addEventListener("touchend", e => { if (e.touches.length < 2) pinchD0 = 0; }, { passive: true });
+document.addEventListener("gesturestart", e => e.preventDefault());
+
+// ctrl+0 — сброс
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "0"){ e.preventDefault(); setZoom(1); }
+});
+
+// ═══════════════ МИНИ-КАРТА ЛЕТ ═══════════════
+const mmBars = $("mmBars"), mmWin = $("mmWin"), mmTip = $("mmTip");
+let mmYears = [];
+
+function buildMinimap(evs){
+  const counts = {};
+  for (const e of evs){
+    (counts[e.year] || (counts[e.year] = {}));
+    counts[e.year][e.faction] = (counts[e.year][e.faction] || 0) + 1;
+  }
+  const maxN = Math.max(1, ...Object.values(counts).map(o => Object.values(o).reduce((a, b) => a + b, 0)));
+  mmBars.querySelectorAll(".mm-col").forEach(el => el.remove());
+  mmYears = [];
+  for (let y = minYear; y <= maxYear; y++){
+    const col = document.createElement("div");
+    col.className = "mm-col";
+    col.dataset.year = y;
+    const o = counts[y];
+    if (o){
+      let total = 0;
+      for (const [fac, n] of Object.entries(o)){
+        const seg = document.createElement("div");
+        seg.className = "mm-seg";
+        seg.style.height = (n / maxN * 30) + "px";
+        seg.style.background = facOf(fac).col;
+        col.appendChild(seg);
+        total += n;
+      }
+      col.dataset.count = total;
+    } else {
+      col.classList.add("dim");
+      const base = document.createElement("div");
+      base.className = "mm-base";
+      col.appendChild(base);
+    }
+    mmBars.appendChild(col);
+    mmYears.push(y);
+  }
+  const axis = $("mmAxis");
+  axis.innerHTML = "";
+  for (let y = Math.ceil(minYear / 10) * 10; y <= maxYear; y += 10)
+    axis.innerHTML += `<span>${y}</span>`;
+}
+
+// позиции годов в координатах скролла (в масштабированных px);
+// замеряются после рендера и смены зума — поэтому всегда точны
+let anchorTops = [];
+function measureAnchors(){
+  const cr = content.getBoundingClientRect();
+  anchorTops = yearAnchors.map(a => ({
+    year: a.year,
+    top: a.el.getBoundingClientRect().top - cr.top,
+  }));
+}
+
+function mmapJump(clientX){
+  const r = mmBars.getBoundingClientRect();
+  const frac = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+  const y = minYear + Math.round(frac * (maxYear - minYear));
+  // ближайший год, где есть записи
+  let best = null, bd = Infinity;
+  for (const a of anchorTops){
+    const d = Math.abs(a.year - y);
+    if (d < bd){ bd = d; best = a; }
+  }
+  if (best) scroller.scrollTo({ top: best.top - 8, behavior: "smooth" });
+}
+mmBars.addEventListener("click", e => mmapJump(e.clientX));
+mmBars.addEventListener("mousemove", e => {
+  const col = e.target.closest(".mm-col");
+  if (!col){ mmTip.style.display = "none"; return; }
+  const r = col.getBoundingClientRect(), rp = mmBars.parentElement.getBoundingClientRect();
+  mmTip.style.left = (r.left - rp.left + r.width / 2) + "px";
+  mmTip.textContent = col.dataset.year + (col.dataset.count ? " // " + plural(+col.dataset.count, "ЗАПИСЬ", "ЗАПИСИ", "ЗАПИСЕЙ") : " // ТИШИНА");
+  mmTip.style.display = "block";
+});
+mmBars.addEventListener("mouseleave", () => mmTip.style.display = "none");
+
+// окно видимых лет на мини-карте
+function updateMmapWindow(){
+  if (!anchorTops.length){ mmWin.style.display = "none"; return; }
+  const top = scroller.scrollTop;
+  const bot = top + scroller.clientHeight;
+  let y0 = anchorTops[0].year, y1 = anchorTops[0].year;
+  for (const a of anchorTops){
+    if (a.top <= top + 20) y0 = a.year;
+    if (a.top <= bot) y1 = a.year;
+  }
+  if (y1 < y0) y1 = y0;
+  const span = maxYear - minYear + 1;
+  mmWin.style.display = "block";
+  mmWin.style.left = ((y0 - minYear) / span * 100) + "%";
+  mmWin.style.width = (Math.max(1, y1 - y0 + 1) / span * 100) + "%";
+}
+scroller.addEventListener("scroll", () => requestAnimationFrame(updateMmapWindow), { passive: true });
+window.addEventListener("resize", () => { measureAnchors(); updateMmapWindow(); });
+
+// ═══════════════ ТИКЕР ═══════════════
+function buildTicker(evs){
+  const byF = {}, byC = {};
+  for (const e of evs){
+    byF[e.faction] = (byF[e.faction] || 0) + 1;
+    for (const c of (e.chars || [])) byC[c] = (byC[c] || 0) + 1;
+  }
+  const top = Object.entries(byC).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const items = [
+    "АРХИВ РАЗДЕЛЁННОГО МИРА // ДОСТУП РАЗРЕШЁН",
+    "ВСЕГО СОБЫТИЙ В БАЗЕ: " + evs.length,
+    FACTIONS.map(f => `${f.key}: ${byF[f.key] || 0}`).join(" // "),
+    "ТОП ПЕРСОНАЖИ: " + top.map(([n, c]) => `${n} (${c})`).join(" · "),
+    `ХРОНОЛОГИЯ ${minYear}–${maxYear} // СИНХРОНИЗАЦИЯ ЗАВЕРШЕНА`,
+    "ВНИМАНИЕ: ЧАСТЬ ДАННЫХ ЗАСЕКРЕЧЕНА",
+  ];
+  const track = $("tickerTrack");
+  track.innerHTML = "";
+  for (let i = 0; i < 2; i++)
+    for (const t of items)
+      track.innerHTML += `<span class="tick-item">${esc(t)}</span><span class="tick-item tick-sep">·//·</span>`;
+}
+
+// ═══════════════ ПАНЕЛЬ УПРАВЛЕНИЯ ═══════════════
+const chipsBox = $("chips");
+function buildChips(){
+  chipsBox.innerHTML = "";
+  const btnAll = document.createElement("div");
+  btnAll.className = "fchip-all";
+  const syncAll = () => btnAll.textContent = S.filters.size === FACTIONS.length ? "✕ СБРОС" : "✓ ВСЕ";
+  btnAll.addEventListener("click", () => {
+    if (S.filters.size === FACTIONS.length) S.filters.clear();
+    else FACTIONS.forEach(f => S.filters.add(f.key));
+    chipsBox.querySelectorAll(".fchip").forEach(ch =>
+      ch.classList.toggle("on", S.filters.has(ch.dataset.key)));
+    syncAll(); render();
+  });
+  chipsBox.appendChild(btnAll);
+  for (const f of FACTIONS){
+    const ch = document.createElement("div");
+    ch.className = "fchip on";
+    ch.dataset.key = f.key;
+    ch.textContent = f.key;
+    ch.style.borderColor = f.col;
+    ch.style.color = f.col;
+    ch.addEventListener("click", () => {
+      if (S.filters.has(f.key)) S.filters.delete(f.key);
+      else S.filters.add(f.key);
+      ch.classList.toggle("on", S.filters.has(f.key));
+      syncAll(); render();
+    });
+    chipsBox.appendChild(ch);
+  }
+  const found = document.createElement("div");
+  found.className = "found";
+  found.id = "found";
+  chipsBox.appendChild(found);
+  syncAll();
+}
+
+$("btnFeed").addEventListener("click", () => setMode("feed"));
+$("btnGrid").addEventListener("click", () => setMode("grid"));
+function setMode(m){
+  if (S.mode === m) return;
+  S.mode = m;
+  $("btnFeed").classList.toggle("on", m === "feed");
+  $("btnGrid").classList.toggle("on", m === "grid");
+  render(); // масштаб сознательно не трогаем
+}
+
+let searchT = 0;
+$("search").addEventListener("input", e => {
+  clearTimeout(searchT);
+  const v = e.target.value;
+  $("searchX").style.display = v ? "block" : "none";
+  searchT = setTimeout(() => { S.query = v; render(); }, 220);
+});
+$("searchX").addEventListener("click", () => {
+  $("search").value = ""; $("searchX").style.display = "none";
+  S.query = ""; render();
+});
+
+// ═══════════════ ЗАГРУЗКА ═══════════════
+async function start(){
+  buildChips();
+  applyZoom();
+  let raw;
+  try {
+    const resp = await fetch("data/events.json", { cache: "no-cache" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    raw = await resp.json();
+  } catch (err){
+    content.innerHTML = `<div style="padding:40px;text-align:center;font-family:var(--mono);font-size:11px;color:#ff5544;letter-spacing:2px">⚠ ОШИБКА ЗАГРУЗКИ АРХИВА: ${esc(err.message)}<br><br><span style="color:var(--text-dim)">страница должна открываться с сервера (GitHub Pages)</span></div>`;
+    return;
+  }
+  ALL = buildEpochs(raw);
+  minYear = Math.min(...ALL.map(e => e.year));
+  maxYear = Math.max(...ALL.map(e => e.year));
+  $("hdLabel").textContent = `АРХИВ // ${minYear}–${maxYear} // ${ALL.length} ЗАП.`;
+  buildTicker(ALL);
+  render();
+}
+
+// ═══════════════ ВОРОТА ДОСТУПА ═══════════════
+// Тот же мягкий клиентский замок, что и на глобусе (см. map/index.html):
+// в исходнике только SHA-256-хэш кода, разблокировка запоминается на устройстве.
+const ACCESS_HASH = 'c5bb4ef4cf1c3e749f1bc451c824755fa16f0d7b9ca636f38c1284009076e3b4';
+const GATE_KEY = 'dw_globe_access'; // общий с глобусом: код вводится один раз
+
+async function sha256hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+(function gate(){
+  const gateEl = $("gate");
+  if (localStorage.getItem(GATE_KEY) === ACCESS_HASH){ gateEl.remove(); start(); return; }
+  gateEl.style.display = "flex";
+  const form = $("gateForm"), input = $("gateInput"), err = $("gateErr");
+  setTimeout(() => input.focus(), 60);
+  if (!(window.crypto && crypto.subtle)){
+    err.textContent = "ОТКРОЙТЕ СТРАНИЦУ ПО HTTPS";
+    input.disabled = true;
+    return;
+  }
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    err.textContent = "";
+    const val = input.value.trim();
+    if (!val) return;
+    let h;
+    try { h = await sha256hex(val); } catch(_) { return; }
+    if (h === ACCESS_HASH){
+      localStorage.setItem(GATE_KEY, ACCESS_HASH);
+      gateEl.classList.add("ok");
+      setTimeout(() => { gateEl.remove(); start(); }, 380);
+    } else {
+      err.textContent = "НЕВЕРНЫЙ КОД ДОСТУПА";
+      gateEl.classList.add("shake");
+      setTimeout(() => gateEl.classList.remove("shake"), 420);
+      input.value = "";
+      input.focus();
+    }
+  });
+})();
+
+})();
+</script>
+</body>
+</html>
