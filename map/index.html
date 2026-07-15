@@ -294,6 +294,97 @@
   .f-chip.link:hover { background: color-mix(in srgb, var(--cc) 18%, transparent); box-shadow: 0 0 8px color-mix(in srgb, var(--cc) 40%, transparent); }
   .f-chip.enemy { --cc: #ff5544; }
 
+  /* ── ДОСЬЕ ЛОКАЦИИ ── */
+  .lc-badges { display: flex; gap: 5px; margin-bottom: 9px; flex-wrap: wrap; }
+  .lc-type {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--fc);
+    background: rgba(2,4,9,0.85);
+    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
+    padding: 3px 9px;
+    border-radius: 3px;
+    text-shadow: 0 0 6px var(--fc);
+  }
+  .lc-type.war { color: #ff5544; border-color: rgba(255,85,68,0.5); text-shadow: 0 0 6px #ff5544; }
+  .lc-region {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    background: rgba(2,4,9,0.7);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .lc-sub {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    line-height: 1.35;
+    background: rgba(2,4,9,0.8);
+    border-radius: 3px;
+    padding: 6px 8px;
+    margin-bottom: 9px;
+  }
+  .lc-desc { font-size: 12.5px; line-height: 1.5; color: var(--text); margin-bottom: 10px; }
+  .lc-full { margin-bottom: 10px; }
+  .lc-full summary {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 2px;
+    color: var(--fc);
+    cursor: pointer;
+    padding: 5px 8px;
+    background: rgba(2,4,9,0.85);
+    border-left: 2px solid var(--fc);
+    border-radius: 3px;
+    user-select: none;
+    list-style: none;
+  }
+  .lc-full summary::-webkit-details-marker { display: none; }
+  .lc-full summary::before { content: '▸ '; }
+  .lc-full[open] summary::before { content: '▾ '; }
+  .lc-full p { font-size: 12px; line-height: 1.55; color: var(--text); margin: 8px 2px 0; }
+  .lc-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 9px;
+    margin-bottom: 4px;
+    background: rgba(2,4,9,0.8);
+    border-left: 2px solid var(--fc);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .lc-child:hover { background: color-mix(in srgb, var(--fc) 12%, rgba(2,4,9,0.8)); }
+  .lc-child-type {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 7.5px;
+    letter-spacing: 1px;
+    color: var(--fc);
+    flex-shrink: 0;
+  }
+  .lc-child-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .lc-back {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--fc);
+    background: rgba(2,4,9,0.85);
+    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
+    padding: 5px 11px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: all .15s;
+  }
+  .lc-back:hover { background: color-mix(in srgb, var(--fc) 15%, transparent); }
+
   /* ── КНОПКИ УПРАВЛЕНИЯ ── */
   .hud-controls {
     position: absolute;
@@ -504,17 +595,20 @@
 
   /* ── МОБИЛЬНАЯ АДАПТАЦИЯ ── */
   @media (max-width: 700px) {
-    .legend { top: 104px; width: 178px; }
+    .legend { width: 178px; }
     .l-name { font-size: 11px; }
     .fcard {
       left: 10px; right: 10px;
-      top: auto; bottom: 0;
+      top: auto !important; bottom: 0;
       width: auto;
-      max-height: 52%;
+      max-height: 55%;
       border-bottom: none;
     }
     .hint { display: none; }
-    .hud-header { padding: 10px 14px 20px; }
+    .hud-header { padding: 8px 12px 14px; }
+    .back-link { margin-bottom: 4px; }
+    .hud-label { font-size: 8px; letter-spacing: 2px; }
+    .hud-status { font-size: 9px; margin-top: 3px; }
   }
 </style>
 </head>
@@ -584,6 +678,7 @@
 
 <script src="data/land.js"></script>
 <script src="data/factions.js"></script>
+<script src="data/locations.js"></script>
 <script>
 (function(){
 "use strict";
@@ -617,6 +712,34 @@ function unwrapRing(ring){
 
 const LAND_UW = LAND.map(unwrapRing);
 for (const f of FACTIONS) f.polysUW = (f.polys || []).map(unwrapRing);
+
+// ── Локации ──
+const LOCATIONS = (window.LOCATIONS_DATA || []).map((l, i) => ({ ...l, id: "loc" + i }));
+const QH_HUB = LOCATIONS.find(l => l.name === "Дом лазури") || null;
+const QH_HOMES = LOCATIONS.filter(l => l.faction === "quiet_harbor" && l !== QH_HUB);
+
+const TYPE_RU = {
+  capital: "СТОЛИЦА", regional_capital: "ЦЕНТР РЕГИОНА", city: "ГОРОД",
+  base: "БАЗА", settlement: "ПОСЕЛЕНИЕ", landmark: "ОБЪЕКТ",
+  anomaly: "АНОМАЛИЯ", frontline: "ЛИНИЯ ФРОНТА",
+};
+const TYPE_SIZE = {
+  capital: 6.5, regional_capital: 5, city: 4, base: 4,
+  settlement: 3.2, landmark: 4.8, anomaly: 5, frontline: 4.8,
+};
+// приоритет подписей при коллизиях (меньше = важнее)
+const TYPE_PRIO = {
+  capital: 0, frontline: 1, landmark: 2, regional_capital: 3,
+  base: 4, city: 5, anomaly: 5, settlement: 6,
+};
+const LOC_FIELDS = [
+  ["region", "Регион", ""], ["population", "Население", "👥 "],
+  ["management", "Управление", ""], ["economy", "Экономика", ""],
+  ["founded", "Основание", "📅 "], ["defense", "Оборона", "🛡️ "],
+  ["access", "Доступ", ""], ["capacity", "Вместимость", ""],
+  ["danger", "Уровень опасности", "⚠️ "], ["status", "Статус", ""],
+  ["intensity", "Интенсивность", "⚔️ "], ["purpose", "Назначение", ""],
+];
 
 // Точка в полигоне (лучевой алгоритм) в координатах lat/«развёрнутая lon»
 function pointInRing(lat, lon, ring){
@@ -916,13 +1039,57 @@ function unproject(mx, my, M){
   return { lat: Math.asin(Math.max(-1, Math.min(1, wy))) / DEG, lon: Math.atan2(wx, wz) / DEG };
 }
 
+// проекция произвольной 3D-точки мира (|P| может быть > 1 — приподнятые объекты).
+// Видимость: точка спрятана, только если она за сферой И внутри её силуэта
+function project3(P, M){
+  const vx3 = M.r1[0]*P[0] + M.r1[1]*P[1] + M.r1[2]*P[2];
+  const vy3 = M.r2[0]*P[0] + M.r2[1]*P[1] + M.r2[2]*P[2];
+  const vz3 = M.r3[0]*P[0] + M.r3[1]*P[1] + M.r3[2]*P[2];
+  return {
+    x: W/2 + vx3 * R, y: H/2 - vy3 * R, z: vz3,
+    vis: vz3 >= 0 || (vx3*vx3 + vy3*vy3) >= 1,
+  };
+}
+
+// сферическая интерполяция между двумя точками на сфере
+function slerp3(a, b, s){
+  let d = a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+  d = Math.max(-1, Math.min(1, d));
+  const o = Math.acos(d);
+  if (o < 1e-4) return [a[0], a[1], a[2]];
+  const sn = Math.sin(o), w1 = Math.sin((1-s)*o)/sn, w2 = Math.sin(s*o)/sn;
+  return [a[0]*w1 + b[0]*w2, a[1]*w1 + b[1]*w2, a[2]*w1 + b[2]*w2];
+}
+function angDist(a, b){
+  return Math.acos(Math.max(-1, Math.min(1, a[0]*b[0] + a[1]*b[1] + a[2]*b[2])));
+}
+function smooth01(x){ return x <= 0 ? 0 : x >= 1 ? 1 : x*x*(3 - 2*x); }
+
 // ═══════════════ UI: СТАТУС / ЛЕГЕНДА / КАРТОЧКА ═══════════════
 const statusEl = document.getElementById('status');
 const byName = {};
 for (const f of FACTIONS) byName[f.name] = f;
+const FALLBACK_F = { key: '?', col: '#8fa8c0', name: '—' };
+function facOfKey(key){ return FACTIONS.find(f => f.key === key) || FALLBACK_F; }
 
-let selectedKey = null;
-let hovKey = null;
+let selectedKey = null;    // выбранная фракция (подсветка территории)
+let selectedLocId = null;  // выбранная локация
+let hovId = null;          // id локации или key фракции под курсором
+let lastT = 0;
+
+// панели не должны наезжать на шапку: меряем её реальную высоту
+const hudHeaderEl = document.querySelector('.hud-header');
+const legendEl = document.getElementById('legend');
+const fcardEl = document.getElementById('fcard');
+function layoutPanels(){
+  const h = hudHeaderEl.offsetHeight;
+  legendEl.style.top = (h + 6) + 'px';
+  legendEl.style.maxHeight = 'calc(100% - ' + (h + 100) + 'px)';
+  if (window.innerWidth > 700) fcardEl.style.top = (h + 6) + 'px';
+  else fcardEl.style.top = '';
+}
+window.addEventListener('resize', layoutPanels);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutPanels);
 
 function setStatus(text, color){
   statusEl.textContent = text || 'СИГНАЛ СТАБИЛЕН';
@@ -988,86 +1155,429 @@ function shortestAngle(from, to){
   return from + d;
 }
 
-function flyTo(f){
-  ty = shortestAngle(ry, -f.clon * DEG);
-  tx = Math.max(-1.35, Math.min(1.35, f.clat * DEG));
-  if (tR < baseR * 1.25) tR = baseR * 1.5;
+function flyToLL(lat, lon, minZoom){
+  ty = shortestAngle(ry, -lon * DEG);
+  tx = Math.max(-1.35, Math.min(1.35, lat * DEG));
+  if (minZoom && tR < minZoom) tR = minZoom;
   autoRot = false;
   updateRotateBtn();
 }
 
+function collapseLegendOnMobile(){
+  if (window.innerWidth <= 700 && !legend.classList.contains('collapsed')){
+    legend.classList.add('collapsed');
+    document.getElementById('legendToggle').textContent = '+';
+  }
+}
+
+function refreshTexture(key){
+  if (refreshTexture._last === key) return;
+  refreshTexture._last = key;
+  buildTexture(key);
+  uploadTexture();
+}
+
 function select(key, fly){
   selectedKey = key;
+  selectedLocId = null;
   legendBody.querySelectorAll('.l-item').forEach(el =>
     el.classList.toggle('active', el.dataset.key === key));
   if (key){
     const f = FACTIONS.find(x => x.key === key);
     openCard(f);
-    if (fly) flyTo(f);
+    if (fly) flyToLL(f.clat, f.clon, baseR * 1.5);
     setStatus('ОБЪЕКТ: ' + f.name, f.col);
-    if (window.innerWidth <= 700 && !legend.classList.contains('collapsed')){
-      legend.classList.add('collapsed');
-      document.getElementById('legendToggle').textContent = '+';
-    }
+    ping = { lat: f.clat, lon: f.clon, t0: lastT, col: f.col };
+    collapseLegendOnMobile();
   } else {
     fcard.classList.remove('open');
     setStatus();
   }
-  buildTexture(selectedKey);
-  uploadTexture();
+  refreshTexture(selectedKey);
 }
 
-// ═══════════════ МАРКЕРЫ / ПОДПИСИ (2D-слой) ═══════════════
+function selectLocation(loc, fly){
+  selectedLocId = loc.id;
+  selectedKey = loc.faction && facOfKey(loc.faction).key !== '?' ? loc.faction : null;
+  legendBody.querySelectorAll('.l-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.key === selectedKey));
+  const f = facOfKey(loc.faction);
+  openLocCard(loc);
+  if (fly !== false) flyToLL(loc.lat, loc.lon, baseR * 1.7);
+  setStatus(TYPE_RU[loc.type] + ': ' + loc.name, f.col);
+  ping = { lat: loc.lat, lon: loc.lon, t0: lastT, col: f.col };
+  collapseLegendOnMobile();
+  refreshTexture(selectedKey);
+}
+
+// ── карточка-досье локации (с дочерними объектами и возвратом) ──
+function locFieldsHtml(loc){
+  let html = '';
+  for (const [key, label, icon] of LOC_FIELDS){
+    const v = loc[key];
+    if (!v) continue;
+    html += `<div class="f-row"><div class="f-label">${label}</div><div class="f-value">${icon}${v}</div></div>`;
+  }
+  return html;
+}
+
+function openLocCard(loc, parent){
+  const f = facOfKey(loc.faction);
+  fcard.style.setProperty('--fc', f.col);
+  fcName.textContent = loc.name;
+  let html = '';
+  if (parent) html += `<div class="lc-back" data-back="1">◄ ${parent.name}</div>`;
+  html += `<div class="lc-badges"><span class="lc-type${loc.type === 'frontline' ? ' war' : ''}">${TYPE_RU[loc.type] || String(loc.type).toUpperCase()}</span>`;
+  if (facOfKey(loc.faction).key !== '?') html += `<span class="lc-region">${f.name}</span>`;
+  html += `</div>`;
+  if (loc.subtitle) html += `<div class="lc-sub">${loc.subtitle}</div>`;
+  if (loc.desc) html += `<div class="lc-desc">${loc.desc}</div>`;
+  if (loc.full){
+    const paras = loc.full.split(/\n\n+/).map(p => `<p>${p}</p>`).join('');
+    html += `<details class="lc-full"><summary>ПОЛНОЕ ДОСЬЕ</summary>${paras}</details>`;
+  }
+  html += locFieldsHtml(loc);
+  if (loc.involved && loc.involved.length)
+    html += `<div class="f-row"><div class="f-label">СТОРОНЫ</div><div class="f-chips">${
+      loc.involved.map(n => {
+        const ff = byName[n];
+        return `<span class="f-chip"${ff ? ` style="--cc:${ff.col}"` : ''}>${n}</span>`;
+      }).join('')}</div></div>`;
+  if (loc.chars && loc.chars.length)
+    html += `<div class="f-row"><div class="f-label">КЛЮЧЕВЫЕ ФИГУРЫ</div><div class="f-chips">${
+      loc.chars.map(n => `<span class="f-chip" style="--cc:${f.col}">${n}</span>`).join('')}</div></div>`;
+  if (loc.children && loc.children.length){
+    html += `<div class="f-row"><div class="f-label">ОБЪЕКТЫ ВНУТРИ</div>${
+      loc.children.map((c, i) => `
+        <div class="lc-child" data-child="${i}">
+          <span class="lc-child-type">${TYPE_RU[c.type] || 'ОБЪЕКТ'}</span>
+          <span class="lc-child-name">${c.name}</span>
+        </div>`).join('')}</div>`;
+  }
+  fcBody.innerHTML = html;
+  fcBody.scrollTop = 0;
+  fcBody.querySelectorAll('[data-child]').forEach(el =>
+    el.addEventListener('click', () => openLocCard(loc.children[+el.dataset.child], loc)));
+  const back = fcBody.querySelector('[data-back]');
+  if (back && parent) back.addEventListener('click', () => openLocCard(parent));
+  fcard.classList.add('open');
+}
+
+// ═══════════════ МАРКЕРЫ / ПОДПИСИ / 3D-СЛОЙ ═══════════════
+let labelRects = [];
+function labelFits(x, y, w, h){
+  for (const r of labelRects){
+    if (x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y) return false;
+  }
+  labelRects.push({ x, y, w, h });
+  return true;
+}
+
+// подпись с подложкой и защитой от наездов; важные подписи рисуются первыми
+function drawLabel(name, x, y, offY, col, hot, alpha, big){
+  if (alpha <= 0.04) return;
+  const fs = Math.max(8, Math.min(big ? 12 : 10.5, R * (big ? 0.028 : 0.023)));
+  octx.save();
+  octx.font = `${hot ? 700 : 500} ${fs}px 'Share Tech Mono', monospace`;
+  octx.textAlign = 'center';
+  octx.textBaseline = 'top';
+  const tw = octx.measureText(name).width;
+  const py = y + offY;
+  if (!hot && !labelFits(x - tw/2 - 4, py - 2, tw + 8, fs + 5)){ octx.restore(); return; }
+  octx.globalAlpha = 0.84 * alpha;
+  octx.fillStyle = 'rgba(4,6,14,0.88)';
+  octx.fillRect(x - tw/2 - 4, py - 2, tw + 8, fs + 5);
+  octx.globalAlpha = alpha;
+  octx.fillStyle = hot ? '#ffffff' : col;
+  octx.shadowColor = '#000';
+  octx.shadowBlur = 4;
+  octx.fillText(name, x, py);
+  octx.restore();
+}
+
+// маркеры по типам — портировано из Obsidian-движка
+function drawTypedMarker(type, x, y, sz, col, hot, t, seed, alpha){
+  octx.save();
+  octx.globalAlpha = alpha;
+  octx.shadowColor = col;
+  octx.shadowBlur = hot ? 20 : 8;
+  const ring = (r, a, lw) => {
+    octx.globalAlpha = a * alpha;
+    octx.strokeStyle = col;
+    octx.lineWidth = lw;
+    octx.beginPath(); octx.arc(x, y, r, 0, Math.PI * 2); octx.stroke();
+  };
+  const core = (a, blur) => {
+    octx.globalAlpha = a * alpha;
+    octx.fillStyle = col;
+    octx.shadowBlur = blur;
+    octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
+  };
+  if (type === 'capital'){
+    const p1 = .5 + .5 * Math.sin(t * .9 + seed);
+    ring(sz + 5 + p1 * 3, (hot ? .55 : .22) * (.4 + .6 * p1), hot ? 1.4 : .7);
+    const p2 = .5 + .5 * Math.sin(t * .9 + seed + Math.PI);
+    ring(sz + 2 + p2 * 2, (hot ? .35 : .14) * (.4 + .6 * p2), .6);
+    core(hot ? 1 : .9, hot ? 26 : 14);
+  } else if (type === 'regional_capital'){
+    const p1 = .5 + .5 * Math.sin(t * .9 + seed);
+    ring(sz + 3 + p1 * 2, (hot ? .4 : .16) * (.4 + .6 * p1), hot ? 1.2 : .6);
+    core(hot ? 1 : .85, hot ? 18 : 10);
+  } else if (type === 'frontline'){
+    const pulse = .5 + .5 * Math.sin(t * 2.2 + seed);
+    const fl = '#ff3322';
+    octx.shadowColor = '#ff5500';
+    octx.strokeStyle = fl;
+    octx.lineWidth = hot ? 1.4 : .8;
+    octx.globalAlpha = (.15 + .25 * pulse) * (hot ? 1.4 : 1) * alpha;
+    octx.beginPath(); octx.arc(x, y, sz + 2 + pulse * 4, 0, Math.PI * 2); octx.stroke();
+    octx.globalAlpha = (.08 + .12 * pulse) * (hot ? 1.4 : 1) * alpha;
+    octx.beginPath(); octx.arc(x, y, sz + 5 + pulse * 6, 0, Math.PI * 2); octx.stroke();
+    octx.globalAlpha = (hot ? 1 : .88) * alpha;
+    octx.fillStyle = fl;
+    octx.shadowBlur = hot ? 24 : 12;
+    octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
+  } else if (type === 'landmark'){
+    // ромб
+    const p1 = .5 + .5 * Math.sin(t * 1.1 + seed);
+    octx.globalAlpha = (.1 + .16 * p1) * (hot ? 1.6 : 1) * alpha;
+    octx.strokeStyle = col;
+    octx.lineWidth = .8;
+    octx.beginPath(); octx.arc(x, y, sz + 2.5 + p1 * 3, 0, Math.PI * 2); octx.stroke();
+    octx.globalAlpha = (hot ? 1 : .88) * alpha;
+    octx.fillStyle = col;
+    octx.shadowBlur = hot ? 20 : 9;
+    octx.beginPath();
+    octx.moveTo(x, y - sz); octx.lineTo(x + sz * .8, y); octx.lineTo(x, y + sz); octx.lineTo(x - sz * .8, y);
+    octx.closePath(); octx.fill();
+  } else if (type === 'base'){
+    // квадрат
+    octx.globalAlpha = (hot ? 1 : .8) * alpha;
+    octx.fillStyle = col;
+    octx.shadowBlur = hot ? 16 : 7;
+    const s = sz * .85;
+    octx.fillRect(x - s, y - s, s * 2, s * 2);
+    octx.globalAlpha = .35 * alpha;
+    octx.strokeStyle = col;
+    octx.lineWidth = .8;
+    octx.strokeRect(x - s - 2.5, y - s - 2.5, s * 2 + 5, s * 2 + 5);
+  } else if (type === 'settlement'){
+    core(hot ? .95 : .55, hot ? 10 : 4);
+  } else {
+    const pulse = .5 + .5 * Math.sin(t * 1.4 + seed);
+    ring(sz + 1.8 + pulse * 2.2, (.06 + .1 * pulse) * (hot ? 1.6 : 1), .7);
+    core(hot ? 1 : .82, hot ? 16 : 7);
+  }
+  octx.restore();
+}
+
+// ── эффект: волна-пинг при выборе объекта ──
+let ping = null; // {lat, lon, t0, col}
+function drawPing(t, M){
+  if (!ping) return;
+  const age = t - ping.t0;
+  if (age > 1.4){ ping = null; return; }
+  const prog = age / 1.4;
+  const radius = prog * 16 * DEG; // угловой радиус
+  const alpha = (1 - prog) * 0.55;
+  const c = ll2xyz(ping.lat, ping.lon);
+  // ортонормальный базис вокруг центра
+  const up = Math.abs(c[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0];
+  let e1 = [up[1]*c[2] - up[2]*c[1], up[2]*c[0] - up[0]*c[2], up[0]*c[1] - up[1]*c[0]];
+  const n1 = Math.hypot(...e1); e1 = e1.map(v => v / n1);
+  const e2 = [c[1]*e1[2] - c[2]*e1[1], c[2]*e1[0] - c[0]*e1[2], c[0]*e1[1] - c[1]*e1[0]];
+  octx.save();
+  octx.strokeStyle = ping.col;
+  octx.shadowColor = ping.col;
+  octx.shadowBlur = 8;
+  octx.globalAlpha = alpha;
+  octx.lineWidth = 1.5;
+  octx.beginPath();
+  let started = false;
+  for (let i = 0; i <= 40; i++){
+    const a = i / 40 * Math.PI * 2;
+    const cr = Math.cos(radius), sr = Math.sin(radius);
+    const P = [
+      c[0]*cr + (e1[0]*Math.cos(a) + e2[0]*Math.sin(a)) * sr,
+      c[1]*cr + (e1[1]*Math.cos(a) + e2[1]*Math.sin(a)) * sr,
+      c[2]*cr + (e1[2]*Math.cos(a) + e2[2]*Math.sin(a)) * sr,
+    ];
+    const p = project3(P, M);
+    if (!p.vis){ started = false; continue; }
+    started ? octx.lineTo(p.x, p.y) : (octx.moveTo(p.x, p.y), started = true);
+  }
+  octx.stroke();
+  octx.restore();
+}
+
+// ── эффект: 3D-дуги сети Тихой гавани ──
+function drawHarborArcs(t, M){
+  if (!QH_HUB) return;
+  const col = (FACTIONS.find(f => f.key === 'quiet_harbor') || {}).col || '#38bdf8';
+  const A = ll2xyz(QH_HUB.lat, QH_HUB.lon);
+  QH_HOMES.forEach((home, k) => {
+    const B = ll2xyz(home.lat, home.lon);
+    const ang = angDist(A, B);
+    const lift = 0.035 + ang * 0.09; // дальше дом — выше дуга
+    const N = 44;
+    octx.save();
+    octx.strokeStyle = col;
+    octx.shadowColor = col;
+    octx.shadowBlur = 7;
+    octx.lineWidth = 1.2;
+    octx.globalAlpha = 0.55;
+    octx.beginPath();
+    let started = false;
+    const pts = [];
+    for (let i = 0; i <= N; i++){
+      const s = i / N;
+      const P = slerp3(A, B, s);
+      const h = 1 + Math.sin(Math.PI * s) * lift;
+      const Q = [P[0]*h, P[1]*h, P[2]*h];
+      const p = project3(Q, M);
+      pts.push(p);
+      if (!p.vis){ started = false; continue; }
+      started ? octx.lineTo(p.x, p.y) : (octx.moveTo(p.x, p.y), started = true);
+    }
+    octx.stroke();
+    // бегущие «караваны» — светящиеся частицы вдоль дуги
+    for (let j = 0; j < 2; j++){
+      const s = ((t * 0.09 + k * 0.31 + j * 0.5) % 1);
+      const idx = Math.min(N, Math.round(s * N));
+      const p = pts[idx];
+      if (p && p.vis){
+        octx.globalAlpha = 0.95;
+        octx.fillStyle = '#eaf8ff';
+        octx.shadowBlur = 10;
+        octx.beginPath(); octx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); octx.fill();
+      }
+    }
+    octx.restore();
+  });
+}
+
+// ── эффект: спутники орбитального мониторинга ──
+const SATS = [
+  { r: 1.30, incl: 62 * DEG, speed: 0.16, phase: 0.0, col: '#4fc3f7' },
+  { r: 1.47, incl: -37 * DEG, speed: 0.105, phase: 2.2, col: '#ffb340' },
+];
+function satPos(s, t){
+  const a = t * s.speed + s.phase;
+  const x = Math.cos(a) * s.r;
+  const yz = Math.sin(a) * s.r;
+  return [x, yz * Math.sin(s.incl), yz * Math.cos(s.incl)];
+}
+function drawSats(t, M){
+  for (const s of SATS){
+    octx.save();
+    // хвост
+    octx.strokeStyle = s.col;
+    octx.shadowColor = s.col;
+    for (let j = 12; j >= 1; j--){
+      const p1 = project3(satPos(s, t - j * 0.22), M);
+      const p2 = project3(satPos(s, t - (j - 1) * 0.22), M);
+      if (!p1.vis || !p2.vis) continue;
+      octx.globalAlpha = 0.05 + (1 - j / 12) * 0.22;
+      octx.lineWidth = 1;
+      octx.shadowBlur = 0;
+      octx.beginPath(); octx.moveTo(p1.x, p1.y); octx.lineTo(p2.x, p2.y); octx.stroke();
+    }
+    const p = project3(satPos(s, t), M);
+    if (p.vis){
+      octx.globalAlpha = 0.95;
+      octx.fillStyle = s.col;
+      octx.shadowBlur = 9;
+      octx.beginPath(); octx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); octx.fill();
+    }
+    octx.restore();
+  }
+}
+
 function drawOverlay(t, M){
   octx.setTransform(dpr, 0, 0, dpr, 0, 0);
   octx.clearRect(0, 0, W, H);
-  const lodA = R <= baseR * 0.55 ? 0.45 : 1;
+  labelRects = [];
 
-  for (const f of FACTIONS){
-    const p = project(f.clat, f.clon, M);
-    if (!p.vis) continue;
-    const hot = f.key === hovKey || f.key === selectedKey;
-    const sz = (hot ? 5.6 : 4) * (f.polysUW.length ? 1 : 0.85);
+  // LOD по фактическому размеру глобуса в пикселях: на маленьком экране
+  // локации появляются позже, чтобы маркеры не сливались в кашу
+  const zoomK = R / 300;
+  // близко — фракционные подписи уступают место локациям
+  const facA = 1 - smooth01((zoomK - 1.5) / 0.55);
+  const locMainA = smooth01((zoomK - 0.6) / 0.3);   // столицы, фронты, объекты, центры регионов
+  const locAllA = smooth01((zoomK - 1.05) / 0.4);   // города, базы, поселения
+  const locLblMainA = smooth01((zoomK - 0.85) / 0.3);
+  const locLblAllA = smooth01((zoomK - 1.35) / 0.4);
 
-    octx.save();
-    octx.shadowColor = f.col;
-    // пульсирующие кольца
-    const seed = f.clon * 0.1;
-    const p1 = 0.5 + 0.5 * Math.sin(t * 0.9 + seed);
-    octx.strokeStyle = f.col;
-    octx.globalAlpha = (hot ? 0.6 : 0.25) * (0.4 + 0.6 * p1) * lodA;
-    octx.lineWidth = hot ? 1.4 : 0.8;
-    octx.beginPath(); octx.arc(p.x, p.y, sz + 5 + p1 * 4, 0, Math.PI * 2); octx.stroke();
-    const p2 = 0.5 + 0.5 * Math.sin(t * 0.9 + seed + Math.PI);
-    octx.globalAlpha = (hot ? 0.4 : 0.15) * (0.4 + 0.6 * p2) * lodA;
-    octx.beginPath(); octx.arc(p.x, p.y, sz + 2 + p2 * 2.5, 0, Math.PI * 2); octx.stroke();
-    // ядро
-    octx.globalAlpha = (hot ? 1 : 0.9) * lodA;
-    octx.fillStyle = f.col;
-    octx.shadowBlur = hot ? 24 : 12;
-    octx.beginPath(); octx.arc(p.x, p.y, sz, 0, Math.PI * 2); octx.fill();
-    octx.restore();
+  drawSats(t, M);
+  const harborActive = selectedKey === 'quiet_harbor';
+  if (harborActive) drawHarborArcs(t, M);
+  drawPing(t, M);
 
-    // подпись
-    const fs = Math.max(8.5, Math.min(12, R * 0.028));
-    const la = (hot ? 1 : 0.75) * lodA;
-    if (la > 0.05){
+  // ── локации (сортировка по приоритету, чтобы важные подписи выигрывали) ──
+  const order = [...LOCATIONS].sort((a, b) => (TYPE_PRIO[a.type] ?? 9) - (TYPE_PRIO[b.type] ?? 9));
+  for (const loc of order){
+    const main = (TYPE_PRIO[loc.type] ?? 9) <= 3;
+    const mA = main ? locMainA : locAllA;
+    if (mA <= 0.03){ loc._sx = null; continue; }
+    const f = facOfKey(loc.faction);
+    const surf = ll2xyz(loc.lat, loc.lon);
+    let p;
+    if (loc.float){
+      // парящая резиденция: приподнята над сферой и слегка покачивается
+      const h = 1.05 + 0.007 * Math.sin(t * 1.3);
+      p = project3([surf[0]*h, surf[1]*h, surf[2]*h], M);
+      const g = project3(surf, M);
+      if (p.vis && g.vis){
+        octx.save();
+        octx.strokeStyle = f.col;
+        octx.globalAlpha = 0.4 * mA;
+        octx.setLineDash([2, 3]);
+        octx.lineWidth = 0.8;
+        octx.beginPath(); octx.moveTo(g.x, g.y); octx.lineTo(p.x, p.y); octx.stroke();
+        octx.restore();
+      }
+    } else {
+      p = project3(surf, M);
+    }
+    if (!p.vis){ loc._sx = null; continue; }
+    loc._sx = p.x; loc._sy = p.y;
+
+    const hot = hovId === loc.id || selectedLocId === loc.id;
+    const sz = (TYPE_SIZE[loc.type] || 4) * (hot ? 1.35 : 1);
+
+    // световой столб для столиц
+    if (loc.type === 'capital' && p.z > 0.15){
+      const top = project3([surf[0]*1.045, surf[1]*1.045, surf[2]*1.045], M);
+      const grad = octx.createLinearGradient(p.x, p.y, top.x, top.y);
+      grad.addColorStop(0, f.col + 'aa');
+      grad.addColorStop(1, f.col + '00');
       octx.save();
-      octx.font = `${hot ? 700 : 500} ${fs}px 'Share Tech Mono', monospace`;
-      octx.textAlign = 'center';
-      octx.textBaseline = 'top';
-      const tw = octx.measureText(f.name).width;
-      const py = p.y + sz + 6;
-      octx.globalAlpha = 0.82 * la;
-      octx.fillStyle = 'rgba(4,6,14,0.88)';
-      octx.fillRect(p.x - tw/2 - 4, py - 2, tw + 8, fs + 5);
-      octx.globalAlpha = la;
-      octx.fillStyle = hot ? '#ffffff' : f.col;
-      octx.shadowColor = '#000';
-      octx.shadowBlur = 4;
-      octx.fillText(f.name, p.x, py);
+      octx.strokeStyle = grad;
+      octx.globalAlpha = 0.75 * mA;
+      octx.lineWidth = 1.6;
+      octx.beginPath(); octx.moveTo(p.x, p.y); octx.lineTo(top.x, top.y); octx.stroke();
       octx.restore();
     }
+
+    drawTypedMarker(loc.type, p.x, p.y, sz, f.col, hot, t, loc.lon * 0.1, mA);
+
+    const lblA = (main ? locLblMainA : locLblAllA) * (hot ? 1 : 0.85);
+    drawLabel(loc.name, p.x, p.y, sz + 5, loc.type === 'frontline' ? '#ff6655' : f.col, hot, lblA, main);
+  }
+
+  // ── центры фракций (уходят при приближении) ──
+  if (facA > 0.03){
+    for (const f of FACTIONS){
+      const p = project(f.clat, f.clon, M);
+      if (!p.vis){ f._sx = null; continue; }
+      f._sx = p.x; f._sy = p.y;
+      const hot = hovId === f.key || selectedKey === f.key;
+      const sz = (hot ? 5.6 : 4) * (f.polysUW.length ? 1 : 0.85);
+      drawTypedMarker('capital', p.x, p.y, sz, f.col, hot, t, f.clon * 0.1, facA);
+      drawLabel(f.name, p.x, p.y, sz + 6, f.col, hot, (hot ? 1 : 0.8) * facA, true);
+    }
+  } else {
+    for (const f of FACTIONS) f._sx = null;
   }
 }
 
@@ -1092,6 +1602,7 @@ function updateScale(){
 // ═══════════════ ГЛАВНЫЙ ЦИКЛ ═══════════════
 function frame(now){
   const t = (now - time0) / 1000;
+  lastT = t;
   if (autoRot) ty += 0.0032;
   // инерция
   if (Math.abs(vy) > 1e-5 || Math.abs(vx) > 1e-5){
@@ -1168,10 +1679,17 @@ overlay.addEventListener('pointermove', e => {
   // hover
   const M = viewMatrix();
   const hit = hitTest(e.clientX, e.clientY, M);
-  hovKey = hit ? hit.key : null;
+  hovId = hit ? (hit.kind === 'loc' ? hit.loc.id : hit.f.key) : null;
   overlay.classList.toggle('pointing', !!hit);
-  if (hit) setStatus('ОБЪЕКТ: ' + hit.name, hit.col);
-  else if (selectedKey){
+  if (hit && hit.kind === 'loc'){
+    const f = facOfKey(hit.loc.faction);
+    setStatus((TYPE_RU[hit.loc.type] || 'ОБЪЕКТ') + ': ' + hit.loc.name, f.col);
+  } else if (hit){
+    setStatus('ОБЪЕКТ: ' + hit.f.name, hit.f.col);
+  } else if (selectedLocId){
+    const loc = LOCATIONS.find(l => l.id === selectedLocId);
+    if (loc) setStatus((TYPE_RU[loc.type] || 'ОБЪЕКТ') + ': ' + loc.name, facOfKey(loc.faction).col);
+  } else if (selectedKey){
     const f = FACTIONS.find(x => x.key === selectedKey);
     setStatus('ОБЪЕКТ: ' + f.name, f.col);
   } else setStatus();
@@ -1189,7 +1707,8 @@ overlay.addEventListener('pointerup', e => {
     if (dragDist < 6){
       const M = viewMatrix();
       const hit = hitTest(e.clientX, e.clientY, M);
-      select(hit ? hit.key : null, false);
+      if (hit && hit.kind === 'loc') selectLocation(hit.loc, false);
+      else select(hit ? hit.f.key : null, false);
     }
   }
   if (pointers.size < 2) pinch0 = 0;
@@ -1209,21 +1728,28 @@ overlay.addEventListener('wheel', e => {
   tR = clampR(tR * (e.deltaY > 0 ? 0.9 : 1.11));
 }, { passive: false });
 
-// поиск объекта под курсором: сначала маркеры, потом территории
+// поиск объекта под курсором: локации -> центры фракций -> территории.
+// Экранные позиции берём из кеша последнего кадра (loc._sx / f._sx)
 function hitTest(cx, cy, M){
   const rect = overlay.getBoundingClientRect();
   const mx = cx - rect.left, my = cy - rect.top;
   let best = null, bd = Infinity;
+  for (const loc of LOCATIONS){
+    if (loc._sx == null) continue;
+    const d = Math.hypot(mx - loc._sx, my - loc._sy);
+    if (d < 16 && d < bd){ bd = d; best = { kind: 'loc', loc }; }
+  }
+  if (best) return best;
   for (const f of FACTIONS){
-    const p = project(f.clat, f.clon, M);
-    if (!p.vis) continue;
-    const d = Math.hypot(mx - p.x, my - p.y);
-    if (d < 20 && d < bd){ bd = d; best = f; }
+    if (f._sx == null) continue;
+    const d = Math.hypot(mx - f._sx, my - f._sy);
+    if (d < 20 && d < bd){ bd = d; best = { kind: 'fac', f }; }
   }
   if (best) return best;
   const ll = unproject(mx, my, M);
   if (!ll) return null;
-  return factionAt(ll.lat, ll.lon);
+  const f = factionAt(ll.lat, ll.lon);
+  return f ? { kind: 'fac', f } : null;
 }
 
 // ═══════════════ КНОПКИ ═══════════════
@@ -1247,6 +1773,7 @@ function start(){
     return;
   }
   resize();
+  layoutPanels();
   R = tR = baseR;
   initGL();
   // Выбор разрешения текстуры под устройство
