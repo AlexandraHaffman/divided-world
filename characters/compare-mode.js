@@ -234,7 +234,7 @@ function statSpread(c) {
 const PHRASE_BANK_PATH = "analysis-phrases.json";
 let phraseBankPromise = null;
 const FALLBACK_PHRASES = {
-  combat_leader: ["⚔ <b>{name}</b> сильнее в прямом столкновении."],
+  combat_leader: ["⚔️ <b>{name}</b> сильнее в прямом столкновении."],
   shadow_leader: ["🌑 <b>{name}</b> — теневой игрок: тень и хаос на {g|name|его|её} стороне."],
   mind_leader: ["🧠 <b>{name}</b> действует умом и влиянием, а не силой."],
   stat_gap: ["↔ Наибольшая пропасть — в {stat}: {hi} против {lo} (<b>{name}</b> впереди)."],
@@ -404,7 +404,7 @@ async function autoVerdictLines(chars) {
 /* ── Радар с наложением (пунктир для разведённых цветов) ── */
 function buildCompareRadar(chars, cols, size = 220) {
   const n = 7, cx = size/2, cy = size/2, R = size * 0.34;
-  const EMOJI = ["🧠","⚔","👑","🔪","🛡","🌑","🎲"];
+  const EMOJI = ["🧠","⚔️","👑","🔪","🛡️","🌑","🎲"];
   const keys = ["intelligence","combat","influence","cruelty","will","stealth","unpredictability"];
   const angles = Array.from({length: n}, (_, i) => (Math.PI*2*i/n) - Math.PI/2);
   const pt = arr => arr.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
@@ -532,7 +532,7 @@ function buildDuelBlock(chars, cols) {
 /* ── Мета-оси: 8 статов → 4 группы ── */
 function buildMetaAxes(chars, cols) {
   const AXES = [
-    ["⚔ МОЩЬ",  ["combat","meta_power"]],
+    ["⚔️ МОЩЬ",  ["combat","meta_power"]],
     ["🧠 РАЗУМ", ["intelligence","influence"]],
     ["🌑 ТЕНЬ",  ["stealth","unpredictability"]],
     ["🔥 НРАВ",  ["will","cruelty"]]

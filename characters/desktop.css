@@ -77,15 +77,19 @@
   .threat-num { font-size: 32px; }
   .threat-label { font-size: 9px; }
   .card-radar-row svg { width: 100px !important; height: 100px !important; }
-  .card-faction-bottom, .card-photo-faction-bottom { font-size: 12px !important; }
-  .faction-badge { font-size: 10px !important; padding: 3px 9px; }
+  .card-faction-bottom, .card-photo-faction-bottom { font-size: 14px !important; }
+  .faction-badge { font-size: 13px !important; padding: 4px 12px; }
 
-  /* карточка с фото (1–2 колонки) */
-  .card-photo-name { font-size: 22px; }
-  .card-photo-role { font-size: 13px; }
-  .card-photo-threat-num { font-size: 28px; }
-  .card-photo-threat-lbl { font-size: 8px; }
-  .card-quote-a-text { font-size: 14px; max-height: 6.5em; }
+  /* карточка с фото (1–2 колонки).
+     Портреты в 2 колонки на широком экране огромные — текст при них
+     должен быть сопоставимого масштаба, иначе выглядит игрушечным. */
+  .card-photo-info { padding: 18px 22px 20px; }
+  .card-photo-name { font-size: 34px; }
+  .card-photo-role { font-size: 17px; margin-bottom: 12px; }
+  .card-photo-threat-num { font-size: 42px; }
+  .card-photo-threat-lbl { font-size: 11px; }
+  .card-quote-a { padding: 16px 20px 18px; }
+  .card-quote-a-text { font-size: 17px; max-height: 8em; padding-left: 12px; }
 
   /* компакт-3 колонки */
   .compact-3-name { font-size: 16px; }
@@ -95,9 +99,9 @@
   .compact-3-faction { font-size: 10px; padding: 2px 7px; }
 
   /* компакт-5 колонок */
-  .compact-5-name { font-size: 12px; }
-  .compact-5-name-area { padding: 8px 8px 9px; min-height: 46px; }
-  .compact-5-threat { font-size: 18px; top: 7px; left: 8px; }
+  .compact-5-name { font-size: 15px; }
+  .compact-5-name-area { padding: 9px 9px 10px; min-height: 54px; }
+  .compact-5-threat { font-size: 22px; top: 7px; left: 9px; }
 
   /* дропдауны фильтров */
   .filters.open { max-height: 400px; }
@@ -151,6 +155,16 @@
 
   /* чуть больше воздуха между карточками */
   .carousel-track { gap: 18px; }
+
+  /* панель-компаньон одиночной карты: шире и с читаемым текстом */
+  .c-solo-panel { width: 420px; max-width: 420px; }
+  .c-solo-sys { font-size: 9px; }
+  .c-solo-title { font-size: 13px; }
+  .c-solo-rank-num { font-size: 42px; }
+  .c-solo-rank-text { font-size: 12px; }
+  .c-solo-val { font-size: 14px; }
+  .c-solo-quote { font-size: 13px; }
+  .c-solo-label { font-size: 9px; }
 
   /* карточки чуть компактнее (больше воздуха), но крупнее телефонных */
   .c-card { width: 284px; max-width: 284px; }

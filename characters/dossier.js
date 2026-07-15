@@ -134,7 +134,7 @@ function metaGlowHTML(c) {
 function buildRadar(stats, rgb, size = 70) {
   const RADAR_KEYS = ["intelligence","combat","influence","cruelty","will","stealth","unpredictability"];
   const vals = RADAR_KEYS.map(k => stats[k] || 0);
-  const EMOJI = ["🧠","⚔","👑","🔪","🛡","🌑","🎲"];
+  const EMOJI = ["🧠","⚔️","👑","🔪","🛡️","🌑","🎲"];
   const n = 7, cx = size/2, cy = size/2, R = size * 0.33;
   const angles = Array.from({length: n}, (_, i) => (Math.PI*2*i/n) - Math.PI/2);
   const pt = arr => arr.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
@@ -478,12 +478,14 @@ function attachCardEvents() {
       if (!moved) {
         e.preventDefault();
         if (currentCols === 3 && typeof toggleCompareSelect === "function") toggleCompareSelect(gidx, el);
+        else if (currentCols === 5 && typeof openRelations === "function") openRelations(gidx);
         else openDossier(gidx);
       }
     });
     el.addEventListener("click", () => {
       if (!('ontouchstart' in window)) {
         if (currentCols === 3 && typeof toggleCompareSelect === "function") toggleCompareSelect(gidx, el);
+        else if (currentCols === 5 && typeof openRelations === "function") openRelations(gidx);
         else openDossier(gidx);
       }
     });

@@ -131,6 +131,36 @@ function buildCarouselCard(c, idx) {
   </div>`;
 }
 
+/* Панель-компаньон для полки с единственной картой: чтобы запись не
+   висела одиноко в пустоте, рядом рисуем терминальную сводку по ней.
+   Только данные из самого JSON — никакой выдуманной информации. */
+function buildSoloPanel(c, shelfLabel) {
+  const col = getFactionColor(c);
+  const all = (typeof allChars !== "undefined" ? allChars : []);
+  const stronger = all.filter(x => (x.threat_level || 0) > (c.threat_level || 0)).length;
+  const rank = stronger + 1;
+  const pct = all.length ? Math.round((1 - stronger / all.length) * 100) : 100;
+  const aliases = c.aliases?.length
+    ? `<div class="c-solo-block"><div class="c-solo-label">Также известна как</div><div class="c-solo-val">${c.aliases.join(" · ")}</div></div>` : "";
+  const loc = c.location
+    ? `<div class="c-solo-block"><div class="c-solo-label">Локация</div><div class="c-solo-val">${c.location}</div></div>` : "";
+  const abilities = c.abilities?.length
+    ? `<div class="c-solo-block"><div class="c-solo-label">Способности</div><div class="c-solo-chips">${c.abilities.map(a=>`<span class="c-back-chip">${a}</span>`).join("")}</div></div>` : "";
+  const quote = c.card_quote
+    ? `<div class="c-solo-quote">«${c.card_quote}»</div>` : "";
+  return `<div class="c-solo-panel" style="--cr:${col.rgb}">
+    <div class="c-card-bar"></div>
+    <div class="c-solo-sys">SYS.ANALYSIS // ${shelfLabel}</div>
+    <div class="c-solo-title">Единственная запись в категории</div>
+    <div class="c-solo-line"></div>
+    <div class="c-solo-rank">
+      <div class="c-solo-rank-num">#${rank}</div>
+      <div class="c-solo-rank-text">по уровню угрозы среди всех записей архива<br>опаснее ${pct}% зафиксированных субъектов</div>
+    </div>
+    ${aliases}${loc}${abilities}${quote}
+  </div>`;
+}
+
 function renderCarousel(chars, groupBy = "tier") {
   const container = document.getElementById("carousel-shelves");
   if (!container) return;
@@ -158,6 +188,7 @@ function renderCarousel(chars, groupBy = "tier") {
       <button type="button" class="carousel-nav next" aria-label="Прокрутить вперёд">›</button>
       <div class="carousel-track ${items.length === 1 ? 'carousel-track--single' : ''}">
         ${items.map(c => buildCarouselCard(c, allChars.indexOf(c))).join("")}
+        ${items.length === 1 ? buildSoloPanel(items[0], label) : ""}
       </div>
     </div>
   `).join("");

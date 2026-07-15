@@ -1,0 +1,158 @@
+/* ══════════════════════════════════════════════════════
+   РЕЖИМ «5» — КАРТА ОКРУЖЕНИЯ (relations-mode.js)
+   Полноэкранный разворот-досье по связям персонажа.
+   --rcr : rgb-цвет фракции героя, --zc : rgb-цвет типа связи.
+   ══════════════════════════════════════════════════════ */
+
+.rel-overlay{position:fixed;inset:0;z-index:300;background:#04060c;display:none;flex-direction:column;overscroll-behavior:contain;}
+.rel-overlay.open{display:flex;}
+.rel-overlay::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 30%,rgba(var(--rcr),0.07),transparent 65%);}
+
+/* ── верхняя панель: назад + хлебные крошки ── */
+.rel-topbar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(var(--rcr),0.16);position:relative;z-index:10;}
+.rel-back{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.12em;color:rgb(var(--rcr));background:rgba(var(--rcr),0.08);border:1px solid rgba(var(--rcr),0.4);border-radius:3px;padding:6px 12px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.rel-back:active{background:rgba(var(--rcr),0.2);}
+.rel-crumbs{display:flex;align-items:center;gap:6px;margin-left:auto;overflow-x:auto;scrollbar-width:none;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.06em;}
+.rel-crumbs::-webkit-scrollbar{display:none;}
+.rel-crumb{color:rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis;padding:3px 2px;}
+.rel-crumb.active{color:rgb(var(--rcr));text-shadow:0 0 8px rgba(var(--rcr),0.5);cursor:default;}
+.rel-crumb-sep{color:rgba(255,255,255,0.22);flex-shrink:0;}
+
+/* ── три колонки ── */
+.rel-main{flex:1;display:grid;grid-template-columns:minmax(118px,1fr) minmax(178px,1.45fr) minmax(118px,1fr);position:relative;overflow:hidden;max-width:1500px;width:100%;margin:0 auto;}
+.rel-col{overflow-y:auto;overflow-x:hidden;padding:14px 10px 40px;position:relative;z-index:2;scrollbar-width:thin;scrollbar-color:rgba(var(--rcr),0.3) transparent;}
+.rel-threads{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:visible;}
+
+/* ── зоны связей (левая колонка) ── */
+.rel-zone{margin-bottom:18px;}
+.rel-zone.rel-hidden{display:none;}
+.rel-zone-title{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.2em;color:rgb(var(--zc));margin-bottom:8px;display:flex;align-items:center;gap:6px;text-transform:uppercase;}
+.rel-zone-title::before{content:'';width:10px;height:2px;flex-shrink:0;background:rgb(var(--zc));box-shadow:0 0 7px rgba(var(--zc),0.9);}
+.rel-zone-count{color:rgba(255,255,255,0.35);letter-spacing:0.05em;}
+.rel-zone-cards{display:grid;grid-template-columns:1fr;gap:10px;}
+.rel-zone--md .rel-zone-cards{grid-template-columns:1fr 1fr;gap:7px;}
+.rel-zone--sm .rel-zone-cards{grid-template-columns:1fr 1fr;gap:5px;}
+
+/* ── карточка связи ── */
+.rel-card{position:relative;border:1px solid rgba(var(--zc),0.35);border-radius:8px;background:linear-gradient(165deg,#0a0d19,#05070d);cursor:pointer;overflow:hidden;transition:opacity 0.25s,box-shadow 0.25s,border-color 0.25s;will-change:transform;}
+.rel-card:active{border-color:rgb(var(--zc));}
+.rel-card.dimmed{opacity:0.14;}
+.rel-card.focused{box-shadow:0 0 18px rgba(var(--zc),0.45);border-color:rgba(var(--zc),0.9);}
+.rel-card.rel-hidden{display:none;}
+.rel-card-photo{width:100%;aspect-ratio:1/1;position:relative;background:#0a0d16;}
+.rel-card-photo img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+.rel-card-photo .rel-noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:18px;color:rgba(var(--zc),0.5);}
+.rel-card-threat{position:absolute;top:4px;right:6px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:900;color:#fff;text-shadow:0 0 6px rgba(0,0,0,0.9),0 0 10px rgba(var(--zc),0.8);}
+.rel-card-name{font-size:11px;font-weight:700;color:#fff;padding:6px 8px 2px;line-height:1.2;}
+.rel-card-label{font-size:9px;font-style:italic;color:rgba(var(--zc),0.85);padding:0 8px 7px;line-height:1.3;}
+.rel-zone--md .rel-card-name{font-size:10px;padding:5px 6px 2px;}
+.rel-zone--md .rel-card-label{font-size:8px;padding:0 6px 6px;}
+.rel-zone--sm .rel-card-name{font-size:9px;padding:4px 5px 1px;}
+.rel-zone--sm .rel-card-label{font-size:7.5px;padding:0 5px 5px;}
+
+/* мёртвые: обесцвечены + трещины */
+.rel-card.dead .rel-card-photo img{filter:grayscale(0.92) brightness(0.55) contrast(1.05);}
+.rel-card.dead{border-style:dashed;border-color:rgba(255,255,255,0.22);}
+.rel-card.dead::after{content:'';position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(113deg,transparent 41.6%,rgba(255,255,255,0.16) 42.4%,transparent 43.2%),
+  linear-gradient(64deg,transparent 59.5%,rgba(255,255,255,0.11) 60.3%,transparent 61.1%),
+  linear-gradient(151deg,transparent 21.7%,rgba(255,255,255,0.09) 22.5%,transparent 23.3%),
+  linear-gradient(87deg,transparent 78.6%,rgba(255,255,255,0.07) 79.3%,transparent 80.1%);}
+.rel-card.dead .rel-card-name{color:rgba(255,255,255,0.45);}
+.rel-dead-tag{position:absolute;left:5px;top:5px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:0.12em;color:#f87171;border:1px solid rgba(248,113,113,0.6);border-radius:2px;padding:1px 4px;background:rgba(0,0,0,0.55);}
+
+/* ── центр: герой ── */
+.rel-center{overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:16px 10px 40px;position:relative;z-index:2;}
+.rel-hero{perspective:1100px;width:min(74%,250px);position:relative;flex-shrink:0;}
+.rel-hero-glow{position:absolute;inset:-7px;border-radius:16px;pointer-events:none;box-shadow:0 0 34px rgba(var(--rcr),0.55),0 0 90px rgba(var(--rcr),0.25);animation:relPulse var(--pp,2.2s) ease-in-out infinite;}
+@keyframes relPulse{0%,100%{opacity:0.22;}50%{opacity:0.85;}}
+.rel-hero-card{position:relative;width:100%;aspect-ratio:3/4;transform-style:preserve-3d;transition:transform 0.65s cubic-bezier(.4,.05,.2,1);cursor:pointer;}
+.rel-hero.flipped .rel-hero-card{transform:rotateY(180deg);}
+.rel-hero-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;border:1px solid rgba(var(--rcr),0.55);background:#0a0d16;}
+.rel-hero-face img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+.rel-hero-face .rel-noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.14em;color:rgba(var(--rcr),0.55);}
+.rel-hero-hint{position:absolute;bottom:6px;right:8px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.1em;color:rgba(255,255,255,0.55);background:rgba(0,0,0,0.5);border-radius:3px;padding:2px 6px;}
+.rel-hero-back{transform:rotateY(180deg);padding:14px;overflow-y:auto;font-size:11.5px;line-height:1.55;color:rgba(255,255,255,0.78);background:linear-gradient(165deg,#0c1020,#05070d);scrollbar-width:none;}
+.rel-hero-back-quote{font-style:italic;color:rgba(var(--rcr),0.9);border-left:2px solid rgba(var(--rcr),0.5);padding-left:9px;margin-bottom:10px;line-height:1.5;}
+.rel-overlay.isolated .rel-hero-face img{filter:grayscale(0.85) brightness(0.65);}
+.rel-overlay.isolated .rel-hero-glow{display:none;}
+
+.rel-hero-name{font-size:21px;font-weight:700;color:#fff;text-align:center;margin-top:13px;line-height:1.15;text-shadow:0 0 16px rgba(var(--rcr),0.35);}
+.rel-hero-role{font-size:11.5px;color:rgba(255,255,255,0.55);text-align:center;margin-top:2px;}
+.rel-hero-threat{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.14em;color:rgb(var(--rcr));text-align:center;margin-top:6px;text-transform:uppercase;}
+.rel-hero-threat b{font-size:15px;}
+
+/* статистика связей + легенда-фильтр */
+.rel-statbar{display:flex;height:6px;width:min(84%,240px);border-radius:3px;overflow:hidden;margin-top:13px;background:rgba(255,255,255,0.06);}
+.rel-statbar-seg{height:100%;transition:width 0.3s;}
+.rel-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:9px;max-width:96%;}
+.rel-legend-item{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.08em;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.14);border-radius:11px;padding:3px 9px;cursor:pointer;display:flex;align-items:center;gap:5px;text-transform:uppercase;transition:all 0.2s;user-select:none;-webkit-user-select:none;}
+.rel-legend-item .rel-legend-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.rel-legend-item.active{color:#fff;border-color:currentColor;}
+.rel-legend-item.muted{opacity:0.3;}
+.rel-total{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-top:9px;text-align:center;}
+
+/* изолированный персонаж */
+.rel-isolated-msg{margin-top:26px;text-align:center;font-family:'Share Tech Mono',monospace;}
+.rel-isolated-msg .l1{font-size:12px;letter-spacing:0.24em;color:rgba(255,255,255,0.55);}
+.rel-isolated-msg .l2{font-size:9px;letter-spacing:0.18em;color:rgba(255,255,255,0.3);margin-top:6px;}
+
+/* ── правая колонка: фракция / подразделение ── */
+.rel-fblock{border:1px solid rgba(var(--rcr),0.28);border-radius:10px;padding:13px 12px;margin-bottom:12px;background:linear-gradient(170deg,rgba(var(--rcr),0.05),rgba(5,8,15,0.6));}
+.rel-flabel{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:rgba(255,255,255,0.38);text-transform:uppercase;margin-bottom:9px;}
+.rel-crest{width:74px;height:74px;border-radius:9px;object-fit:cover;display:block;margin:0 auto 9px;border:1px solid rgba(var(--rcr),0.45);box-shadow:0 0 18px rgba(var(--rcr),0.25);}
+.rel-crest-mono{width:74px;height:74px;border-radius:9px;margin:0 auto 9px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:30px;font-weight:900;color:rgb(var(--rcr));border:1px solid rgba(var(--rcr),0.45);background:radial-gradient(circle at 50% 38%,rgba(var(--rcr),0.16),rgba(5,8,15,0.4));text-shadow:0 0 14px rgba(var(--rcr),0.7);}
+.rel-emblem-mono{width:46px;height:46px;font-size:19px;}
+.rel-fname{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.14em;color:rgb(var(--rcr));text-align:center;text-transform:uppercase;text-shadow:0 0 12px rgba(var(--rcr),0.4);line-height:1.35;}
+.rel-fdesc{font-size:10px;line-height:1.5;color:rgba(255,255,255,0.55);margin-top:8px;text-align:center;}
+.rel-fdivider{height:1px;margin:10px 0;background:linear-gradient(90deg,transparent,rgba(var(--rcr),0.4),transparent);}
+.rel-position-val{font-size:12px;font-weight:700;color:#fff;text-align:center;line-height:1.35;}
+
+/* ── планшет/десктоп ── */
+@media (min-width:1024px){
+  .rel-topbar{padding:14px 26px;}
+  .rel-back{font-size:12px;padding:8px 16px;}
+  .rel-crumbs{font-size:12px;}
+  .rel-crumb{max-width:170px;}
+  .rel-col{padding:22px 18px 60px;}
+  .rel-zone-title{font-size:11px;}
+  .rel-zone-cards{gap:12px;}
+  .rel-card-name{font-size:14px;padding:8px 10px 3px;}
+  .rel-card-label{font-size:11px;padding:0 10px 9px;}
+  .rel-zone--md .rel-card-name{font-size:12.5px;}
+  .rel-zone--md .rel-card-label{font-size:10px;}
+  .rel-zone--sm .rel-card-name{font-size:11px;}
+  .rel-zone--sm .rel-card-label{font-size:9px;}
+  .rel-card-threat{font-size:14px;}
+  .rel-hero{width:min(66%,320px);}
+  .rel-hero-name{font-size:30px;}
+  .rel-hero-role{font-size:14px;}
+  .rel-hero-threat{font-size:12px;}
+  .rel-hero-threat b{font-size:19px;}
+  .rel-hero-back{font-size:13.5px;}
+  .rel-statbar{height:7px;width:min(80%,300px);}
+  .rel-legend-item{font-size:11px;padding:4px 12px;}
+  .rel-total{font-size:11px;}
+  .rel-crest,.rel-crest-mono{width:96px;height:96px;}
+  .rel-crest-mono{font-size:38px;}
+  .rel-fname{font-size:14px;}
+  .rel-fdesc{font-size:12px;}
+  .rel-flabel{font-size:9px;}
+  .rel-position-val{font-size:14px;}
+}
+
+/* ── узкий портрет телефона ── */
+@media (max-width:560px){
+  .rel-main{grid-template-columns:minmax(96px,1fr) minmax(140px,1.4fr) minmax(96px,1fr);}
+  .rel-col{padding:10px 6px 30px;}
+  .rel-hero{width:min(88%,190px);}
+  .rel-hero-name{font-size:16px;}
+  .rel-zone--sm .rel-zone-cards,.rel-zone--md .rel-zone-cards{gap:4px;}
+}
+
+/* ── без анимаций ── */
+@media (prefers-reduced-motion:reduce){
+  .rel-hero-glow{animation:none;opacity:0.4;}
+  .rel-hero-card{transition:none;}
+  .rel-card{transition:none;}
+}
