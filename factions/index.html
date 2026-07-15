@@ -29,7 +29,28 @@
     color: var(--text);
     font-family: 'Rajdhani', sans-serif;
     min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
   }
+
+  /* ── ФОНОВЫЙ АРТ ── */
+  .bg-art {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: url('../data/images/backgrounds/bg-main.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: brightness(0.8);
+  }
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(8,12,18,0.55) 0%, rgba(8,12,18,0.75) 45%, rgba(8,12,18,0.92) 100%);
+  }
+  #app { position: relative; z-index: 2; }
 
   body::after {
     content: '';
@@ -209,9 +230,14 @@
 </head>
 <body>
 
+<div class="bg-art"></div>
+<div class="bg-overlay"></div>
+
+<div id="app">
+
 <header class="terminal-header">
   <a href="../index.html" class="back-link">← НА ГЛАВНУЮ</a>
-  <div class="terminal-label">SYS.ACCESS.GRANTED // РЕЕСТР ФРАКЦИЙ</div>
+  <div class="terminal-label">SYS.ACCESS.GRANTED // FACTION REGISTRY</div>
   <div class="terminal-title">⚔️ <span>ФРАКЦИИ</span></div>
 </header>
 
@@ -325,8 +351,10 @@
 </div>
 
 <div class="terminal-footer">
-  SYS.RECORD // ЗЕМЛЯ • 2061 ГОД // ВСЕ ДАННЫЕ ЗАСЕКРЕЧЕНЫ
+  SYS.RECORD // EARTH • YEAR 2061 // ALL DATA CLASSIFIED
 </div>
+
+</div><!-- /app -->
 
 </body>
 </html>

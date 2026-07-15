@@ -33,12 +33,32 @@
     flex-direction: column;
   }
 
+  /* фоновый арт */
+  .bg-art {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: url('../data/images/backgrounds/bg-timeline.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: brightness(0.6);
+    pointer-events: none;
+  }
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(6,7,12,0.55) 0%, rgba(6,7,12,0.82) 100%);
+  }
+
   /* фон: виньетка + слабая сетка */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: 1;
     pointer-events: none;
     background:
       radial-gradient(ellipse at 50% -10%, rgba(255,179,64,0.05), transparent 55%),
@@ -685,6 +705,8 @@
     justify-content: center;
     background:
       radial-gradient(circle at 50% 40%, rgba(20,32,52,0.6), transparent 60%),
+      linear-gradient(rgba(6,7,12,0.75), rgba(6,7,12,0.92)),
+      url('../data/images/backgrounds/bg-timeline.webp') center/cover no-repeat,
       var(--bg);
     transition: opacity .35s;
   }
@@ -798,13 +820,16 @@
 </head>
 <body>
 
+<div class="bg-art"></div>
+<div class="bg-overlay"></div>
+
 <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
 
 <div class="hd">
   <div class="hd-r1">
     <a class="back-link" href="../index.html">◄ ТЕРМИНАЛ</a>
     <div class="hd-title">ХРОНОЛОГИЯ — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
-    <div class="hd-label" id="hdLabel">АРХИВ // 1999–2061</div>
+    <div class="hd-label" id="hdLabel">ARCHIVE // 1999–2061</div>
   </div>
   <div class="hd-r2">
     <div class="mode-sw">
@@ -825,7 +850,7 @@
 </div>
 
 <div class="scroller" id="scroller">
-  <div class="content" id="content"><div id="boot">РАСШИФРОВКА АРХИВА…</div></div>
+  <div class="content" id="content"><div id="boot">DECRYPTING ARCHIVE…</div></div>
 </div>
 
 <div class="mmap">
@@ -1354,12 +1379,12 @@ function buildTicker(evs){
   }
   const top = Object.entries(byC).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const items = [
-    "АРХИВ РАЗДЕЛЁННОГО МИРА // ДОСТУП РАЗРЕШЁН",
-    "ВСЕГО СОБЫТИЙ В БАЗЕ: " + evs.length,
+    "DIVIDED WORLD ARCHIVE // ACCESS GRANTED",
+    "TOTAL EVENTS IN DATABASE: " + evs.length,
     FACTIONS.map(f => `${f.key}: ${byF[f.key] || 0}`).join(" // "),
-    "ТОП ПЕРСОНАЖИ: " + top.map(([n, c]) => `${n} (${c})`).join(" · "),
-    `ХРОНОЛОГИЯ ${minYear}–${maxYear} // СИНХРОНИЗАЦИЯ ЗАВЕРШЕНА`,
-    "ВНИМАНИЕ: ЧАСТЬ ДАННЫХ ЗАСЕКРЕЧЕНА",
+    "TOP CHARACTERS: " + top.map(([n, c]) => `${n} (${c})`).join(" · "),
+    `TIMELINE ${minYear}–${maxYear} // SYNC COMPLETE`,
+    "WARNING: PART OF THE DATA IS CLASSIFIED",
   ];
   const track = $("tickerTrack");
   track.innerHTML = "";
@@ -1443,7 +1468,7 @@ async function start(){
   ALL = buildEpochs(raw);
   minYear = Math.min(...ALL.map(e => e.year));
   maxYear = Math.max(...ALL.map(e => e.year));
-  $("hdLabel").textContent = `АРХИВ // ${minYear}–${maxYear} // ${ALL.length} ЗАП.`;
+  $("hdLabel").textContent = `ARCHIVE // ${minYear}–${maxYear} // ${ALL.length} REC.`;
   buildTicker(ALL);
   render();
 }

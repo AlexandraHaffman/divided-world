@@ -38,17 +38,17 @@ function buildCarouselCard(c, idx) {
   const radarFace = buildRadar(stats, col.rgb, 120);
 
   const statsHTML = [
-    ["Интеллект",   stats.intelligence],
-    ["Боевые",      stats.combat],
-    ["Влияние",     stats.influence],
-    ["Жестокость",  stats.cruelty],
-    ["Воля",        stats.will],
-    ["Скрытность",  stats.stealth],
-    ["Непредсказ.", stats.unpredictability],
-    ["Мета-сила",   stats.meta_power]
-  ].filter(([, v]) => v > 0).map(([l, v]) =>
+    ["Интеллект",   stats.intelligence,     "intelligence"],
+    ["Боевые",      stats.combat,           "combat"],
+    ["Влияние",     stats.influence,        "influence"],
+    ["Жестокость",  stats.cruelty,          "cruelty"],
+    ["Воля",        stats.will,             "will"],
+    ["Скрытность",  stats.stealth,          "stealth"],
+    ["Непредсказ.", stats.unpredictability, "unpredictability"],
+    ["Мета-сила",   stats.meta_power,       "meta_power"]
+  ].filter(([, v]) => v > 0).map(([l, v, key]) =>
     `<div class="c-stat-row">
-      <span class="c-stat-name">${l}</span>
+      <span class="c-stat-name" data-tip="${STAT_INFO[key] || ''}">${l}</span>
       <div class="c-stat-track"><div class="c-stat-fill" style="width:${Math.min(v/10*100,100)}%"></div></div>
       <span class="c-stat-val">${v}</span>
     </div>`
@@ -112,7 +112,7 @@ function buildCarouselCard(c, idx) {
       <div class="c-card-bar"></div>
       <div class="c-back-header">
         <div>
-          <div class="c-back-sys">SYS.RECORD // ДОСЬЕ</div>
+          <div class="c-back-sys">SYS.RECORD // DOSSIER</div>
           <div class="c-back-name">${c.name}</div>
           <div class="c-back-role">${c.role || ""}</div>
         </div>

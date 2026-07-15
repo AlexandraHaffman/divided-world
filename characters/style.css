@@ -6,6 +6,10 @@ body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;mi
 body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,20,40,0.12) 2px,rgba(0,20,40,0.12) 4px);pointer-events:none;z-index:10;}
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(30,60,100,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(30,60,100,0.15) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 
+/* ── ФОНОВЫЙ АРТ (архив досье) ── */
+.bg-art{position:fixed;inset:0;z-index:0;background-image:url('../data/images/backgrounds/bg-characters.webp');background-size:cover;background-position:center center;background-repeat:no-repeat;filter:brightness(0.6);}
+.bg-overlay{position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,8,15,0.55) 0%,rgba(5,8,15,0.8) 60%,rgba(5,8,15,0.95) 100%);}
+
 /* ── ШАПКА ── */
 .header{position:relative;z-index:200;padding:20px 16px 14px;border-bottom:1px solid rgba(30,100,180,0.2);}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
@@ -307,6 +311,51 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .stat-track{flex:1;height:3px;background:rgba(var(--dr),0.1);border-radius:2px;overflow:hidden;}
 .stat-fill{height:100%;background:linear-gradient(90deg,rgba(var(--dr),0.5),rgb(var(--dr)));border-radius:2px;box-shadow:0 0 6px rgba(var(--dr),0.4);}
 .stat-val{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;color:rgb(var(--dr));width:14px;text-align:right;flex-shrink:0;}
+
+/* ── Тултип с пояснением статы (наведение на название в досье /
+   на обороте карточки / в режиме сравнения) ── */
+.stat-name[data-tip],
+.c-stat-name[data-tip],
+.compare-stat-label[data-tip]{position:relative;cursor:help;}
+.stat-name[data-tip]::after,
+.c-stat-name[data-tip]::after,
+.compare-stat-label[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute;
+  left:0;
+  bottom:calc(100% + 8px);
+  z-index:50;
+  width:max-content;
+  max-width:200px;
+  white-space:normal;
+  font-family:'Rajdhani',sans-serif;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:normal;
+  text-transform:none;
+  line-height:1.4;
+  color:var(--white);
+  background:rgba(6,10,18,0.97);
+  border:1px solid rgba(79,195,247,0.45);
+  box-shadow:0 6px 18px rgba(0,0,0,0.5),0 0 12px rgba(79,195,247,0.12);
+  padding:7px 10px;
+  border-radius:4px;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(4px);
+  transition:opacity 0.15s,transform 0.15s;
+}
+.stat-name[data-tip]:hover::after,
+.c-stat-name[data-tip]:hover::after,
+.compare-stat-label[data-tip]:hover::after{opacity:1;transform:translateY(0);}
+/* только для устройств с курсором — на тачскрине наведения не бывает */
+@media not all and (hover: hover){
+  .stat-name[data-tip]::after,
+  .c-stat-name[data-tip]::after,
+  .compare-stat-label[data-tip]::after{display:none;}
+}
+/* SVG-радар: пояснение по наведению на иконку статы */
+.radar-axis-label{cursor:help;}
 .abilities{display:flex;flex-wrap:wrap;gap:5px;}
 .chip{font-family:'Share Tech Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid rgba(var(--dr),0.25);border-radius:3px;color:rgb(var(--dr));background:rgba(var(--dr),0.05);}
 .dossier-bottom{height:40px;}
