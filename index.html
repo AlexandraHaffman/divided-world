@@ -232,6 +232,7 @@
     text-align: center;
     text-decoration: none;
     display: block;
+    position: relative;
   }
 
   .nav-btn:hover, .nav-btn:active {
@@ -244,6 +245,57 @@
     display: block;
     font-size: 18px;
     margin-bottom: 6px;
+  }
+
+  /* ── Тултип с количеством записей (появляется при наведении) ── */
+  .nav-tip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%) translateY(4px);
+    background: rgba(6,10,18,0.96);
+    border: 1px solid var(--blue);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 14px rgba(79,195,247,0.15);
+    padding: 7px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 20;
+  }
+  .nav-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--blue);
+  }
+  .nav-tip b {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--blue);
+    line-height: 1;
+  }
+  .nav-tip span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  /* показываем тултип только при наличии курсора */
+  @media (hover: hover) and (pointer: fine) {
+    .nav-btn:hover .nav-tip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   }
 
   /* ── SECTION LABEL ── */
@@ -266,7 +318,7 @@
   }
 
   /* ── FACTION SLIDER ── */
-  .slider-wrapper { padding: 0 16px; }
+  .slider-wrapper { padding: 0 16px; position: relative; }
 
   .slider-track {
     display: flex;
@@ -278,6 +330,38 @@
   }
 
   .slider-track::-webkit-scrollbar { display: none; }
+
+  /* ── Стрелки-навигация по каруселе (десктоп) ── */
+  .slider-nav {
+    position: absolute;
+    top: 42%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(79,195,247,0.35);
+    background: rgba(6,10,18,0.72);
+    backdrop-filter: blur(6px);
+    color: var(--blue);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    transition: opacity 0.2s, background 0.2s, border-color 0.2s;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  }
+  .slider-nav:hover { background: rgba(79,195,247,0.16); border-color: var(--blue); }
+  .slider-nav.prev { left: 2px; }
+  .slider-nav.next { right: 2px; }
+  .slider-nav[disabled] { opacity: 0.25; pointer-events: none; }
+
+  /* показываем стрелки только на устройствах с курсором */
+  @media (hover: hover) and (pointer: fine) {
+    .slider-nav { display: flex; }
+  }
 
   .faction-card {
     flex: 0 0 85vw;
@@ -296,6 +380,41 @@
   }
 
   .faction-card:active { transform: scale(0.98); }
+
+  /* ── Блик по гербу фракции: медленный диагональный проблеск ── */
+  .faction-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -70%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(105deg,
+      transparent 0%,
+      rgba(255,255,255,0.04) 35%,
+      rgba(255,255,255,0.16) 50%,
+      rgba(255,255,255,0.04) 65%,
+      transparent 100%);
+    transform: skewX(-16deg);
+    z-index: 1;
+    pointer-events: none;
+    animation: emblemSheen 7s ease-in-out infinite;
+  }
+  .faction-card:nth-child(2)::after { animation-delay: 1s; }
+  .faction-card:nth-child(3)::after { animation-delay: 2s; }
+  .faction-card:nth-child(4)::after { animation-delay: 3s; }
+  .faction-card:nth-child(5)::after { animation-delay: 4s; }
+  .faction-card:nth-child(6)::after { animation-delay: 5s; }
+  .faction-card:nth-child(7)::after { animation-delay: 6s; }
+
+  @keyframes emblemSheen {
+    0%   { left: -70%; }
+    60%, 100% { left: 170%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faction-card::after { animation: none; }
+  }
 
   .faction-card-glow {
     position: absolute;
@@ -347,6 +466,7 @@
     padding: 14px 16px 16px;
     position: relative;
     z-index: 2;
+    background: rgba(13,19,32,0.9);
   }
 
   .faction-tag {
@@ -527,6 +647,8 @@
 <!-- FACTION SLIDER -->
 <div class="section-label">РЕЕСТР ФРАКЦИЙ</div>
 <div class="slider-wrapper">
+  <button class="slider-nav prev" id="sliderPrev" aria-label="Предыдущая фракция" type="button">‹</button>
+  <button class="slider-nav next" id="sliderNext" aria-label="Следующая фракция" type="button">›</button>
   <div class="slider-track" id="sliderTrack">
 
     <a href="factions/america.html" class="faction-card" style="--card-color: var(--america)">
@@ -643,45 +765,16 @@
   <div class="nav-grid">
     <a href="characters/index.html" class="nav-btn">
       <span class="btn-icon">👤</span>ПЕРСОНАЖИ
+      <span class="nav-tip"><b id="count-chars">—</b><span id="count-chars-lbl">профилей</span></span>
     </a>
     <a href="map/index.html" class="nav-btn">
       <span class="btn-icon">🌎</span>КАРТА
+      <span class="nav-tip"><b id="count-locations">—</b><span id="count-locations-lbl">локаций</span></span>
     </a>
     <a href="timeline/index.html" class="nav-btn">
       <span class="btn-icon">📜</span>ИСТОРИЯ
+      <span class="nav-tip"><b id="count-events">—</b><span id="count-events-lbl">событий</span></span>
     </a>
-  </div>
-</div>
-
-<!-- STATS -->
-<div class="section-label">ДАННЫЕ СИСТЕМЫ</div>
-<div class="stats-section">
-  <div class="stats-grid">
-    <div class="stat-card wide">
-      <div class="stat-label">ТЕКУЩИЙ ЦИКЛ</div>
-      <div class="stat-value"><span>2061</span> Н.Э.</div>
-      <div class="stat-sub">ЗЕМЛЯ // ПОСТПЕРЕЛОМНАЯ ЭРА</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">ПЕРСОНАЖЕЙ</div>
-      <div class="stat-value">91</div>
-      <div class="stat-sub">ПРОФИЛЕЙ</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">СОБЫТИЙ</div>
-      <div class="stat-value">200+</div>
-      <div class="stat-sub">ЗАПИСЕЙ</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">ФРАКЦИЙ</div>
-      <div class="stat-value">16</div>
-      <div class="stat-sub">АКТИВНЫХ</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">АРХИВ</div>
-      <div class="stat-value" style="font-size:16px">ПОЛНЫЙ</div>
-      <div class="stat-sub">ДОСТУП РАЗРЕШЁН</div>
-    </div>
   </div>
 </div>
 
@@ -717,6 +810,82 @@
   }, { root: track, threshold: 0.6 });
 
   cards.forEach(card => observer.observe(card));
+
+  /* ── Стрелки-навигация по каруселе фракций ── */
+  const prevBtn = document.getElementById('sliderPrev');
+  const nextBtn = document.getElementById('sliderNext');
+
+  function scrollByCard(dir) {
+    const card = track.querySelector('.faction-card');
+    const step = card ? card.getBoundingClientRect().width + 12 : track.clientWidth * 0.85;
+    track.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
+  function updateNavState() {
+    const scrollable = track.scrollWidth > track.clientWidth + 4;
+    prevBtn.disabled = !scrollable || track.scrollLeft <= 4;
+    nextBtn.disabled = !scrollable || track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
+  }
+  prevBtn.addEventListener('click', () => scrollByCard(-1));
+  nextBtn.addEventListener('click', () => scrollByCard(1));
+  track.addEventListener('scroll', updateNavState, { passive: true });
+  window.addEventListener('resize', updateNavState);
+  updateNavState();
+
+  /* ══════════════════════════════════════════
+     ДИНАМИЧЕСКИЕ СЧЁТЧИКИ (подтягиваются из разделов)
+     ── персонажи, локации, события ──
+     ══════════════════════════════════════════ */
+  const REPO = 'AlexandraHaffman/divided-world';
+
+  function plural(n, one, few, many) {
+    const n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return one;
+    if (n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return few;
+    return many;
+  }
+  function setCount(numId, lblId, value, forms) {
+    const numEl = document.getElementById(numId);
+    const lblEl = document.getElementById(lblId);
+    if (numEl) numEl.textContent = value;
+    if (lblEl && forms) lblEl.textContent = plural(value, forms[0], forms[1], forms[2]);
+  }
+
+  // Персонажи — по числу профилей в data/characters (как в архиве персонажей)
+  (async () => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/characters`);
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        const n = data.filter(f => f.name.endsWith('.json') && f.name !== '.keep').length;
+        if (n > 0) setCount('count-chars', 'count-chars-lbl', n, ['профиль', 'профиля', 'профилей']);
+      }
+    } catch (e) { /* тултип останется с «—» */ }
+  })();
+
+  // Локации — по числу задокументированных точек карты
+  (() => {
+    const s = document.createElement('script');
+    s.src = 'map/data/locations.js';
+    s.onload = () => {
+      if (Array.isArray(window.LOCATIONS_DATA)) {
+        setCount('count-locations', 'count-locations-lbl', window.LOCATIONS_DATA.length,
+          ['локация', 'локации', 'локаций']);
+      }
+    };
+    document.body.appendChild(s);
+  })();
+
+  // События — по числу записей в хронологии
+  (async () => {
+    try {
+      const res = await fetch('timeline/data/events.json');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setCount('count-events', 'count-events-lbl', data.length,
+          ['событие', 'события', 'событий']);
+      }
+    } catch (e) { /* тултип останется с «—» */ }
+  })();
 </script>
 </body>
 </html>

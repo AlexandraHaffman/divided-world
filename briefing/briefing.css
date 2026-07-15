@@ -734,3 +734,62 @@ body {
   .sec-body { font-size: 15px; }
   .zone-tab { font-size: 9.5px; padding: 7px 8px; }
 }
+
+/* ============================================================
+   Desktop tuning (≥1024px)
+   Мобильная вёрстка не трогается. На широком экране:
+   • секции шире и текст крупнее (без «микроскопа»);
+   • интерактивные картинки-панели крупнее и помещаются целиком;
+   • секция «Земля» показывается как центрированный портретный
+     «экран», иначе SVG-интерфейс (рассчитанный на телефон)
+     обрезается по краям монитора.
+   ============================================================ */
+@media (min-width: 1024px) {
+
+  /* ── Общие секции ── */
+  .brief-section { max-width: 780px; padding: 60px 24px 64px; }
+  .sec-body { font-size: 18px; max-width: 52ch; }
+  .sec-body.dim { font-size: 17px; }
+  .sec-marker { font-size: 11px; }
+
+  /* ── 01 — Земля: снимок на всю ширину, а портретный SVG-интерфейс
+     (радар, метки, подписи) сжимаем в центральную колонку, иначе он
+     обрезается по краям широкого монитора ── */
+  .earth-img { object-position: 60% 62%; }
+  .earth-svg {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 48vh, 460px);
+  }
+  .earth-text {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 48vh, 460px);
+    padding: 0 8px;
+    right: auto;
+  }
+
+  /* ── 02 — Сканер мета-фактора ── */
+  .scanner { grid-template-columns: 240px 1fr; gap: 26px; margin-top: 30px; }
+  .scan-tab { font-size: 12px; padding: 11px 6px; }
+  .scan-readout .r-head { font-size: 10px; }
+  .scan-readout .r-text { font-size: 17px; }
+
+  /* ── 03 — Панорама «цепь катастроф» ── */
+  .collapse-viewport { height: 52svh; max-height: 460px; margin-top: 30px; }
+  .collapse-tab { font-size: 12px; padding: 11px 5px; }
+  .collapse-readout .r-head { font-size: 10px; }
+  .collapse-readout .r-text { font-size: 17px; }
+
+  /* ── 04 — Карта типов территорий ── */
+  .zones-map-wrap { height: 56svh; max-height: 520px; margin-top: 30px; }
+  .zone-tab { font-size: 12px; padding: 10px 14px; }
+  .zones-readout .r-head { font-size: 10px; }
+  .zones-readout .r-text { font-size: 16px; }
+
+  /* ── Финал ── */
+  .brief-final { max-width: 780px; }
+  .brief-final .f-title { font-size: 28px; }
+  .brief-summary { font-size: 14px; }
+  .brief-return { font-size: 16px; }
+}
