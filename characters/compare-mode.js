@@ -562,7 +562,8 @@ function injectCompareStyles() {
     .cv-monogram{font-family:'Share Tech Mono',monospace;font-weight:900;font-size:14px;letter-spacing:0.02em;text-shadow:0 0 8px rgba(var(--pc),0.6);}
     /* строки вердикта */
     .cv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;background:currentColor;}
-    .cv-name{flex:1;font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;}
+    .cv-sep{align-self:stretch;width:1px;margin:1px 3px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(var(--rc,79,195,247),0.75),transparent);box-shadow:0 0 6px rgba(var(--rc,79,195,247),0.45);}
+    .cv-name{flex:1;font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;padding-left:2px;}
     .cv-crown{font-size:12px;}
     .cv-metric{display:flex;flex-direction:column;align-items:center;min-width:44px;}
     .cv-metric-lbl{font-family:'Share Tech Mono',monospace;font-size:6px;letter-spacing:0.06em;color:var(--dim);text-transform:uppercase;margin-bottom:1px;}
@@ -642,8 +643,9 @@ async function openCompare() {
     const tLead = threats[i] === maxThreat && maxThreat > 0;
     const wLead = wins[i]    === maxWins   && maxWins   > 0;
     const sLead = totals[i]  === maxTotal  && maxTotal  > 0;
-    return `<div class="cv-row">
+    return `<div class="cv-row" style="--rc:${rgb}">
       ${portraitBox(c, rgb)}
+      <span class="cv-sep"></span>
       <span class="cv-name">${c.name}${wLead ? '<span class="cv-crown">👑</span>' : ''}</span>
       <span class="cv-metric ${tLead ? 'lead' : ''}"><span class="cv-metric-lbl">Threat</span><span class="cv-metric-val" style="color:rgb(${rgb})">${threats[i]}</span></span>
       <span class="cv-metric ${wLead ? 'lead' : ''}"><span class="cv-metric-lbl">Победы</span><span class="cv-metric-val" style="color:rgb(${rgb})">${wins[i]}</span></span>

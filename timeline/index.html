@@ -127,11 +127,14 @@
     font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
-    letter-spacing: 2px;
-    transition: color .2s;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--amber-dim);
+    padding: 5px 12px;
+    border-radius: 3px;
+    transition: all .2s;
     flex-shrink: 0;
   }
-  .back-link:hover { color: var(--amber); }
+  .back-link:hover { color: var(--amber); border-color: var(--amber); }
   .hd-title {
     font-family: 'Orbitron', monospace;
     font-size: clamp(13px, 3.4vw, 19px);
@@ -827,7 +830,7 @@
 
 <div class="hd">
   <div class="hd-r1">
-    <a class="back-link" href="../index.html">◄ ТЕРМИНАЛ</a>
+    <a class="back-link" href="../index.html">← ТЕРМИНАЛ</a>
     <div class="hd-title">ХРОНОЛОГИЯ — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
     <div class="hd-label" id="hdLabel">ARCHIVE // 1999–2061</div>
   </div>
@@ -860,7 +863,7 @@
 </div>
 
 <div id="gate">
-  <a class="gate-back" href="../index.html">◄ ТЕРМИНАЛ</a>
+  <a class="gate-back" href="../index.html">← ТЕРМИНАЛ</a>
   <div class="gate-box">
     <div class="gate-icon">🔒</div>
     <div class="gate-title">ДОСТУП К СТРАНИЦЕ ОГРАНИЧЕН</div>

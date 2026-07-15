@@ -611,6 +611,19 @@
     text-align: center;
     background: rgba(8,12,18,0.6);
   }
+
+  /* ═══ Десктоп: слегка сжимаем вертикальный ритм, чтобы титульная
+     страница ровно вмещалась по высоте на невысоких ноутбуках,
+     без «докручивания». Мобильная вёрстка не трогается. ═══ */
+  @media (min-width: 1024px) {
+    .terminal-header { padding: 22px 20px 14px; }
+    .intro-section { padding: 12px 16px 0; }
+    .section-label { padding: 16px 16px 8px; }
+    .faction-card { max-width: 300px; }
+    .slider-dots { margin-top: 10px; }
+    .nav-section { padding: 12px 16px 0; }
+    .terminal-footer { padding: 11px 16px; }
+  }
 </style>
 </head>
 <body>

@@ -752,22 +752,40 @@ body {
   .sec-body.dim { font-size: 17px; }
   .sec-marker { font-size: 11px; }
 
-  /* ── 01 — Земля: снимок на всю ширину, а портретный SVG-интерфейс
-     (радар, метки, подписи) сжимаем в центральную колонку, иначе он
-     обрезается по краям широкого монитора ── */
-  .earth-img { object-position: 60% 62%; }
-  .earth-svg {
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(100%, 48vh, 460px);
+  /* ── 01 — Земля: полноэкранный лендскейп-герой ──
+     Снимок на весь экран; заголовок — крупно слева по центру высоты;
+     портретный SVG-интерфейс (радар/метки) держим справа в своём
+     аспекте, а подписи-капшены (они рассчитаны на телефон и лезут
+     за край) на десктопе прячем — ничего не обрезается. */
+  .sec-earth { max-width: none; padding: 0; }
+  .earth-img { object-position: 54% 52%; }
+  .earth-veil {
+    background:
+      linear-gradient(90deg, rgba(8,12,18,0.94) 0%, rgba(8,12,18,0.62) 32%, rgba(8,12,18,0.05) 62%, rgba(8,12,18,0) 100%),
+      linear-gradient(180deg, rgba(8,12,18,0.85) 0%, rgba(8,12,18,0.12) 26%, rgba(8,12,18,0.12) 62%, rgba(8,12,18,0.6) 100%);
   }
   .earth-text {
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(100%, 48vh, 460px);
-    padding: 0 8px;
+    left: max(48px, 6vw);
     right: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(46vw, 640px);
+    padding: 0;
   }
+  .earth-hero { font-size: clamp(52px, 6.4vw, 88px); margin: 14px 0 22px; }
+  .sec-earth .sec-body { font-size: 20px; max-width: 34ch; }
+  .sec-earth .sec-marker { font-size: 12px; }
+  .sys-line { font-size: 11px; }
+  .earth-svg {
+    left: auto;
+    right: 2%;
+    transform: none;
+    width: min(52vh, 520px);
+  }
+  /* подписи HUD рассчитаны на портретный телефон — на десктопе прячем,
+     чтобы ничего не вылезало за край; радар/метки/орбиты остаются */
+  .earth-caption { display: none; }
+  .earth-scrollhint { left: auto; right: 3%; transform: none; }
 
   /* ── 02 — Сканер мета-фактора ── */
   .scanner { grid-template-columns: 240px 1fr; gap: 26px; margin-top: 30px; }

@@ -29,9 +29,15 @@
   .search-suggestions { max-height: 360px; }
   .search-sugg-item { font-size: 14px; padding: 11px 15px; }
 
+  /* ── строка статистики: поиск прижимаем к правому краю (в уровень с карточками) ── */
+  .stats-row { padding-right: 28px; }
+  .stats-row .search-wrap { margin-left: auto; }
+
   /* ── переключатели/фильтры: крупнее и удобнее для мыши ── */
-  .view-controls { gap: 16px; padding: 12px 24px; }
-  .filter-toggles-row { gap: 12px; }
+  /* Единый бар: режим слева, фильтры + сортировка справа — без пустоты. */
+  .view-controls { gap: 14px 18px; padding: 14px 28px; }
+  .vc-left { gap: 14px; }
+  .vc-right { gap: 10px; }
   .filter-btn { font-size: 13px; padding: 9px 18px; cursor: pointer; }
   .filters-toggle, .sort-toggle, #meta-toggle { font-size: 13px; height: 42px; padding: 0 20px; }
   .cols-label { font-size: 13px; letter-spacing: 0.14em; }
@@ -106,13 +112,45 @@
   .carousel-group-switch { padding: 10px 24px 16px; }
   .carousel-group-btn { font-size: 12px; padding: 8px 18px; }
 
-  .carousel-shelf { margin-bottom: 40px; }
-  .carousel-shelf-header { padding: 0 24px 10px; }
-  .carousel-shelf-title { font-size: 13px; }
-  .carousel-shelf-count { font-size: 10px; }
-  .carousel-shelf-line { margin: 0 24px 12px; }
+  .carousel-shelf { margin-bottom: 44px; }
+
+  /* Заголовки полок — крупнее и стильнее: с вертикальным акцентом и подсветкой */
+  .carousel-shelf-header { padding: 0 28px 12px; align-items: center; gap: 14px; }
+  .carousel-shelf-title {
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    line-height: 1;
+    padding-left: 14px;
+    position: relative;
+    text-shadow: 0 0 18px rgba(var(--shelf-cr,79,195,247),0.55);
+  }
+  .carousel-shelf-title::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 4px; height: 0.9em;
+    background: rgb(var(--shelf-cr,79,195,247));
+    box-shadow: 0 0 10px rgba(var(--shelf-cr,79,195,247),0.8);
+    border-radius: 2px;
+  }
+  .carousel-shelf-count {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    padding: 3px 9px;
+    border: 1px solid rgba(var(--shelf-cr,79,195,247),0.35);
+    border-radius: 3px;
+    color: rgb(var(--shelf-cr,79,195,247));
+    opacity: 0.85;
+    align-self: center;
+  }
+  .carousel-shelf-line { margin: 0 28px 14px; opacity: 0.32; }
 
   .carousel-shelf { position: relative; }
+
+  /* чуть больше воздуха между карточками */
+  .carousel-track { gap: 18px; }
 
   /* карточки чуть компактнее (больше воздуха), но крупнее телефонных */
   .c-card { width: 284px; max-width: 284px; }

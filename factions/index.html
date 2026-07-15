@@ -70,14 +70,17 @@
   .back-link {
     display: inline-block;
     font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
-    letter-spacing: 1px;
+    letter-spacing: 0.1em;
     margin-bottom: 16px;
-    transition: color 0.2s;
+    border: 1px solid rgba(79,195,247,0.3);
+    padding: 5px 12px;
+    border-radius: 3px;
+    transition: all 0.2s;
   }
-  .back-link:hover { color: var(--blue); }
+  .back-link:hover { color: var(--blue); border-color: var(--blue); }
 
   .terminal-label {
     font-family: 'Share Tech Mono', monospace;
@@ -236,7 +239,7 @@
 <div id="app">
 
 <header class="terminal-header">
-  <a href="../index.html" class="back-link">← НА ГЛАВНУЮ</a>
+  <a href="../index.html" class="back-link">← ТЕРМИНАЛ</a>
   <div class="terminal-label">SYS.ACCESS.GRANTED // FACTION REGISTRY</div>
   <div class="terminal-title">⚔️ <span>ФРАКЦИИ</span></div>
 </header>

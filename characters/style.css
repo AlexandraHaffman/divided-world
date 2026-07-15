@@ -235,7 +235,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .meta-glow-wrap .meta-glow{bottom:auto;top:0;}
 
 /* ── ПЕРЕКЛЮЧАТЕЛЬ КОЛОНОК ── */
-.view-controls{position:relative;z-index:10;display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid rgba(30,100,180,0.15);flex-wrap:wrap;}
+.view-controls{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px 16px;padding:8px 16px;border-bottom:1px solid rgba(30,100,180,0.15);flex-wrap:wrap;}
+.vc-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.vc-left{gap:12px;}
 .cols-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:0.1em;}
 .cols-slider{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:2px;}
 .cols-opt{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;color:var(--dim);background:transparent;border:none;width:28px;height:24px;border-radius:3px;cursor:pointer;transition:all 0.15s;}

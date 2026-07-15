@@ -67,11 +67,14 @@
     font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
-    letter-spacing: 2px;
+    letter-spacing: 0.1em;
     margin-bottom: 8px;
-    transition: color 0.2s;
+    border: 1px solid rgba(79,195,247,0.3);
+    padding: 5px 12px;
+    border-radius: 3px;
+    transition: all 0.2s;
   }
-  .back-link:hover { color: var(--blue); }
+  .back-link:hover { color: var(--blue); border-color: var(--blue); }
   .hud-label {
     font-family: 'Share Tech Mono', monospace;
     font-size: 9px;
@@ -625,7 +628,7 @@
 </div>
 
 <div class="hud-header">
-  <a class="back-link" href="../index.html">◄ ТЕРМИНАЛ</a>
+  <a class="back-link" href="../index.html">← ТЕРМИНАЛ</a>
   <div class="hud-label">ORBITAL MONITORING // FACTION GRID // 2061 CE</div>
   <div class="hud-title">ГЛОБАЛЬНАЯ КАРТА — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
   <div class="hud-status" id="status">SIGNAL STABLE</div>
@@ -668,7 +671,7 @@
 </div>
 
 <div id="gate">
-  <a class="gate-back" href="../index.html">◄ ТЕРМИНАЛ</a>
+  <a class="gate-back" href="../index.html">← ТЕРМИНАЛ</a>
   <div class="gate-box">
     <div class="gate-icon">🔒</div>
     <div class="gate-title">ДОСТУП К СТРАНИЦЕ ОГРАНИЧЕН</div>
@@ -1107,7 +1110,7 @@ for (const f of FACTIONS){
   it.className = 'l-item';
   it.style.setProperty('--fc', f.col);
   it.dataset.key = f.key;
-  it.innerHTML = `<div class="l-dot"></div><div><div class="l-name">${f.name}</div><div class="l-sub">${f.base || ''}</div></div>`;
+  it.innerHTML = `<div class="l-dot"></div><div class="l-name">${f.name}</div>`;
   it.addEventListener('click', () => select(f.key, true));
   legendBody.appendChild(it);
 }

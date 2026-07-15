@@ -151,7 +151,7 @@ function renderCarousel(chars, groupBy = "tier") {
     <div class="carousel-shelf" style="--shelf-cr:${color}">
       <div class="carousel-shelf-header">
         <div class="carousel-shelf-title">${label}</div>
-        <div class="carousel-shelf-count">${items.length} ЗАПИСЕЙ</div>
+        <div class="carousel-shelf-count">${items.length} ${typeof pluralRu === "function" ? pluralRu(items.length, "ЗАПИСЬ", "ЗАПИСИ", "ЗАПИСЕЙ") : "ЗАПИСЕЙ"}</div>
       </div>
       <div class="carousel-shelf-line"></div>
       <button type="button" class="carousel-nav prev" aria-label="Прокрутить назад">‹</button>

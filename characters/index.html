@@ -15,7 +15,7 @@
 
 <div class="header">
   <div class="header-top">
-    <a href="../index.html" class="back-btn">← АРХИВ</a>
+    <a href="../index.html" class="back-btn">← ТЕРМИНАЛ</a>
     <span class="sys-label">SYS.<span>PERSONNEL_DB</span> // CLEARANCE: OMNI</span>
   </div>
   <div class="page-title">Персонажи</div>
@@ -31,21 +31,21 @@
 </div>
 
 <div class="view-controls">
-  <span class="cols-label">РЕЖИМ</span>
-  <div class="cols-slider" id="cols-slider">
-    <button class="cols-opt" data-cols="1" data-mode="ПОДБОРКИ" title="Подборки — карточки по тирам и фракциям">1</button>
-    <button class="cols-opt active" data-cols="2" data-mode="ГАЛЕРЕЯ" title="Галерея и досье — основной режим">2</button>
-    <button class="cols-opt" data-cols="3" data-mode="СРАВНЕНИЕ" title="Режим сравнения персонажей">3</button>
-    <button class="cols-opt" data-cols="5" data-mode="СВЯЗИ" title="Отображение связей — скоро">5</button>
+  <div class="vc-group vc-left">
+    <span class="cols-label">РЕЖИМ</span>
+    <div class="cols-slider" id="cols-slider">
+      <button class="cols-opt" data-cols="1" data-mode="ПОДБОРКИ" title="Подборки — карточки по тирам и фракциям">1</button>
+      <button class="cols-opt active" data-cols="2" data-mode="ГАЛЕРЕЯ" title="Галерея и досье — основной режим">2</button>
+      <button class="cols-opt" data-cols="3" data-mode="СРАВНЕНИЕ" title="Режим сравнения персонажей">3</button>
+      <button class="cols-opt" data-cols="5" data-mode="СВЯЗИ" title="Отображение связей — скоро">5</button>
+    </div>
   </div>
-  <button class="sort-toggle" id="sort-toggle">СОРТ: <span id="sort-label">УГРОЗА ↓</span></button>
-</div>
-
-<!-- строка кнопок-фильтров: ФРАКЦИИ · ТИРЫ · МЕТА-ЛЮДИ -->
-<div class="filter-toggles-row">
-  <button class="filters-toggle" id="filters-toggle">ФРАКЦИИ <span class="chev">▾</span></button>
-  <button class="filters-toggle" id="tier-toggle">ТИРЫ <span class="chev">▾</span></button>
-  <button class="sort-toggle" id="meta-toggle">МЕТА-ЛЮДИ</button>
+  <div class="vc-group vc-right">
+    <button class="filters-toggle" id="filters-toggle">ФРАКЦИИ <span class="chev">▾</span></button>
+    <button class="filters-toggle" id="tier-toggle">ТИРЫ <span class="chev">▾</span></button>
+    <button class="sort-toggle" id="meta-toggle">МЕТА-ЛЮДИ</button>
+    <button class="sort-toggle" id="sort-toggle">СОРТ: <span id="sort-label">УГРОЗА ↓</span></button>
+  </div>
 </div>
 
 <div class="filters" id="filters">
