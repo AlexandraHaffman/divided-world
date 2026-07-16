@@ -333,12 +333,52 @@ text { user-select: none; }
   96% { opacity: 0.9; }
 }
 .w-plus-lbl {
+  font-family: var(--orb);
+  font-size: 11px;
+  font-weight: 700;
+  fill: #eafff4;
+  letter-spacing: 2px;
+  text-anchor: middle;
+  filter: drop-shadow(0 0 6px rgba(var(--ph-rgb),0.9));
+}
+.w-plus-sub {
   font-family: var(--mono);
-  font-size: 9px;
-  fill: var(--ph);
-  letter-spacing: 1px;
+  font-size: 6.5px;
+  fill: rgba(var(--ph-rgb),0.7);
+  letter-spacing: 2px;
   text-anchor: middle;
 }
+
+/* Маркус — аномалия сверх потолка: крупный узел, «опасный» ореол и рамка-мишень */
+.node.anomaly-major .n-core { fill: #eafff4; }
+.node.anomaly-major .n-rim { stroke-width: 2; }
+.anomaly-halo {
+  fill: none;
+  stroke: rgba(var(--ph-rgb),0.5);
+  stroke-width: 1.2;
+  animation: anomHalo 3.2s ease-in-out infinite;
+}
+.anomaly-target {
+  fill: none;
+  stroke: rgba(var(--ph-rgb),0.28);
+  stroke-width: 0.8;
+  stroke-dasharray: 2 4;
+}
+@keyframes anomHalo {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.08); }
+}
+
+/* ── LOD-видимость (JS ставит data-lod на <svg>; включённые слои — под управлением CSS) ── */
+#tree[data-lod="0"] .lod1,
+#tree[data-lod="0"] .lod2,
+#tree[data-lod="0"] .lod3,
+#tree[data-lod="1"] .lod2,
+#tree[data-lod="1"] .lod3,
+#tree[data-lod="2"] .lod3 { display: none; }
+/* выбранный узел всегда показывает свой код и имя, на любом зуме */
+.node.selected .n-code,
+.node.selected .n-name { display: inline !important; }
 
 /* воронка Артура: мёртвый пиксель */
 .nul-void { animation: voidFlicker 6s steps(3, end) infinite; }
@@ -384,6 +424,100 @@ text { user-select: none; }
   letter-spacing: 1.5px;
   text-anchor: middle;
 }
+.res-thread.res-hot {
+  stroke: var(--cy);
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 5px rgba(var(--cy-rgb),0.9));
+}
+
+/* легенда резонанса — поясняет принцип связи, появляется при включении слоя */
+.res-legend {
+  position: absolute;
+  left: 302px;                               /* правее панели фильтров, чтобы не перекрывались */
+  bottom: 14px;
+  z-index: 24;
+  width: 262px;
+  max-width: calc(100vw - 28px);
+  background: rgba(4,11,9,0.93);
+  border: 1px solid rgba(var(--cy-rgb),0.35);
+  border-left: 2px solid var(--cy);
+  padding: 11px 13px 13px;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+}
+.res-legend-head { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--cy); margin-bottom: 6px; }
+.res-legend-lead { font-size: 11px; color: var(--text); line-height: 1.4; margin-bottom: 9px; }
+.res-legend-lead b { color: var(--cy); font-weight: 700; }
+.res-legend-row {
+  display: grid;
+  grid-template-columns: 12px 1fr;
+  gap: 6px 7px;
+  align-items: baseline;
+  padding: 4px 0;
+  cursor: pointer;
+  border-top: 1px solid rgba(var(--cy-rgb),0.12);
+}
+.res-legend-row:hover .res-legend-lbl { color: var(--cy); }
+.res-legend-dot { width: 7px; height: 7px; border: 1px solid var(--cy); border-radius: 50%; align-self: center; }
+.res-legend-lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px; color: var(--text); }
+.res-legend-mem { grid-column: 2; font-family: var(--mono); font-size: 9px; color: var(--text-dim); letter-spacing: 0.5px; }
+
+/* ═══ КЛЮЧ: КАК ЧИТАТЬ ДРЕВО (легенда + заставка) ═══ */
+#legendModal {
+  position: fixed;
+  inset: 0;
+  z-index: 320;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: radial-gradient(circle at 50% 42%, rgba(var(--ph-rgb),0.06), transparent 60%), rgba(2,6,5,0.9);
+}
+#legendModal[hidden] { display: none; }
+.legend-box {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: rgba(4,11,9,0.96);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--ph);
+  box-shadow: 0 0 44px rgba(var(--ph-rgb),0.14), inset 0 0 24px rgba(var(--ph-rgb),0.04);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  padding: 20px 22px 22px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ph-dim) transparent;
+}
+.legend-sys { font-family: var(--mono); font-size: 8.5px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; }
+.legend-title {
+  font-family: var(--orb);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #eafff4;
+  text-shadow: 0 0 22px rgba(var(--ph-rgb),0.4);
+  margin-bottom: 8px;
+}
+.legend-lead { font-size: 13px; color: var(--text); line-height: 1.45; margin-bottom: 16px; }
+.legend-grid { display: flex; flex-direction: column; gap: 2px; }
+.legend-row {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 9px 4px;
+  border-top: 1px solid var(--border);
+}
+.legend-glyph {
+  font-size: 18px;
+  color: var(--ph);
+  text-align: center;
+  line-height: 1.3;
+  text-shadow: 0 0 10px rgba(var(--ph-rgb),0.5);
+}
+.legend-cap { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ph); margin-bottom: 2px; }
+.legend-txt { font-size: 12.5px; color: var(--text); line-height: 1.4; }
+.legend-foot { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--text-dim); margin: 14px 0 14px; line-height: 1.5; }
+#legendGo { width: 100%; }
 
 /* ядро — Источник */
 #coreG { cursor: pointer; }
@@ -1017,58 +1151,127 @@ text { user-select: none; }
   .m-core::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(circle at 12% 50%, rgba(var(--ph-rgb),0.16), transparent 55%);
+    background: radial-gradient(circle at 14% 50%, rgba(var(--ph-rgb),0.18), transparent 58%);
     pointer-events: none;
   }
-  .m-core-code { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ph); }
-  .m-core-name { font-family: var(--orb); font-size: 16px; font-weight: 900; color: #eafff4; margin: 3px 0; }
-  .m-core-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--text-dim); }
+  .m-core-sigil { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
+  .m-core-sigil-p { stroke: rgba(var(--ph-rgb),0.6); }
+  .m-core-code { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--ph); position: relative; }
+  .m-core-name { font-family: var(--orb); font-size: 17px; font-weight: 900; color: #eafff4; margin: 3px 0; position: relative; }
+  .m-core-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--text-dim); position: relative; }
 
-  .m-class { border: 1px solid var(--border); margin-bottom: 8px; background: rgba(4,11,9,0.8); }
+  .m-key {
+    width: 100%;
+    margin-bottom: 14px;
+    background: rgba(var(--ph-rgb),0.06);
+    border: 1px dashed rgba(var(--ph-rgb),0.35);
+    color: var(--ph);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 10px;
+  }
+
+  .m-class {
+    border: 1px solid var(--border);
+    border-left: 2px solid rgba(var(--ph-rgb),0.35);
+    margin-bottom: 9px;
+    background: rgba(4,11,9,0.82);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  }
+  .m-class.rare { border-left-color: rgba(var(--cy-rgb),0.5); }
   .m-class-head {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 11px 12px;
+    gap: 11px;
+    padding: 12px;
     cursor: pointer;
   }
-  .m-class-head svg { flex-shrink: 0; }
-  .m-class-code { font-family: var(--orb); font-size: 13px; font-weight: 700; color: var(--ph); letter-spacing: 2px; width: 46px; }
-  .m-class-name { flex: 1; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--text); }
-  .m-class-count { font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
-  .m-class-arrow { color: var(--text-dim); font-size: 11px; transition: transform 0.2s; }
+  .m-class-sigil {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+    background: rgba(2,6,5,0.6);
+  }
+  .m-class.open .m-class-sigil { border-color: rgba(var(--ph-rgb),0.5); box-shadow: inset 0 0 12px rgba(var(--ph-rgb),0.12); }
+  .m-class-titles { flex: 1; min-width: 0; }
+  .m-class-code { font-family: var(--orb); font-size: 15px; font-weight: 700; color: var(--ph); letter-spacing: 2px; display: flex; align-items: center; gap: 7px; }
+  .m-rare { font-family: var(--mono); font-size: 7px; letter-spacing: 1.5px; color: var(--cy); border: 1px solid rgba(var(--cy-rgb),0.4); padding: 1px 4px; font-weight: 400; }
+  .m-class-name { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: var(--text-dim); margin-top: 2px; }
+  .m-class-meta { text-align: right; flex-shrink: 0; }
+  .m-class-count { font-family: var(--orb); font-size: 15px; font-weight: 700; color: #eafff4; line-height: 1; }
+  .m-class-count span { display: block; font-family: var(--mono); font-size: 7px; font-weight: 400; color: var(--text-dim); letter-spacing: 1px; margin-top: 2px; }
+  .m-class-peak { font-family: var(--mono); font-size: 8px; color: rgba(var(--ph-rgb),0.6); letter-spacing: 1px; margin-top: 3px; }
+  .m-class-arrow { color: var(--text-dim); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
   .m-class.open .m-class-arrow { transform: rotate(90deg); color: var(--ph); }
-  .m-class-body { display: none; border-top: 1px solid var(--border); padding: 6px 0 10px; }
+  .m-class-body { display: none; border-top: 1px solid var(--border); padding: 4px 0 10px; }
   .m-class.open .m-class-body { display: block; }
-  .m-class-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; padding: 6px 12px 8px; }
+  .m-class-desc { font-size: 11.5px; color: var(--text-dim); line-height: 1.45; padding: 10px 12px 4px; }
 
   .m-band-cap {
     font-family: var(--mono);
     font-size: 8px;
     letter-spacing: 2px;
-    color: rgba(var(--ph-rgb),0.45);
-    padding: 8px 12px 4px;
+    color: rgba(var(--ph-rgb),0.5);
+    padding: 12px 12px 6px;
     display: flex; align-items: center; gap: 8px;
   }
-  .m-band-cap::after { content: ''; flex: 1; height: 1px; background: rgba(var(--ph-rgb),0.08); }
+  .m-band-cap::after { content: ''; flex: 1; height: 1px; background: rgba(var(--ph-rgb),0.1); }
+  .m-band-cap.ghost { color: rgba(var(--ph-rgb),0.4); }
+  .m-band-cap.ghost::after { background: repeating-linear-gradient(90deg, rgba(var(--ph-rgb),0.2) 0 3px, transparent 3px 7px); }
 
+  /* карточка носителя — архивная бирка */
   .m-node {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 8px 12px;
+    gap: 11px;
+    margin: 6px 12px;
+    padding: 9px 11px;
+    background: rgba(6,15,12,0.7);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--fc, var(--ph));
     cursor: pointer;
+    overflow: hidden;
   }
-  .m-node:active { background: rgba(var(--ph-rgb),0.06); }
+  .m-node:active { background: rgba(var(--ph-rgb),0.08); }
+  .m-node-sigil { position: absolute; right: -6px; bottom: -8px; opacity: 0.12; pointer-events: none; }
+  .m-node-sigil svg, .m-node-sigil { width: 46px; height: 46px; }
+  .m-node-sigil-p { stroke: var(--ph); }
   .m-node-ring { flex-shrink: 0; }
-  .m-node-main { flex: 1; min-width: 0; }
-  .m-node-code { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--ph); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .m-node-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .m-node-w { font-family: var(--mono); font-size: 11px; color: var(--text-dim); flex-shrink: 0; }
-  .m-node.dead { opacity: 0.4; }
+  .m-node-main { flex: 1; min-width: 0; position: relative; z-index: 1; }
+  .m-node-code { font-family: var(--mono); font-size: 9.5px; letter-spacing: 1px; color: var(--ph); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .m-node-name { font-size: 14px; font-weight: 700; color: var(--text); margin: 1px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .m-node-sub { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.5px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .m-node-right { flex-shrink: 0; text-align: right; position: relative; z-index: 1; }
+  .m-node-w { font-family: var(--orb); font-size: 15px; font-weight: 700; color: var(--ph); line-height: 1; }
+  .m-node-thr { font-family: var(--mono); font-size: 9px; color: var(--text-dim); margin-top: 3px; letter-spacing: 0.5px; }
+  .m-node.dead { opacity: 0.5; }
   .m-node.dead .m-node-name { text-decoration: line-through; }
-  .m-node.ghost-row { opacity: 0.5; }
+  .m-node.dead .m-node-w { color: var(--text-dim); }
+  .m-node.anom { border-left-width: 3px; box-shadow: inset 0 0 16px rgba(var(--ph-rgb),0.1); }
+  .m-node.anom .m-node-w { color: #eafff4; text-shadow: 0 0 8px rgba(var(--ph-rgb),0.7); }
+
+  /* карточка вакансии — приглашение родить персонажа */
+  .m-node.ghost-row {
+    border-style: dashed;
+    border-left-color: rgba(var(--ph-rgb),0.3);
+    background: rgba(4,11,9,0.5);
+  }
+  .m-ghost-mark {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    border: 1px dashed rgba(var(--ph-rgb),0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px; color: rgba(var(--ph-rgb),0.5);
+  }
   .m-node.ghost-row .m-node-code { color: var(--text-dim); }
+  .m-node.ghost-row .m-node-name { color: var(--text); font-weight: 600; }
+  .m-node.ghost-row .m-node-sub { white-space: normal; }
+  .m-node-vac { font-family: var(--mono); font-size: 8px; letter-spacing: 1.5px; color: rgba(var(--ph-rgb),0.5); border: 1px dashed rgba(var(--ph-rgb),0.35); padding: 2px 5px; }
+
   .m-review-banner {
     margin: 10px 0;
     border: 1px dashed rgba(var(--ph-rgb),0.4);

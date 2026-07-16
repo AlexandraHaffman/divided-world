@@ -52,7 +52,11 @@ function radiusOf(n) {
   return R_MIN + (10 - Math.max(1, Math.min(10, n.meta_power))) * R_STEP;
 }
 function bandOf(n) { const b = BANDS.find(b => b.test(n.meta_power)); return b ? b.id : "W1-2"; }
-function nodeSize(n) { return 6.5 + Math.min(1, (n.threat || 0) / 90) * 7; } // размер = уровень угрозы
+function nodeSize(n) {                        // размер = уровень угрозы
+  let s = 6.5 + Math.min(1, (n.threat || 0) / 90) * 7;
+  if (n.anomaly && n.meta_power > 10) s = Math.max(s + 7, 18); // Маркус: аномалия читается крупно
+  return s;
+}
 function pol(a, r) { return [Math.cos(a) * r, Math.sin(a) * r]; }
 
 /* ── СИГИЛЫ КЛАССОВ: 8 геометрических глифов, монохром ── */
@@ -230,7 +234,7 @@ function buildSectors() {
       const deg = ang * 180 / Math.PI + 90;
       const flip = (deg > 90 && deg < 270) ? deg + 180 : deg;
       sg.appendChild(el("text", {
-        class: "subclass-lbl lod1",
+        class: "subclass-lbl lod2",
         x: sx.toFixed(1), y: sy.toFixed(1),
         transform: `rotate(${flip.toFixed(1)} ${sx.toFixed(1)} ${sy.toFixed(1)})`,
       }, name.toUpperCase()));
@@ -313,10 +317,37 @@ function buildGhosts() {
       <text class="g-q" y="3.5">?</text>
       <text class="g-lbl lod2" y="19">НЕ ЗАДОКУМЕНТИРОВАНО</text>`;
     gg.addEventListener("mouseenter", e => showHover(e, {
-      code: `${gh.cls}-W?·?·———`, name: gh.subclass.toUpperCase(), sub: "ПУСТОЙ СЛОТ ТАКСОНОМИИ", note: gh.hint,
+      code: `${gh.cls}-W?·?·———`, name: gh.subclass.toUpperCase(), sub: "ВАКАНСИЯ ТАКСОНОМИИ · СЛОТ СВОБОДЕН", note: gh.hint,
     }));
     gg.addEventListener("mouseleave", hideHover);
+    gg.addEventListener("click", ev => { ev.stopPropagation(); showGhostDossier(gh); });
     g.appendChild(gg);
+  });
+}
+
+/* легенда резонанса: поясняет ПРИНЦИП связи (родственные проявления
+   у носителей РАЗНЫХ классов) и перечисляет группы с составом */
+function buildResLegend() {
+  const box = $("resLegend");
+  const nm = id => (byId[id]?.name || id).split(" ")[0];
+  box.innerHTML = `
+    <div class="res-legend-head">РЕЗОНАНС · РОДСТВЕННЫЕ СИЛЫ</div>
+    <div class="res-legend-lead">Нити связывают носителей <b>разных классов</b> с похожей механикой проявления. Это не родство и не союз — сходство самой силы.</div>
+    ${T.resonance.map((t, i) => `
+      <div class="res-legend-row" data-res="${t.label}">
+        <span class="res-legend-dot"></span>
+        <span class="res-legend-lbl">${t.label}</span>
+        <span class="res-legend-mem">${t.members.map(nm).join(" · ")}</span>
+      </div>`).join("")}`;
+  box.querySelectorAll(".res-legend-row").forEach(row => {
+    row.onmouseenter = () => svg.querySelectorAll(`.res-thread[data-res="${CSS.escape(row.dataset.res)}"]`)
+      .forEach(th => th.classList.add("res-hot"));
+    row.onmouseleave = () => svg.querySelectorAll(".res-thread.res-hot").forEach(th => th.classList.remove("res-hot"));
+    row.onclick = () => {
+      const t = T.resonance.find(r => r.label === row.dataset.res);
+      const first = t && byId[t.members.find(m => byId[m])];
+      if (first) selectNode(first.id);
+    };
   });
 }
 
@@ -375,15 +406,22 @@ function buildNodes() {
       <path class="n-arc" d="${nodeArc(n, R)}"/>
       <circle class="n-core ${pulse}" r="${(R * 0.34).toFixed(1)}" style="--pulse:${pulseDur}s"/>
       ${state.layers.badges ? `<g class="n-badge lod2" transform="translate(${(R + 8).toFixed(1)},${(-R - 6).toFixed(1)}) scale(0.72)">${sigilSVG(n.cls, 1, "n-sigil")}</g>` : ""}
-      <text class="n-code lod2" y="${(flip ? -(R + 18) : R + 14).toFixed(1)}">${codeOf(n)}</text>
+      <text class="n-code lod3" y="${(flip ? -(R + 18) : R + 14).toFixed(1)}">${codeOf(n)}</text>
       <text class="n-name lod3" y="${(flip ? -(R + 9) : R + 24).toFixed(1)}">${n.name}</text>`;
 
-    if (n.anomaly && n.meta_power > 10) {      // шип Маркуса сквозь кольцо W10
+    if (n.anomaly && n.meta_power > 10) {      // Маркус: аномалия сверх потолка шкалы — читается издалека
+      ng.classList.add("anomaly-major");
       const spike = el("g");
       const [sx0, sy0] = pol(p.a, R_MIN + 14), [sx1, sy1] = pol(p.a, Math.max(46, p.r - R - 4));
       spike.appendChild(el("line", { class: "anomaly-spike", x1: sx0.toFixed(1), y1: sy0.toFixed(1), x2: sx1.toFixed(1), y2: sy1.toFixed(1) }));
       groups.spokes.appendChild(spike);
-      ng.insertAdjacentHTML("beforeend", `<text class="w-plus-lbl lod1" y="${(-R - 8).toFixed(1)}">W10⁺</text>`);
+      // опасный ореол + рамка-мишень + метка выводятся ПОД остальным содержимым узла
+      ng.insertAdjacentHTML("afterbegin",
+        `<circle class="anomaly-halo" r="${(R + 13).toFixed(1)}"/>` +
+        `<circle class="anomaly-target" r="${(R + 6).toFixed(1)}"/>`);
+      ng.insertAdjacentHTML("beforeend",
+        `<text class="w-plus-lbl lod1" y="${(-R - 20).toFixed(1)}">W10⁺</text>` +
+        `<text class="w-plus-sub lod2" y="${(-R - 10).toFixed(1)}">СВЕРХ ПОТОЛКА ШКАЛЫ</text>`);
     }
 
     ng.addEventListener("click", e => { e.stopPropagation(); selectNode(n.id); });
@@ -430,12 +468,11 @@ function buildCore() {
    >2.1 — коды/бейджи; >3 — имена. Невидимое скрыто display:none. */
 function zoomFactor() { return VB0.w / vb.w; }
 function updateLOD() {
+  // видимость слоёв детализации задаётся через CSS по атрибуту data-lod —
+  // это дешевле поэлементного обхода и позволяет .selected переопределить правило
   const z = zoomFactor();
   const lod = z < 1.3 ? 0 : z < 2.1 ? 1 : z < 3 ? 2 : 3;
   svg.dataset.lod = lod;
-  svg.querySelectorAll(".lod1").forEach(e => e.style.display = lod >= 1 ? "" : "none");
-  svg.querySelectorAll(".lod2").forEach(e => e.style.display = lod >= 2 ? "" : "none");
-  svg.querySelectorAll(".lod3").forEach(e => e.style.display = lod >= 3 ? "" : "none");
   groups.spokes.style.display = lod >= 1 ? "" : "none";
   groups.cmn.style.display = lod >= 1 ? "" : "none";
   if (lod >= 1) $("lodHint").classList.add("gone");
@@ -692,6 +729,22 @@ function showClassDossier(cls) {
   dBody.querySelectorAll("[data-go]").forEach(e => e.onclick = () => selectNode(e.dataset.go));
 }
 
+/* досье пустого слота — приглашение автору родить нового персонажа */
+function showGhostDossier(g) {
+  const c = T.classes[g.cls];
+  dBody.innerHTML = `
+    <div class="d-sys">SYS.TAXA // ВАКАНСИЯ ТАКСОНОМИИ // СЛОТ ПУСТ</div>
+    <div class="d-code">${g.cls}-W?·?·———</div>
+    <div class="d-name">${g.subclass}</div>
+    <div class="d-role">Класс ${g.cls} · ${c ? c.name : ""} — носитель не задокументирован</div>
+    <div class="d-portrait none" style="border-style:dashed">[ СЛОТ СВОБОДЕН · НОСИТЕЛЬ НЕ НАЙДЕН ]</div>
+    <div class="d-sec"><div class="d-sec-cap">ЗАКЛЮЧЕНИЕ АРХИВА</div><div class="d-note">${g.hint}</div></div>
+    <div class="d-sec"><div class="d-sec-cap">ЧТО ЭТО ЗНАЧИТ</div><div class="d-review">
+      Класс допускает такой подкласс, но живого носителя нет. Пустой слот — <b>подсказка</b>: сюда можно поместить нового персонажа. Заполнишь дамп — узел встанет на это место сам, с готовым кодом.
+    </div></div>`;
+  openDossier();
+}
+
 function selectSource() {
   clearSelection(true);
   $("stage").classList.add("focused");
@@ -844,14 +897,14 @@ $("panelToggle").onclick = () => $("panel").classList.toggle("open");
 /* ═══ СЛОИ ═══ */
 function applyLayers() {
   const L = state.layers;
-  groups.res.style.display = "";
+  // слои-тумблеры выключают элемент инлайном; включённые отдаём под управление LOD (CSS)
   svg.querySelectorAll(".res-thread, .res-lbl").forEach(e => e.style.display = L.res ? "" : "none");
-  svg.querySelectorAll(".n-code").forEach(e => { if (!L.codes) e.style.display = "none"; });
-  svg.querySelectorAll(".n-badge").forEach(e => { if (!L.badges) e.style.display = "none"; });
+  svg.querySelectorAll(".n-code").forEach(e => e.style.display = L.codes ? "" : "none");
+  svg.querySelectorAll(".n-badge").forEach(e => e.style.display = L.badges ? "" : "none");
   groups.ghosts.style.display = L.ghost ? "" : "none";
-  updateLOD();                               // LOD переопределит видимость включённых
-  if (!L.codes) svg.querySelectorAll(".n-code").forEach(e => e.style.display = "none");
-  if (!L.badges) svg.querySelectorAll(".n-badge").forEach(e => e.style.display = "none");
+  const rl = $("resLegend");
+  if (rl) { rl.hidden = !L.res; if (L.res) buildResLegend(); }
+  updateLOD();
   nulField(L.nul);
 }
 ["Codes", "Badges", "Res", "Nul", "Ghost"].forEach(k => {
@@ -1074,6 +1127,32 @@ function bindNodeDrag() {
   });
 }
 
+/* ═══ КЛЮЧ: КАК ЧИТАТЬ ДРЕВО ═══ */
+const LEGEND_ROWS = [
+  ["◔", "УГОЛ", "Класс способности — 8 секторов по кругу. Классификация по механике проявления, не по стихиям."],
+  ["◎", "РАДИУС", "Сила по шкале Вистнера. Чем БЛИЖЕ к центру — тем СИЛЬНЕЕ: сила течёт от Источника. W10 у ядра, W1 на периферии."],
+  ["◜", "ДУГА УЗЛА", "Балл Вистнера ещё раз, заполненностью дуги вокруг ядра узла."],
+  ["○", "КАЁМКА", "Цвет тонкого ободка — фракция носителя."],
+  ["◍", "РАЗМЕР", "Уровень угрозы: чем крупнее узел, тем выше угроза."],
+  ["✦", "ПУЛЬС", "Частота мерцания ядра — мета-сила."],
+  ["┈", "ЛИНИЯ К ЦЕНТРУ", "Происхождение силы: пунктир — врождённое (отголосок Первовсплеска), сплошная — дар Источника, от кольца — соборное."],
+  ["⬡", "СИГИЛ", "Геометрический глиф класса у узла и в вершине сектора."],
+  ["𝚆", "КОД", "Каталожная бирка CLS-Wn·o·FCT-### — класс, балл, происхождение, фракция, серийник."],
+];
+function openLegend(intro) {
+  $("legendGrid").innerHTML = LEGEND_ROWS.map(([g, cap, txt]) => `
+    <div class="legend-row">
+      <div class="legend-glyph">${g}</div>
+      <div><div class="legend-cap">${cap}</div><div class="legend-txt">${txt}</div></div>
+    </div>`).join("");
+  $("legendGo").style.display = intro ? "" : "none";
+  $("legendModal").hidden = false;
+}
+function closeLegend() { $("legendModal").hidden = true; localStorage.setItem("dw_tree_intro", "1"); }
+$("btnKey").onclick = () => openLegend(false);
+$("legendClose").onclick = closeLegend;
+$("legendGo").onclick = closeLegend;
+
 /* ═══ ШТАМП БАЗЫ ═══ */
 $("dbVersion").textContent = `${T.version} // ${nodes.length} ЗАПИСЕЙ`;
 $("dbChangelog").innerHTML = `ЖУРНАЛ ПЕРЕКЛАССИФИКАЦИЙ:<br>${T.changelog.join("<br>")}<br>СБОРКА: ${T.built}`;
@@ -1112,50 +1191,73 @@ function miniRing(n, size = 30) {
     <circle cx="${c}" cy="${c}" r="3.4" fill="none" stroke="${fc}" stroke-width="1.6"/>
   </svg>`;
 }
+/* карточка носителя для мобильной таксономии — архивная бирка, а не строка */
+function mNodeCard(m) {
+  const fc = T.factions[m.fac]?.color || "#46e8a4";
+  const dead = m.status === "dead";
+  return `
+    <div class="m-node ${dead ? "dead" : ""} ${m.anomaly && m.meta_power > 10 ? "anom" : ""}" data-open="${m.id}" style="--fc:${fc}">
+      <div class="m-node-sigil"><svg width="46" height="46" viewBox="-11 -11 22 22">${sigilSVG(m.cls, 1.3, "m-node-sigil-p")}</svg></div>
+      ${miniRing(m)}
+      <div class="m-node-main">
+        <div class="m-node-code">${codeOf(m)}</div>
+        <div class="m-node-name">${m.name}</div>
+        <div class="m-node-sub">${m.subclass} · ${T.factions[m.fac]?.name || m.fac}</div>
+      </div>
+      <div class="m-node-right">
+        <div class="m-node-w">${wistnerTag(m)}</div>
+        <div class="m-node-thr">△${m.threat || "—"}</div>
+      </div>
+    </div>`;
+}
 function renderMobile() {
   const wrap = $("mobileTaxa");
   if (!wrap || !isMobile()) return;
   const open = new Set([...wrap.querySelectorAll(".m-class.open")].map(e => e.dataset.cls));
   let html = `
     <div class="m-core" id="mCore">
+      <div class="m-core-sigil"><svg width="42" height="42" viewBox="-11 -11 22 22">${sigilSVG("SRC", 2.0, "m-core-sigil-p")}</svg></div>
       <div class="m-core-code">SRC-W∞ · ЯДРО ДРЕВА</div>
       <div class="m-core-name">${srcNode?.name || "ИСТОЧНИК"}</div>
       <div class="m-core-sub">ВСЯ МЕТА-СИЛА МИРА ИСХОДИТ ОТСЮДА · НАЖМИТЕ</div>
-    </div>`;
+    </div>
+    <button class="m-key" id="mKey">? КАК ЧИТАТЬ ТАКСОНОМИЮ</button>`;
   CLS_ORDER.forEach(cls => {
     const members = nodes.filter(n => n.cls === cls && !n.review && nodeMatches(n)).sort((a, b) => b.meta_power - a.meta_power);
     const ghosts = state.layers.ghost ? T.ghosts.filter(g => g.cls === cls) : [];
     if (!members.length && !ghosts.length) return;
     const bands = BANDS.filter(b => members.some(m => b.test(m.meta_power)));
+    const top = members[0];
+    const rare = cls === "ENT" || cls === "NUL";
     html += `
-      <div class="m-class ${open.has(cls) ? "open" : ""}" data-cls="${cls}">
+      <div class="m-class ${open.has(cls) ? "open" : ""} ${rare ? "rare" : ""}" data-cls="${cls}">
         <div class="m-class-head">
-          <svg width="20" height="20" viewBox="-10 -10 20 20">${sigilSVG(cls, 1)}</svg>
-          <span class="m-class-code">${cls}</span>
-          <span class="m-class-name">${T.classes[cls].name.toUpperCase()}</span>
-          <span class="m-class-count">${members.length}</span>
+          <div class="m-class-sigil"><svg width="26" height="26" viewBox="-11 -11 22 22">${sigilSVG(cls, 1.2)}</svg></div>
+          <div class="m-class-titles">
+            <div class="m-class-code">${cls}${rare ? ' <span class="m-rare">РЕДКИЙ</span>' : ""}</div>
+            <div class="m-class-name">${T.classes[cls].name.toUpperCase()}</div>
+          </div>
+          <div class="m-class-meta">
+            <div class="m-class-count">${members.length}<span>носит.</span></div>
+            ${top ? `<div class="m-class-peak">до ${wistnerTag(top)}</div>` : ""}
+          </div>
           <span class="m-class-arrow">▸</span>
         </div>
         <div class="m-class-body">
           <div class="m-class-desc">${T.classes[cls].desc}</div>
           ${bands.map(b => `
             <div class="m-band-cap">${b.lbl.toUpperCase()}</div>
-            ${members.filter(m => b.test(m.meta_power)).map(m => `
-              <div class="m-node ${m.status === "dead" ? "dead" : ""}" data-open="${m.id}">
-                ${miniRing(m)}
-                <div class="m-node-main">
-                  <div class="m-node-code">${codeOf(m)}</div>
-                  <div class="m-node-name">${m.name}</div>
-                </div>
-                <div class="m-node-w">${wistnerTag(m)}</div>
-              </div>`).join("")}`).join("")}
-          ${ghosts.map(g => `
-            <div class="m-node ghost-row">
-              <svg class="m-node-ring" width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="11" fill="none" stroke="rgba(70,232,164,0.35)" stroke-dasharray="3 4"/><text x="15" y="19" text-anchor="middle" style="font-family:var(--mono);font-size:10px;fill:rgba(70,232,164,0.4)">?</text></svg>
+            ${members.filter(m => b.test(m.meta_power)).map(mNodeCard).join("")}`).join("")}
+          ${ghosts.length ? `<div class="m-band-cap ghost">ВАКАНСИИ ТАКСОНОМИИ · ${ghosts.length}</div>` : ""}
+          ${ghosts.map((g, i) => `
+            <div class="m-node ghost-row" data-ghost="${cls}:${i}">
+              <div class="m-ghost-mark">?</div>
               <div class="m-node-main">
                 <div class="m-node-code">${g.cls}-W?·?·———</div>
-                <div class="m-node-name">${g.subclass} · НЕ ЗАДОКУМЕНТИРОВАНО</div>
+                <div class="m-node-name">${g.subclass}</div>
+                <div class="m-node-sub">${g.hint}</div>
               </div>
+              <div class="m-node-right"><div class="m-node-vac">ВАКАНТ</div></div>
             </div>`).join("")}
         </div>
       </div>`;
@@ -1166,8 +1268,14 @@ function renderMobile() {
   }
   wrap.innerHTML = html;
   $("mCore").onclick = selectSource;
+  $("mKey").onclick = () => openLegend(false);
   wrap.querySelectorAll(".m-class-head").forEach(h => h.onclick = () => h.parentElement.classList.toggle("open"));
   wrap.querySelectorAll("[data-open]").forEach(e => e.onclick = () => showNodeDossier(byId[e.dataset.open]));
+  wrap.querySelectorAll("[data-ghost]").forEach(e => e.onclick = () => {
+    const [cls, i] = e.dataset.ghost.split(":");
+    const g = T.ghosts.filter(x => x.cls === cls)[+i];
+    if (g) showGhostDossier(g);
+  });
 }
 
 /* ═══ ВОРОТА ДОСТУПА (механизм глобальной карты, один в один) ═══
@@ -1226,6 +1334,7 @@ function start() {
   applyFilters();
   renderMobile();
   window.addEventListener("resize", renderMobile);
+  if (!localStorage.getItem("dw_tree_intro")) openLegend(true);  // короткая заставка при первом входе
 }
 
 })();

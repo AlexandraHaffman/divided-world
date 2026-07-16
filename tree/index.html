@@ -40,12 +40,15 @@
     <div id="vignette" aria-hidden="true"></div>
 
     <div class="stage-controls">
+      <button class="sbtn" id="btnKey" title="Как читать древо">?</button>
       <button class="sbtn" id="zoomIn"  title="Приблизить">+</button>
       <button class="sbtn" id="zoomOut" title="Отдалить">−</button>
       <button class="sbtn" id="zoomFit" title="Сброс вида">⟲</button>
     </div>
 
-    <div class="lod-hint" id="lodHint">ПРИБЛИЗЬТЕ ДЛЯ РАЗВЁРТКИ НОСИТЕЛЕЙ · КЛИК ПО КЛАССУ — ФОКУС</div>
+    <div class="lod-hint" id="lodHint">ПРИБЛИЗЬТЕ ДЛЯ РАЗВЁРТКИ НОСИТЕЛЕЙ · КЛИК ПО КЛАССУ — ФОКУС · «?» — КАК ЧИТАТЬ</div>
+
+    <div class="res-legend" id="resLegend" hidden></div>
 
     <div class="hovercard" id="hovercard" hidden></div>
 
@@ -84,7 +87,7 @@
         <div class="togglerow" id="layers">
           <label class="tgl"><input type="checkbox" id="tglCodes" checked><span>Каталожные коды</span></label>
           <label class="tgl"><input type="checkbox" id="tglBadges" checked><span>Сигилы классов</span></label>
-          <label class="tgl"><input type="checkbox" id="tglRes"><span>Резонансные нити</span></label>
+          <label class="tgl"><input type="checkbox" id="tglRes"><span>Резонанс родств. сил</span></label>
           <label class="tgl desktop-only"><input type="checkbox" id="tglNul"><span>Поле подавления NUL</span></label>
           <label class="tgl"><input type="checkbox" id="tglGhost" checked><span>Пустые слоты</span></label>
         </div>
@@ -117,6 +120,21 @@
 
   <div id="glitchOverlay" aria-hidden="true" hidden>
     <div class="glitch-text">ОБЪЕКТ НЕ ПОДДАЁТСЯ КЛАССИФИКАЦИИ</div>
+  </div>
+
+  <!-- ── КЛЮЧ: КАК ЧИТАТЬ ДРЕВО (легенда кодирования + короткая заставка) ── -->
+  <div id="legendModal" hidden>
+    <div class="legend-box">
+      <button class="dossier-close" id="legendClose">×</button>
+      <div class="legend-head">
+        <div class="legend-sys">SYS.TAXA // ЛЕГЕНДА КОДИРОВАНИЯ</div>
+        <div class="legend-title">КАК ЧИТАТЬ ДРЕВО</div>
+        <div class="legend-lead">Каждый узел — задокументированный мета-человек. Его положение и вид кодируют данные архива по нескольким каналам сразу.</div>
+      </div>
+      <div class="legend-grid" id="legendGrid"></div>
+      <div class="legend-foot">Древо показывает только мета-людей. «Обычные» персонажи в него не попадают.</div>
+      <button class="d-btn" id="legendGo">ВОЙТИ В АРХИВ →</button>
+    </div>
   </div>
 </div>
 
