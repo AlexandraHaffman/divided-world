@@ -95,6 +95,64 @@ function firstNameRu(c) {
   return parts[0];
 }
 
+/* Фамилия для сокращения — последнее слово имени, если оно с заглавной
+   (то есть настоящая фамилия, а не эпитет «в бездну» / «тишины»). Для
+   одиночных имён и эпитетов возвращает null — резать нечего. */
+function lastNameRu(c) {
+  const n = (c && c.name || "").trim();
+  const parts = n.split(/\s+/);
+  if (parts.length < 2) return null;
+  const last = parts[parts.length - 1];
+  return /^[А-ЯЁA-Z]/.test(last) ? last : null;
+}
+
+/* Короткие псевдонимы для сокращения — берём только однословные прозвища
+   («Апостол», «Фримен», «Барон», «Волк»). Двухсловные псевдонимы — это, как
+   правило, должности («Министр связи», «Директор ГУИН») или снова полное имя,
+   поэтому их не трогаем: роль целиком тащить не надо. «Неизвестно» и подобное
+   отсекаем. */
+function aliasesShort(c) {
+  return ((c && c.aliases) || [])
+    .map(a => String(a).trim())
+    .filter(a => a && !/\s/.test(a) && a.length >= 2 && !/^неизвестн/i.test(a));
+}
+
+/* ── Короткие формы для одного отчёта ──
+   Для каждого персонажа собираем ПУЛ коротких форм: личное имя, фамилия и
+   короткие псевдонимы. Из пула убираем всё, что в пределах этого сравнения
+   указывает не однозначно (общая фамилия у Лилии и Ульяны Спасских, общее имя
+   у двух Юлианов, пересечение псевдонима с чужим именем) — так подстановка
+   никогда не спутает двух персонажей. На каждое упоминание форма выбирается
+   случайно, поэтому в одном отчёте спокойно уживаются «Артур», «Остерман» и
+   «Апостол». Первое упоминание всё равно идёт полным именем (см. renderPhrase). */
+let compareShortForms = null;
+function computeShortForms(chars) {
+  // кандидаты на персонажа (без дублей внутри самого персонажа)
+  const cands = chars.map(c => {
+    const set = new Set();
+    const f = firstNameRu(c); if (f) set.add(f);
+    const l = lastNameRu(c);  if (l) set.add(l);
+    aliasesShort(c).forEach(a => set.add(a));
+    return set;
+  });
+  // сколько раз каждая строка встречается среди всех кандидатов
+  const globalCount = {};
+  cands.forEach(set => set.forEach(s => { globalCount[s] = (globalCount[s] || 0) + 1; }));
+  const map = new Map();
+  chars.forEach((c, i) => {
+    const pool = [...cands[i]].filter(s => globalCount[s] === 1);
+    map.set(c, pool);   // может быть пустым — тогда откатимся к firstNameRu
+  });
+  return map;
+}
+
+/* Короткая форма имени для повторного упоминания — случайная из пула. */
+function shortNameRu(c) {
+  const pool = compareShortForms && compareShortForms.get(c);
+  if (pool && pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  return firstNameRu(c);
+}
+
 /* ══════════════════════════════════════════
    ЦВЕТА: разведение совпадающих фракций
    ══════════════════════════════════════════ */
@@ -213,22 +271,23 @@ function powerScore(c) {
 
 /* Боевой архетип — по доминирующей мета-оси профиля. Если два верхних
    направления почти равны, персонаж «универсал». Чисто для флейвора —
-   компактный ярлык рядом с именем в итоговой таблице. */
+   компактный ярлык рядом с именем в итоговой таблице. У каждого архетипа
+   есть пояснение (tip) — оно всплывает по наведению/тапу. */
 const ARCHETYPES = [
-  ["power", ["combat","meta_power"],        "⚔", "Разрушитель"],
-  ["mind",  ["intelligence","influence"],   "🧠", "Стратег"],
-  ["shadow",["stealth","unpredictability"], "🌑", "Призрак"],
-  ["nerve", ["will","cruelty"],             "🔥", "Фанатик"]
+  ["power", ["combat","meta_power"],        "⚔", "Разрушитель", "Разрушителя", "Ставка на грубую силу — боевые навыки и мета-мощь. Решает всё в лобовом столкновении."],
+  ["mind",  ["intelligence","influence"],   "🧠", "Стратег",     "Стратега",     "Оружие — ум, связи и влияние, а не кулаки. Выигрывает партию до её начала."],
+  ["shadow",["stealth","unpredictability"], "🌑", "Призрак",     "Призрака",     "Скрытность и непредсказуемость. Бьёт из тени и уходит прежде, чем его заметят."],
+  ["nerve", ["will","cruelty"],             "🔥", "Фанатик",     "Фанатика",     "Несгибаемая воля и готовность идти до конца. Ломается последним и не знает пощады."]
 ];
+const ARCH_UNIVERSAL = { emoji: "◇", label: "Универсал", gen: "Универсала", tip: "Ровный профиль без явных провалов — силён почти во всём понемногу, но без острых пиков." };
+const ARCH_UNKNOWN   = { emoji: "◇", label: "Тёмная лошадка", gen: "Тёмной лошадки", tip: "Профиль без выраженных сильных сторон — предсказать поведение сложно." };
 function combatArchetype(c) {
-  const scored = ARCHETYPES.map(([id, keys, emoji, label]) => ({
-    id, emoji, label, v: keys.reduce((s, k) => s + st(c, k), 0)
+  const scored = ARCHETYPES.map(([id, keys, emoji, label, gen, tip]) => ({
+    id, emoji, label, gen, tip, v: keys.reduce((s, k) => s + st(c, k), 0)
   })).sort((a, b) => b.v - a.v);
-  if (scored[0].v <= 0) return { emoji: "◇", label: "Тёмная лошадка" };
-  if (scored[1].v > 0 && (scored[0].v - scored[1].v) / scored[0].v < 0.15) {
-    return { emoji: "◇", label: "Универсал" };
-  }
-  return { emoji: scored[0].emoji, label: scored[0].label };
+  if (scored[0].v <= 0) return ARCH_UNKNOWN;
+  if (scored[1].v > 0 && (scored[0].v - scored[1].v) / scored[0].v < 0.08) return ARCH_UNIVERSAL;
+  return { emoji: scored[0].emoji, label: scored[0].label, gen: scored[0].gen, tip: scored[0].tip };
 }
 
 /* Ранг по угрозе среди всей базы */
@@ -324,7 +383,7 @@ function renderPhrase(tpl, entry, chars, seen) {
 
   const nameFor = idx => {
     const c = chars[idx];
-    if (seen.has(idx)) return firstNameRu(c);
+    if (seen.has(idx)) return shortNameRu(c);
     seen.add(idx);
     return c.name;
   };
@@ -638,6 +697,11 @@ function buildDuelBlock(chars, cols) {
       factor = stName ? `Ключевой фактор — ${stName}` : null;
     }
     const factorHTML = factor ? `<div class="cv-duel-factor">${factor}</div>` : "";
+    // Цитата лидера как эпиграф — только когда есть явный перевес.
+    const q = (diff >= 8 && chars[lead].card_quote) ? chars[lead].card_quote.trim() : "";
+    const quoteHTML = q
+      ? `<div class="cv-duel-quote">«${q}»<span class="cv-duel-quote-by">— ${shortNameRu(chars[lead])}</span></div>`
+      : "";
     return `<div class="compare-verdict">
       <div class="cv-title">SYS.DUEL // ВЕРОЯТНЫЙ ИСХОД</div>
       <div class="cv-duel-nums">
@@ -650,6 +714,7 @@ function buildDuelBlock(chars, cols) {
       </div>
       <div class="cv-duel-verdict">${verdict}</div>
       ${factorHTML}
+      ${quoteHTML}
     </div>`;
   }
   const order = chars.map((c, i) => i).sort((a, b) => ps[b] - ps[a]);
@@ -689,6 +754,89 @@ function buildDuelBlock(chars, cols) {
     ${rows}
     <div class="cv-duel-verdict">${rankVerdict}</div>
   </div>`;
+}
+
+/* ── Слоган-афиша матча (в шапке отчёта) ──
+   Для дуэли — «АРХЕТИП ПРОТИВ АРХЕТИПА», для группы — перечень уникальных
+   архетипов через точку. Зеркальные дуэли одинаковых архетипов не склоняем,
+   чтобы избежать корявых падежей. */
+function matchupSlogan(chars) {
+  const arts = chars.map(combatArchetype);
+  if (chars.length === 2) {
+    if (arts[0].label === arts[1].label) return "ЗЕРКАЛЬНАЯ ДУЭЛЬ";
+    return `${arts[0].label} против ${arts[1].gen}`.toUpperCase();
+  }
+  const uniq = [...new Set(arts.map(a => a.label))];
+  if (uniq.length === 1) return `${chars.length} × ${uniq[0]}`.toUpperCase();
+  return uniq.join(" · ").toUpperCase();
+}
+
+/* ── «Что если»: исход при разных условиях боя ──
+   Каждый сценарий взвешивает свой набор статов и называет победителя. */
+const SCENARIOS = [
+  ["⚔", "Открытый бой", ["combat", "meta_power"],
+   "Прямое столкновение лицом к лицу: решают боевые навыки и мета-мощь."],
+  ["🌑", "Игра в тени", ["stealth", "unpredictability", "intelligence"],
+   "Скрытная операция без прямого контакта: скрытность, непредсказуемость и расчёт."],
+  ["⏳", "Долгая война", ["will", "influence", "intelligence"],
+   "Противостояние на истощение: воля, связи и холодный расчёт решают на дистанции."]
+];
+function buildScenarios(chars, cols) {
+  const rows = SCENARIOS.map(([emoji, label, keys, tip]) => {
+    const sc = chars.map(c => keys.reduce((s, k) => s + st(c, k), 0));
+    const mx = Math.max(...sc);
+    const leaders = sc.reduce((a, v, i) => { if (v === mx) a.push(i); return a; }, []);
+    let outcome;
+    if (mx <= 0 || leaders.length === chars.length) {
+      outcome = `<span class="cv-scn-tie">не разобрать</span>`;
+    } else if (leaders.length > 1) {
+      outcome = `<span class="cv-scn-tie">ничья</span>`;
+    } else {
+      const wi = leaders[0];
+      outcome = `<span class="cv-scn-win" style="color:rgb(${cols[wi].rgb})">${shortNameRu(chars[wi])}</span>`;
+    }
+    return `<div class="cv-scn-row">
+      <span class="cv-scn-cond cv-tip" data-tip="${tip}">${emoji} ${label}</span>
+      <span class="cv-scn-arrow">→</span>
+      ${outcome}
+    </div>`;
+  }).join("");
+  return `<div class="compare-verdict">
+    <div class="cv-title">SYS.SCENARIO // ПРИ РАЗНЫХ УСЛОВИЯХ</div>
+    ${rows}
+  </div>`;
+}
+
+/* ── «Слабое звено»: самый низкий стат каждого персонажа ── */
+function buildWeakness(chars, cols) {
+  const rows = chars.map((c, i) => {
+    let lowKey = null, lowVal = Infinity;
+    CMP_STAT_KEYS.forEach(k => { const v = st(c, k); if (v < lowVal) { lowVal = v; lowKey = k; } });
+    const lbl = DUEL_STAT_LABELS[lowKey] || "—";
+    const tip = (typeof STAT_INFO !== "undefined" && STAT_INFO[lowKey]) || "";
+    return `<div class="cv-weak-row">
+      <span class="cv-dot" style="color:rgb(${cols[i].rgb})"></span>
+      <span class="cv-weak-name">${shortNameRu(c)}</span>
+      <span class="cv-weak-stat cv-tip" data-tip="${tip}">${lbl}</span>
+      <span class="cv-weak-val" style="color:rgb(${cols[i].rgb})">${lowVal}</span>
+    </div>`;
+  }).join("");
+  return `<div class="compare-verdict">
+    <div class="cv-title">SYS.WEAKNESS // СЛАБОЕ ЗВЕНО</div>
+    ${rows}
+  </div>`;
+}
+
+/* Тап по подсказке открывает её на тач-устройствах (где нет наведения);
+   повторный тап или тап мимо — закрывает. Вешаем один раз на документ. */
+function ensureCompareTipTap() {
+  if (window.__cmpTipTap) return;
+  window.__cmpTipTap = true;
+  document.addEventListener("click", e => {
+    const tip = e.target.closest(".cv-tip");
+    document.querySelectorAll(".cv-tip.tip-open").forEach(el => { if (el !== tip) el.classList.remove("tip-open"); });
+    if (tip) { tip.classList.toggle("tip-open"); }
+  });
 }
 
 /* ── Мета-оси: 8 статов → 4 группы ── */
@@ -758,6 +906,27 @@ function injectCompareStyles() {
     .cv-rank-track{flex:1;height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;}
     .cv-rank-track>div{height:100%;border-radius:4px;transition:width 0.4s;}
     .cv-rank-val{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:900;width:28px;text-align:right;flex-shrink:0;}
+    /* слоган-афиша матча */
+    .compare-slogan{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--white);text-transform:uppercase;margin-top:8px;padding:6px 10px;border-left:2px solid rgba(79,195,247,0.5);background:linear-gradient(90deg,rgba(79,195,247,0.08),transparent);border-radius:0 4px 4px 0;}
+    /* сценарии «что если» */
+    .cv-scn-row{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
+    .cv-scn-cond{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;}
+    .cv-scn-arrow{font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:12px;}
+    .cv-scn-win{font-size:13px;font-weight:800;white-space:nowrap;text-shadow:0 0 10px currentColor;margin-left:auto;}
+    .cv-scn-tie{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);margin-left:auto;}
+    /* слабое звено */
+    .cv-weak-row{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
+    .cv-weak-name{flex:1;font-size:12px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .cv-weak-stat{font-size:11px;font-weight:600;color:var(--text);}
+    .cv-weak-val{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:900;width:24px;text-align:right;flex-shrink:0;}
+    /* цитата победителя в дуэли */
+    .cv-duel-quote{font-family:'Rajdhani',sans-serif;font-style:italic;font-size:12px;color:var(--text);text-align:center;padding:10px 6px 2px;line-height:1.45;opacity:0.9;}
+    .cv-duel-quote-by{display:block;font-style:normal;font-size:10px;color:var(--dim);letter-spacing:0.04em;margin-top:3px;}
+    /* всплывающие подсказки к архетипам / сценариям / уязвимостям
+       (hover на десктопе, тап на тач-устройствах через .tip-open) */
+    .cv-tip{position:relative;cursor:help;text-decoration:underline dotted rgba(255,255,255,0.28);text-underline-offset:2px;}
+    .cv-tip[data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:220px;white-space:normal;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:500;letter-spacing:normal;text-transform:none;line-height:1.4;color:var(--white);background:rgba(6,10,18,0.97);border:1px solid rgba(79,195,247,0.45);box-shadow:0 6px 18px rgba(0,0,0,0.5),0 0 12px rgba(79,195,247,0.12);padding:7px 10px;border-radius:4px;opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity 0.15s,transform 0.15s;}
+    .cv-tip[data-tip]:hover::after,.cv-tip.tip-open[data-tip]::after{opacity:1;transform:translateY(0);}
     /* тряска при лимите */
     @keyframes cmpShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
     .char-card.cmp-shake{animation:cmpShake 0.35s ease;border-color:#f87171 !important;box-shadow:0 0 16px rgba(248,113,113,0.4) !important;}
@@ -773,6 +942,7 @@ async function openCompare() {
   injectCompareStyles();
   const chars = compareSelection.map(idx => allChars[idx]);
   const cols = distinctColors(chars);
+  compareShortForms = computeShortForms(chars);   // короткие формы имён на этот отчёт
 
   const legend = chars.map((c, i) => `
     <div class="compare-legend-item" style="color:rgb(${cols[i].rgb})">
@@ -814,7 +984,7 @@ async function openCompare() {
       <span class="cv-sep"></span>
       <span class="cv-name-wrap">
         <span class="cv-name">${c.name}${wLead ? '<span class="cv-crown">👑</span>' : ''}</span>
-        <span class="cv-arch-tag" style="color:rgb(${rgb})">${arch.emoji} ${arch.label}</span>
+        <span class="cv-arch-tag cv-tip" data-tip="${arch.tip}" style="color:rgb(${rgb})">${arch.emoji} ${arch.label}</span>
       </span>
       <span class="cv-metric ${tLead ? 'lead' : ''}"><span class="cv-metric-lbl">Threat</span><span class="cv-metric-val" style="color:rgb(${rgb})">${threats[i]}</span></span>
       <span class="cv-metric ${wLead ? 'lead' : ''}"><span class="cv-metric-lbl">Победы</span><span class="cv-metric-val" style="color:rgb(${rgb})">${wins[i]}</span></span>
@@ -852,6 +1022,15 @@ async function openCompare() {
   // ── Дуэль / боевой рейтинг ──
   const duelHTML = buildDuelBlock(chars, cols);
 
+  // ── «Что если»: исход при разных условиях ──
+  const scenariosHTML = buildScenarios(chars, cols);
+
+  // ── «Слабое звено» ──
+  const weaknessHTML = buildWeakness(chars, cols);
+
+  // ── Слоган-афиша матча ──
+  const sloganHTML = `<div class="compare-slogan">${matchupSlogan(chars)}</div>`;
+
   // ── Радар ──
   const radar = buildCompareRadar(chars, cols, 220);
 
@@ -869,18 +1048,22 @@ async function openCompare() {
     <div class="compare-header">
       <button class="compare-close" onclick="closeCompare()">← НАЗАД</button>
       <div class="compare-title">SYS.COMPARE // ${chars.length} ${pluralRu(chars.length, 'ЗАПИСЬ', 'ЗАПИСИ', 'ЗАПИСЕЙ')}</div>
+      ${sloganHTML}
       <div class="compare-legend">${legend}</div>
     </div>
     ${verdictHTML}
     ${autoHTML}
+    ${scenariosHTML}
     ${archHTML}
     ${duelHTML}
+    ${weaknessHTML}
     <div class="compare-radar-wrap">${radar}</div>
     ${metaAxesHTML}
     <div class="compare-section-title">Характеристики</div>
     <div class="compare-stats">${statsHTML}</div>
   `;
 
+  ensureCompareTipTap();
   document.getElementById("compare-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
 }
