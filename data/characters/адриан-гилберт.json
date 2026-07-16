@@ -14,10 +14,10 @@
     "Адриан Гилберт"
   ],
   "abilities": [
-    "Политическое лидерство",
-    "Стратегическое мышление",
-    "Манипуляция общественным мнением",
-    "Гиревой спорт"
+    "Лидерство",
+    "Стратегическое планирование",
+    "Харизма",
+    "Разработка секретных проектов"
   ],
   "threat_level": 49,
   "stats": {
@@ -39,5 +39,5 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/365C9A63-D4B5-4751-B622-25D788D227C6.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E923352E-D84A-4EF3-B5DA-93CCA67ED833.png",
   "tier": "epic",
-  "exported_at": "2026-07-16T09:01:16.075Z"
+  "exported_at": "2026-07-16T16:30:23.859Z"
 }
