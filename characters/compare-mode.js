@@ -154,6 +154,103 @@ function shortNameRu(c) {
 }
 
 /* ══════════════════════════════════════════
+   СКЛОНЕНИЕ ИМЁН ПО ПАДЕЖАМ (лёгкий морфо-движок)
+   Падежи: nom (именит.), gen (родит.), dat (дат.), acc (винит.),
+   inst (творит.), prep (предл.).
+   Принцип «не навреди»: уверенно склоняем только понятные классы, всё
+   спорное (иностранные имена на гласный, женские фамилии на согласный,
+   беглые гласные, латиница, составные) оставляем в именительном — это ровно
+   текущее поведение, без выдуманных кривых форм.
+   ══════════════════════════════════════════ */
+function declineWord(w, gender, gcase) {
+  if (!w || gcase === "nom") return w;
+  if (!/[а-яё]/i.test(w)) return w;      // латиница/аббревиатуры (CSO)
+  if (w.indexOf("-") >= 0) return w;     // составные (Жрец-Прорицатель, Аль-Нар)
+  const L = w.toLowerCase();
+  if (L.endsWith("иа")) return w;        // иностранные на -иа (Тенебриа) — не трогаем
+  const stem = w.slice(0, -1);           // без последней буквы — для замен
+  const preLast = L.slice(-2, -1);       // предпоследняя буква (спелл-правила)
+  const hush = /[жшчщц]/.test(L.slice(-1));
+
+  // ── Прилагательные-фамилии (-ская/-ский, -ая/-ой) ──
+  // Только явные адъективные окончания: голое -ий не берём, иначе имена
+  // вроде «Валерий» уедут в «Валерого».
+  if (gender === "f" && /(ская|цкая)$/.test(L)) {               // Спасская
+    return gcase === "acc" ? w.slice(0, -2) + "ую" : w.slice(0, -2) + "ой";
+  }
+  if (gender === "m" && L.length > 4 && /(ский|цкий|ской|цкой|ый|ой)$/.test(L)) { // Ленский
+    const base = w.slice(0, -2);
+    if (gcase === "gen" || gcase === "acc") return base + "ого";
+    if (gcase === "dat")  return base + "ому";
+    if (gcase === "inst") return base + "им";
+    if (gcase === "prep") return base + "ом";
+    return w;
+  }
+
+  // ── Женские фамилии -ова/-ева/-ёва (склоняются адъективно) ──
+  // Гончарова → Гончаровой / Гончарову. Длину ограничиваем, чтобы не задеть
+  // короткие имена на -ва (Ева → Евы, а не «Евой»).
+  if (gender === "f" && L.length >= 5 && /(ова|ева|ёва)$/.test(L)) {
+    return gcase === "acc" ? w.slice(0, -1) + "у" : w.slice(0, -1) + "ой";
+  }
+
+  // ── 1-е склонение: -а / -я (для любого пола) ──
+  if (L.endsWith("а")) {
+    if (gcase === "gen")  return stem + (/[жшчщцгкх]/.test(preLast) ? "и" : "ы");
+    if (gcase === "dat" || gcase === "prep") return stem + "е";
+    if (gcase === "acc")  return stem + "у";
+    if (gcase === "inst") return stem + (/[жшчщц]/.test(preLast) ? "ей" : "ой");
+    return w;
+  }
+  if (L.endsWith("я")) {
+    const iya = L.endsWith("ия");                                // Лилия vs Аня/Нимфея
+    if (gcase === "gen")  return stem + "и";
+    if (gcase === "dat" || gcase === "prep") return stem + (iya ? "и" : "е");
+    if (gcase === "acc")  return stem + "ю";
+    if (gcase === "inst") return stem + "ей";
+    return w;
+  }
+
+  // ── Мужские ──
+  if (gender === "m") {
+    if (L.endsWith("й") && !/[ую]й$/.test(L)) {                  // Андрей (не Сюй)
+      if (gcase === "gen" || gcase === "acc") return stem + "я";
+      if (gcase === "dat")  return stem + "ю";
+      if (gcase === "inst") return stem + "ем";
+      if (gcase === "prep") return stem + (L.endsWith("ий") ? "и" : "е"); // Валерии / Андрее
+      return w;
+    }
+    if (L.endsWith("ль")) {                                      // Даниэль, Фогель
+      if (gcase === "gen" || gcase === "acc") return stem + "я";
+      if (gcase === "dat")  return stem + "ю";
+      if (gcase === "inst") return stem + "ем";
+      if (gcase === "prep") return stem + "е";
+      return w;
+    }
+    if (/[бвгджзклмнпрстфхцчшщ]$/.test(L)) {                     // твёрдый согласный
+      if (gcase === "gen" || gcase === "acc") return w + "а";
+      if (gcase === "dat")  return w + "у";
+      if (gcase === "inst") return w + (/(ов|ев|ёв)$/.test(L) ? "ым" : (hush ? "ем" : "ом")); // Журавлёвым
+      if (gcase === "prep") return w + "е";
+      return w;
+    }
+  }
+
+  // всё прочее — без изменений (безопасный откат к именительному)
+  return w;
+}
+
+/* Склоняет имя целиком (в т.ч. двухсловное «Имя Фамилия») пословно.
+   Эпитеты-фразы со словом со строчной буквы («Смотрящий в бездну») не трогаем
+   вовсе — там пословное склонение ломает конструкцию. */
+function declineNameStr(str, gender, gcase) {
+  if (!gcase || gcase === "nom") return str;
+  const s = String(str);
+  if (/\s/.test(s) && s.split(/\s+/).some(t => /^[а-яё]/.test(t))) return s;
+  return s.split(/\s+/).map(t => declineWord(t, gender, gcase)).join(" ");
+}
+
+/* ══════════════════════════════════════════
    ЦВЕТА: разведение совпадающих фракций
    ══════════════════════════════════════════ */
 function rgbStrToHsl(str) {
@@ -372,8 +469,10 @@ function pickTemplate(bank, category) {
 
 /* Рендер одной фразы с учётом:
    • имён-слотов (slots: имя-слота → индекс персонажа) — при ПЕРВОМ упоминании
-     персонажа в блоке подставляется полное имя, при повторном — только личное
-     имя (общий Set `seen` копится между строками в порядке показа);
+     персонажа в блоке подставляется полное имя, при повторном — короткая форма
+     (общий Set `seen` копится между строками в порядке показа);
+   • падежей: {name:gen}, {a:acc}, {names:inst} и т.п. — имя склоняется по полу
+     персонажа (nom/gen/dat/acc/inst/prep). Без суффикса — именительный;
    • гендерных токенов {g|слот|муж|жен} — форма выбирается по полу персонажа,
      привязанного к слоту;
    • группы имён (groupIdxs) для {names} и обычных подстановок (extra). */
@@ -387,6 +486,8 @@ function renderPhrase(tpl, entry, chars, seen) {
     seen.add(idx);
     return c.name;
   };
+  const nameCased = (idx, gcase) =>
+    gcase ? declineNameStr(nameFor(idx), genderOf(chars[idx]), gcase) : nameFor(idx);
 
   // 1) гендерные токены {g|слот|муж.форма|жен.форма} — не расходуют «упоминание»
   tpl = tpl.replace(/\{g\|([a-zA-Zа-яёА-ЯЁ]+)\|([^|}]*)\|([^}]*)\}/g, (_, slot, m, f) => {
@@ -394,10 +495,11 @@ function renderPhrase(tpl, entry, chars, seen) {
     return (idx != null && genderOf(chars[idx]) === "f") ? f : m;
   });
 
-  // 2) обычные токены слева направо — так «первое упоминание» = порядку чтения
-  tpl = tpl.replace(/\{([a-zA-Z]+)\}/g, (whole, key) => {
-    if (key in slots) return nameFor(slots[key]);
-    if (key === "names" && entry.groupIdxs) return joinNamesRu(entry.groupIdxs.map(nameFor));
+  // 2) обычные токены слева направо — так «первое упоминание» = порядку чтения.
+  //    Необязательный суффикс :падеж склоняет имя.
+  tpl = tpl.replace(/\{([a-zA-Z]+)(?::(gen|dat|acc|inst|prep|nom))?\}/g, (whole, key, gcase) => {
+    if (key in slots) return nameCased(slots[key], gcase);
+    if (key === "names" && entry.groupIdxs) return joinNamesRu(entry.groupIdxs.map(i => nameCased(i, gcase)));
     if (key in extra) return String(extra[key]);
     return whole;
   });
@@ -663,8 +765,10 @@ function buildDuelBlock(chars, cols) {
     const p1 = 100 - p0;
     const lead = p0 >= p1 ? 0 : 1;
     const diff = Math.abs(p0 - p1);
-    const w = `<b>${chars[lead].name}</b>`;
-    const f = genderOf(chars[lead]) === "f";
+    const g = genderOf(chars[lead]);
+    const f = g === "f";
+    const w    = `<b>${chars[lead].name}</b>`;                                       // именит.
+    const wGen = `<b>${declineNameStr(chars[lead].name, g, "gen")}</b>`;             // родит.
     let verdict;
     if (diff < 8) {
       verdict = pick([
@@ -675,14 +779,14 @@ function buildDuelBlock(chars, cols) {
       ]);
     } else if (diff < 24) {
       verdict = pick([
-        `небольшой перевес у ${w}`,
+        `небольшой перевес у ${wGen}`,
         `${w} вероятнее возьмёт верх`,
         `в затяжной схватке ${w} скорее дожмёт соперника`,
         `если ничего не пойдёт не так, победит ${w}`
       ]);
     } else {
       verdict = pick([
-        `уверенная победа ${w}`,
+        `уверенная победа ${wGen}`,
         `${w} выйдет ${f ? "победительницей" : "победителем"} без особого труда`,
         `здесь ${w} — безоговорочн${f ? "ая фаворитка" : "ый фаворит"}, разрыв огромен`,
         `${w} диктует условия от первой секунды до последней`
@@ -731,6 +835,7 @@ function buildDuelBlock(chars, cols) {
   // Короткий вердикт под рейтингом: насколько уверенно лидирует первый.
   const top = order[0], second = order[1];
   const lead = `<b>${chars[top].name}</b>`;
+  const leadGen = `<b>${declineNameStr(chars[top].name, genderOf(chars[top]), "gen")}</b>`;
   const margin = ps[second] > 0 ? (ps[top] - ps[second]) / ps[second] : 1;
   let rankVerdict;
   if (margin < 0.08) {
@@ -741,7 +846,7 @@ function buildDuelBlock(chars, cols) {
   } else if (margin < 0.35) {
     rankVerdict = pick([
       `${lead} возглавляет расклад, но погоня рядом`,
-      `перевес у ${lead}, хотя запас прочности невелик`
+      `перевес у ${leadGen}, хотя запас прочности невелик`
     ]);
   } else {
     rankVerdict = pick([
