@@ -357,6 +357,20 @@ function portraitBox(c, rgb, size = 46) {
    АНАЛИТИКА (всё детерминированно, без ИИ)
    ══════════════════════════════════════════ */
 const CMP_STAT_KEYS = ["intelligence","combat","influence","cruelty","will","stealth","unpredictability","meta_power"];
+
+/* Формы названий статов для грамотных предлогов в разборе:
+   prep — «в …» (предложный, с верным в/во), by — «по …» (дательный),
+   nom — именительный. Все строчные, для употребления в середине фразы. */
+const STAT_FORMS = {
+  intelligence:     { nom: "интеллект",         prep: "в интеллекте",         by: "по интеллекту" },
+  combat:           { nom: "боевые навыки",     prep: "в боевых навыках",     by: "по боевым навыкам" },
+  influence:        { nom: "влияние",           prep: "во влиянии",           by: "по влиянию" },
+  cruelty:          { nom: "жестокость",        prep: "в жестокости",         by: "по жестокости" },
+  will:             { nom: "воля",              prep: "в воле",               by: "по воле" },
+  stealth:          { nom: "скрытность",        prep: "в скрытности",         by: "по скрытности" },
+  unpredictability: { nom: "непредсказуемость", prep: "в непредсказуемости",  by: "по непредсказуемости" },
+  meta_power:       { nom: "мета-сила",         prep: "в мета-силе",          by: "по мета-силе" }
+};
 const st = (c, k) => (c.stats && c.stats[k]) || 0;
 
 /* Боевая мощь — взвешенная формула для дуэли/рейтинга */
@@ -438,7 +452,7 @@ const FALLBACK_PHRASES = {
   will_leader: ["🗿 <b>{name}</b> не сломать давлением — воля здесь железная."],
   glass_cannon: ["💥 <b>{name}</b> бьёт страшно, но и сам{g|name|| а} открыт{g|name||а} для ответного удара."],
   wildcard: ["🎲 <b>{name}</b> — фактор хаоса: просчитать {g|name|его|её} невозможно."],
-  stat_gap: ["↔ Наибольшая пропасть — в {stat}: {hi} против {lo} (<b>{name}</b> впереди)."],
+  stat_gap: ["↔ Наибольшая пропасть — {statPrep}: {hi} против {lo} (<b>{name}</b> впереди)."],
   specialist_generalist: ["◆ <b>{specialist}</b> — узкий специалист с резкими пиками, <b>{generalist}</b> ровнее и универсальнее."],
   dominance: ["▲ <b>{name}</b> доминирует по совокупной боевой мощи."],
   close_power: ["⚖ <b>{a}</b> и <b>{b}</b> подозрительно близки по силе — исход решит случай."],
@@ -448,7 +462,12 @@ const FALLBACK_PHRASES = {
   shared_ability: ["🧬 {names} играют на одном поле — оба владеют способностью «{ability}»."],
   tier_gap: ["🎖 <b>{highName}</b> ({highTier}) на голову выше по значимости, чем <b>{lowName}</b> ({lowTier})."],
   status_mix: ["💀 <b>{deadName}</b> уже {g|deadName|мёртв|мертва} — сравнение с живым <b>{aliveName}</b> скорее теоретическое."],
-  threat_gap: ["📈 Разница в угрозе — {diff} пунктов в пользу <b>{name}</b>."]
+  threat_gap: ["📈 Разница в угрозе — {diff} пунктов в пользу <b>{name}</b>."],
+  summary_lead: ["⭐ Итог: по совокупности сильнее <b>{name}</b> — берёт за счёт {basis}."],
+  summary_slight: ["⭐ Итог: перевес небольшой, но он у <b>{name:gen}</b> — за счёт {basis}."],
+  summary_even: ["⭐ Итог: по совокупности <b>{a}</b> и <b>{b}</b> вровень — явного фаворита нет, всё решит контекст, а не сила."],
+  summary_multi: ["⭐ Итог: самая крупная фигура здесь — <b>{name}</b>, прежде всего за счёт {basis}."],
+  summary_multi_close: ["⭐ Итог: группа плотная, но по совокупности чуть впереди <b>{name}</b> — за счёт {basis}."]
 };
 
 function loadPhraseBank() {
@@ -571,17 +590,16 @@ async function autoVerdictLines(chars) {
   }
 
   // наибольший разрыв по одному стату
-  const gapDefs = [
-    ["интеллекте","intelligence"],["боевых","combat"],["влиянии","influence"],["жестокости","cruelty"],
-    ["воле","will"],["скрытности","stealth"],["непредсказуемости","unpredictability"],["мета-силе","meta_power"]
-  ];
   let gap = { d: -1 };
-  gapDefs.forEach(([lbl, k]) => {
+  CMP_STAT_KEYS.forEach(k => {
     const vals = chars.map(c => st(c, k));
     const hi = Math.max(...vals), lo = Math.min(...vals), d = hi - lo;
-    if (d > gap.d) gap = { d, lbl, hi, lo, whoIdx: vals.indexOf(hi) };
+    if (d > gap.d) gap = { d, k, hi, lo, whoIdx: vals.indexOf(hi) };
   });
-  if (gap.d >= 4) triggered.push({ cat: "stat_gap", slots: { name: gap.whoIdx }, extra: { stat: gap.lbl, hi: gap.hi, lo: gap.lo } });
+  if (gap.d >= 4) {
+    const sf = STAT_FORMS[gap.k];
+    triggered.push({ cat: "stat_gap", slots: { name: gap.whoIdx }, extra: { statPrep: sf.prep, statBy: sf.by, statNom: sf.nom, hi: gap.hi, lo: gap.lo } });
+  }
 
   // специалист vs универсал
   const sp = chars.map(statSpread);
@@ -654,16 +672,66 @@ async function autoVerdictLines(chars) {
   const crossed = crossedPaths(chars);
   if (crossed) triggered.push({ cat: "crossed_paths", slots: { a: crossed.a, b: crossed.b }, priority: true });
 
-  // Отбираем до 5 строк. Сначала — приоритетные (нарративные связки вроде
-  // пересечения путей), затем добираем случайными из остального пула, чтобы
-  // при каждом открытии разбор звучал по-новому.
+  // Отбираем до 4 строк-наблюдений. Сначала — приоритетные (нарративные связки
+  // вроде пересечения путей), затем добираем случайными из остального пула,
+  // чтобы при каждом открытии разбор звучал по-новому.
   const seen = new Set();
   const prio = triggered.filter(t => t.priority);
   const restPool = shuffleArr(triggered.filter(t => !t.priority));
-  const chosen = [...prio, ...restPool].slice(0, 5);
-  return chosen
+  const chosen = [...prio, ...restPool].slice(0, 4);
+  const lines = chosen
     .map(t => { const tpl = pickTemplate(bank, t.cat); return tpl ? renderPhrase(tpl, t, chars, seen) : null; })
     .filter(Boolean);
+
+  // ── ИТОГ: кто в целом крупнее как фигура и за счёт чего ──
+  // Считаем не «поединок», а общий вес: сумма статов + значимость (threat).
+  // Ум и влияние учитываются наравне с силой — это сравнение фигур, не драка.
+  const summary = summaryVerdict(chars, bank, seen);
+  return { lines, summary };
+}
+
+/* Общий «вес» персонажа: широкий охват (сумма статов) + значимость (threat).
+   Намеренно НЕ боевая формула — это сравнение фигур целиком, а не поединок. */
+function overallScore(c) {
+  return CMP_STAT_KEYS.reduce((s, k) => s + st(c, k), 0) + (c.threat_level || 0) * 0.8;
+}
+
+/* За счёт какой мета-оси лидер обходит соперника — для объяснения «почему».
+   Возвращает предложную формулировку («в уме, связях и влиянии»). */
+const BASIS_TEXT = {
+  power:  "мета-мощи и прямого боя",
+  mind:   "ума, связей и влияния",
+  shadow: "скрытности и непредсказуемости",
+  nerve:  "воли и хватки"
+};
+function edgeBasis(leader, other) {
+  let best = null;
+  ARCHETYPES.forEach(([id, keys]) => {
+    const d = keys.reduce((s, k) => s + st(leader, k) - st(other, k), 0);
+    if (d > 0 && (!best || d > best.d)) best = { id, d };
+  });
+  return best ? BASIS_TEXT[best.id] : "ровного профиля без слабых мест";
+}
+
+/* Строка-итог. Для двойки — «лидер / чуть впереди / вровень», для группы —
+   самая крупная фигура. Формулировки подчёркивают, что решает не драка. */
+function summaryVerdict(chars, bank, seen) {
+  const ov = chars.map(overallScore);
+  const order = chars.map((_, i) => i).sort((a, b) => ov[b] - ov[a]);
+  const top = order[0], second = order[1];
+  if (second == null) return null;
+  const margin = ov[second] > 0 ? (ov[top] - ov[second]) / ov[second] : 1;
+  const basis = edgeBasis(chars[top], chars[second]);
+  let entry;
+  if (chars.length === 2) {
+    if (margin < 0.05)      entry = { cat: "summary_even",   slots: { a: top, b: second } };
+    else if (margin < 0.18) entry = { cat: "summary_slight", slots: { name: top }, extra: { basis } };
+    else                    entry = { cat: "summary_lead",   slots: { name: top }, extra: { basis } };
+  } else {
+    entry = { cat: margin < 0.08 ? "summary_multi_close" : "summary_multi", slots: { name: top }, extra: { basis } };
+  }
+  const tpl = pickTemplate(bank, entry.cat);
+  return tpl ? renderPhrase(tpl, entry, chars, seen) : null;
 }
 
 /* ── Радар с наложением (пунктир для разведённых цветов) ── */
@@ -898,7 +966,7 @@ function buildScenarios(chars, cols) {
       outcome = `<span class="cv-scn-tie">ничья</span>`;
     } else {
       const wi = leaders[0];
-      outcome = `<span class="cv-scn-win" style="color:rgb(${cols[wi].rgb})">${shortNameRu(chars[wi])}</span>`;
+      outcome = `<span class="cv-scn-win" style="color:rgb(${cols[wi].rgb})">${chars[wi].name}</span>`;
     }
     return `<div class="cv-scn-row">
       <span class="cv-scn-cond cv-tip" data-tip="${tip}">${emoji} ${label}</span>
@@ -993,6 +1061,8 @@ function injectCompareStyles() {
     .cv-auto-line{font-size:12px;color:var(--text);line-height:1.5;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
     .cv-auto-line:last-child{border-bottom:none;}
     .cv-auto-line b{color:var(--white);}
+    .cv-auto-summary{margin-top:8px;padding:10px 12px;border:1px solid rgba(79,195,247,0.28);border-left:2px solid rgba(79,195,247,0.6);border-radius:0 5px 5px 0;background:linear-gradient(90deg,rgba(79,195,247,0.07),transparent);font-size:12.5px;color:var(--white);}
+    .cv-auto-summary b{color:var(--white);}
     /* ранги по базе */
     .cv-arch-row{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
     .cv-arch-name{flex:1;font-size:12px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1015,14 +1085,14 @@ function injectCompareStyles() {
     .compare-slogan{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--white);text-transform:uppercase;margin-top:8px;padding:6px 10px;border-left:2px solid rgba(79,195,247,0.5);background:linear-gradient(90deg,rgba(79,195,247,0.08),transparent);border-radius:0 4px 4px 0;}
     /* сценарии «что если» */
     .cv-scn-row{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
-    .cv-scn-cond{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;}
-    .cv-scn-arrow{font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:12px;}
-    .cv-scn-win{font-size:13px;font-weight:800;white-space:nowrap;text-shadow:0 0 10px currentColor;margin-left:auto;}
-    .cv-scn-tie{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);margin-left:auto;}
+    .cv-scn-cond{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;flex-shrink:0;}
+    .cv-scn-arrow{font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:12px;flex-shrink:0;}
+    .cv-scn-win{font-size:13px;font-weight:800;text-shadow:0 0 10px currentColor;margin-left:auto;min-width:0;text-align:right;line-height:1.25;}
+    .cv-scn-tie{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);margin-left:auto;flex-shrink:0;}
     /* слабое звено */
     .cv-weak-row{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
-    .cv-weak-name{flex:1;font-size:12px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .cv-weak-stat{font-size:11px;font-weight:600;color:var(--text);}
+    .cv-weak-name{flex:1;min-width:0;font-size:12px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .cv-weak-stat{font-size:11px;font-weight:600;color:var(--text);flex-shrink:0;}
     .cv-weak-val{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:900;width:24px;text-align:right;flex-shrink:0;}
     /* цитата победителя в дуэли */
     .cv-duel-quote{font-family:'Rajdhani',sans-serif;font-style:italic;font-size:12px;color:var(--text);text-align:center;padding:10px 6px 2px;line-height:1.45;opacity:0.9;}
@@ -1030,8 +1100,12 @@ function injectCompareStyles() {
     /* всплывающие подсказки к архетипам / сценариям / уязвимостям
        (hover на десктопе, тап на тач-устройствах через .tip-open) */
     .cv-tip{position:relative;cursor:help;text-decoration:underline dotted rgba(255,255,255,0.28);text-underline-offset:2px;}
-    .cv-tip[data-tip]::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:220px;white-space:normal;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:500;letter-spacing:normal;text-transform:none;line-height:1.4;color:var(--white);background:rgba(6,10,18,0.97);border:1px solid rgba(79,195,247,0.45);box-shadow:0 6px 18px rgba(0,0,0,0.5),0 0 12px rgba(79,195,247,0.12);padding:7px 10px;border-radius:4px;opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity 0.15s,transform 0.15s;}
-    .cv-tip[data-tip]:hover::after,.cv-tip.tip-open[data-tip]::after{opacity:1;transform:translateY(0);}
+    /* display:none в скрытом состоянии — чтобы всплывашка не занимала место
+       и не распирала страницу вбок (иначе её ширина создаёт горизонтальный сдвиг) */
+    .cv-tip[data-tip]::after{content:attr(data-tip);display:none;position:absolute;left:0;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:min(220px,72vw);white-space:normal;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:500;letter-spacing:normal;text-transform:none;line-height:1.4;color:var(--white);background:rgba(6,10,18,0.97);border:1px solid rgba(79,195,247,0.45);box-shadow:0 6px 18px rgba(0,0,0,0.5),0 0 12px rgba(79,195,247,0.12);padding:7px 10px;border-radius:4px;pointer-events:none;}
+    .cv-tip[data-tip]:hover::after,.cv-tip.tip-open[data-tip]::after{display:block;}
+    /* подсказки у правого края открываем влево, чтобы не убегали за экран */
+    .cv-weak-stat.cv-tip[data-tip]::after{left:auto;right:0;}
     /* тряска при лимите */
     @keyframes cmpShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
     .char-card.cmp-shake{animation:cmpShake 0.35s ease;border-color:#f87171 !important;box-shadow:0 0 16px rgba(248,113,113,0.4) !important;}
@@ -1104,11 +1178,13 @@ async function openCompare() {
     ${verdictRows}${contestedNote}
   </div>`;
 
-  // ── Авто-разбор словами ──
-  const autoLines = await autoVerdictLines(chars);
-  const autoHTML = autoLines.length ? `<div class="compare-verdict">
+  // ── Авто-разбор словами + строка-итог ──
+  const { lines: autoLines, summary } = await autoVerdictLines(chars);
+  const autoBody = autoLines.map(l => `<div class="cv-auto-line">${l}</div>`).join("");
+  const autoSummary = summary ? `<div class="cv-auto-line cv-auto-summary">${summary}</div>` : "";
+  const autoHTML = (autoLines.length || summary) ? `<div class="compare-verdict">
     <div class="cv-title">SYS.ANALYSIS // АВТО-РАЗБОР</div>
-    <div class="cv-auto">${autoLines.map(l => `<div class="cv-auto-line">${l}</div>`).join("")}</div>
+    <div class="cv-auto">${autoBody}${autoSummary}</div>
   </div>` : "";
 
   // ── Ранги по всей базе ──
