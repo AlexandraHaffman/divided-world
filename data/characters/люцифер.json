@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Лидер группировки",
-  "birthdate": "06.06.2006",
+  "birthdate": "06.06",
   "faction": "Пищевая цепь",
   "subfaction": "",
   "location": "Белая зона",
@@ -36,5 +36,5 @@
   "avatar_web": "https://alexandrahaffman.github.io/divided-world/data/images/characters/B8199503-6097-4356-8B14-0E7B6E09F282.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B42E4F2-11CB-432A-9FFE-B4502B9B52B9.jpeg",
   "tier": "epic",
-  "exported_at": "2026-06-29T10:14:00.882Z"
+  "exported_at": "2026-07-16T20:13:54.147Z"
 }
