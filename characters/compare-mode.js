@@ -211,6 +211,26 @@ function powerScore(c) {
        + st(c,"intelligence")*0.3 + st(c,"cruelty")*0.2 + st(c,"influence")*0.15;
 }
 
+/* Боевой архетип — по доминирующей мета-оси профиля. Если два верхних
+   направления почти равны, персонаж «универсал». Чисто для флейвора —
+   компактный ярлык рядом с именем в итоговой таблице. */
+const ARCHETYPES = [
+  ["power", ["combat","meta_power"],        "⚔", "Разрушитель"],
+  ["mind",  ["intelligence","influence"],   "🧠", "Стратег"],
+  ["shadow",["stealth","unpredictability"], "🌑", "Призрак"],
+  ["nerve", ["will","cruelty"],             "🔥", "Фанатик"]
+];
+function combatArchetype(c) {
+  const scored = ARCHETYPES.map(([id, keys, emoji, label]) => ({
+    id, emoji, label, v: keys.reduce((s, k) => s + st(c, k), 0)
+  })).sort((a, b) => b.v - a.v);
+  if (scored[0].v <= 0) return { emoji: "◇", label: "Тёмная лошадка" };
+  if (scored[1].v > 0 && (scored[0].v - scored[1].v) / scored[0].v < 0.15) {
+    return { emoji: "◇", label: "Универсал" };
+  }
+  return { emoji: scored[0].emoji, label: scored[0].label };
+}
+
 /* Ранг по угрозе среди всей базы */
 function archiveRank(c) {
   const total = allChars.length || 1;
@@ -227,6 +247,27 @@ function statSpread(c) {
   return Math.sqrt(vs.reduce((a, v) => a + (v - m) ** 2, 0) / vs.length);
 }
 
+/* Пересечение путей: имя одного персонажа встречается в тексте досье
+   другого (биография / текущий статус). Возвращает первую найденную пару
+   { a: чьё досье, b: кто упомянут } либо null. Совпадение ищем по полному
+   имени с границами слова, чтобы не ловить случайные подстроки. */
+function crossedPaths(chars) {
+  const dossierText = c => `${c.biography || ""}\n${c.current_status || ""}`;
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  for (let a = 0; a < chars.length; a++) {
+    const text = dossierText(chars[a]);
+    if (!text.trim()) continue;
+    for (let b = 0; b < chars.length; b++) {
+      if (a === b) continue;
+      const full = (chars[b].name || "").trim();
+      if (full.length < 4) continue;
+      const re = new RegExp(`(^|[^А-Яа-яЁёA-Za-z])${esc(full)}([^А-Яа-яЁёA-Za-z]|$)`);
+      if (re.test(text)) return { a, b };
+    }
+  }
+  return null;
+}
+
 /* ── Банк фраз для авто-разбора: подгружается один раз из JSON ──
    Файл должен лежать рядом: characters/analysis-phrases.json
    Если не найден/не грузится — используется маленький запасной набор,
@@ -237,11 +278,18 @@ const FALLBACK_PHRASES = {
   combat_leader: ["⚔ <b>{name}</b> сильнее в прямом столкновении."],
   shadow_leader: ["🌑 <b>{name}</b> — теневой игрок: тень и хаос на {g|name|его|её} стороне."],
   mind_leader: ["🧠 <b>{name}</b> действует умом и влиянием, а не силой."],
+  cruelty_leader: ["🩸 <b>{name}</b> не остановится там, где другие дрогнут."],
+  will_leader: ["🗿 <b>{name}</b> не сломать давлением — воля здесь железная."],
+  glass_cannon: ["💥 <b>{name}</b> бьёт страшно, но и сам{g|name|| а} открыт{g|name||а} для ответного удара."],
+  wildcard: ["🎲 <b>{name}</b> — фактор хаоса: просчитать {g|name|его|её} невозможно."],
   stat_gap: ["↔ Наибольшая пропасть — в {stat}: {hi} против {lo} (<b>{name}</b> впереди)."],
   specialist_generalist: ["◆ <b>{specialist}</b> — узкий специалист с резкими пиками, <b>{generalist}</b> ровнее и универсальнее."],
   dominance: ["▲ <b>{name}</b> доминирует по совокупной боевой мощи."],
   close_power: ["⚖ <b>{a}</b> и <b>{b}</b> подозрительно близки по силе — исход решит случай."],
   same_faction: ["👥 {names} — из одной фракции ({faction}), это скорее внутреннее соперничество."],
+  same_location: ["📍 {names} действуют в одной точке — {place}. Столкновение здесь — вопрос времени."],
+  crossed_paths: ["🕸 Их пути уже пересекались: имя <b>{b}</b> всплывает прямо в досье <b>{a}</b>."],
+  shared_ability: ["🧬 {names} играют на одном поле — оба владеют способностью «{ability}»."],
   tier_gap: ["🎖 <b>{highName}</b> ({highTier}) на голову выше по значимости, чем <b>{lowName}</b> ({lowTier})."],
   status_mix: ["💀 <b>{deadName}</b> уже {g|deadName|мёртв|мертва} — сравнение с живым <b>{aliveName}</b> скорее теоретическое."],
   threat_gap: ["📈 Разница в угрозе — {diff} пунктов в пользу <b>{name}</b>."]
@@ -331,10 +379,35 @@ async function autoVerdictLines(chars) {
     return idxs.length === 1 ? idxs[0] : null;
   };
 
+  /* Единоличный лидер по группе статов, но только с ощутимым отрывом
+     от второго места и достаточно высоким значением — иначе фраза
+     звучит натянуто на околоравных профилях. */
+  const soloLeaderMargin = (keys, minVal, minGap) => {
+    const sc = chars.map(c => keys.reduce((a, k) => a + st(c, k), 0));
+    const li = soloLeader(keys);
+    if (li === null) return null;
+    const top = sc[li];
+    const second = Math.max(...sc.filter((_, i) => i !== li), 0);
+    return (top >= minVal && top - second >= minGap) ? li : null;
+  };
+
   let li;
   if ((li = soloLeader(["combat","meta_power"])) !== null)        triggered.push({ cat: "combat_leader", slots: { name: li } });
   if ((li = soloLeader(["stealth","unpredictability"])) !== null) triggered.push({ cat: "shadow_leader", slots: { name: li } });
   if ((li = soloLeader(["intelligence","influence"])) !== null)   triggered.push({ cat: "mind_leader", slots: { name: li } });
+  if ((li = soloLeaderMargin(["cruelty"], 7, 3)) !== null)        triggered.push({ cat: "cruelty_leader", slots: { name: li } });
+  if ((li = soloLeaderMargin(["will"], 8, 3)) !== null)           triggered.push({ cat: "will_leader", slots: { name: li } });
+  if ((li = soloLeaderMargin(["unpredictability"], 7, 3)) !== null) triggered.push({ cat: "wildcard", slots: { name: li } });
+
+  // «стеклянная пушка»: высокий урон (combat+meta) при слабой живучести (will+stealth)
+  {
+    const off = chars.map(c => st(c,"combat") + st(c,"meta_power"));
+    const def = chars.map(c => st(c,"will") + st(c,"stealth"));
+    const cand = chars.map((c, i) => ({ i, off: off[i], def: def[i] }))
+      .filter(x => x.off >= 14 && x.def <= 8)
+      .sort((a, b) => (b.off - b.def) - (a.off - a.def));
+    if (cand.length) triggered.push({ cat: "glass_cannon", slots: { name: cand[0].i } });
+  }
 
   // наибольший разрыв по одному стату
   const gapDefs = [
@@ -394,8 +467,39 @@ async function autoVerdictLines(chars) {
   const tmax = Math.max(...threats), tmin = Math.min(...threats), tdiff = tmax - tmin;
   if (tdiff >= 15) triggered.push({ cat: "threat_gap", slots: { name: threats.indexOf(tmax) }, extra: { diff: tdiff, pts: pluralRu(tdiff, "пункт", "пункта", "пунктов") } });
 
+  // общая локация — реальный шанс столкнуться на одной территории
+  const locGroups = {};
+  chars.forEach((c, i) => {
+    const l = (c.location || "").trim();
+    if (l && l !== "—") (locGroups[l] = locGroups[l] || []).push(i);
+  });
+  Object.entries(locGroups).forEach(([l, idxs]) => {
+    if (idxs.length >= 2) triggered.push({ cat: "same_location", groupIdxs: idxs, extra: { place: l } });
+  });
+
+  // общая способность — зеркальный навык у двух и более
+  const abilityGroups = {};
+  chars.forEach((c, i) => (c.abilities || []).forEach(a => {
+    const key = String(a).trim().toLowerCase();
+    if (!key) return;
+    (abilityGroups[key] = abilityGroups[key] || { idxs: [], label: String(a).trim() }).idxs.push(i);
+  }));
+  const sharedAbil = Object.values(abilityGroups)
+    .filter(g => new Set(g.idxs).size >= 2)
+    .sort((a, b) => b.idxs.length - a.idxs.length)[0];
+  if (sharedAbil) triggered.push({ cat: "shared_ability", groupIdxs: [...new Set(sharedAbil.idxs)], extra: { ability: sharedAbil.label } });
+
+  // пересечение путей — имя одного встречается в досье другого
+  const crossed = crossedPaths(chars);
+  if (crossed) triggered.push({ cat: "crossed_paths", slots: { a: crossed.a, b: crossed.b }, priority: true });
+
+  // Отбираем до 5 строк. Сначала — приоритетные (нарративные связки вроде
+  // пересечения путей), затем добираем случайными из остального пула, чтобы
+  // при каждом открытии разбор звучал по-новому.
   const seen = new Set();
-  const chosen = shuffleArr(triggered).slice(0, 5);
+  const prio = triggered.filter(t => t.priority);
+  const restPool = shuffleArr(triggered.filter(t => !t.priority));
+  const chosen = [...prio, ...restPool].slice(0, 5);
   return chosen
     .map(t => { const tpl = pickTemplate(bank, t.cat); return tpl ? renderPhrase(tpl, t, chars, seen) : null; })
     .filter(Boolean);
@@ -467,9 +571,33 @@ function buildTugRow(label, vals, cols, tip) {
   </div>`;
 }
 
+/* Веса статов для боевой мощи — держим синхронно с powerScore(),
+   чтобы «ключевой фактор» объяснял именно тот перевес, что в процентах. */
+const POWER_WEIGHTS = {
+  combat: 1.0, meta_power: 1.1, will: 0.6, unpredictability: 0.5,
+  stealth: 0.4, intelligence: 0.3, cruelty: 0.2, influence: 0.15
+};
+const DUEL_STAT_LABELS = {
+  intelligence: "интеллект", combat: "боевые навыки", influence: "влияние",
+  cruelty: "жестокость", will: "воля", stealth: "скрытность",
+  unpredictability: "непредсказуемость", meta_power: "мета-сила"
+};
+
+/* Какой стат сильнее всего склонил чашу в сторону победителя —
+   стат с наибольшим положительным вкладом (вес × разрыв) в разницу мощи. */
+function decisiveStat(winner, loser) {
+  let best = null;
+  Object.keys(POWER_WEIGHTS).forEach(k => {
+    const contrib = POWER_WEIGHTS[k] * (st(winner, k) - st(loser, k));
+    if (contrib > 0 && (!best || contrib > best.contrib)) best = { k, contrib };
+  });
+  return best ? DUEL_STAT_LABELS[best.k] : null;
+}
+
 /* ── Дуэль (2) / боевой рейтинг (3+) ── */
 function buildDuelBlock(chars, cols) {
   const ps = chars.map(powerScore);
+  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
   if (chars.length === 2) {
     const total = ps[0] + ps[1] || 1;
     const p0 = Math.round(ps[0] / total * 100);
@@ -478,27 +606,38 @@ function buildDuelBlock(chars, cols) {
     const diff = Math.abs(p0 - p1);
     const w = `<b>${chars[lead].name}</b>`;
     const f = genderOf(chars[lead]) === "f";
-    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
     let verdict;
     if (diff < 8) {
       verdict = pick([
         "почти равны — исход решит случай и условия",
         "силы зеркальны: в реальном бою всё решат нервы",
-        "паритет — любой перекос, и чаша качнётся в другую сторону"
+        "паритет — любой перекос, и чаша качнётся в другую сторону",
+        "разница в пределах погрешности — тут не угадаешь"
       ]);
     } else if (diff < 24) {
       verdict = pick([
         `небольшой перевес у ${w}`,
         `${w} вероятнее возьмёт верх`,
-        `в затяжной схватке ${w} скорее дожмёт соперника`
+        `в затяжной схватке ${w} скорее дожмёт соперника`,
+        `если ничего не пойдёт не так, победит ${w}`
       ]);
     } else {
       verdict = pick([
         `уверенная победа ${w}`,
         `${w} выйдет ${f ? "победительницей" : "победителем"} без особого труда`,
-        `здесь ${w} — безоговорочн${f ? "ая фаворитка" : "ый фаворит"}, разрыв огромен`
+        `здесь ${w} — безоговорочн${f ? "ая фаворитка" : "ый фаворит"}, разрыв огромен`,
+        `${w} диктует условия от первой секунды до последней`
       ]);
     }
+    // «ключевой фактор» — что именно решает исход
+    let factor;
+    if (diff < 8) {
+      factor = pick(["Решат не статы, а условия и удача", "Ключевого перевеса нет — всё в деталях"]);
+    } else {
+      const stName = decisiveStat(chars[lead], chars[1 - lead]);
+      factor = stName ? `Ключевой фактор — ${stName}` : null;
+    }
+    const factorHTML = factor ? `<div class="cv-duel-factor">${factor}</div>` : "";
     return `<div class="compare-verdict">
       <div class="cv-title">SYS.DUEL // ВЕРОЯТНЫЙ ИСХОД</div>
       <div class="cv-duel-nums">
@@ -510,6 +649,7 @@ function buildDuelBlock(chars, cols) {
         <div style="width:${p1}%;background:rgb(${cols[1].rgb})"></div>
       </div>
       <div class="cv-duel-verdict">${verdict}</div>
+      ${factorHTML}
     </div>`;
   }
   const order = chars.map((c, i) => i).sort((a, b) => ps[b] - ps[a]);
@@ -523,9 +663,31 @@ function buildDuelBlock(chars, cols) {
       <span class="cv-rank-val" style="color:rgb(${cols[i].rgb})">${ps[i].toFixed(0)}</span>
     </div>`;
   }).join("");
+  // Короткий вердикт под рейтингом: насколько уверенно лидирует первый.
+  const top = order[0], second = order[1];
+  const lead = `<b>${chars[top].name}</b>`;
+  const margin = ps[second] > 0 ? (ps[top] - ps[second]) / ps[second] : 1;
+  let rankVerdict;
+  if (margin < 0.08) {
+    rankVerdict = pick([
+      `на вершине тесно: ${lead} лидирует, но отрыв символический`,
+      `${lead} впереди лишь на волос — за первое место идёт настоящая борьба`
+    ]);
+  } else if (margin < 0.35) {
+    rankVerdict = pick([
+      `${lead} возглавляет расклад, но погоня рядом`,
+      `перевес у ${lead}, хотя запас прочности невелик`
+    ]);
+  } else {
+    rankVerdict = pick([
+      `${lead} доминирует — остальные далеко позади`,
+      `${lead} на голову выше всех в этой подборке`
+    ]);
+  }
   return `<div class="compare-verdict">
     <div class="cv-title">SYS.COMBAT // БОЕВОЙ РЕЙТИНГ</div>
     ${rows}
+    <div class="cv-duel-verdict">${rankVerdict}</div>
   </div>`;
 }
 
@@ -563,7 +725,9 @@ function injectCompareStyles() {
     /* строки вердикта */
     .cv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;background:currentColor;}
     .cv-sep{align-self:stretch;width:1px;margin:1px 3px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(var(--rc,79,195,247),0.75),transparent);box-shadow:0 0 6px rgba(var(--rc,79,195,247),0.45);}
-    .cv-name{flex:1;font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;padding-left:2px;}
+    .cv-name-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding-left:2px;}
+    .cv-name{font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;}
+    .cv-arch-tag{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .cv-crown{font-size:12px;}
     .cv-metric{display:flex;flex-direction:column;align-items:center;min-width:44px;}
     .cv-metric-lbl{font-family:'Share Tech Mono',monospace;font-size:6px;letter-spacing:0.06em;color:var(--dim);text-transform:uppercase;margin-bottom:1px;}
@@ -587,6 +751,7 @@ function injectCompareStyles() {
     .cv-duel-track>div{height:100%;transition:width 0.4s;}
     .cv-duel-verdict{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);text-align:center;padding-top:8px;letter-spacing:0.04em;}
     .cv-duel-verdict b{color:var(--white);}
+    .cv-duel-factor{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);text-align:center;padding-top:4px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.75;}
     /* боевой рейтинг 3+ */
     .cv-rank-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
     .cv-rank-name{width:96px;flex-shrink:0;font-size:11px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -643,10 +808,14 @@ async function openCompare() {
     const tLead = threats[i] === maxThreat && maxThreat > 0;
     const wLead = wins[i]    === maxWins   && maxWins   > 0;
     const sLead = totals[i]  === maxTotal  && maxTotal  > 0;
+    const arch = combatArchetype(c);
     return `<div class="cv-row" style="--rc:${rgb}">
       ${portraitBox(c, rgb)}
       <span class="cv-sep"></span>
-      <span class="cv-name">${c.name}${wLead ? '<span class="cv-crown">👑</span>' : ''}</span>
+      <span class="cv-name-wrap">
+        <span class="cv-name">${c.name}${wLead ? '<span class="cv-crown">👑</span>' : ''}</span>
+        <span class="cv-arch-tag" style="color:rgb(${rgb})">${arch.emoji} ${arch.label}</span>
+      </span>
       <span class="cv-metric ${tLead ? 'lead' : ''}"><span class="cv-metric-lbl">Threat</span><span class="cv-metric-val" style="color:rgb(${rgb})">${threats[i]}</span></span>
       <span class="cv-metric ${wLead ? 'lead' : ''}"><span class="cv-metric-lbl">Победы</span><span class="cv-metric-val" style="color:rgb(${rgb})">${wins[i]}</span></span>
       <span class="cv-metric ${sLead ? 'lead' : ''}"><span class="cv-metric-lbl">Σ статы</span><span class="cv-metric-val" style="color:rgb(${rgb})">${totals[i]}</span></span>
