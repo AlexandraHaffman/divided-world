@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Древо мета-способностей — Разделённый мир</title>
+<link rel="stylesheet" href="tree.css">
+</head>
+<body>
+
+<!-- ═══ ВОРОТА ДОСТУПА (механизм глобальной карты, один в один) ═══ -->
+<div id="gate">
+  <a class="gate-back" href="../index.html">← ТЕРМИНАЛ</a>
+  <div class="gate-box">
+    <div class="gate-icon">🜍</div>
+    <div class="gate-title">ЗАКРЫТЫЙ АРХИВ // ТАКСОНОМИЯ ОДАРЁННЫХ</div>
+    <div class="gate-sub">Введите код доступа</div>
+    <form id="gateForm" autocomplete="off">
+      <input id="gateInput" type="password" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="• • • • • • •" aria-label="Код доступа">
+      <button id="gateBtn" type="submit">Подтвердить</button>
+    </form>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="app" hidden>
+
+  <!-- ── HUD-шапка ── -->
+  <header class="hud">
+    <a class="back-link" href="../index.html">← ТЕРМИНАЛ</a>
+    <div class="hud-label">WISTNER TAXONOMY // META-CARRIER REGISTRY // CLEARANCE: OMNI</div>
+    <div class="hud-title">ДРЕВО <span>МЕТА-СПОСОБНОСТЕЙ</span></div>
+    <div class="hud-status"><span class="hud-dot"></span><span id="hudCount">—</span></div>
+  </header>
+
+  <!-- ── ДЕСКТОП: СЦЕНА ── -->
+  <div id="stage">
+    <svg id="tree" role="img" aria-label="Полярное древо мета-способностей"></svg>
+    <div class="scan-sweep" aria-hidden="true"></div>
+    <div id="vignette" aria-hidden="true"></div>
+
+    <div class="stage-controls">
+      <button class="sbtn" id="zoomIn"  title="Приблизить">+</button>
+      <button class="sbtn" id="zoomOut" title="Отдалить">−</button>
+      <button class="sbtn" id="zoomFit" title="Сброс вида">⟲</button>
+    </div>
+
+    <div class="lod-hint" id="lodHint">ПРИБЛИЗЬТЕ ДЛЯ РАЗВЁРТКИ НОСИТЕЛЕЙ · КЛИК ПО КЛАССУ — ФОКУС</div>
+
+    <div class="hovercard" id="hovercard" hidden></div>
+
+    <div class="db-stamp" id="dbStamp">
+      <span id="dbVersion">TAXA.DB</span>
+      <div class="db-changelog" id="dbChangelog"></div>
+    </div>
+  </div>
+
+  <!-- ── ПАНЕЛЬ ФИЛЬТРОВ / СЛОЁВ ── -->
+  <aside id="panel">
+    <button id="panelToggle" title="Фильтры и слои">◧</button>
+    <div class="panel-body">
+      <div class="panel-block">
+        <div class="panel-cap">ПОИСК / КОМАНДА</div>
+        <input id="query" type="text" autocomplete="off" spellcheck="false" placeholder="W10 · KIN·g · RKS · имя">
+      </div>
+      <div class="panel-block">
+        <div class="panel-cap">КЛАСС</div>
+        <div class="chiprow" id="fClass"></div>
+      </div>
+      <div class="panel-block">
+        <div class="panel-cap">ФРАКЦИЯ</div>
+        <div class="chiprow" id="fFaction"></div>
+      </div>
+      <div class="panel-block">
+        <div class="panel-cap">ПОЛОСА ВИСТНЕРА</div>
+        <div class="chiprow" id="fBand"></div>
+      </div>
+      <div class="panel-block">
+        <div class="panel-cap">ПРОИСХОЖДЕНИЕ</div>
+        <div class="chiprow" id="fOrigin"></div>
+      </div>
+      <div class="panel-block">
+        <div class="panel-cap">СЛОИ</div>
+        <div class="togglerow" id="layers">
+          <label class="tgl"><input type="checkbox" id="tglCodes" checked><span>Каталожные коды</span></label>
+          <label class="tgl"><input type="checkbox" id="tglBadges" checked><span>Сигилы классов</span></label>
+          <label class="tgl"><input type="checkbox" id="tglRes"><span>Резонансные нити</span></label>
+          <label class="tgl desktop-only"><input type="checkbox" id="tglNul"><span>Поле подавления NUL</span></label>
+          <label class="tgl"><input type="checkbox" id="tglGhost" checked><span>Пустые слоты</span></label>
+        </div>
+      </div>
+      <div class="panel-block">
+        <button class="wbtn" id="btnAnalytics">▤ АНАЛИТИКА</button>
+        <button class="wbtn" id="btnReview">⚠ СПОРНЫЕ <span id="reviewCount"></span></button>
+        <button class="wbtn" id="btnClear">СБРОС ФИЛЬТРОВ</button>
+      </div>
+      <div class="editor-badge" id="editorBadge" hidden>◉ РЕДАКТОР-РЕЖИМ<br><small>перетащите узел в сектор — класс пересчитается</small></div>
+    </div>
+  </aside>
+
+  <!-- ── МОБИЛКА: ГАРМОШКА ── -->
+  <div id="mobileTaxa"></div>
+
+  <!-- ── ДОСЬЕ (сайдбар / bottom-sheet) ── -->
+  <aside id="dossier" hidden>
+    <div class="dossier-grip" aria-hidden="true"></div>
+    <button class="dossier-close" id="dossierClose">×</button>
+    <div id="dossierBody"></div>
+  </aside>
+
+  <!-- ── АНАЛИТИКА ── -->
+  <aside id="analytics" hidden>
+    <button class="dossier-close" id="analyticsClose">×</button>
+    <div class="an-title">РАСПРЕДЕЛЕНИЕ НОСИТЕЛЕЙ</div>
+    <div id="analyticsBody"></div>
+  </aside>
+
+  <div id="glitchOverlay" aria-hidden="true" hidden>
+    <div class="glitch-text">ОБЪЕКТ НЕ ПОДДАЁТСЯ КЛАССИФИКАЦИИ</div>
+  </div>
+</div>
+
+<script src="data/nodes.js"></script>
+<script src="tree.js"></script>
+</body>
+</html>

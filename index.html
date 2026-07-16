@@ -612,6 +612,22 @@
     background: rgba(8,12,18,0.6);
   }
 
+  /* ── Секретный вход в закрытый архив (древо мета-способностей).
+     Неприметный глиф в служебной строке: без подсказок, без курсора-указателя;
+     проявляется фосфорным свечением только при наведении. ── */
+  .sys-glyph {
+    color: inherit;
+    text-decoration: none;
+    cursor: text;
+    opacity: 0.5;
+    transition: color 0.4s, opacity 0.4s, text-shadow 0.4s;
+  }
+  .sys-glyph:hover {
+    color: #46e8a4;
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(70,232,164,0.8);
+  }
+
   /* ═══ Десктоп: слегка сжимаем вертикальный ритм, чтобы титульная
      страница ровно вмещалась по высоте на невысоких ноутбуках,
      без «докручивания». Мобильная вёрстка не трогается. ═══ */
@@ -792,7 +808,7 @@
 </div>
 
 <div class="terminal-footer">
-  SYS.RECORD // EARTH • YEAR 2061 // ALL DATA CLASSIFIED
+  SYS.RECORD // EARTH • YEAR 2061 // ALL DATA CLASSIFIED <a class="sys-glyph" href="tree/index.html" aria-label="Служебный раздел">⌬</a>
 </div>
 
 </div><!-- /app -->

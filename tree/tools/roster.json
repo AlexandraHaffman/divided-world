@@ -1,0 +1,79 @@
+{
+  "_comment": "Каталожная приписка носителей к таксономии. slug = файл в data/characters (null — носитель есть в каноне, но карточки в дампе пока нет). Редактор-режим дерева экспортирует именно этот формат — файл кладётся сюда и данные пересобираются: python3 tree/tools/build_tree_data.py",
+
+  "carriers": [
+    { "slug": "ульяна-спасская",  "cls": "KIN", "subclass": "гидрокинез",              "origin": "s", "fac": "HVN", "serial": "021" },
+    { "slug": "лилия-спасская",   "cls": "KIN", "subclass": "аэрокинез",               "origin": "s", "fac": "IND", "serial": "022" },
+    { "slug": "дариан-сорель",    "cls": "KIN", "subclass": "фотоспектр",              "origin": "s", "fac": "RKS", "serial": "013" },
+    { "slug": "эмиль-грант",      "cls": "KIN", "subclass": "магмокинез",              "origin": "s", "fac": "RKS", "serial": "014" },
+    { "slug": "аша-наир",         "cls": "KIN", "subclass": "кристаллизация",          "origin": "s", "fac": "RKS", "serial": "015" },
+    { "slug": "сюй-лэй",          "cls": "KIN", "subclass": "вакуум / барика",         "origin": "s", "fac": "RKS", "serial": "016" },
+    { "slug": "ольга-гончарова",  "cls": "KIN", "dual": true, "subclass": "материя + температура", "origin": "s", "fac": "TNB", "serial": "017" },
+    { "slug": "маркус-кросс",     "cls": "KIN", "subclass": "термоклимат",             "origin": "s", "fac": "EQN", "serial": "002", "anomaly": true },
+
+    { "slug": "валентина-блажек", "cls": "VIT", "subclass": "вампиризм жизненных сил", "origin": "s", "fac": "RKS", "serial": "023" },
+    { "slug": "дух-леса",         "cls": "VIT", "subclass": "флора-связь",             "origin": "s", "fac": "ABY", "serial": "031" },
+    { "slug": "эва-найт",         "cls": "VIT", "subclass": "гемокинез",               "origin": "s", "fac": "IND", "serial": "024" },
+    { "slug": "кристина-новак",   "cls": "VIT", "subclass": "микробиокинез",           "origin": "s", "fac": "TNB", "serial": "011" },
+    { "slug": "борис-ленский",    "cls": "VIT", "subclass": "бессмертие / воскрешение","origin": "s", "fac": "IND", "serial": "025" },
+    { "slug": null, "id": "лукас-вайс", "name": "Лукас Вайс", "meta_power": 3, "threat": 18, "status": "alive",
+      "role": "Целитель миссий Тенебриона",
+      "abilities": ["Целительство", "Стабилизация раненых"],
+      "cls": "VIT", "subclass": "целительство", "origin": "s", "fac": "TNB", "serial": "051" },
+
+    { "slug": "амели-бертран",    "cls": "ENT", "subclass": "распад / гниение",        "origin": "s", "fac": "RKS", "serial": "012" },
+
+    { "slug": "маро",             "cls": "PSI", "subclass": "телепатия / гипноз",      "origin": "s", "fac": "GRN", "serial": "003" },
+    { "slug": "смотрящий-в-бездну","cls": "PSI","subclass": "перцептивные искажения",  "origin": "s", "fac": "ABY", "serial": "032" },
+    { "slug": null, "id": "тева-мануа", "name": "Тева Мануа", "meta_power": 8, "threat": 41, "status": "alive",
+      "role": "Оперативница Квартета",
+      "abilities": ["Нейросенсорные перегрузки", "Дистанционная индукция боли"],
+      "cls": "PSI", "subclass": "нейросенсорика / боль", "origin": "s", "fac": "RKS", "serial": "018" },
+    { "slug": "стефан-дюпон",     "cls": "PSI", "subclass": "эрозия воли",             "origin": "s", "fac": "RKS", "serial": "019" },
+    { "slug": "кристиан-фогель",  "cls": "PSI", "subclass": "вестибулярная дезориентация", "origin": "s", "fac": "RKS", "serial": "020" },
+    { "slug": "александра-вегас", "cls": "PSI", "subclass": "стирание памяти",         "origin": "s", "fac": "UAM", "serial": "007" },
+
+    { "slug": "вестник-тишины",   "cls": "FLD", "subclass": "ЭМИ",                     "origin": "s", "fac": "ABY", "serial": "033" },
+    { "slug": "эрик-сэнд",        "cls": "FLD", "subclass": "сияние / щиты",           "origin": "g", "fac": "TNB", "serial": "044" },
+    { "slug": "анаиса-аскирион",  "cls": "FLD", "subclass": "резонанс-клинки / инфразвук", "origin": "s", "fac": "TNB", "serial": "045" },
+    { "slug": "вероника-рин",     "cls": "FLD", "subclass": "стеклокинез",             "origin": "s", "fac": "MRC", "serial": "052" },
+
+    { "slug": "селеста-орсини",   "cls": "COG", "subclass": "провидение",              "origin": "s", "fac": "TNB", "serial": "046", "lobe": "Провидение" },
+    { "slug": "марина-элеонора-геррера", "cls": "COG", "subclass": "абсолютное зрение","origin": "g", "fac": "TNB", "serial": "047", "lobe": "Провидение" },
+    { "slug": null, "id": "чжао-линь", "name": "Чжао Линь", "meta_power": 6, "threat": 34, "status": "alive",
+      "role": "Мета-сенсор Ракшасов",
+      "abilities": ["Мета-сенсорика", "Пеленгация одарённых"],
+      "cls": "COG", "subclass": "мета-сенсорика", "origin": "s", "fac": "RKS", "serial": "026", "lobe": "Провидение" },
+    { "slug": "эну",              "cls": "COG", "subclass": "квантовое моделирование", "origin": "s", "fac": "MSP", "serial": "004", "lobe": "Усиление" },
+    { "slug": "нимфея-эленис",    "cls": "COG", "subclass": "ускоренный приём информации", "origin": "s", "fac": "UAM", "serial": "008", "lobe": "Усиление" },
+
+    { "slug": "артур-остерман",   "cls": "NUL", "subclass": "отрицание способностей",  "origin": "s", "fac": "TNB", "serial": "∅", "anomaly": true },
+
+    { "slug": "дамиан-кортес",    "cls": "CMN", "subclass": "соборная связь",          "origin": "c", "fac": "TNB", "serial": "061" },
+    { "slug": "михаэль-иннос",    "cls": "CMN", "subclass": "соборная связь",          "origin": "c", "fac": "TNB", "serial": "062" },
+    { "slug": "катарина-меланье", "cls": "CMN", "subclass": "соборная связь",          "origin": "c", "fac": "TNB", "serial": "063" },
+    { "slug": "джон-гарстон",     "cls": "CMN", "subclass": "соборная связь",          "origin": "c", "fac": "TNB", "serial": "064" },
+    { "slug": null, "id": "себастьян-де-валуа", "name": "Себастьян де Валуа", "meta_power": 1, "threat": 32, "status": "alive",
+      "role": "Гражданин Тенебриона",
+      "abilities": ["Соборная связь с богиней", "Перманентное долголетие"],
+      "cls": "CMN", "subclass": "соборная связь", "origin": "c", "fac": "TNB", "serial": "065" },
+
+    { "slug": "тенебриа",         "cls": "SRC", "subclass": "источник",                "origin": "s", "fac": "TNB", "serial": "" },
+
+    { "slug": "лилит-блэквуд",    "cls": "CMN", "subclass": "соборная связь",          "origin": "c", "fac": "TNB", "serial": "066",
+      "review": true, "review_note": "Мета-сила 2 превышает соборный фон. CMN-фон или скрытая PSI? Требует уточнения." }
+  ],
+
+  "ghosts": [
+    { "cls": "KIN", "subclass": "гравитика",    "hint": "Профиль предсказан симметрией класса. Носитель не задокументирован." },
+    { "cls": "PSI", "subclass": "онейрокинез",  "hint": "Косвенные следы вмешательства в фазу сна. Носитель не установлен." },
+    { "cls": "FLD", "subclass": "электрокинез", "hint": "Прямое управление зарядом статистически ожидаемо. Носитель не задокументирован." }
+  ],
+
+  "resonance": [
+    { "label": "Регенерация / бессмертие", "members": ["лилия-спасская", "валентина-блажек", "борис-ленский"] },
+    { "label": "Провидение",               "members": ["селеста-орсини", "марина-элеонора-геррера", "чжао-линь"] },
+    { "label": "Термические аномалии",     "members": ["маркус-кросс", "ольга-гончарова", "дариан-сорель"] },
+    { "label": "Искажение восприятия",     "members": ["смотрящий-в-бездну", "маро", "кристиан-фогель"] }
+  ]
+}
