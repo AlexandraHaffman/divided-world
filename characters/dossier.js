@@ -31,6 +31,9 @@ const TIER_FILTER_COLORS = {
 };
 
 const REPO = "AlexandraHaffman/divided-world";
+/* Реестр системных портретов (лицо на чёрном), не связан с экспортом
+   Obsidian — переживает re-export заметок. См. data/portraits.json */
+const PORTRAITS_URL = "https://AlexandraHaffman.github.io/divided-world/data/portraits.json";
 const TOP_FACTIONS = new Set(["Тенебрион", "Единая Америка", "Аркадия", "Forge", "Ракшасы"]);
 
 /* Краткие пояснения характеристик — всплывают по наведению на название
@@ -323,7 +326,10 @@ function setTierFilter(tier) {
 
 async function loadCharacters() {
   try {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/characters`);
+    const [res, portraits] = await Promise.all([
+      fetch(`https://api.github.com/repos/${REPO}/contents/data/characters`),
+      fetch(PORTRAITS_URL).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+    ]);
     const data = await res.json();
     if (!Array.isArray(data)) {
       const msg = data.message || "Неизвестная ошибка API";
@@ -335,6 +341,7 @@ async function loadCharacters() {
         .map(async f => {
           const c = await (await fetch(f.download_url)).json();
           c._slug = f.name.replace(/\.json$/, "");
+          if (portraits[c._slug]) c.portrait_web = portraits[c._slug];
           return c;
         })
     )).sort((a, b) => (b.threat_level || 0) - (a.threat_level || 0));

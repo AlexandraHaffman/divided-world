@@ -1,0 +1,9 @@
+{
+  "_comment": "Реестр системных портретов (portrait_web) — лицо на чёрном фоне, для режима сравнения и т.п. Не связан с экспортом Obsidian и не перезаписывается им. Ключ = id персонажа (совпадает с именем файла в data/characters/ без .json).",
+  "халиф-захир-аль-нар": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/zahir-al-nar-portrait-web.jpg",
+  "эмили-картер": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/emily-carter-portrait-web.jpg",
+  "валентина-блажек": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/valentina-blazhek-portrait-web.jpg",
+  "эмиль-грант": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/emil-grant-portrait-web.jpg",
+  "аша-наир": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/asha-nair-portrait-web.jpg",
+  "сюй-лэй": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/xu-lei-portrait-web.jpg"
+}
