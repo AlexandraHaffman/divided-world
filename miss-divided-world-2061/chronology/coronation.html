@@ -63,10 +63,10 @@
     `<div>${pod(th,"2-я вице-мисс","p3","✦")}</div></div></div>`+
 
     `<div class="section"><div class="stage-scene chron">`+
-    `<p><b>Третье место.</b> Первым называют имя ${esc(th.name)}. ${esc((perf(th.slug).reaction||"").split(". ").slice(0,2).join(". "))}.</p>`+
-    `<p><b>Первая вице-мисс.</b> Затем — ${esc(r.name)}. ${esc((perf(r.slug).reaction||"").split(". ").slice(0,2).join(". "))}.</p>`+
+    `<p><b>Замыкает тройку · 2-я вице-мисс.</b> Первым называют имя ${esc(th.name)}. ${esc(perf(th.slug).reaction||"")}</p>`+
+    `<p><b>Первая вице-мисс.</b> Затем — ${esc(r.name)}. ${esc(perf(r.slug).reaction||"")}</p>`+
     `<p><b>И корона.</b> Ведущий держит паузу дольше, чем позволяет регламент. Имя победительницы — <b style="color:var(--gold)">${esc(w.name)}</b>. `+
-    `${esc((perf(w.slug).reaction||""))}</p></div></div>`+
+    `${esc(perf(w.slug).reaction||"")}</p></div></div>`+
 
     `<div class="section"><div class="shead"><span class="n">Корона «${esc(cr.name)}»</span></div>`+
     `<div class="card"><div class="chron">`+

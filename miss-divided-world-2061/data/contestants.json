@@ -159,11 +159,11 @@
    "sex": 10
   },
   "measure": {
-   "height": 175,
-   "bust": 92,
+   "height": 174,
+   "bust": 91,
    "waist": 61,
    "hips": 93,
-   "weight": 60
+   "weight": 61
   },
   "img": {
    "reference": "data/images/characters/28C1C4A0-8A00-40F1-9383-E4B1481AF389.jpeg",
@@ -1370,11 +1370,11 @@
    "sex": 5
   },
   "measure": {
-   "height": 162,
-   "bust": 80,
-   "waist": 58,
-   "hips": 84,
-   "weight": 48
+   "height": 174,
+   "bust": 84,
+   "waist": 57,
+   "hips": 87,
+   "weight": 49
   },
   "img": {
    "reference": "data/images/characters/AD456BE7-25E6-4BF8-8F90-815F5AD2E63E.jpeg",
@@ -1647,7 +1647,7 @@
   "img": {
    "reference": "data/images/characters/C0289A0D-F98E-4399-B099-1F71B1EA426E.png",
    "cinematic": "data/images/characters/B71EF63A-BD66-42A8-84AF-CB12BA0F5BBC.jpeg",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/kristina-novak-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/kristina-novak-portrait-web.jpg"
   },
   "placement": 18,
@@ -1737,7 +1737,7 @@
   "img": {
    "reference": "data/images/characters/6ABBA230-D8F1-4A02-9D6D-72D9C267418E.png",
    "cinematic": "data/images/characters/FDF611D7-EC46-48FA-996C-52188694514D.jpeg",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/emilia-everett-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/emiliya-everett-portrait-web.jpg"
   },
   "placement": 19,
@@ -2093,7 +2093,7 @@
   "img": {
    "reference": "data/images/characters/3054195D-272F-4FBB-B57A-8D17F77FDC08.jpeg",
    "cinematic": "data/images/characters/36D7CACD-0A34-4E91-BBF0-25FD1451710A.png",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/emily-grey-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/emili-grey-portrait-web.jpg"
   },
   "placement": 23,
@@ -2881,7 +2881,7 @@
   "img": {
    "reference": "data/images/characters/D14D67FF-D3B6-402B-910C-2265DA9B3F40.png",
    "cinematic": "data/images/characters/119793A8-B2FA-490C-B833-E659E8A74531.png",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/samantha-chen-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/samanta-chen-portrait-web.jpg"
   },
   "placement": 32,

@@ -93,9 +93,18 @@ window.DWrenderParticipant=function(){
     (arrival.first_line?`<p class="lead">«${esc(arrival.first_line).replace(/^«|»$/g,'')}»</p>`:"")+
     (arrival.gesture?`<p class="muted">${esc(arrival.gesture)}</p>`:"")+`</div></div>`:"";
 
-  // реакция на результат (спойлер)
+  // реакция на результат (спойлер) — динамический итог + характер
+  function outcome(pl){
+    if(pl===1) return "Корона «Разлом» — её: Мисс Разделённый мир 2061.";
+    if(pl===2) return "Первая вице-мисс.";
+    if(pl===3) return "Вторая вице-мисс.";
+    if(pl<=5) return `В шаге от тройки — ${pl}-е место.`;
+    if(pl<=10) return `Дошла до десятки — ${pl}-е место.`;
+    if(pl<=20) return `Вошла в двадцатку — ${pl}-е место.`;
+    return `Завершила конкурс на ${pl}-м месте.`;
+  }
   const reactionBlock = spoil && p.reaction?
-    `<div class="card" style="border-color:var(--gold-dim)"><h3>Реакция на результат</h3><div class="chron"><p>${esc(p.reaction)}</p></div></div>`:"";
+    `<div class="card" style="border-color:var(--gold-dim)"><h3>Итог и реакция</h3><div class="chron"><p><b style="color:var(--gold)">${outcome(c.placement)}</b> ${esc(p.reaction)}</p></div></div>`:"";
 
   host.innerHTML =
     `<div class="participant-hero" style="${fac(c)}"><div class="facbar"></div>`+

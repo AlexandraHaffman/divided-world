@@ -1,27 +1,6 @@
 {
  "reference_dir": "data/images/characters/",
  "total": 35,
- "with_system_portrait": 31,
- "missing_system_portrait": [
-  {
-   "slug": "кристина-новак",
-   "name": "Кристина Новак",
-   "expected": "data/images/characters/kristina-novak-portrait-web.jpg"
-  },
-  {
-   "slug": "саманта-чен",
-   "name": "Саманта Чен",
-   "expected": "data/images/characters/samanta-chen-portrait-web.jpg"
-  },
-  {
-   "slug": "эмили-грей",
-   "name": "Эмили Грей",
-   "expected": "data/images/characters/emili-grey-portrait-web.jpg"
-  },
-  {
-   "slug": "эмилия-эверетт",
-   "name": "Эмилия Эверетт",
-   "expected": "data/images/characters/emiliya-everett-portrait-web.jpg"
-  }
- ]
+ "with_system_portrait": 35,
+ "missing_system_portrait": []
 }

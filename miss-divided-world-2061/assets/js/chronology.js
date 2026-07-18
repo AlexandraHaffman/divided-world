@@ -142,7 +142,9 @@ window.DWrenderRound = function(cfg){
   // лучшая выходит в самом низу. Ранги (#N) при этом остаются верными.
   const disp=pool.slice().reverse();
   const t=(DW.timeline||[]).find(x=>x.key===key)||{};
-  const index = `<div class="perf-index">`+disp.map(s=>`<a href="#p-${s}">${esc(by(s).name)}</a>`).join("")+`</div>`;
+  // индекс — по алфавиту, чтобы порядок не выдавал места раунда
+  const idxOrder=pool.slice().sort((a,b)=>by(a).name.localeCompare(by(b).name,'ru'));
+  const index = `<div class="perf-index">`+idxOrder.map(s=>`<a href="#p-${s}">${esc(by(s).name)}</a>`).join("")+`</div>`;
   const note = `<p class="muted" style="margin:2px 0 14px;font-size:12.5px">↑ Порядок обратный: сверху — последнее место раунда, лучшая выходит в самом низу. Так итог раунда не раскрывается заранее.</p>`;
   const scene = cfg.scene?`<div class="stage-scene chron">${cfg.scene}</div>`:"";
   el.innerHTML =

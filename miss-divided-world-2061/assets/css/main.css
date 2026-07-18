@@ -195,9 +195,9 @@ h1,h2,h3{font-family:'Orbitron',monospace;color:var(--white);letter-spacing:1px;
 .attr .n{text-align:right;font-family:'Share Tech Mono',monospace;color:var(--silver)}
 
 /* ── Секции-заголовки ── */
-.shead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.shead .n{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;white-space:nowrap}
-.shead::after{content:'';flex:1;height:1px;background:var(--line)}
+.shead{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.shead .n{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.shead::after{content:'';flex:1;min-width:24px;height:1px;background:var(--line)}
 .shead.big .n{font-size:14px}
 
 /* ── Ворота доступа (пароль) ── */
