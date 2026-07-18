@@ -48,7 +48,8 @@
     most_unexpected:"выступление, которое никто не мог предсказать",
     absolute_individuality:"тип, не похожий ни на один другой",
     breakthrough:"наибольший подъём от предварительного места к итоговому",
-    best_debut:"лучший результат среди тех, от кого не ждали"};
+    best_debut:"лучший результат среди тех, от кого не ждали",
+    miss_congeniality:"тепло и доброта — приз, который участницы присуждают друг другу"};
   const cards=(DW.awards||[]).map(a=>{ const c=window.DWby(a.slug);
     return `<a class="award" style="${fac(c)}" href="contestants/participant.html?slug=${a.slug}">`+
       `<div class="at">${esc(a.title)}</div><div class="an">${esc(a.name)}</div>`+

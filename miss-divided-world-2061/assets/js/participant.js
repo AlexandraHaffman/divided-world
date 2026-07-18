@@ -108,6 +108,9 @@ window.DWrenderParticipant=function(){
       `<span class="tag">${esc(c.tier)}</span>`+
       `<span class="tag">г.р. ${esc(c.birthdate)}</span>`+
       `<span class="tag">статус: ${esc(c.status)}</span></div>`+
+      (c.measure?`<div class="pmeta"><span class="tag gold">рост ${c.measure.height} см</span>`+
+        `<span class="tag gold">${c.measure.bust}–${c.measure.waist}–${c.measure.hips}</span>`+
+        `<span class="tag gold">вес ${c.measure.weight} кг</span></div>`:"")+
       `<div class="pmeta">${placeBadge}</div>`+
       (awards?`<div class="pmeta">${awards}</div>`:"")+
       `</div></div>`+

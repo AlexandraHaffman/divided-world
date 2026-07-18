@@ -49,6 +49,13 @@
   "href": "chronology/faction-costumes.html"
  },
  {
+  "key": "interlude-1",
+  "title": "Закулисье · Свободный день",
+  "date": "16 октября",
+  "remaining": 35,
+  "href": "chronology/interlude-1.html"
+ },
+ {
   "key": "top-20",
   "title": "Первое сокращение · 35→20",
   "date": "16 октября",
@@ -82,6 +89,13 @@
   "date": "18 октября",
   "remaining": 5,
   "href": "chronology/top-5.html"
+ },
+ {
+  "key": "interlude-2",
+  "title": "Вечер финалисток",
+  "date": "18 октября",
+  "remaining": 5,
+  "href": "chronology/interlude-2.html"
  },
  {
   "key": "final-looks",

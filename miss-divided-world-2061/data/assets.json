@@ -1,18 +1,8 @@
 {
  "reference_dir": "data/images/characters/",
  "total": 35,
- "with_system_portrait": 28,
+ "with_system_portrait": 31,
  "missing_system_portrait": [
-  {
-   "slug": "бьянка-скардино",
-   "name": "Бьянка Скардино",
-   "expected": "data/images/characters/byanka-skardino-portrait-web.jpg"
-  },
-  {
-   "slug": "клара-уолш",
-   "name": "Клара Уолш",
-   "expected": "data/images/characters/klara-uolsh-portrait-web.jpg"
-  },
   {
    "slug": "кристина-новак",
    "name": "Кристина Новак",
@@ -22,11 +12,6 @@
    "slug": "саманта-чен",
    "name": "Саманта Чен",
    "expected": "data/images/characters/samanta-chen-portrait-web.jpg"
-  },
-  {
-   "slug": "тенебриа",
-   "name": "Тенебриа",
-   "expected": "data/images/characters/tenebria-portrait-web.jpg"
   },
   {
    "slug": "эмили-грей",

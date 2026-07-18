@@ -54,7 +54,13 @@ function avatarHTML(c){
 }
 
 /* хроника-лид для модных раундов */
-function fashionLead(c,d){
+function fashionLead(c,d,rk){
+  if(rk==="swimwear"){
+    const m=c.measure||{};
+    const fig = m.height?`<b>Фигура.</b> Рост ${m.height} см · ${m.bust}–${m.waist}–${m.hips} · ${m.weight} кг. `:"";
+    return `<p class="lead">${esc(c.sensual)}</p>`+
+           `<p>${fig}${esc((d&&d.walk)||"")}</p>`;
+  }
   const bits=[];
   bits.push(`<span class="lead">${esc(c.temper.replace(/\.$/,''))}.</span> ${esc(c.sensual)}`);
   if(d&&d.walk) bits.push(esc(d.walk));
@@ -81,7 +87,7 @@ function perfBlock(rk,slug,rr){
   const link=`${CB}contestants/participant.html?slug=${slug}`;
   let body="";
   if(isFashion){
-    body = `<div class="cols"><div class="chron">${fashionLead(c,d)}`+
+    body = `<div class="cols"><div class="chron">${fashionLead(c,d,rk)}`+
       (rk==="costume"&&d&&d.entrance?`<p><b>Появление.</b> ${esc(d.entrance)}</p>`:"")+
       (d&&d.crowd&&rk!=="costume"?`<p><b>Зал.</b> ${esc(d.crowd)}</p>`:"")+
       (PRELIM.includes(rk)?movementHTML(rk,slug):"")+

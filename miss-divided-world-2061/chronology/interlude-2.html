@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вечер финалисток · Мисс Разделённый мир 2061</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/rounds.css">
+</head>
+<body>
+<div class="page">
+  <div id="topbar"></div>
+  <div class="wrap"><div id="main"></div></div>
+  <div id="foot"></div>
+</div>
+<script src="../data/data.js"></script>
+<script>window.CB="../";</script>
+<script src="../assets/js/main.js"></script>
+<script>
+(function(){
+  if(!window.DWguard()) return;
+  window.DWinit("chronology.html");
+  const DW=window.DWget(), esc=window.DWesc, by=window.DWby;
+  const t=(DW.timeline||[]).find(x=>x.key==="interlude-2")||{};
+  const host=document.getElementById("main");
+  const hero=`<div class="round-hero"><div class="rn">${esc(t.date||"")} · осталось 5</div>`+
+    `<h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(30px,7vw,52px)">Вечер финалисток</h1>`+
+    `<div class="sub">Накануне финала пятерых оставшихся собирают на общий ужин без камер главного эфира — узнать, какие они не на подиуме, а в жизни. Один стол, пять женщин, ради которых расколотый мир завтра остановится.</div>`+
+    window.DWprogress("interlude-2")+`</div>`;
+  if(!window.DWspoilers()){
+    host.innerHTML=hero+`<div class="spoiler-shield"><div class="serif" style="font-size:20px;color:var(--white)">Кто дошёл до пятёрки — пока тайна</div>`+
+      `<p class="muted" style="margin-top:8px">Эта глава про вечер финалисток раскрывает состав топ-5. Откройте спойлеры или дойдите по хронике.</p>`+
+      `<button class="btn" onclick="window.DWsetSpoilers(true);location.reload()">Показать вечер финалисток</button></div>`+
+      window.DWchapnav("interlude-2");
+    return;
+  }
+  const top5=(DW.rankings.top5||[]).map(r=>r.slug);
+  // персональные «домашние» зарисовки (по slug); фолбэк — из темперамента
+  const BEAT={
+   "нимфея-эленис":"весь ужин слушала — и к десерту каждая из четверых была уверена, что именно с ней Нимфея сегодня по-настоящему откровенна. Так она отдыхает: читая людей, как другие читают книгу.",
+   "ульяна-спасская":"явилась последней, босиком, велела подогреть воду в бассейне резиденции и половину вечера провела в нём, лениво комментируя происходящее с бортика. Корона ей по-прежнему не нужна — нужен тёплый вечер, и она его себе устроила.",
+   "валентина-блажек":"привела двух Обликов «на всякий случай», трижды меняла платье к ужину и мрачнела, если пауза в разговоре длилась дольше, чем ей хотелось; но, поймав искренний смех соседки над своей же шуткой, вдруг подобрела и до полуночи была почти милой.",
+   "тенебриа":"сотворила из воздуха светящиеся снежинки над столом просто потому, что стало скучно, уронила бокал, засмеялась и рассказала, что впервые за годы ей не одиноко — «потому что тут все настоящие, и злятся на меня по-настоящему».",
+   "ольга-гончарова":"почти не говорила, но к концу вечера знала о каждой за столом больше, чем та о себе; один раз, впрочем, сняла напряжение точным сухим замечанием, и даже Валентина расхохоталась. Ещё одна страница для архива, который майор ведёт вопреки всему.",
+   "амели-бертран":"пришла в перчатках, села строго по центру, дважды поправила приборы до идеальной симметрии — и всё же осталась до конца, что для неё почти признание в тепле.",
+   "анаиса-аскирион":"впервые сняла шлем за столом; под ним оказалось усталое молодое лицо, и в тишине, без грохота войны, она держалась за край стола, как за поручень.",
+   "кассандра-стерлинг":"сидела прямо, как приговор, но однажды, когда решила, что никто не смотрит, на секунду прикрыла глаза и оперлась о стол — и Ольга это заметила, и промолчала.",
+  };
+  const beat=s=>{const c=by(s); return BEAT[s]||`${esc(c.temper.replace(/\.$/,'').toLowerCase())}: ${esc(c.sensual)}`;};
+  const names=top5.map(s=>by(s).name);
+  const list=top5.map(s=>{const c=by(s);
+    return `<div class="perf" style="${window.DWfac(c)}"><div class="facbar"></div>`+
+      `<div class="phead">`+
+      (window.DWimg(c.img.system_1x1)||window.DWimg(c.img.reference)?`<img class="av" src="${window.DWimg(c.img.system_1x1)||window.DWimg(c.img.reference)}" alt="${esc(c.name)}">`:`<div class="av noimg" style="${window.DWfac(c)}">◈</div>`)+
+      `<div class="who"><a href="${window.DWH.CB}contestants/participant.html?slug=${s}"><div class="nm">${esc(c.name)}</div></a>`+
+      `<div class="fc">${esc(c.faction)}</div></div></div>`+
+      `<div class="pbody"><div class="chron"><p>${esc(by(s).name.split(' ')[0])} ${beat(s)}</p></div></div></div>`;
+  }).join("");
+  host.innerHTML=hero+
+    `<div class="stage-scene chron"><p>Их развели по разным резиденциям на всё время конкурса, и вот они впервые за одним столом — без жюри, без баллов, без света главного купола. `+
+    `Соперницы, которым завтра делить одну корону на всех, сегодня просто ужинают. За окном — лагуна и радиосводки Мыса; на столе — вино Тихой гавани и хлеб, который кто-то тайком отнёс обслуге. `+
+    `Пятеро: ${esc(names.join(', '))}.</p>`+
+    `<p>Вечер получился странно тёплым. Оказалось, что вблизи, без подиума, даже хищницы устают, боятся и хотят, чтобы их поняли, — и на несколько часов расколотый мир за этим столом почти срастается.</p></div>`+
+    `<div class="section"><div class="shead"><span class="n">Какие они в жизни</span></div>${list}</div>`+
+    `<div class="stage-scene chron"><p>Расходились за полночь. Кто-то — к тёплой воде, кто-то — к своим Обликам, кто-то — к архиву на коже. Завтра одна из них станет лицом расколотого мира, а четверо навсегда запомнят этот тихий ужин как последний вечер, когда они были просто пятью женщинами, а не соперницами. `+
+    `«Из всех вечеров конкурса, — записала потом Далия Морэ, — самым красивым был тот, что никто не снимал».</p></div>`+
+    window.DWchapnav("interlude-2");
+})();
+</script>
+</body>
+</html>

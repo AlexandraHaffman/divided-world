@@ -60,6 +60,13 @@
    "presence": 8,
    "sex": 10
   },
+  "measure": {
+   "height": 176,
+   "bust": 90,
+   "waist": 62,
+   "hips": 92,
+   "weight": 60
+  },
   "img": {
    "reference": "data/images/characters/E9709DFE-E713-4D1D-8804-55275B534835.jpeg",
    "cinematic": "data/images/characters/80FCA5EE-1B0D-4146-BE8D-3D2632652081.jpeg",
@@ -150,6 +157,13 @@
    "memorable": 9,
    "presence": 9,
    "sex": 10
+  },
+  "measure": {
+   "height": 175,
+   "bust": 92,
+   "waist": 61,
+   "hips": 93,
+   "weight": 60
   },
   "img": {
    "reference": "data/images/characters/28C1C4A0-8A00-40F1-9383-E4B1481AF389.jpeg",
@@ -243,6 +257,13 @@
    "presence": 10,
    "sex": 10
   },
+  "measure": {
+   "height": 174,
+   "bust": 90,
+   "waist": 60,
+   "hips": 92,
+   "weight": 57
+  },
   "img": {
    "reference": "data/images/characters/A8EF8BDF-C887-4F22-99E3-F82990510B10.jpeg",
    "cinematic": "data/images/characters/F0A6032F-944B-4DAC-A38F-2142C574E29F.jpeg",
@@ -334,10 +355,17 @@
    "presence": 10,
    "sex": 4
   },
+  "measure": {
+   "height": 164,
+   "bust": 82,
+   "waist": 60,
+   "hips": 86,
+   "weight": 51
+  },
   "img": {
    "reference": "data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.png",
    "cinematic": "data/images/characters/2C41A19D-4070-47FE-A7A2-10CDBBCD6934.jpeg",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/tenebria-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/tenebria-portrait-web.jpg"
   },
   "placement": 4,
@@ -424,6 +452,13 @@
    "memorable": 8,
    "presence": 8,
    "sex": 7
+  },
+  "measure": {
+   "height": 173,
+   "bust": 88,
+   "waist": 63,
+   "hips": 91,
+   "weight": 63
   },
   "img": {
    "reference": "data/images/characters/BE8B8969-77BD-4AC3-9DA1-A2E16034E946.jpeg",
@@ -512,6 +547,13 @@
    "presence": 9,
    "sex": 5
   },
+  "measure": {
+   "height": 174,
+   "bust": 87,
+   "waist": 64,
+   "hips": 91,
+   "weight": 66
+  },
   "img": {
    "reference": "data/images/characters/0FEAB1F6-C1B3-4E2C-B25E-9ED39B478261.jpeg",
    "cinematic": "data/images/characters/F298514C-CC97-45A3-8F06-5A3433329C86.jpeg",
@@ -594,6 +636,13 @@
    "memorable": 9,
    "presence": 10,
    "sex": 4
+  },
+  "measure": {
+   "height": 171,
+   "bust": 82,
+   "waist": 61,
+   "hips": 86,
+   "weight": 54
   },
   "img": {
    "reference": "data/images/characters/AA6E2D00-481B-4679-9241-2087D50BD1CA.jpeg",
@@ -679,6 +728,13 @@
    "memorable": 7,
    "presence": 6,
    "sex": 8
+  },
+  "measure": {
+   "height": 175,
+   "bust": 89,
+   "waist": 60,
+   "hips": 90,
+   "weight": 58
   },
   "img": {
    "reference": "data/images/characters/2DE1D56E-F307-419A-8CFB-5CB364B81EF5.jpeg",
@@ -767,6 +823,13 @@
    "presence": 9,
    "sex": 7
   },
+  "measure": {
+   "height": 172,
+   "bust": 86,
+   "waist": 62,
+   "hips": 90,
+   "weight": 60
+  },
   "img": {
    "reference": "data/images/characters/8E4DA22F-9BB4-4839-9042-9FDCCADB8E8A.jpeg",
    "cinematic": "data/images/characters/E36CB904-01B2-4AF9-9A39-F5CB26323986.jpeg",
@@ -853,6 +916,13 @@
    "presence": 9,
    "sex": 9
   },
+  "measure": {
+   "height": 170,
+   "bust": 88,
+   "waist": 60,
+   "hips": 90,
+   "weight": 54
+  },
   "img": {
    "reference": "data/images/characters/DEE788D3-08D7-458B-8ED4-3EF8226FA3E3.jpeg",
    "cinematic": "data/images/characters/A8052DEC-8DF5-4E58-B1F7-3B237373901A.jpeg",
@@ -936,6 +1006,13 @@
    "presence": 6,
    "sex": 6
   },
+  "measure": {
+   "height": 170,
+   "bust": 90,
+   "waist": 64,
+   "hips": 94,
+   "weight": 62
+  },
   "img": {
    "reference": "data/images/characters/FAAC188D-C0C6-4E82-877C-A9928DB80436.jpeg",
    "cinematic": "data/images/characters/664537A6-11C1-4DE5-B157-085D845DD339.jpeg",
@@ -958,7 +1035,8 @@
   "best_round": "interview",
   "worst_round": "swimwear",
   "awards": [
-   "Главный прорыв конкурса"
+   "Главный прорыв конкурса",
+   "Мисс Дружелюбие (выбор участниц)"
   ]
  },
  {
@@ -1020,6 +1098,13 @@
    "memorable": 7,
    "presence": 5,
    "sex": 8
+  },
+  "measure": {
+   "height": 168,
+   "bust": 88,
+   "waist": 61,
+   "hips": 90,
+   "weight": 55
   },
   "img": {
    "reference": "data/images/characters/C74D6DA0-0ECE-48DE-88A9-2072005B4139.jpeg",
@@ -1102,6 +1187,13 @@
    "presence": 8,
    "sex": 6
   },
+  "measure": {
+   "height": 172,
+   "bust": 86,
+   "waist": 64,
+   "hips": 90,
+   "weight": 61
+  },
   "img": {
    "reference": "data/images/characters/786136FB-450D-4C30-BEBD-660E3EAAD280.jpeg",
    "cinematic": "data/images/characters/FBDD52F8-924F-4D92-864A-4E25EB991068.jpeg",
@@ -1183,6 +1275,13 @@
    "memorable": 9,
    "presence": 8,
    "sex": 2
+  },
+  "measure": {
+   "height": 188,
+   "bust": 94,
+   "waist": 74,
+   "hips": 96,
+   "weight": 79
   },
   "img": {
    "reference": "data/images/characters/22C71268-5A3F-4A3D-AAB9-B4C3E4FD5783.jpeg",
@@ -1270,6 +1369,13 @@
    "presence": 9,
    "sex": 5
   },
+  "measure": {
+   "height": 162,
+   "bust": 80,
+   "waist": 58,
+   "hips": 84,
+   "weight": 48
+  },
   "img": {
    "reference": "data/images/characters/AD456BE7-25E6-4BF8-8F90-815F5AD2E63E.jpeg",
    "cinematic": "data/images/characters/F8EE3410-3CD7-4692-BFE7-F6C5CED15502.jpeg",
@@ -1356,6 +1462,13 @@
    "presence": 8,
    "sex": 6
   },
+  "measure": {
+   "height": 168,
+   "bust": 85,
+   "waist": 61,
+   "hips": 88,
+   "weight": 55
+  },
   "img": {
    "reference": "data/images/characters/5AE861A9-E73F-490C-BA2E-9B13AE4F1884.jpeg",
    "cinematic": "data/images/characters/C9F63431-C04D-4EAC-BAC7-1A29C7D75249.jpeg",
@@ -1438,6 +1551,13 @@
    "presence": 6,
    "sex": 4
   },
+  "measure": {
+   "height": 168,
+   "bust": 90,
+   "waist": 68,
+   "hips": 96,
+   "weight": 66
+  },
   "img": {
    "reference": "data/images/characters/41DB6C4C-B4FE-4C3C-84B7-FB683B41B6E9.jpeg",
    "cinematic": "data/images/characters/B441113C-FE3C-4907-8818-A70B8A857663.jpeg",
@@ -1516,6 +1636,13 @@
    "memorable": 6,
    "presence": 6,
    "sex": 5
+  },
+  "measure": {
+   "height": 169,
+   "bust": 86,
+   "waist": 63,
+   "hips": 90,
+   "weight": 58
   },
   "img": {
    "reference": "data/images/characters/C0289A0D-F98E-4399-B099-1F71B1EA426E.png",
@@ -1600,6 +1727,13 @@
    "presence": 7,
    "sex": 4
   },
+  "measure": {
+   "height": 176,
+   "bust": 88,
+   "waist": 66,
+   "hips": 93,
+   "weight": 66
+  },
   "img": {
    "reference": "data/images/characters/6ABBA230-D8F1-4A02-9D6D-72D9C267418E.png",
    "cinematic": "data/images/characters/FDF611D7-EC46-48FA-996C-52188694514D.jpeg",
@@ -1683,6 +1817,13 @@
    "presence": 7,
    "sex": 6
   },
+  "measure": {
+   "height": 171,
+   "bust": 85,
+   "waist": 63,
+   "hips": 89,
+   "weight": 61
+  },
   "img": {
    "reference": "data/images/characters/BFE6CD97-F082-4A80-8A50-7CAD9F40530E.jpeg",
    "cinematic": "data/images/characters/93ED1AD6-48DC-4112-9F74-8D298866FB27.jpeg",
@@ -1763,6 +1904,13 @@
    "memorable": 6,
    "presence": 5,
    "sex": 6
+  },
+  "measure": {
+   "height": 176,
+   "bust": 84,
+   "waist": 62,
+   "hips": 88,
+   "weight": 58
   },
   "img": {
    "reference": "data/images/characters/F254ADB9-8242-4A0C-8577-A8015ECCA77D.jpeg",
@@ -1847,6 +1995,13 @@
    "presence": 7,
    "sex": 4
   },
+  "measure": {
+   "height": 169,
+   "bust": 84,
+   "waist": 64,
+   "hips": 89,
+   "weight": 57
+  },
   "img": {
    "reference": "data/images/characters/BD4CB5F7-24A3-4111-8B07-A513A0D408CE.jpeg",
    "cinematic": "data/images/characters/99C440B3-0D34-40A3-9173-4C84615114ED.jpeg",
@@ -1927,6 +2082,13 @@
    "memorable": 6,
    "presence": 7,
    "sex": 6
+  },
+  "measure": {
+   "height": 173,
+   "bust": 86,
+   "waist": 63,
+   "hips": 91,
+   "weight": 63
   },
   "img": {
    "reference": "data/images/characters/3054195D-272F-4FBB-B57A-8D17F77FDC08.jpeg",
@@ -2009,6 +2171,13 @@
    "presence": 6,
    "sex": 6
   },
+  "measure": {
+   "height": 172,
+   "bust": 88,
+   "waist": 66,
+   "hips": 92,
+   "weight": 65
+  },
   "img": {
    "reference": "data/images/characters/524BD9A2-9A2D-412C-BE61-7AD1A3052290.jpeg",
    "cinematic": "data/images/characters/CBEFAFA9-48C6-4977-B978-A46BF060D8B8.jpeg",
@@ -2090,6 +2259,13 @@
    "presence": 6,
    "sex": 5
   },
+  "measure": {
+   "height": 170,
+   "bust": 86,
+   "waist": 64,
+   "hips": 90,
+   "weight": 60
+  },
   "img": {
    "reference": "data/images/characters/9FAB8761-62A5-43E0-A046-1F5B714453DE.jpeg",
    "cinematic": "data/images/characters/AE16A7E9-9493-4991-A873-DB923DDF8731.jpeg",
@@ -2169,6 +2345,13 @@
    "memorable": 6,
    "presence": 6,
    "sex": 6
+  },
+  "measure": {
+   "height": 174,
+   "bust": 88,
+   "waist": 61,
+   "hips": 90,
+   "weight": 62
   },
   "img": {
    "reference": "data/images/characters/89E30AE6-C402-43AE-9916-84AF8486E18B.jpeg",
@@ -2251,6 +2434,13 @@
    "presence": 6,
    "sex": 3
   },
+  "measure": {
+   "height": 169,
+   "bust": 84,
+   "waist": 66,
+   "hips": 90,
+   "weight": 60
+  },
   "img": {
    "reference": "data/images/characters/15AC19FD-C45A-44B8-94A5-CBB0B8C9532A.jpeg",
    "cinematic": "data/images/characters/FD1F044B-131B-4497-B084-111A52F3B960.jpeg",
@@ -2331,6 +2521,13 @@
    "presence": 6,
    "sex": 4
   },
+  "measure": {
+   "height": 170,
+   "bust": 86,
+   "waist": 66,
+   "hips": 92,
+   "weight": 62
+  },
   "img": {
    "reference": "data/images/characters/AF32072F-0D73-4FCC-B2BF-5462BAA92F11.jpeg",
    "cinematic": "data/images/characters/B1C8D6E5-8FC5-4C54-B58B-0978B512A2D8.jpeg",
@@ -2408,6 +2605,13 @@
    "memorable": 6,
    "presence": 6,
    "sex": 4
+  },
+  "measure": {
+   "height": 170,
+   "bust": 85,
+   "waist": 65,
+   "hips": 90,
+   "weight": 60
   },
   "img": {
    "reference": "data/images/characters/E66275CA-E17B-4441-B368-57A744F444AC.jpeg",
@@ -2492,10 +2696,17 @@
    "presence": 6,
    "sex": 4
   },
+  "measure": {
+   "height": 169,
+   "bust": 88,
+   "waist": 68,
+   "hips": 94,
+   "weight": 66
+  },
   "img": {
    "reference": "data/images/characters/6632B3DD-7DC1-4032-AFE2-80A60554F2D0.jpeg",
    "cinematic": "data/images/characters/214175D1-3DE3-4E86-BAEA-11801AA449F8.jpeg",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/bianca-scardino-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/byanka-skardino-portrait-web.jpg"
   },
   "placement": 30,
@@ -2572,6 +2783,13 @@
    "memorable": 6,
    "presence": 5,
    "sex": 4
+  },
+  "measure": {
+   "height": 168,
+   "bust": 85,
+   "waist": 66,
+   "hips": 91,
+   "weight": 61
   },
   "img": {
    "reference": "data/images/characters/8F3E463C-DA3C-42C5-966F-C5FF617ABCAD.jpeg",
@@ -2653,6 +2871,13 @@
    "presence": 5,
    "sex": 5
   },
+  "measure": {
+   "height": 167,
+   "bust": 84,
+   "waist": 64,
+   "hips": 89,
+   "weight": 56
+  },
   "img": {
    "reference": "data/images/characters/D14D67FF-D3B6-402B-910C-2265DA9B3F40.png",
    "cinematic": "data/images/characters/119793A8-B2FA-490C-B833-E659E8A74531.png",
@@ -2731,6 +2956,13 @@
    "memorable": 6,
    "presence": 5,
    "sex": 4
+  },
+  "measure": {
+   "height": 167,
+   "bust": 88,
+   "waist": 68,
+   "hips": 95,
+   "weight": 64
   },
   "img": {
    "reference": "data/images/characters/AFF2994B-65BD-4466-B2C8-E068A86C7787.png",
@@ -2812,6 +3044,13 @@
    "presence": 5,
    "sex": 3
   },
+  "measure": {
+   "height": 166,
+   "bust": 82,
+   "waist": 64,
+   "hips": 88,
+   "weight": 55
+  },
   "img": {
    "reference": "data/images/characters/C0DBBAE8-00F3-428F-BFDD-AEEAAFF2493B.jpeg",
    "cinematic": "data/images/characters/003C5369-2EB0-4448-84AF-B9429DDD34D0.jpeg",
@@ -2890,10 +3129,17 @@
    "presence": 5,
    "sex": 3
   },
+  "measure": {
+   "height": 168,
+   "bust": 84,
+   "waist": 65,
+   "hips": 90,
+   "weight": 60
+  },
   "img": {
    "reference": "data/images/characters/B358B92A-C5E7-4A30-B93A-6D05A488A4C2.jpeg",
    "cinematic": "data/images/characters/403A3FA8-0ACF-4CCA-9430-80C479877188.jpeg",
-   "system_1x1": null,
+   "system_1x1": "data/images/characters/clara-walsh-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/klara-uolsh-portrait-web.jpg"
   },
   "placement": 35,

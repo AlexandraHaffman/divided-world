@@ -6,7 +6,7 @@
 """
 import json, glob, os, sys, hashlib
 sys.path.insert(0, os.path.dirname(__file__))
-from profiles import PROFILES, ATTR, FACTIONS
+from profiles import PROFILES, ATTR, FACTIONS, MEASURE
 from world import CONTEST, STAGES, AGG
 import engine as E
 
@@ -212,6 +212,9 @@ def awards(R, cap=2):
     strong= {s: attr(s,"command")+attr(s,"presence")+_rng("str",s)*0.3 for s in C}
     danger= {s: attr(s,"presence")+0.5*attr(s,"individ")+0.5*C[s]["stats"].get("cruelty",0)+_rng("dng",s)*0.3 for s in C}
     indiv = {s: attr(s,"individ")+_rng("ind",s)*0.3 for s in C}
+    # Мисс Дружелюбие — тёплые, добрые, не жестокие (выбор самих участниц)
+    congen = {s: attr(s,"charisma")*0.5 + (10-C[s]["stats"].get("cruelty",5))*0.45
+                 + attr(s,"coherence")*0.05 + _rng("cong",s)*0.3 for s in C}
     # (id, заголовок, метрика, пул)
     specs = [
       ("best_interview","Лучшее интервью", av("interview"), None),
@@ -230,6 +233,7 @@ def awards(R, cap=2):
       ("absolute_individuality","Абсолютная индивидуальность", indiv, None),
       ("breakthrough","Главный прорыв конкурса", climb, None),
       ("best_debut","Лучший дебют", common, None),
+      ("miss_congeniality","Мисс Дружелюбие (выбор участниц)", congen, None),
     ]
     held = {}
     res = []
@@ -293,6 +297,7 @@ def emit():
             "sensual": c["sensual"], "strengths": c["strengths"],
             "weaknesses": c["weaknesses"], "scandal": c["scandal"],
             "attrs": dict(zip(ATTR, c["attrs"])),
+            "measure": dict(zip(["height","bust","waist","hips","weight"], MEASURE[s])),
             "img": c["img"],
             "placement": placement[s],
             "prelim_rank": R["prelim_rank"][s],
