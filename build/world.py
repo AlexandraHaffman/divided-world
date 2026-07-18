@@ -109,8 +109,8 @@ STAGES = [
 AGG = {
     "prelim_weights": {"presentation":0.10,"interview":0.25,"swimwear":0.20,
                        "gown":0.20,"costume":0.25},
-    "semifinal": {"prelim":0.60,"manifesto":0.40},          # 20 -> 10
-    "top10":     {"semifinal":0.55,"stage_question":0.45},  # 10 -> 5
+    "semifinal": {"prelim":0.65,"manifesto":0.35},          # 20 -> 10
+    "top10":     {"semifinal":0.60,"stage_question":0.40},  # 10 -> 5
     "top5_final":{"final_look":0.50,"final_question":0.50},  # 5 -> 3 (собственная система финала)
     "crown":     {"final_look":0.40,"final_question":0.30,"last_word":0.30},  # 3 -> 1
 }

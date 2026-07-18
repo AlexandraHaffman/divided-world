@@ -3,211 +3,211 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.1353,
+   "total": 9.2393,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.5745,
+   "total": 8.9833,
    "rank": 2
-  },
-  {
-   "slug": "тенебриа",
-   "name": "Тенебриа",
-   "total": 8.5253,
-   "rank": 3
-  },
-  {
-   "slug": "амели-бертран",
-   "name": "Амели Бертран",
-   "total": 8.4207,
-   "rank": 4
-  },
-  {
-   "slug": "кассандра-стерлинг",
-   "name": "Кассандра Стерлинг",
-   "total": 8.2998,
-   "rank": 5
-  },
-  {
-   "slug": "анаиса-аскирион",
-   "name": "Анаиса Аскирион",
-   "total": 8.2256,
-   "rank": 6
-  },
-  {
-   "slug": "ольга-гончарова",
-   "name": "Ольга Гончарова",
-   "total": 8.0013,
-   "rank": 7
   },
   {
    "slug": "валентина-блажек",
    "name": "Валентина Блажек",
-   "total": 7.8559,
-   "rank": 8
+   "total": 8.4433,
+   "rank": 3
   },
   {
-   "slug": "лилия-спасская",
-   "name": "Лилия Спасская",
-   "total": 7.6537,
-   "rank": 9
+   "slug": "тенебриа",
+   "name": "Тенебриа",
+   "total": 8.3746,
+   "rank": 4
+  },
+  {
+   "slug": "анаиса-аскирион",
+   "name": "Анаиса Аскирион",
+   "total": 7.9991,
+   "rank": 5
+  },
+  {
+   "slug": "ольга-гончарова",
+   "name": "Ольга Гончарова",
+   "total": 7.9474,
+   "rank": 6
+  },
+  {
+   "slug": "амели-бертран",
+   "name": "Амели Бертран",
+   "total": 7.7306,
+   "rank": 7
   },
   {
    "slug": "эва-найт",
    "name": "Эва Найт",
-   "total": 7.5592,
+   "total": 7.6059,
+   "rank": 8
+  },
+  {
+   "slug": "аша-наир",
+   "name": "Аша Наир",
+   "total": 7.4009,
+   "rank": 9
+  },
+  {
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "total": 7.3621,
    "rank": 10
+  },
+  {
+   "slug": "харпер-вэнс",
+   "name": "Харпер Вэнс",
+   "total": 7.3374,
+   "rank": 11
+  },
+  {
+   "slug": "кавита-рао",
+   "name": "Кавита Рао",
+   "total": 7.2956,
+   "rank": 12
   },
   {
    "slug": "лилит-блэквуд",
    "name": "Лилит Блэквуд",
-   "total": 7.5269,
-   "rank": 11
-  },
-  {
-   "slug": "эмилия-эверетт",
-   "name": "Эмилия Эверетт",
-   "total": 7.4519,
-   "rank": 12
-  },
-  {
-   "slug": "селеста-орсини",
-   "name": "Селеста Орсини",
-   "total": 7.4079,
+   "total": 7.1964,
    "rank": 13
   },
   {
-   "slug": "абигейл-ли",
-   "name": "Абигейл Ли",
-   "total": 7.3094,
+   "slug": "александра-вегас",
+   "name": "Александра Вегас",
+   "total": 7.1569,
    "rank": 14
   },
   {
    "slug": "изабелла-родригес",
    "name": "Изабелла Родригес",
-   "total": 7.2336,
+   "total": 7.0864,
    "rank": 15
   },
   {
-   "slug": "александра-вегас",
-   "name": "Александра Вегас",
-   "total": 7.1102,
+   "slug": "кассандра-стерлинг",
+   "name": "Кассандра Стерлинг",
+   "total": 6.9819,
    "rank": 16
+  },
+  {
+   "slug": "селеста-орсини",
+   "name": "Селеста Орсини",
+   "total": 6.8853,
+   "rank": 17
   },
   {
    "slug": "кристина-новак",
    "name": "Кристина Новак",
-   "total": 7.0532,
-   "rank": 17
-  },
-  {
-   "slug": "харпер-вэнс",
-   "name": "Харпер Вэнс",
-   "total": 7.026,
+   "total": 6.8636,
    "rank": 18
-  },
-  {
-   "slug": "марина-элеонора-геррера",
-   "name": "Марина Элеонора Геррера",
-   "total": 6.9977,
-   "rank": 19
-  },
-  {
-   "slug": "кавита-рао",
-   "name": "Кавита Рао",
-   "total": 6.91,
-   "rank": 20
   },
   {
    "slug": "вероника-рин",
    "name": "Вероника Рин",
-   "total": 6.8542,
+   "total": 6.7961,
+   "rank": 19
+  },
+  {
+   "slug": "эмилия-эверетт",
+   "name": "Эмилия Эверетт",
+   "total": 6.7294,
+   "rank": 20
+  },
+  {
+   "slug": "элари-уолш",
+   "name": "Элари Уолш",
+   "total": 6.7125,
    "rank": 21
   },
   {
-   "slug": "айша-хан",
-   "name": "Айша Хан",
-   "total": 6.7536,
+   "slug": "марина-элеонора-геррера",
+   "name": "Марина Элеонора Геррера",
+   "total": 6.7005,
    "rank": 22
   },
   {
    "slug": "эмили-грей",
    "name": "Эмили Грей",
-   "total": 6.7512,
+   "total": 6.6892,
    "rank": 23
+  },
+  {
+   "slug": "айша-хан",
+   "name": "Айша Хан",
+   "total": 6.6616,
+   "rank": 24
   },
   {
    "slug": "эмили-картер",
    "name": "Эмили Картер",
-   "total": 6.7446,
-   "rank": 24
-  },
-  {
-   "slug": "катарина-меланье",
-   "name": "Катарина Меланье",
-   "total": 6.7173,
+   "total": 6.4578,
    "rank": 25
-  },
-  {
-   "slug": "ирэн-штайнер",
-   "name": "Ирэн Штайнер",
-   "total": 6.6266,
-   "rank": 26
-  },
-  {
-   "slug": "аша-наир",
-   "name": "Аша Наир",
-   "total": 6.5913,
-   "rank": 27
-  },
-  {
-   "slug": "бьянка-скардино",
-   "name": "Бьянка Скардино",
-   "total": 6.4657,
-   "rank": 28
-  },
-  {
-   "slug": "элари-уолш",
-   "name": "Элари Уолш",
-   "total": 6.4609,
-   "rank": 29
-  },
-  {
-   "slug": "мириам-блум",
-   "name": "Мириам Блум",
-   "total": 6.4376,
-   "rank": 30
-  },
-  {
-   "slug": "мария-жданова",
-   "name": "Мария Жданова",
-   "total": 6.3953,
-   "rank": 31
   },
   {
    "slug": "вивиан-мерсер",
    "name": "Вивиан Мерсер",
-   "total": 6.3942,
-   "rank": 32
+   "total": 6.4256,
+   "rank": 26
   },
   {
-   "slug": "чэнь-вэй",
-   "name": "Чэнь Вэй",
-   "total": 6.3171,
-   "rank": 33
+   "slug": "абигейл-ли",
+   "name": "Абигейл Ли",
+   "total": 6.4252,
+   "rank": 27
   },
   {
-   "slug": "клара-уолш",
-   "name": "Клара Уолш",
-   "total": 6.2787,
-   "rank": 34
+   "slug": "катарина-меланье",
+   "name": "Катарина Меланье",
+   "total": 6.1981,
+   "rank": 28
+  },
+  {
+   "slug": "ирэн-штайнер",
+   "name": "Ирэн Штайнер",
+   "total": 6.1219,
+   "rank": 29
+  },
+  {
+   "slug": "бьянка-скардино",
+   "name": "Бьянка Скардино",
+   "total": 6.0516,
+   "rank": 30
+  },
+  {
+   "slug": "мириам-блум",
+   "name": "Мириам Блум",
+   "total": 5.9903,
+   "rank": 31
   },
   {
    "slug": "саманта-чен",
    "name": "Саманта Чен",
-   "total": 6.0362,
+   "total": 5.9467,
+   "rank": 32
+  },
+  {
+   "slug": "мария-жданова",
+   "name": "Мария Жданова",
+   "total": 5.9445,
+   "rank": 33
+  },
+  {
+   "slug": "чэнь-вэй",
+   "name": "Чэнь Вэй",
+   "total": 5.8276,
+   "rank": 34
+  },
+  {
+   "slug": "клара-уолш",
+   "name": "Клара Уолш",
+   "total": 5.7654,
    "rank": 35
   }
  ],
@@ -215,121 +215,121 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.1923,
+   "total": 9.2872,
    "rank": 1
-  },
-  {
-   "slug": "кассандра-стерлинг",
-   "name": "Кассандра Стерлинг",
-   "total": 8.5625,
-   "rank": 2
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.3947,
-   "rank": 3
+   "total": 8.7758,
+   "rank": 2
   },
   {
-   "slug": "амели-бертран",
-   "name": "Амели Бертран",
-   "total": 8.3391,
-   "rank": 4
+   "slug": "валентина-блажек",
+   "name": "Валентина Блажек",
+   "total": 8.3781,
+   "rank": 3
   },
   {
    "slug": "тенебриа",
    "name": "Тенебриа",
-   "total": 8.2855,
+   "total": 8.119,
+   "rank": 4
+  },
+  {
+   "slug": "ольга-гончарова",
+   "name": "Ольга Гончарова",
+   "total": 7.7344,
    "rank": 5
   },
   {
    "slug": "анаиса-аскирион",
    "name": "Анаиса Аскирион",
-   "total": 8.1009,
+   "total": 7.7324,
    "rank": 6
   },
   {
-   "slug": "ольга-гончарова",
-   "name": "Ольга Гончарова",
-   "total": 7.9121,
+   "slug": "амели-бертран",
+   "name": "Амели Бертран",
+   "total": 7.5767,
    "rank": 7
-  },
-  {
-   "slug": "валентина-блажек",
-   "name": "Валентина Блажек",
-   "total": 7.7382,
-   "rank": 8
-  },
-  {
-   "slug": "эмилия-эверетт",
-   "name": "Эмилия Эверетт",
-   "total": 7.6107,
-   "rank": 9
-  },
-  {
-   "slug": "селеста-орсини",
-   "name": "Селеста Орсини",
-   "total": 7.5939,
-   "rank": 10
-  },
-  {
-   "slug": "лилит-блэквуд",
-   "name": "Лилит Блэквуд",
-   "total": 7.5747,
-   "rank": 11
-  },
-  {
-   "slug": "лилия-спасская",
-   "name": "Лилия Спасская",
-   "total": 7.4375,
-   "rank": 12
-  },
-  {
-   "slug": "изабелла-родригес",
-   "name": "Изабелла Родригес",
-   "total": 7.3594,
-   "rank": 13
-  },
-  {
-   "slug": "эва-найт",
-   "name": "Эва Найт",
-   "total": 7.3433,
-   "rank": 14
   },
   {
    "slug": "харпер-вэнс",
    "name": "Харпер Вэнс",
-   "total": 7.1607,
-   "rank": 15
+   "total": 7.4971,
+   "rank": 8
   },
   {
-   "slug": "кристина-новак",
-   "name": "Кристина Новак",
-   "total": 7.1389,
-   "rank": 16
+   "slug": "аша-наир",
+   "name": "Аша Наир",
+   "total": 7.3627,
+   "rank": 9
   },
   {
-   "slug": "абигейл-ли",
-   "name": "Абигейл Ли",
-   "total": 7.1158,
-   "rank": 17
+   "slug": "эва-найт",
+   "name": "Эва Найт",
+   "total": 7.3565,
+   "rank": 10
   },
   {
-   "slug": "марина-элеонора-геррера",
-   "name": "Марина Элеонора Геррера",
-   "total": 6.9479,
-   "rank": 18
-  },
-  {
-   "slug": "александра-вегас",
-   "name": "Александра Вегас",
-   "total": 6.873,
-   "rank": 19
+   "slug": "изабелла-родригес",
+   "name": "Изабелла Родригес",
+   "total": 7.2754,
+   "rank": 11
   },
   {
    "slug": "кавита-рао",
    "name": "Кавита Рао",
-   "total": 6.7746,
+   "total": 7.2235,
+   "rank": 12
+  },
+  {
+   "slug": "лилит-блэквуд",
+   "name": "Лилит Блэквуд",
+   "total": 7.1951,
+   "rank": 13
+  },
+  {
+   "slug": "кассандра-стерлинг",
+   "name": "Кассандра Стерлинг",
+   "total": 7.0219,
+   "rank": 14
+  },
+  {
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "total": 7.0095,
+   "rank": 15
+  },
+  {
+   "slug": "александра-вегас",
+   "name": "Александра Вегас",
+   "total": 6.9775,
+   "rank": 16
+  },
+  {
+   "slug": "селеста-орсини",
+   "name": "Селеста Орсини",
+   "total": 6.9303,
+   "rank": 17
+  },
+  {
+   "slug": "кристина-новак",
+   "name": "Кристина Новак",
+   "total": 6.8295,
+   "rank": 18
+  },
+  {
+   "slug": "эмилия-эверетт",
+   "name": "Эмилия Эверетт",
+   "total": 6.7331,
+   "rank": 19
+  },
+  {
+   "slug": "вероника-рин",
+   "name": "Вероника Рин",
+   "total": 6.6537,
    "rank": 20
   }
  ],
@@ -337,61 +337,61 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.3751,
+   "total": 9.4974,
    "rank": 1
-  },
-  {
-   "slug": "кассандра-стерлинг",
-   "name": "Кассандра Стерлинг",
-   "total": 8.5998,
-   "rank": 2
-  },
-  {
-   "slug": "амели-бертран",
-   "name": "Амели Бертран",
-   "total": 8.2011,
-   "rank": 3
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.1765,
+   "total": 8.744,
+   "rank": 2
+  },
+  {
+   "slug": "валентина-блажек",
+   "name": "Валентина Блажек",
+   "total": 8.1499,
+   "rank": 3
+  },
+  {
+   "slug": "тенебриа",
+   "name": "Тенебриа",
+   "total": 8.0776,
    "rank": 4
   },
   {
    "slug": "ольга-гончарова",
    "name": "Ольга Гончарова",
-   "total": 7.8696,
+   "total": 7.8085,
    "rank": 5
   },
   {
    "slug": "анаиса-аскирион",
    "name": "Анаиса Аскирион",
-   "total": 7.8243,
+   "total": 7.7631,
    "rank": 6
   },
   {
-   "slug": "селеста-орсини",
-   "name": "Селеста Орсини",
-   "total": 7.6884,
+   "slug": "амели-бертран",
+   "name": "Амели Бертран",
+   "total": 7.6337,
    "rank": 7
   },
   {
-   "slug": "тенебриа",
-   "name": "Тенебриа",
-   "total": 7.6829,
+   "slug": "харпер-вэнс",
+   "name": "Харпер Вэнс",
+   "total": 7.5917,
    "rank": 8
   },
   {
-   "slug": "эмилия-эверетт",
-   "name": "Эмилия Эверетт",
-   "total": 7.5717,
+   "slug": "эва-найт",
+   "name": "Эва Найт",
+   "total": 7.3666,
    "rank": 9
   },
   {
-   "slug": "валентина-блажек",
-   "name": "Валентина Блажек",
-   "total": 7.2152,
+   "slug": "аша-наир",
+   "name": "Аша Наир",
+   "total": 7.2417,
    "rank": 10
   }
  ],
@@ -399,31 +399,31 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.5793,
+   "total": 9.6641,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.5483,
+   "total": 9.0444,
    "rank": 2
   },
   {
-   "slug": "амели-бертран",
-   "name": "Амели Бертран",
-   "total": 8.3954,
+   "slug": "валентина-блажек",
+   "name": "Валентина Блажек",
+   "total": 8.6682,
    "rank": 3
   },
   {
-   "slug": "кассандра-стерлинг",
-   "name": "Кассандра Стерлинг",
-   "total": 8.2233,
+   "slug": "тенебриа",
+   "name": "Тенебриа",
+   "total": 7.9458,
    "rank": 4
   },
   {
    "slug": "ольга-гончарова",
    "name": "Ольга Гончарова",
-   "total": 7.9145,
+   "total": 7.6873,
    "rank": 5
   }
  ],
@@ -431,19 +431,19 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.4678,
+   "total": 9.5377,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.5008,
+   "total": 8.8767,
    "rank": 2
   },
   {
-   "slug": "амели-бертран",
-   "name": "Амели Бертран",
-   "total": 8.4609,
+   "slug": "валентина-блажек",
+   "name": "Валентина Блажек",
+   "total": 8.6062,
    "rank": 3
   }
  ],
@@ -456,7 +456,7 @@
    "faction_color": "#4a9eff",
    "place": 1,
    "band": "Победительница",
-   "total": 9.4678,
+   "total": 9.5377,
    "best_round": "gown",
    "worst_round": "swimwear"
   },
@@ -468,33 +468,33 @@
    "faction_color": "#00ced1",
    "place": 2,
    "band": "1-я вице-мисс",
-   "total": 8.5008,
+   "total": 8.8767,
    "best_round": "gown",
    "worst_round": "interview"
   },
   {
-   "slug": "амели-бертран",
-   "name": "Амели Бертран",
+   "slug": "валентина-блажек",
+   "name": "Валентина Блажек",
    "faction": "Ракшасы",
    "faction_id": "rakshasy",
    "faction_color": "#a55eea",
    "place": 3,
    "band": "2-я вице-мисс",
-   "total": 8.4609,
-   "best_round": "costume",
+   "total": 8.6062,
+   "best_round": "presentation",
    "worst_round": "interview"
   },
   {
-   "slug": "кассандра-стерлинг",
-   "name": "Кассандра Стерлинг",
-   "faction": "Единая Америка",
-   "faction_id": "america",
-   "faction_color": "#4a9eff",
+   "slug": "тенебриа",
+   "name": "Тенебриа",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
    "place": 4,
    "band": "Выбыла 5→3 (Топ-5)",
-   "total": 8.2233,
+   "total": 7.9458,
    "best_round": "costume",
-   "worst_round": "presentation"
+   "worst_round": "interview"
   },
   {
    "slug": "ольга-гончарова",
@@ -504,7 +504,7 @@
    "faction_color": "#ff9d00",
    "place": 5,
    "band": "Выбыла 5→3 (Топ-5)",
-   "total": 7.9145,
+   "total": 7.6873,
    "best_round": "costume",
    "worst_round": "interview"
   },
@@ -516,80 +516,56 @@
    "faction_color": "#ff9d00",
    "place": 6,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.8243,
+   "total": 7.7631,
    "best_round": "costume",
    "worst_round": "interview"
   },
   {
-   "slug": "селеста-орсини",
-   "name": "Селеста Орсини",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
+   "slug": "амели-бертран",
+   "name": "Амели Бертран",
+   "faction": "Ракшасы",
+   "faction_id": "rakshasy",
+   "faction_color": "#a55eea",
    "place": 7,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.6884,
-   "best_round": "gown",
+   "total": 7.6337,
+   "best_round": "costume",
    "worst_round": "swimwear"
   },
   {
-   "slug": "тенебриа",
-   "name": "Тенебриа",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
+   "slug": "харпер-вэнс",
+   "name": "Харпер Вэнс",
+   "faction": "Единая Америка",
+   "faction_id": "america",
+   "faction_color": "#4a9eff",
    "place": 8,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.6829,
+   "total": 7.5917,
    "best_round": "presentation",
    "worst_round": "interview"
   },
   {
-   "slug": "эмилия-эверетт",
-   "name": "Эмилия Эверетт",
-   "faction": "Единая Америка",
-   "faction_id": "america",
-   "faction_color": "#4a9eff",
+   "slug": "эва-найт",
+   "name": "Эва Найт",
+   "faction": "Независимые",
+   "faction_id": "independent",
+   "faction_color": "#c0c8d4",
    "place": 9,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.5717,
-   "best_round": "gown",
-   "worst_round": "swimwear"
+   "total": 7.3666,
+   "best_round": "swimwear",
+   "worst_round": "interview"
   },
   {
-   "slug": "валентина-блажек",
-   "name": "Валентина Блажек",
+   "slug": "аша-наир",
+   "name": "Аша Наир",
    "faction": "Ракшасы",
    "faction_id": "rakshasy",
    "faction_color": "#a55eea",
    "place": 10,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.2152,
-   "best_round": "swimwear",
-   "worst_round": "interview"
-  },
-  {
-   "slug": "лилит-блэквуд",
-   "name": "Лилит Блэквуд",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
-   "place": 11,
-   "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.5747,
-   "best_round": "gown",
-   "worst_round": "interview"
-  },
-  {
-   "slug": "лилия-спасская",
-   "name": "Лилия Спасская",
-   "faction": "Независимые",
-   "faction_id": "independent",
-   "faction_color": "#c0c8d4",
-   "place": 12,
-   "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.4375,
-   "best_round": "costume",
+   "total": 7.2417,
+   "best_round": "presentation",
    "worst_round": "interview"
   },
   {
@@ -598,69 +574,57 @@
    "faction": "Forge",
    "faction_id": "forge",
    "faction_color": "#a8d8ff",
-   "place": 13,
+   "place": 11,
    "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.3594,
+   "total": 7.2754,
    "best_round": "interview",
-   "worst_round": "costume"
-  },
-  {
-   "slug": "эва-найт",
-   "name": "Эва Найт",
-   "faction": "Независимые",
-   "faction_id": "independent",
-   "faction_color": "#c0c8d4",
-   "place": 14,
-   "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.3433,
-   "best_round": "swimwear",
-   "worst_round": "interview"
-  },
-  {
-   "slug": "харпер-вэнс",
-   "name": "Харпер Вэнс",
-   "faction": "Единая Америка",
-   "faction_id": "america",
-   "faction_color": "#4a9eff",
-   "place": 15,
-   "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.1607,
-   "best_round": "presentation",
    "worst_round": "swimwear"
   },
   {
-   "slug": "кристина-новак",
-   "name": "Кристина Новак",
+   "slug": "кавита-рао",
+   "name": "Кавита Рао",
+   "faction": "Ракшасы",
+   "faction_id": "rakshasy",
+   "faction_color": "#a55eea",
+   "place": 12,
+   "band": "Выбыла 20→10 (Топ-20)",
+   "total": 7.2235,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "лилит-блэквуд",
+   "name": "Лилит Блэквуд",
    "faction": "Тенебрион",
    "faction_id": "tenebrion",
    "faction_color": "#ff9d00",
-   "place": 16,
+   "place": 13,
    "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.1389,
+   "total": 7.1951,
    "best_round": "gown",
    "worst_round": "swimwear"
   },
   {
-   "slug": "абигейл-ли",
-   "name": "Абигейл Ли",
+   "slug": "кассандра-стерлинг",
+   "name": "Кассандра Стерлинг",
    "faction": "Единая Америка",
    "faction_id": "america",
    "faction_color": "#4a9eff",
-   "place": 17,
+   "place": 14,
    "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.1158,
-   "best_round": "costume",
+   "total": 7.0219,
+   "best_round": "interview",
    "worst_round": "presentation"
   },
   {
-   "slug": "марина-элеонора-геррера",
-   "name": "Марина Элеонора Геррера",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
-   "place": 18,
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "faction": "Независимые",
+   "faction_id": "independent",
+   "faction_color": "#c0c8d4",
+   "place": 15,
    "band": "Выбыла 20→10 (Топ-20)",
-   "total": 6.9479,
+   "total": 7.0095,
    "best_round": "costume",
    "worst_round": "interview"
   },
@@ -670,21 +634,45 @@
    "faction": "Единая Америка",
    "faction_id": "america",
    "faction_color": "#4a9eff",
-   "place": 19,
+   "place": 16,
    "band": "Выбыла 20→10 (Топ-20)",
-   "total": 6.873,
-   "best_round": "swimwear",
+   "total": 6.9775,
+   "best_round": "costume",
    "worst_round": "interview"
   },
   {
-   "slug": "кавита-рао",
-   "name": "Кавита Рао",
-   "faction": "Ракшасы",
-   "faction_id": "rakshasy",
-   "faction_color": "#a55eea",
-   "place": 20,
+   "slug": "селеста-орсини",
+   "name": "Селеста Орсини",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
+   "place": 17,
    "band": "Выбыла 20→10 (Топ-20)",
-   "total": 6.7746,
+   "total": 6.9303,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "кристина-новак",
+   "name": "Кристина Новак",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
+   "place": 18,
+   "band": "Выбыла 20→10 (Топ-20)",
+   "total": 6.8295,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "эмилия-эверетт",
+   "name": "Эмилия Эверетт",
+   "faction": "Единая Америка",
+   "faction_id": "america",
+   "faction_color": "#4a9eff",
+   "place": 19,
+   "band": "Выбыла 20→10 (Топ-20)",
+   "total": 6.7331,
    "best_round": "interview",
    "worst_round": "swimwear"
   },
@@ -694,23 +682,35 @@
    "faction": "Наемники",
    "faction_id": "mercs",
    "faction_color": "#b8860b",
-   "place": 21,
-   "band": "Выбыла 35→20",
-   "total": 6.8542,
+   "place": 20,
+   "band": "Выбыла 20→10 (Топ-20)",
+   "total": 6.6537,
    "best_round": "costume",
    "worst_round": "presentation"
   },
   {
-   "slug": "айша-хан",
-   "name": "Айша Хан",
+   "slug": "элари-уолш",
+   "name": "Элари Уолш",
    "faction": "Forge",
    "faction_id": "forge",
    "faction_color": "#a8d8ff",
-   "place": 22,
+   "place": 21,
    "band": "Выбыла 35→20",
-   "total": 6.7536,
+   "total": 6.7125,
    "best_round": "gown",
    "worst_round": "swimwear"
+  },
+  {
+   "slug": "марина-элеонора-геррера",
+   "name": "Марина Элеонора Геррера",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
+   "place": 22,
+   "band": "Выбыла 35→20",
+   "total": 6.7005,
+   "best_round": "costume",
+   "worst_round": "presentation"
   },
   {
    "slug": "эмили-грей",
@@ -720,9 +720,21 @@
    "faction_color": "#2ecc71",
    "place": 23,
    "band": "Выбыла 35→20",
-   "total": 6.7512,
+   "total": 6.6892,
    "best_round": "costume",
    "worst_round": "presentation"
+  },
+  {
+   "slug": "айша-хан",
+   "name": "Айша Хан",
+   "faction": "Forge",
+   "faction_id": "forge",
+   "faction_color": "#a8d8ff",
+   "place": 24,
+   "band": "Выбыла 35→20",
+   "total": 6.6616,
+   "best_round": "gown",
+   "worst_round": "swimwear"
   },
   {
    "slug": "эмили-картер",
@@ -730,93 +742,9 @@
    "faction": "Единая Америка",
    "faction_id": "america",
    "faction_color": "#4a9eff",
-   "place": 24,
-   "band": "Выбыла 35→20",
-   "total": 6.7446,
-   "best_round": "gown",
-   "worst_round": "swimwear"
-  },
-  {
-   "slug": "катарина-меланье",
-   "name": "Катарина Меланье",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
    "place": 25,
    "band": "Выбыла 35→20",
-   "total": 6.7173,
-   "best_round": "gown",
-   "worst_round": "swimwear"
-  },
-  {
-   "slug": "ирэн-штайнер",
-   "name": "Ирэн Штайнер",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
-   "place": 26,
-   "band": "Выбыла 35→20",
-   "total": 6.6266,
-   "best_round": "interview",
-   "worst_round": "swimwear"
-  },
-  {
-   "slug": "аша-наир",
-   "name": "Аша Наир",
-   "faction": "Ракшасы",
-   "faction_id": "rakshasy",
-   "faction_color": "#a55eea",
-   "place": 27,
-   "band": "Выбыла 35→20",
-   "total": 6.5913,
-   "best_round": "swimwear",
-   "worst_round": "interview"
-  },
-  {
-   "slug": "бьянка-скардино",
-   "name": "Бьянка Скардино",
-   "faction": "Гарнизон",
-   "faction_id": "garrison",
-   "faction_color": "#aaaaaa",
-   "place": 28,
-   "band": "Выбыла 35→20",
-   "total": 6.4657,
-   "best_round": "gown",
-   "worst_round": "swimwear"
-  },
-  {
-   "slug": "элари-уолш",
-   "name": "Элари Уолш",
-   "faction": "Forge",
-   "faction_id": "forge",
-   "faction_color": "#a8d8ff",
-   "place": 29,
-   "band": "Выбыла 35→20",
-   "total": 6.4609,
-   "best_round": "gown",
-   "worst_round": "swimwear"
-  },
-  {
-   "slug": "мириам-блум",
-   "name": "Мириам Блум",
-   "faction": "Единая Америка",
-   "faction_id": "america",
-   "faction_color": "#4a9eff",
-   "place": 30,
-   "band": "Выбыла 35→20",
-   "total": 6.4376,
-   "best_round": "interview",
-   "worst_round": "swimwear"
-  },
-  {
-   "slug": "мария-жданова",
-   "name": "Мария Жданова",
-   "faction": "Ковчег",
-   "faction_id": "ark",
-   "faction_color": "#8899bb",
-   "place": 31,
-   "band": "Выбыла 35→20",
-   "total": 6.3953,
+   "total": 6.4578,
    "best_round": "gown",
    "worst_round": "swimwear"
   },
@@ -826,33 +754,69 @@
    "faction": "Единая Америка",
    "faction_id": "america",
    "faction_color": "#4a9eff",
-   "place": 32,
+   "place": 26,
    "band": "Выбыла 35→20",
-   "total": 6.3942,
+   "total": 6.4256,
    "best_round": "gown",
    "worst_round": "interview"
   },
   {
-   "slug": "чэнь-вэй",
-   "name": "Чэнь Вэй",
-   "faction": "Forge",
-   "faction_id": "forge",
-   "faction_color": "#a8d8ff",
-   "place": 33,
+   "slug": "абигейл-ли",
+   "name": "Абигейл Ли",
+   "faction": "Единая Америка",
+   "faction_id": "america",
+   "faction_color": "#4a9eff",
+   "place": 27,
    "band": "Выбыла 35→20",
-   "total": 6.3171,
+   "total": 6.4252,
+   "best_round": "interview",
+   "worst_round": "presentation"
+  },
+  {
+   "slug": "катарина-меланье",
+   "name": "Катарина Меланье",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
+   "place": 28,
+   "band": "Выбыла 35→20",
+   "total": 6.1981,
    "best_round": "interview",
    "worst_round": "swimwear"
   },
   {
-   "slug": "клара-уолш",
-   "name": "Клара Уолш",
-   "faction": "Forge",
-   "faction_id": "forge",
-   "faction_color": "#a8d8ff",
-   "place": 34,
+   "slug": "ирэн-штайнер",
+   "name": "Ирэн Штайнер",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
+   "place": 29,
    "band": "Выбыла 35→20",
-   "total": 6.2787,
+   "total": 6.1219,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "бьянка-скардино",
+   "name": "Бьянка Скардино",
+   "faction": "Гарнизон",
+   "faction_id": "garrison",
+   "faction_color": "#aaaaaa",
+   "place": 30,
+   "band": "Выбыла 35→20",
+   "total": 6.0516,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "мириам-блум",
+   "name": "Мириам Блум",
+   "faction": "Единая Америка",
+   "faction_id": "america",
+   "faction_color": "#4a9eff",
+   "place": 31,
+   "band": "Выбыла 35→20",
+   "total": 5.9903,
    "best_round": "interview",
    "worst_round": "swimwear"
   },
@@ -862,10 +826,46 @@
    "faction": "Forge",
    "faction_id": "forge",
    "faction_color": "#a8d8ff",
+   "place": 32,
+   "band": "Выбыла 35→20",
+   "total": 5.9467,
+   "best_round": "gown",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "мария-жданова",
+   "name": "Мария Жданова",
+   "faction": "Ковчег",
+   "faction_id": "ark",
+   "faction_color": "#8899bb",
+   "place": 33,
+   "band": "Выбыла 35→20",
+   "total": 5.9445,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "чэнь-вэй",
+   "name": "Чэнь Вэй",
+   "faction": "Forge",
+   "faction_id": "forge",
+   "faction_color": "#a8d8ff",
+   "place": 34,
+   "band": "Выбыла 35→20",
+   "total": 5.8276,
+   "best_round": "interview",
+   "worst_round": "swimwear"
+  },
+  {
+   "slug": "клара-уолш",
+   "name": "Клара Уолш",
+   "faction": "Forge",
+   "faction_id": "forge",
+   "faction_color": "#a8d8ff",
    "place": 35,
    "band": "Выбыла 35→20",
-   "total": 6.0362,
-   "best_round": "gown",
+   "total": 5.7654,
+   "best_round": "interview",
    "worst_round": "swimwear"
   }
  ]

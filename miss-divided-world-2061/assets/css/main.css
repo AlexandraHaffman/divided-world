@@ -177,7 +177,6 @@ h1,h2,h3{font-family:'Orbitron',monospace;color:var(--white);letter-spacing:1px;
 /* ── Речь/манифест блок ── */
 .speech{border:1px solid var(--line);background:linear-gradient(180deg,rgba(20,26,38,.6),rgba(11,15,22,.6));padding:20px 22px;position:relative}
 .speech .txt{font-family:'Cormorant Garamond',serif;font-size:20px;line-height:1.5;color:#e8ecf3}
-.speech .txt::first-letter{font-size:1px}
 .speech .meta{margin-top:14px;display:grid;gap:5px}
 .speech .meta .m{font-size:13px;color:var(--text-dim)}
 .speech .meta .m b{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;margin-right:6px}

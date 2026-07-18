@@ -33,51 +33,55 @@ def clamp(x, lo=1.0, hi=10.0):
 # ── АТРИБУТЫ (индексы совпадают с profiles.ATTR) ────────────────────────────
 IDX = {k:i for i,k in enumerate(
     ["beauty","individ","physique","charisma","intellect",
-     "rhetoric","style","command","coherence","memorable","presence"])}
+     "rhetoric","style","command","coherence","memorable","presence","sex"])}
 
 # ── РАУНДЫ: какие атрибуты и с каким весом оценивает раунд ───────────────────
 # сумма весов внутри раунда нормируется автоматически
 ROUNDS = {
+    # Это в первую очередь конкурс КРАСОТЫ: визуальные раунды весят больше,
+    # а сексуальность/красота/форма — ключевые критерии выходов.
     "presentation": {  # представление / выход открытия
-        "title":"Представление","weight":0.10,"phase":"prelim",
-        "attrs":{"beauty":3,"style":2,"command":2,"memorable":2,"physique":1},
+        "title":"Представление","weight":0.15,"phase":"prelim",
+        "attrs":{"beauty":3,"sex":2,"physique":2,"style":2,"command":1,"memorable":1},
     },
     "interview": {     # закрытое интервью
-        "title":"Закрытое интервью","weight":0.25,"phase":"prelim",
+        "title":"Закрытое интервью","weight":0.10,"phase":"prelim",
         "attrs":{"intellect":3,"rhetoric":3,"charisma":2,"coherence":1,"individ":1},
     },
-    "swimwear": {      # выход в купальнике
-        "title":"Выход в купальнике","weight":0.20,"phase":"prelim",
-        "attrs":{"physique":3,"beauty":2,"presence":2,"command":2,"individ":1},
+    "swimwear": {      # выход в купальнике — красота тела и чувственность
+        "title":"Выход в купальнике","weight":0.30,"phase":"prelim",
+        "attrs":{"sex":4,"physique":3,"beauty":3,"command":1,"individ":1},
     },
     "gown": {          # вечернее платье
-        "title":"Вечернее платье","weight":0.20,"phase":"prelim",
-        "attrs":{"style":3,"beauty":2,"coherence":2,"command":2,"memorable":1},
+        "title":"Вечернее платье","weight":0.25,"phase":"prelim",
+        "attrs":{"beauty":3,"style":3,"sex":2,"coherence":1,"command":1,"memorable":1},
     },
     "costume": {       # фракционный костюм
-        "title":"Фракционный костюм","weight":0.25,"phase":"prelim",
-        "attrs":{"individ":3,"coherence":3,"memorable":2,"style":1,"presence":1},
+        "title":"Фракционный костюм","weight":0.20,"phase":"prelim",
+        "attrs":{"individ":3,"coherence":2,"memorable":2,"style":2,"presence":1,"beauty":1},
     },
-    # финальные раунды (собственные системы, не входят в prelim)
+    # финальные раунды (собственные системы, не входят в prelim).
+    # Красота/сексуальность/присутствие вплетены и сюда: это конкурс красоты,
+    # и внешность участницы — часть впечатления от любого её выхода.
     "manifesto": {     # топ-20 «Манифест»
         "title":"Манифест","phase":"top20",
-        "attrs":{"rhetoric":3,"command":3,"presence":2,"coherence":1,"memorable":1},
+        "attrs":{"rhetoric":3,"command":2,"presence":2,"beauty":2,"sex":1,"memorable":1},
     },
     "stage_question": {# топ-10 персональный вопрос
         "title":"Персональный вопрос","phase":"top10",
-        "attrs":{"intellect":3,"rhetoric":2,"coherence":2,"individ":2,"charisma":1},
+        "attrs":{"intellect":2,"rhetoric":2,"coherence":2,"beauty":2,"charisma":1,"individ":1},
     },
     "final_look": {    # топ-5 финальный образ
         "title":"Финальный образ","phase":"top5",
-        "attrs":{"style":3,"beauty":2,"memorable":2,"coherence":2,"command":1},
+        "attrs":{"beauty":3,"sex":3,"style":2,"memorable":2,"command":1},
     },
     "final_question": {# топ-5 общий вопрос
         "title":"Общий вопрос","phase":"top5",
-        "attrs":{"rhetoric":3,"coherence":2,"charisma":2,"individ":2,"intellect":1},
+        "attrs":{"rhetoric":3,"coherence":2,"charisma":2,"beauty":2,"sex":1,"individ":1},
     },
     "last_word": {     # топ-3 последнее слово
         "title":"Последнее слово","phase":"top3",
-        "attrs":{"command":3,"memorable":2,"rhetoric":2,"presence":2,"coherence":1},
+        "attrs":{"command":2,"memorable":2,"rhetoric":2,"presence":2,"beauty":2,"sex":1},
     },
 }
 PRELIM = ["presentation","interview","swimwear","gown","costume"]
@@ -91,16 +95,16 @@ JURY = [
         "Видит крой там, где другие видят блеск.",
   "focus":"Силуэт, ткань, цельность костюма, вкус.",
   "bias":"Ценит архитектуру образа и наказывает пошлость; равнодушен к спецэффектам.",
-  "accent":{"style":1.6,"beauty":1.15,"coherence":1.25},
-  "reads":["style","beauty","coherence","individ"]},
+  "accent":{"style":1.55,"beauty":1.3,"coherence":1.2,"sex":1.2},
+  "reads":["style","beauty","coherence","individ","sex"]},
 
  {"id":"j_director","name":"Ким До-Хён","role":"Режиссёр телевизионных шоу",
   "origin":"Единая Медиасеть",
   "bio":"Постановщик крупнейших прямых эфиров континента. Мыслит кадром, светом и монтажом.",
   "focus":"Присутствие в кадре, память зрителя, движение, драматургия выхода.",
   "bias":"Награждает то, что нельзя выключить; холоден к красивой пустоте.",
-  "accent":{"command":1.5,"memorable":1.4,"physique":1.15,"presence":1.2},
-  "reads":["command","memorable","physique","presence","beauty"]},
+  "accent":{"command":1.4,"memorable":1.35,"physique":1.25,"presence":1.15,"beauty":1.25,"sex":1.3},
+  "reads":["command","memorable","physique","presence","beauty","sex"]},
 
  {"id":"j_press","name":"Далия Морэ","role":"Журналист-интервьюер",
   "origin":"Независимая пресса Белой зоны",
@@ -132,8 +136,8 @@ JURY = [
   "bio":"Хореограф и постановщик проходов; читает тело как текст.",
   "focus":"Пластика, походка, владение телом, дисциплина движения.",
   "bias":"Награждает контроль и характер движения; равнодушен к статусу.",
-  "accent":{"physique":1.55,"command":1.25,"style":1.15},
-  "reads":["physique","command","style","presence"]},
+  "accent":{"physique":1.5,"command":1.2,"style":1.15,"sex":1.35,"beauty":1.15},
+  "reads":["physique","command","style","presence","sex","beauty"]},
 
  {"id":"j_chair","name":"Арбитр Хейл","role":"Председатель жюри, нейтральный аналитик",
   "origin":"Нейтральная территория, бывш. арбитражный корпус",
@@ -143,7 +147,7 @@ JURY = [
   "bias":"Усредняет и уравновешивает; выносит письменное решение при ничьей.",
   "accent":{},  # нейтральный: ровное среднее по всем reads
   "reads":["beauty","individ","physique","charisma","intellect",
-           "rhetoric","style","command","coherence","memorable","presence"]},
+           "rhetoric","style","command","coherence","memorable","presence","sex"]},
 ]
 
 def round_base(attrs, round_key):

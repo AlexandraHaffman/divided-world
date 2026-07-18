@@ -23,7 +23,7 @@
   const DW=window.DWget(), esc=window.DWesc;
   const ATTR_RU={beauty:"красота",individ:"индивидуальность",physique:"пластика",charisma:"харизма",
     intellect:"интеллект",rhetoric:"речь",style:"стиль",command:"владение залом",coherence:"цельность",
-    memorable:"запоминаемость",presence:"сцен. сила"};
+    memorable:"запоминаемость",presence:"сцен. сила",sex:"сексуальность"};
   const cards=(DW.jury||[]).map((j,i)=>{
     const acc=Object.keys(j.accent||{}).map(k=>ATTR_RU[k]||k);
     return `<div class="card" style="border-left:3px solid var(--gold)">`+

@@ -1,19 +1,20 @@
 {
  "presentation": {
   "title": "Представление",
-  "weight": 0.1,
+  "weight": 0.15,
   "phase": "prelim",
   "attrs": {
    "beauty": 3,
+   "sex": 2,
+   "physique": 2,
    "style": 2,
-   "command": 2,
-   "memorable": 2,
-   "physique": 1
+   "command": 1,
+   "memorable": 1
   }
  },
  "interview": {
   "title": "Закрытое интервью",
-  "weight": 0.25,
+  "weight": 0.1,
   "phase": "prelim",
   "attrs": {
    "intellect": 3,
@@ -25,38 +26,40 @@
  },
  "swimwear": {
   "title": "Выход в купальнике",
-  "weight": 0.2,
+  "weight": 0.3,
   "phase": "prelim",
   "attrs": {
+   "sex": 4,
    "physique": 3,
-   "beauty": 2,
-   "presence": 2,
-   "command": 2,
+   "beauty": 3,
+   "command": 1,
    "individ": 1
   }
  },
  "gown": {
   "title": "Вечернее платье",
-  "weight": 0.2,
+  "weight": 0.25,
   "phase": "prelim",
   "attrs": {
+   "beauty": 3,
    "style": 3,
-   "beauty": 2,
-   "coherence": 2,
-   "command": 2,
+   "sex": 2,
+   "coherence": 1,
+   "command": 1,
    "memorable": 1
   }
  },
  "costume": {
   "title": "Фракционный костюм",
-  "weight": 0.25,
+  "weight": 0.2,
   "phase": "prelim",
   "attrs": {
    "individ": 3,
-   "coherence": 3,
+   "coherence": 2,
    "memorable": 2,
-   "style": 1,
-   "presence": 1
+   "style": 2,
+   "presence": 1,
+   "beauty": 1
   }
  },
  "manifesto": {
@@ -65,9 +68,10 @@
   "phase": "top20",
   "attrs": {
    "rhetoric": 3,
-   "command": 3,
+   "command": 2,
    "presence": 2,
-   "coherence": 1,
+   "beauty": 2,
+   "sex": 1,
    "memorable": 1
   }
  },
@@ -76,11 +80,12 @@
   "weight": null,
   "phase": "top10",
   "attrs": {
-   "intellect": 3,
+   "intellect": 2,
    "rhetoric": 2,
    "coherence": 2,
-   "individ": 2,
-   "charisma": 1
+   "beauty": 2,
+   "charisma": 1,
+   "individ": 1
   }
  },
  "final_look": {
@@ -88,10 +93,10 @@
   "weight": null,
   "phase": "top5",
   "attrs": {
-   "style": 3,
-   "beauty": 2,
+   "beauty": 3,
+   "sex": 3,
+   "style": 2,
    "memorable": 2,
-   "coherence": 2,
    "command": 1
   }
  },
@@ -103,8 +108,9 @@
    "rhetoric": 3,
    "coherence": 2,
    "charisma": 2,
-   "individ": 2,
-   "intellect": 1
+   "beauty": 2,
+   "sex": 1,
+   "individ": 1
   }
  },
  "last_word": {
@@ -112,11 +118,12 @@
   "weight": null,
   "phase": "top3",
   "attrs": {
-   "command": 3,
+   "command": 2,
    "memorable": 2,
    "rhetoric": 2,
    "presence": 2,
-   "coherence": 1
+   "beauty": 2,
+   "sex": 1
   }
  }
 }

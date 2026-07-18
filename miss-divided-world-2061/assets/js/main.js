@@ -223,13 +223,16 @@ window.DWspeech = function(sp){
 };
 
 /* блок атрибутов */
-const ATTR_RU = {beauty:"Красота",individ:"Индивидуальность",physique:"Пластика",charisma:"Харизма",
-  intellect:"Интеллект",rhetoric:"Речь",style:"Стиль",command:"Владение залом",coherence:"Цельность",
-  memorable:"Запоминаемость",presence:"Сцен. сила"};
+const ATTR_RU = {beauty:"Красота",sex:"Сексуальность",physique:"Пластика/форма",individ:"Индивидуальность",
+  charisma:"Харизма",intellect:"Интеллект",rhetoric:"Речь",style:"Стиль",command:"Владение залом",
+  coherence:"Цельность",memorable:"Запоминаемость",presence:"Сцен. сила"};
+// порядок показа: красота и чувственность впереди (конкурс красоты)
+const ATTR_ORDER = ["beauty","sex","physique","style","individ","charisma","command","presence","memorable","coherence","intellect","rhetoric"];
 window.DWattrs = function(attrs, fc){
-  return `<div class="attrs" style="${fc||''}">`+Object.entries(attrs).map(([k,v])=>
-    `<div class="attr"><div class="k">${ATTR_RU[k]||k}</div><div class="bar"><i style="width:${v*10}%"></i></div><div class="n">${v}</div></div>`
-  ).join("")+`</div>`;
+  const keys = ATTR_ORDER.filter(k=>k in attrs).concat(Object.keys(attrs).filter(k=>ATTR_ORDER.indexOf(k)<0));
+  return `<div class="attrs" style="${fc||''}">`+keys.map(k=>{const v=attrs[k];
+    return `<div class="attr"><div class="k">${ATTR_RU[k]||k}</div><div class="bar"><i style="width:${v*10}%"></i></div><div class="n">${v}</div></div>`;
+  }).join("")+`</div>`;
 };
 
 /* глава: навигация prev/next по хронологии */
