@@ -176,10 +176,11 @@ window.DWrenderArrivals = function(cfg){
       `<span class="fc">${esc(c.faction)}${c.subfaction?" · "+esc(c.subfaction):""}</span></div>`+
       (c.measure?`<div class="arr-stats mono">рост ${c.measure.height} см · ${c.measure.bust}–${c.measure.waist}–${c.measure.hips} · вес ${c.measure.weight} кг</div>`:"")+
       `<div class="chron">`+
+      (c.appear?`<p class="lead">${esc(c.appear)}</p>`:"")+
       (a.mode?`<p><b>Прибытие.</b> ${esc(a.mode)}</p>`:"")+
-      (a.first_image?`<p><b>Первый образ.</b> ${esc(a.first_image)}</p>`:"")+
       (a.gesture?`<p><b>Жест.</b> ${esc(a.gesture)}</p>`:"")+
       (a.first_line?`<p class="lead">«${esc(a.first_line).replace(/^«|»$/g,'')}»</p>`:"")+
+      (c.soul?`<p><b>Душа.</b> ${esc(c.soul)}</p>`:"")+
       (a.crowd?`<p><b>Публика.</b> ${esc(a.crowd)}</p>`:"")+
       (a.press?`<p class="muted">Пресса: ${esc(a.press)}</p>`:"")+
       `</div></div></div>`;

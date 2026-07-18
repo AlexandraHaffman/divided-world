@@ -129,6 +129,12 @@ window.DWrenderParticipant=function(){
       `<p class="faint mono" style="margin-top:8px;font-size:9px">Системный портрет 1:1 может быть добавлен позднее — место в интерфейсе зарезервировано.</p>`+
     `</div>`+
 
+    ((c.appear||c.soul)?`<div class="section"><div class="card" style="border-left:3px solid var(--fc,var(--gold))">`+
+      `<h3>Внешность и манеры</h3><div class="chron">`+
+      (c.appear?`<p class="lead">${esc(c.appear)}</p>`:"")+
+      (c.soul?`<p><b class="mono" style="font-size:9px;letter-spacing:2px;color:var(--gold)">ДУША</b> ${esc(c.soul)}</p>`:"")+
+      `</div></div></div>`:"")+
+
     `<div class="section"><div class="two-col">`+
       `<div class="card"><h3>Досье</h3><div class="chron">`+
         `<p class="lead">${esc(c.card_quote?('«'+c.card_quote.replace(/^«|»$/g,'')+'»'):c.arch)}</p>`+

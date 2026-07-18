@@ -6,7 +6,7 @@
 """
 import json, glob, os, sys, hashlib
 sys.path.insert(0, os.path.dirname(__file__))
-from profiles import PROFILES, ATTR, FACTIONS, MEASURE
+from profiles import PROFILES, ATTR, FACTIONS, MEASURE, PERSONA
 from world import CONTEST, STAGES, AGG
 import engine as E
 
@@ -298,6 +298,8 @@ def emit():
             "weaknesses": c["weaknesses"], "scandal": c["scandal"],
             "attrs": dict(zip(ATTR, c["attrs"])),
             "measure": dict(zip(["height","bust","waist","hips","weight"], MEASURE[s])),
+            "appear": PERSONA.get(s,{}).get("appear",""),
+            "soul": PERSONA.get(s,{}).get("soul",""),
             "img": c["img"],
             "placement": placement[s],
             "prelim_rank": R["prelim_rank"][s],
