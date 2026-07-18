@@ -156,6 +156,18 @@ window.DWrenderParticipant=function(){
       (c.soul?`<p><b class="mono" style="font-size:9px;letter-spacing:2px;color:var(--gold)">ДУША</b> ${esc(c.soul)}</p>`:"")+
       `</div></div></div>`:"")+
 
+    ((p.voices&&p.voices.length)?`<div class="section"><div class="shead"><span class="n">Голоса соперниц</span></div>`+
+      `<div class="voices">`+p.voices.map(v=>{
+        const a=by(v.by); if(!a) return "";
+        const av=img(a.img.system_1x1)||img(a.img.reference);
+        const ph=av?`<img src="${av}" alt="${esc(a.name)}" loading="lazy">`:`<div class="vph noimg" style="${fac(a)}">◈</div>`;
+        return `<div class="voice" style="${fac(a)}"><div class="vhead">`+
+          `<a class="vph" href="${CB}contestants/participant.html?slug=${a.slug}">${ph}</a>`+
+          `<div class="vwho"><a href="${CB}contestants/participant.html?slug=${a.slug}"><b>${esc(a.name)}</b></a>`+
+          `<span>${esc(a.faction)}</span></div></div>`+
+          `<div class="vtxt">«${esc(v.text).replace(/^«|»$/g,'')}»</div></div>`;
+      }).join("")+`</div></div>`:"")+
+
     `<div class="section"><div class="two-col">`+
       `<div class="card"><h3>Досье</h3><div class="chron">`+
         `<p class="lead">${esc(c.card_quote?('«'+c.card_quote.replace(/^«|»$/g,'')+'»'):c.arch)}</p>`+

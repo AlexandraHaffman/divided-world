@@ -107,7 +107,11 @@ window.DWfoot = function(){
 
 /* ════════════ ОБЩИЕ РЕНДЕРЕРЫ ════════════ */
 
-/* карточка участницы для сеток */
+/* детерминированный хэш слуга — «почерк» участницы в дизайне */
+function slugHash(s){ let h=7; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return h; }
+const SIGILS=["✦","❖","✧","◆","❋","✺","☩","♆","⚚","✵","❂","✤"];
+
+/* карточка участницы для сеток — с индивидуальным почерком */
 window.DWcard = function(c, opts={}){
   const spoil = opts.showPlace!==false && window.DWspoilers();
   const src = img(c.img.system_1x1) || img(c.img.reference);
@@ -116,10 +120,16 @@ window.DWcard = function(c, opts={}){
     : `<div class="noimg"><span class="glyph">◈</span><span class="mono">ПОРТРЕТ 1:1<br>ОЖИДАЕТСЯ</span></div>`;
   const place = spoil ? `<div class="place">#${c.placement}</div>` : "";
   const href = `${opts.base||CB}contestants/participant.html?slug=${c.slug}`;
-  return `<a class="pcard" style="${facStyle(c)}" href="${href}">`+
+  const h = slugHash(c.slug);
+  const sigil = SIGILS[h%SIGILS.length];
+  const initial = (c.name||"?").charAt(0);
+  const leg = c.tier==="legendary" ? " leg" : "";
+  return `<a class="pcard pat${h%4}${leg}" style="${facStyle(c)};--ang:${h%360}deg" href="${href}">`+
     `<div class="facbar"></div>${place}`+
+    `<span class="sigil">${sigil}</span>`+
     `<div class="ph">${ph}</div>`+
-    `<div class="meta"><div class="nm">${esc(c.name)}</div>`+
+    `<div class="meta"><span class="initial">${esc(initial)}</span>`+
+    `<div class="nm">${esc(c.name)}</div>`+
     `<div class="rl">${esc(c.arch)}</div>`+
     `<div class="fc">${esc(c.faction)}</div></div></a>`;
 };
