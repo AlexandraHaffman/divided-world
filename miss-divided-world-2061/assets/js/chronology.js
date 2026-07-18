@@ -154,14 +154,15 @@ window.DWrenderArrivals = function(cfg){
   const cards = cs.map(c=>{
     const a=perf(c.slug).arrival||{};
     const src=img(c.img.cinematic)||img(c.img.reference);
-    const ph=src?`<img src="${src}" alt="${esc(c.name)}" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover;object-position:center 22%;filter:brightness(.7)">`
-      :`<div class="noimg" style="aspect-ratio:16/9">◈</div>`;
-    return `<div class="perf" style="${fac(c)}"><div class="facbar"></div>`+
-      `<div style="position:relative">${ph}</div>`+
-      `<div class="phead">${avatarHTML(c)}<div class="who">`+
-      `<a href="${CB}contestants/participant.html?slug=${c.slug}"><div class="nm">${esc(c.name)}</div></a>`+
-      `<div class="fc">${esc(c.faction)}</div></div></div>`+
-      `<div class="pbody"><div class="chron">`+
+    const link=`${CB}contestants/participant.html?slug=${c.slug}`;
+    const ph=src?`<img src="${src}" alt="${esc(c.name)}" loading="lazy">`
+      :`<div class="noimg" style="${fac(c)}">◈</div>`;
+    return `<div class="arr" style="${fac(c)}"><div class="facbar"></div>`+
+      `<a class="photo" href="${link}">${ph}</a>`+
+      `<div class="arr-body">`+
+      `<div class="arr-head"><a href="${link}"><span class="nm">${esc(c.name)}</span></a>`+
+      `<span class="fc">${esc(c.faction)}${c.subfaction?" · "+esc(c.subfaction):""}</span></div>`+
+      `<div class="chron">`+
       (a.mode?`<p><b>Прибытие.</b> ${esc(a.mode)}</p>`:"")+
       (a.first_image?`<p><b>Первый образ.</b> ${esc(a.first_image)}</p>`:"")+
       (a.gesture?`<p><b>Жест.</b> ${esc(a.gesture)}</p>`:"")+

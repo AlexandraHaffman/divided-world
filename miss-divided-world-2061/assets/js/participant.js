@@ -56,7 +56,7 @@ window.DWrenderParticipant=function(){
   const arrival=p.arrival||{};
 
   // hero
-  const heroImg = cin?`<img src="${cin}" alt="${esc(c.name)}">`:`<div class="noimg" style="${fac(c)}">КИНЕМАТОГРАФИЧЕСКИЙ ПОРТРЕТ ОЖИДАЕТСЯ</div>`;
+  const heroImg = cin?`<div class="cbg" style="background-image:url('${cin}')"></div><img src="${cin}" alt="${esc(c.name)}">`:`<div class="noimg" style="${fac(c)}">КИНЕМАТОГРАФИЧЕСКИЙ ПОРТРЕТ ОЖИДАЕТСЯ</div>`;
   const avatarEl = av?`<img class="avatar" src="${av}" alt="${esc(c.name)}">`:`<div class="avatar noimg" style="${fac(c)}">◈</div>`;
   const placeBadge = spoil
     ? `<span class="place-badge ${c.placement===1?'win':''}">${c.placement===1?'♛ ':''}#${c.placement} · ${esc(c.elim_band)}</span>`
