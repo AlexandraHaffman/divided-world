@@ -132,15 +132,19 @@ window.DWrenderRound = function(cfg){
   const {key, roundKey, title, subtitle, host} = cfg;
   const el=document.getElementById(host||"main");
   const pool=poolFor(roundKey); const rr=roundRank(roundKey);
+  // показываем от последнего места раунда к первому — интрига сохраняется,
+  // лучшая выходит в самом низу. Ранги (#N) при этом остаются верными.
+  const disp=pool.slice().reverse();
   const t=(DW.timeline||[]).find(x=>x.key===key)||{};
-  const index = `<div class="perf-index">`+pool.map(s=>`<a href="#p-${s}">${esc(by(s).name)}</a>`).join("")+`</div>`;
+  const index = `<div class="perf-index">`+disp.map(s=>`<a href="#p-${s}">${esc(by(s).name)}</a>`).join("")+`</div>`;
+  const note = `<p class="muted" style="margin:2px 0 14px;font-size:12.5px">↑ Порядок обратный: сверху — последнее место раунда, лучшая выходит в самом низу. Так итог раунда не раскрывается заранее.</p>`;
   const scene = cfg.scene?`<div class="stage-scene chron">${cfg.scene}</div>`:"";
   el.innerHTML =
     `<div class="round-hero"><div class="rn">${esc(t.date||"")} · осталось ${pool.length}</div>`+
     `<h1>${esc(title)}</h1><div class="sub">${esc(subtitle||"")}</div>`+
     window.DWprogress(key)+`</div>`+
-    scene + index +
-    pool.map(s=>perfBlock(roundKey,s,rr)).join("")+
+    scene + index + note +
+    disp.map(s=>perfBlock(roundKey,s,rr)).join("")+
     window.DWchapnav(key);
 };
 
