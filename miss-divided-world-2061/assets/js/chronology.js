@@ -56,10 +56,10 @@ function avatarHTML(c){
 /* хроника-лид для модных раундов */
 function fashionLead(c,d,rk){
   if(rk==="swimwear"){
-    const m=c.measure||{};
-    const fig = m.height?`<b>Фигура.</b> Рост ${m.height} см · ${m.bust}–${m.waist}–${m.hips} · ${m.weight} кг. `:"";
+    // «горячее» художественное описание, а не сухие цифры (цифры — при прибытии)
     return `<p class="lead">${esc(c.sensual)}</p>`+
-           `<p>${fig}${esc((d&&d.walk)||"")}</p>`;
+           (d&&d.impression?`<p>${esc(d.impression)}</p>`:"")+
+           (d&&d.walk?`<p><b>Выход.</b> ${esc(d.walk)}</p>`:"");
   }
   const bits=[];
   bits.push(`<span class="lead">${esc(c.temper.replace(/\.$/,''))}.</span> ${esc(c.sensual)}`);
@@ -174,6 +174,7 @@ window.DWrenderArrivals = function(cfg){
       `<div class="arr-body">`+
       `<div class="arr-head"><a href="${link}"><span class="nm">${esc(c.name)}</span></a>`+
       `<span class="fc">${esc(c.faction)}${c.subfaction?" · "+esc(c.subfaction):""}</span></div>`+
+      (c.measure?`<div class="arr-stats mono">рост ${c.measure.height} см · ${c.measure.bust}–${c.measure.waist}–${c.measure.hips} · вес ${c.measure.weight} кг</div>`:"")+
       `<div class="chron">`+
       (a.mode?`<p><b>Прибытие.</b> ${esc(a.mode)}</p>`:"")+
       (a.first_image?`<p><b>Первый образ.</b> ${esc(a.first_image)}</p>`:"")+
