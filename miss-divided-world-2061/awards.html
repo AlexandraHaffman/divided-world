@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Награды · Мисс Разделённый мир 2061</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/leaderboard.css">
+<link rel="stylesheet" href="assets/css/rounds.css">
+</head>
+<body>
+<div class="page">
+  <div id="topbar"></div>
+  <div class="wrap"><div id="main"></div></div>
+  <div id="foot"></div>
+</div>
+<script src="data/data.js"></script>
+<script>window.CB="";</script>
+<script src="assets/js/main.js"></script>
+<script>
+(function(){
+  if(!window.DWguard()) return;
+  window.DWinit("awards.html");
+  const DW=window.DWget(), esc=window.DWesc, fac=window.DWfac;
+  const host=document.getElementById("main");
+  const hero=`<div class="round-hero" style="border:none;padding:0 0 8px"><div class="rn">специальные титулы</div>`+
+    `<h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,7vw,52px)">Награды</h1>`+
+    `<div class="sub">Шестнадцать титулов, отмечающих диапазон конкурса. Специальная награда не обязана совпадать с высоким итоговым местом — и часто не совпадает.</div></div>`;
+  if(!window.DWspoilers()){
+    host.innerHTML=`<div class="section">${hero}<div class="spoiler-shield">`+
+      `<div class="serif" style="font-size:20px;color:var(--white)">Награды раскрываются вместе с итогами</div>`+
+      `<p class="muted" style="margin-top:8px">Специальные титулы — часть развязки. Откройте режим спойлеров, чтобы увидеть, кому они достались.</p>`+
+      `<button class="btn" onclick="window.DWsetSpoilers(true);location.reload()">Показать награды</button></div></div>`;
+    return;
+  }
+  const desc={best_interview:"глубина, честность и владение словом в закрытой комнате",
+    best_swimwear:"пластика, присутствие и цельность образа у воды",
+    best_gown:"концепция, силуэт и свет вечернего выхода",
+    best_costume:"верность фракции и сила фракционного образа",
+    best_manifesto:"сценическая сила обращения к миру",
+    best_final_speech:"последняя минута перед блокировкой оценок",
+    most_photogenic:"как образ живёт в кадре и в памяти",
+    audience_choice:"голос зала, не всегда совпадающий с жюри",
+    press_choice:"выбор прессы: индивидуальность и повод для истории",
+    best_movement:"владение телом и характер движения",
+    strongest_stage:"самое мощное сценическое присутствие",
+    most_dangerous:"самый опасный, но убедительный образ",
+    most_unexpected:"выступление, которое никто не мог предсказать",
+    absolute_individuality:"тип, не похожий ни на один другой",
+    breakthrough:"наибольший подъём от предварительного места к итоговому",
+    best_debut:"лучший результат среди тех, от кого не ждали"};
+  const cards=(DW.awards||[]).map(a=>{ const c=window.DWby(a.slug);
+    return `<a class="award" style="${fac(c)}" href="contestants/participant.html?slug=${a.slug}">`+
+      `<div class="at">${esc(a.title)}</div><div class="an">${esc(a.name)}</div>`+
+      `<div class="af">${esc(c.faction)}</div>`+
+      `<p class="muted" style="font-size:12px;margin-top:8px">${esc(desc[a.id]||"")}</p></a>`;}).join("");
+  host.innerHTML=`<div class="section">${hero}<div class="awards-grid">${cards}</div></div>`;
+})();
+</script>
+</body>
+</html>

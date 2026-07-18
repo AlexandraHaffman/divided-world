@@ -1,0 +1,121 @@
+[
+ {
+  "key": "prologue",
+  "title": "Пролог",
+  "date": "12 октября",
+  "remaining": 35,
+  "href": "chronology/prologue.html"
+ },
+ {
+  "key": "arrivals",
+  "title": "Прибытие 35",
+  "date": "13 октября",
+  "remaining": 35,
+  "href": "chronology/arrivals.html"
+ },
+ {
+  "key": "opening",
+  "title": "Церемония открытия",
+  "date": "13 октября",
+  "remaining": 35,
+  "href": "chronology/opening.html"
+ },
+ {
+  "key": "interviews",
+  "title": "Закрытое интервью",
+  "date": "14 октября",
+  "remaining": 35,
+  "href": "chronology/interviews.html"
+ },
+ {
+  "key": "swimwear",
+  "title": "Выход в купальниках",
+  "date": "15 октября",
+  "remaining": 35,
+  "href": "chronology/swimwear.html"
+ },
+ {
+  "key": "evening-gowns",
+  "title": "Вечерние платья",
+  "date": "15 октября",
+  "remaining": 35,
+  "href": "chronology/evening-gowns.html"
+ },
+ {
+  "key": "faction-costumes",
+  "title": "Фракционный костюм",
+  "date": "16 октября",
+  "remaining": 35,
+  "href": "chronology/faction-costumes.html"
+ },
+ {
+  "key": "top-20",
+  "title": "Первое сокращение · 35→20",
+  "date": "16 октября",
+  "remaining": 20,
+  "href": "chronology/top-20.html"
+ },
+ {
+  "key": "manifesto",
+  "title": "Манифест · Топ-20",
+  "date": "17 октября",
+  "remaining": 20,
+  "href": "chronology/manifesto.html"
+ },
+ {
+  "key": "top-10",
+  "title": "Второе сокращение · 20→10",
+  "date": "17 октября",
+  "remaining": 10,
+  "href": "chronology/top-10.html"
+ },
+ {
+  "key": "stage-questions",
+  "title": "Персональный вопрос · Топ-10",
+  "date": "18 октября",
+  "remaining": 10,
+  "href": "chronology/stage-questions.html"
+ },
+ {
+  "key": "top-5",
+  "title": "Третье сокращение · 10→5",
+  "date": "18 октября",
+  "remaining": 5,
+  "href": "chronology/top-5.html"
+ },
+ {
+  "key": "final-looks",
+  "title": "Финальный образ · Топ-5",
+  "date": "19 октября",
+  "remaining": 5,
+  "href": "chronology/final-looks.html"
+ },
+ {
+  "key": "final-question",
+  "title": "Общий финальный вопрос",
+  "date": "19 октября",
+  "remaining": 5,
+  "href": "chronology/final-question.html"
+ },
+ {
+  "key": "top-3",
+  "title": "Четвёртое сокращение · 5→3",
+  "date": "19 октября",
+  "remaining": 3,
+  "href": "chronology/top-3.html"
+ },
+ {
+  "key": "last-word",
+  "title": "Последнее слово · Топ-3",
+  "date": "19 октября",
+  "remaining": 3,
+  "href": "chronology/last-word.html"
+ },
+ {
+  "key": "coronation",
+  "title": "Коронация",
+  "date": "19 октября",
+  "remaining": 1,
+  "href": "chronology/coronation.html"
+ }
+]

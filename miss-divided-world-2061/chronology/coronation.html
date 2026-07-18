@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Коронация · Мисс Разделённый мир 2061</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/rounds.css">
+<link rel="stylesheet" href="../assets/css/leaderboard.css">
+</head>
+<body>
+<div class="page">
+  <div id="topbar"></div>
+  <div class="wrap"><div id="main"></div></div>
+  <div id="foot"></div>
+</div>
+<script src="../data/data.js"></script>
+<script>window.CB="../";</script>
+<script src="../assets/js/main.js"></script>
+<script src="../assets/js/chronology.js"></script>
+<script>
+(function(){
+  if(!window.DWguard()) return;
+  window.DWinit("chronology.html");
+  const DW=window.DWget(), esc=window.DWesc, img=window.DWimg, fac=window.DWfac;
+  const host=document.getElementById("main");
+  const t=(DW.timeline||[]).find(x=>x.key==="coronation")||{};
+  function hero(){ return `<div class="round-hero"><div class="rn">${esc(t.date||"")} · финал</div>`+
+    `<h1>Коронация</h1><div class="sub">Возвращение всех, специальные титулы, запечатанный результат — и корона «Разлом» находит свою голову.</div>`+
+    window.DWprogress("coronation")+`</div>`; }
+  if(!window.DWspoilers()){
+    host.innerHTML=hero()+
+      `<div class="spoiler-shield"><div class="serif" style="font-size:22px;color:var(--white)">Имя победительницы скрыто</div>`+
+      `<p class="muted" style="margin-top:8px">Вы дошли до финала в режиме последовательного чтения. Откройте развязку — или вернитесь и досмотрите этапы.</p>`+
+      `<button class="btn" onclick="window.DWsetSpoilers(true);location.reload()">♛ Показать коронацию</button></div>`+
+      window.DWchapnav("coronation");
+    return;
+  }
+  const w=window.DWby(DW.results.winner.slug), r=window.DWby(DW.results.runnerup.slug), th=window.DWby(DW.results.third.slug);
+  const perf=s=>(DW.performances||{})[s]||{};
+  const cr=DW.contest.crown;
+  const pod=(c,rank,cls,medal)=>{ const src=img(c.img.system_1x1)||img(c.img.reference);
+    const ph=src?`<img src="${src}" alt="${esc(c.name)}">`:`<div class="noimg" style="${fac(c)}">◈</div>`;
+    return `<a class="pod ${cls}" style="${fac(c)}" href="../contestants/participant.html?slug=${c.slug}">`+
+      (cls==="p1"?`<div class="crown-emoji">♛</div>`:"")+
+      `<div class="ph">${ph}</div><div class="cap"><div class="rank">${medal} ${rank}</div>`+
+      `<div class="nm">${esc(c.name)}</div><div class="fc">${esc(c.faction)}</div></div></a>`; };
+  const awards=(DW.awards||[]).map(a=>{ const c=window.DWby(a.slug);
+    return `<a class="award" style="${fac(c)}"><div class="at">${esc(a.title)}</div><div class="an">${esc(a.name)}</div><div class="af">${esc(c.faction)}</div></a>`;}).join("");
+
+  host.innerHTML=hero()+
+    `<div class="stage-scene chron">`+
+    `<p>Все тридцать пять возвращаются на кольцевую сцену — прошедшие и выбывшие, богини и наёмницы, святые и хищницы. Купол «эфирного неба» гаснет до одной серебряной линии над водой. Ведущие объявляют, что оценки запечатаны и изменить уже ничего нельзя: то, что произойдёт в следующие минуты, останется в истории расколотого мира.</p>`+
+    `<p>Сначала — специальные титулы. Шестнадцать наград расходятся по всему полю: их получают не только финалистки, и зал понимает, что этот конкурс запомнит куда больше трёх имён.</p></div>`+
+
+    `<div class="section"><div class="shead"><span class="n">Специальные титулы</span></div>`+
+    `<div class="awards-grid">${awards}</div>`+
+    `<p class="muted" style="margin-top:10px">Полный разбор наград — на <a class="tag gold" href="../awards.html">странице наград</a>.</p></div>`+
+
+    `<div class="section"><div class="shead big"><span class="n">Топ-3 · запечатанный результат</span></div>`+
+    `<div class="podium"><div>${pod(r,"1-я вице-мисс","p2","✦")}</div>`+
+    `<div>${pod(w,"МИСС РАЗДЕЛЁННЫЙ МИР · 2061","p1","♛")}</div>`+
+    `<div>${pod(th,"2-я вице-мисс","p3","✦")}</div></div></div>`+
+
+    `<div class="section"><div class="stage-scene chron">`+
+    `<p><b>Третье место.</b> Первым называют имя ${esc(th.name)}. ${esc((perf(th.slug).reaction||"").split(". ").slice(0,2).join(". "))}.</p>`+
+    `<p><b>Первая вице-мисс.</b> Затем — ${esc(r.name)}. ${esc((perf(r.slug).reaction||"").split(". ").slice(0,2).join(". "))}.</p>`+
+    `<p><b>И корона.</b> Ведущий держит паузу дольше, чем позволяет регламент. Имя победительницы — <b style="color:var(--gold)">${esc(w.name)}</b>. `+
+    `${esc((perf(w.slug).reaction||""))}</p></div></div>`+
+
+    `<div class="section"><div class="shead"><span class="n">Корона «${esc(cr.name)}»</span></div>`+
+    `<div class="card"><div class="chron">`+
+    `<p class="lead">${esc(cr.symbolism)}</p>`+
+    `<p><b>Форма.</b> ${esc(cr.form)} <b>Материал.</b> ${esc(cr.material)}</p>`+
+    `<p>${esc(cr.tech)} Когда обруч ложится на голову ${esc(w.name)}, встроенный световод ловит сценический свет и распускает холодную кайму по контуру её лица. `+
+    `Лента цвета эфирного серебра — «MISS DIVIDED WORLD · 2061» — ложится через плечо. Первый проход победительницы зал встречает стоя.</p></div></div></div>`+
+
+    `<div class="section"><div class="stage-scene chron">`+
+    `<p><b>Речь победительницы.</b> «${esc((perf(w.slug).final_answer||{}).text||"").replace(/^«|»$/g,'')}» — так она отвечала на общий вопрос; теперь, с короной, она добавляет лишь одну фразу и умолкает. Трансляция завершается на её лице, по контуру которого светится шов «Разлома» — расколотый мир на один вечер действительно посмотрел в одно лицо.</p>`+
+    `<p class="muted">Что было дальше — как отреагировали фракции, кто отказался признать результат и какие речи стали вирусными — в <a class="tag gold" href="../epilogue.html">эпилоге</a>.</p></div></div>`+
+
+    window.DWchapnav("coronation");
+})();
+</script>
+</body>
+</html>

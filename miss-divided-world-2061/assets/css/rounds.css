@@ -1,0 +1,63 @@
+/* Страницы раундов хроники */
+.round-hero{padding:30px 0 18px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.round-hero .rn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase}
+.round-hero h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(30px,7vw,52px);color:var(--white);margin:6px 0 10px;letter-spacing:0}
+.round-hero .sub{font-size:16px;color:var(--text-dim);max-width:760px}
+.round-hero .rmeta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+
+/* большой блок «явление раунда» — художественная часть */
+.stage-scene{border:1px solid var(--line);background:linear-gradient(180deg,rgba(20,26,38,.5),rgba(11,15,22,.5));padding:22px;margin-bottom:22px}
+
+/* карточка участницы в раунде: хроника + досье + протокол */
+.perf{border:1px solid var(--line);background:var(--bg2);margin-bottom:22px;overflow:hidden;position:relative}
+.perf .facbar{position:absolute;top:0;left:0;right:0;height:2px;background:var(--fc,var(--gold));box-shadow:0 0 10px var(--fc,var(--gold));z-index:2}
+.perf .phead{display:flex;gap:14px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line2)}
+.perf .phead .av{width:56px;height:56px;flex-shrink:0;border:1px solid var(--fc,var(--gold));object-fit:cover;object-position:center top;background:#0c1016}
+.perf .phead .av.noimg{display:flex;align-items:center;justify-content:center;font-size:22px}
+.perf .phead .who{flex:1;min-width:0}
+.perf .phead .who .nm{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--white);line-height:1}
+.perf .phead .who .fc{font-size:12px;color:var(--fc,var(--text-dim));margin-top:2px}
+.perf .phead .who a{border-bottom:1px dotted transparent}
+.perf .phead .who a:hover .nm{color:var(--gold)}
+.perf .phead .rr{text-align:right;flex-shrink:0}
+.perf .phead .rr .lbl{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--text-faint);text-transform:uppercase}
+.perf .phead .rr .val{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;color:var(--gold)}
+.perf .pbody{padding:16px;display:grid;gap:16px}
+.perf .cols{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start}
+@media(max-width:820px){.perf .cols{grid-template-columns:1fr}}
+
+/* движение места */
+.movement{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px;
+  border:1px solid var(--line);padding:5px 10px;color:var(--text-dim)}
+.movement .up{color:var(--ok)}
+.movement .down{color:var(--danger)}
+.movement .same{color:var(--text-faint)}
+
+/* реакция публики (индикатор) */
+.reaction-meter{display:grid;gap:5px;margin-top:4px}
+.reaction-meter .rm{display:grid;grid-template-columns:70px 1fr 30px;gap:8px;align-items:center;font-size:11px}
+.reaction-meter .rm .k{font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1px;color:var(--text-faint);text-transform:uppercase}
+.reaction-meter .rm .bar{height:4px;background:rgba(255,255,255,.06);position:relative}
+.reaction-meter .rm .bar i{position:absolute;left:0;top:0;bottom:0}
+.reaction-meter .rm .bar i.aud{background:var(--gold)}
+.reaction-meter .rm .bar i.jur{background:var(--america)}
+.reaction-meter .rm .n{text-align:right;font-family:'Share Tech Mono',monospace;color:var(--silver)}
+
+/* сокращение — сцена объявления */
+.cut-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.cut-col{border:1px solid var(--line);background:var(--bg2);padding:14px}
+.cut-col h3{font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.cut-col.adv h3{color:var(--ok)}
+.cut-col.out h3{color:var(--danger)}
+.cut-list{display:grid;gap:6px}
+.cut-list .ci{display:flex;align-items:center;gap:8px;font-size:14px;padding:5px 8px;border:1px solid var(--line2);background:rgba(255,255,255,.015)}
+.cut-list .ci .p{font-family:'Orbitron',monospace;font-size:11px;color:var(--text-faint);width:26px}
+.cut-list .ci .nm{flex:1;color:var(--text)}
+.cut-list .ci .fc{font-size:11px}
+@media(max-width:640px){.cut-grid{grid-template-columns:1fr}}
+
+/* оглавление участниц в раунде (быстрый переход) */
+.perf-index{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}
+.perf-index a{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--text-dim);
+  border:1px solid var(--line);padding:4px 9px;transition:.15s}
+.perf-index a:hover{border-color:var(--fc,var(--gold));color:var(--fc,var(--gold))}

@@ -1,0 +1,48 @@
+/* Таблица рейтинга + награды + финал */
+.lb-band{margin-bottom:22px}
+.lb-band .bh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.lb-band .bh .t{font-family:'Orbitron',monospace;font-size:13px;color:var(--white);letter-spacing:1px}
+.lb-band .bh .m{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text-faint);text-transform:uppercase}
+.lb-row{display:flex;align-items:center;gap:12px;padding:9px 12px;border:1px solid var(--line2);background:var(--bg2);margin-bottom:5px;
+  transition:.15s;position:relative;overflow:hidden}
+.lb-row:hover{border-color:var(--fc,var(--gold));transform:translateX(2px)}
+.lb-row .facbar{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--fc,var(--gold))}
+.lb-row .pl{font-family:'Orbitron',monospace;font-weight:900;font-size:17px;width:34px;text-align:center;color:var(--text-dim);flex-shrink:0}
+.lb-row.gold .pl{color:var(--gold)}.lb-row.silver .pl{color:#cfd8e6}.lb-row.bronze .pl{color:#c99b6a}
+.lb-row .medal{font-size:17px;width:22px;flex-shrink:0;text-align:center}
+.lb-row .nm{flex:1;min-width:0}
+.lb-row .nm b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:18px;color:var(--white);display:block;line-height:1}
+.lb-row .nm span{font-size:11px;color:var(--fc,var(--text-dim))}
+.lb-row .rounds{display:none;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-faint);gap:8px}
+.lb-row .tot{font-family:'Orbitron',monospace;font-weight:700;font-size:15px;color:var(--silver);flex-shrink:0}
+@media(min-width:720px){.lb-row .rounds{display:flex}}
+
+/* награды */
+.awards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.award{border:1px solid var(--line);background:linear-gradient(180deg,var(--bg3),var(--bg2));padding:16px;position:relative;overflow:hidden}
+.award::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);box-shadow:0 0 10px var(--gold-dim)}
+.award .at{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.award .an{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;color:var(--white);line-height:1}
+.award .af{font-size:12px;color:var(--text-dim);margin-top:4px}
+.award a:hover .an{color:var(--gold)}
+
+/* подиум финала */
+.podium{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:12px;align-items:end;margin:22px 0}
+.podium .pod{border:1px solid var(--gold-dim);background:var(--bg2);overflow:hidden;text-align:center;position:relative}
+.podium .pod .ph{aspect-ratio:3/4;overflow:hidden;background:#0a0d13;position:relative}
+.podium .pod .ph img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.podium .pod .ph .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;
+  background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--fc,var(--gold)) 18%,transparent),transparent 70%)}
+.podium .pod .cap{padding:12px 10px}
+.podium .pod .rank{font-family:'Orbitron',monospace;font-weight:900;font-size:15px;color:var(--gold)}
+.podium .pod .nm{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;color:var(--white);line-height:1;margin-top:4px}
+.podium .pod .fc{font-size:11px;color:var(--fc,var(--text-dim));margin-top:3px}
+.podium .pod.p1{grid-row:1;box-shadow:0 0 34px rgba(217,182,120,.22);border-color:var(--gold)}
+.podium .pod.p1 .rank{font-size:18px}
+.podium .crown-emoji{font-size:26px;position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:3;
+  filter:drop-shadow(0 0 10px rgba(217,182,120,.7))}
+@media(max-width:640px){.podium{grid-template-columns:1fr;gap:10px}.podium .pod.p1{order:-1}}
+
+/* спойлер-щит */
+.spoiler-shield{border:1px dashed var(--gold-dim);background:rgba(217,182,120,.05);padding:20px;text-align:center;margin:16px 0}
+.spoiler-shield .btn{margin-top:12px}

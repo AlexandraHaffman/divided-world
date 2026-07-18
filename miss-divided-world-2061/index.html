@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мисс Разделённый мир — 2061</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/leaderboard.css">
+<style>
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:radial-gradient(900px 500px at 50% -20%,rgba(217,182,120,.12),transparent 60%),
+      radial-gradient(700px 500px at 50% 120%,rgba(60,90,150,.1),transparent 60%)}
+  .hero-inner{max-width:var(--maxw);margin:0 auto;padding:64px 18px 40px;text-align:center;position:relative;z-index:2}
+  .emblem{width:120px;height:120px;margin:0 auto 22px;position:relative}
+  .emblem svg{width:100%;height:100%;filter:drop-shadow(0 0 18px rgba(217,182,120,.3))}
+  .hero .kick{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:5px;color:var(--gold);text-transform:uppercase}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(40px,10vw,88px);color:var(--white);
+    line-height:.95;margin:10px 0;letter-spacing:0}
+  .hero .yr{color:var(--gold)}
+  .hero .slogan{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,4vw,26px);color:var(--silver);max-width:640px;margin:6px auto 0}
+  .hero .meta{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:20px;
+    font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--text-dim)}
+  .hero .meta b{color:var(--silver)}
+  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+  .mode-note{margin-top:14px;font-size:12px;color:var(--text-faint)}
+  .stage-schema{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:26px}
+  .stage-schema .st{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text-dim);
+    border:1px solid var(--line);padding:5px 9px}
+  .stage-schema .st b{color:var(--gold)}
+  .roster-note{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<!-- ВОРОТА ДОСТУПА -->
+<div id="gate">
+  <a class="gate-back" href="../characters/index.html">← АРХИВ ПЕРСОНАЖЕЙ</a>
+  <div class="gate-box">
+    <div class="gate-icon">♛</div>
+    <div class="gate-title">ЗАКРЫТАЯ ТРАНСЛЯЦИЯ // МИСС РАЗДЕЛЁННЫЙ МИР — 2061</div>
+    <div class="gate-sub">Введите код доступа</div>
+    <form id="gateForm" autocomplete="off">
+      <input id="gateInput" type="password" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="• • • • • • •" aria-label="Код доступа">
+      <button class="btn block" id="gateBtn" type="submit">Подтвердить</button>
+    </form>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="page" class="page" hidden>
+  <div id="topbar"></div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="emblem">
+        <svg viewBox="0 0 100 100" aria-label="Единое лицо">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#4a9eff"/><stop offset=".25" stop-color="#ff9d00"/>
+            <stop offset=".5" stop-color="#a55eea"/><stop offset=".75" stop-color="#2ecc71"/>
+            <stop offset="1" stop-color="#00ced1"/></linearGradient></defs>
+          <circle cx="50" cy="50" r="46" fill="none" stroke="url(#g)" stroke-width="1.2" opacity=".55"/>
+          <path d="M50 14 C40 22 38 34 42 44 C46 54 44 62 38 70 C34 76 36 84 50 88"
+            fill="none" stroke="url(#g)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M50 14 C60 22 62 34 58 44 C54 54 56 62 62 70 C66 76 64 84 50 88"
+            fill="none" stroke="#d9b678" stroke-width="1.1" opacity=".7"/>
+          <circle cx="50" cy="50" r="2.4" fill="#d9b678"/>
+        </svg>
+      </div>
+      <div class="kick">Внутренняя трансляция расколотого мира</div>
+      <h1>Мисс Разделённый мир<br><span class="yr">2061</span></h1>
+      <div class="slogan" id="slogan"></div>
+      <div class="meta" id="hero-meta"></div>
+      <div class="stage-schema" id="stage-schema"></div>
+      <div class="cta">
+        <a class="btn" href="chronology/prologue.html">▶ Начать хронику</a>
+        <button class="btn ghost" id="archive-btn">Открыть полный архив (со спойлерами)</button>
+      </div>
+      <div class="mode-note" id="mode-note"></div>
+    </div>
+  </section>
+
+  <!-- топ-3 / статус (только в режиме спойлеров) -->
+  <div id="reveal" class="wrap"></div>
+
+  <!-- реестр 35 участниц -->
+  <div class="wrap section">
+    <div class="roster-note">
+      <div class="shead" style="flex:1;margin:0"><span class="n">Реестр 35 участниц</span></div>
+      <a class="tag gold" href="contestants.html">Каталог с фильтрами →</a>
+    </div>
+    <div class="grid-cards" id="roster"></div>
+  </div>
+
+  <!-- быстрые ссылки -->
+  <div class="wrap section">
+    <div class="three-col">
+      <a class="card" href="chronology.html"><h3>📜 Хроника</h3><p class="muted">17 глав: от пролога до коронации. Читать по порядку.</p></a>
+      <a class="card" href="jury.html"><h3>⚖ Жюри</h3><p class="muted">Семь независимых судей и правила оценки.</p></a>
+      <a class="card" href="leaderboard.html"><h3>▤ Рейтинг</h3><p class="muted">Официальная таблица 1–35 и баллы.</p></a>
+      <a class="card" href="awards.html"><h3>★ Награды</h3><p class="muted">Шестнадцать специальных титулов конкурса.</p></a>
+      <a class="card" href="final.html"><h3>♛ Финал</h3><p class="muted">Топ-3, коронация и итог.</p></a>
+      <a class="card" href="rules.html"><h3>§ Правила</h3><p class="muted">Формула судейства и регламент этапов.</p></a>
+    </div>
+  </div>
+
+  <div id="foot"></div>
+</div>
+
+<script src="data/data.js"></script>
+<script>window.CB="";</script>
+<script src="assets/js/main.js"></script>
+<script>
+(function(){
+  function start(){
+    document.getElementById("page").hidden=false;
+    window.DWinit("");
+    const DW=window.DWget(), esc=window.DWesc;
+    const c=DW.contest;
+    document.getElementById("slogan").textContent="«"+c.slogan+"»";
+    document.getElementById("hero-meta").innerHTML=
+      `<span><b>${esc(c.dates)}</b></span><span>${esc(c.venue.name)}</span><span>${esc(c.venue.place)}</span>`;
+    document.getElementById("stage-schema").innerHTML=
+      (DW.timeline||[]).map(t=>`<span class="st">${esc(t.title.split('·')[0].trim())} <b>${t.remaining}</b></span>`).join("");
+    // реестр
+    document.getElementById("roster").innerHTML=
+      (DW.contestants||[]).slice().sort((a,b)=>a.faction.localeCompare(b.faction,'ru')||a.name.localeCompare(b.name,'ru'))
+      .map(x=>window.DWcard(x)).join("");
+    // режим
+    function refreshMode(){
+      const sp=window.DWspoilers();
+      document.getElementById("mode-note").textContent = sp
+        ? "Режим полного архива активен: итоги, места и коронация раскрыты."
+        : "Сейчас включён режим последовательного чтения — итоги скрыты. Хронику можно читать как репортаж от первой участницы до короны.";
+      document.getElementById("archive-btn").textContent = sp ? "Скрыть спойлеры (читать по порядку)" : "Открыть полный архив (со спойлерами)";
+      const rev=document.getElementById("reveal");
+      if(sp){
+        const w=window.DWby(DW.results.winner.slug), r=window.DWby(DW.results.runnerup.slug), t=window.DWby(DW.results.third.slug);
+        const pod=(c,rank,cls,medal)=>{
+          const src=window.DWimg(c.img.system_1x1)||window.DWimg(c.img.reference);
+          const ph=src?`<img src="${src}" alt="${esc(c.name)}">`:`<div class="noimg" style="${window.DWfac(c)}">◈</div>`;
+          return `<a class="pod ${cls}" style="${window.DWfac(c)}" href="contestants/participant.html?slug=${c.slug}">`+
+            (cls==="p1"?`<div class="crown-emoji">♛</div>`:"")+
+            `<div class="ph">${ph}</div><div class="cap"><div class="rank">${medal} ${rank}</div>`+
+            `<div class="nm">${esc(c.name)}</div><div class="fc">${esc(c.faction)}</div></div></a>`;
+        };
+        rev.innerHTML=`<div class="section"><div class="shead"><span class="n">Итог конкурса · Топ-3</span></div>`+
+          `<div class="podium"><div>${pod(r,"1-я вице-мисс","p2","✦")}</div>`+
+          `<div>${pod(w,"МИСС РАЗДЕЛЁННЫЙ МИР","p1","♛")}</div>`+
+          `<div>${pod(t,"2-я вице-мисс","p3","✦")}</div></div>`+
+          `<div class="center"><a class="btn ghost" href="final.html">Полный финал и коронация →</a></div></div>`;
+      } else rev.innerHTML="";
+    }
+    document.getElementById("archive-btn").addEventListener("click",()=>{ window.DWsetSpoilers(!window.DWspoilers()); refreshMode(); });
+    refreshMode();
+  }
+  window.DWgate(start);
+})();
+</script>
+</body>
+</html>

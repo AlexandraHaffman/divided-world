@@ -1,0 +1,259 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   МИСС РАЗДЕЛЁННЫЙ МИР — 2061 · базовый дизайн
+   Тёмный футуристический архив государственной трансляции.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
+
+:root{
+  --bg:#07090e;
+  --bg1:#0b0f16;
+  --bg2:rgba(15,20,30,0.82);
+  --bg3:rgba(20,26,38,0.9);
+  --line:rgba(198,210,230,0.14);
+  --line2:rgba(198,210,230,0.08);
+  --text:#d7deea;
+  --text-dim:#8290a8;
+  --text-faint:#5a687e;
+  --silver:#c8d2e2;
+  --gold:#d9b678;
+  --gold-dim:#8c7346;
+  --white:#f2f5fa;
+  --danger:#e0685f;
+  --ok:#5dd98a;
+  /* фракционные акценты */
+  --america:#4a9eff; --tenebrion:#ff9d00; --forge:#a8d8ff; --rakshasy:#a55eea;
+  --arcadia:#2ecc71; --quiet-harbor:#00ced1; --garrison:#9fb0c3; --mercs:#b8860b;
+  --ark:#8899bb; --independent:#c0c8d4;
+  --accent:var(--gold);
+  --maxw:1180px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Rajdhani',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+  line-height:1.5;
+  -webkit-text-size-adjust:100%;
+}
+/* фон: глубокий градиент + сетка */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(217,182,120,0.06), transparent 60%),
+    radial-gradient(900px 500px at 90% 110%, rgba(79,120,180,0.06), transparent 60%),
+    linear-gradient(180deg,#080b11 0%,#06080d 100%);
+}
+/* тонкие сканлайны эфира */
+body::after{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.035) 2px,rgba(0,0,0,0.035) 4px);
+}
+#app,.page{position:relative;z-index:2}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ── Типографика ── */
+.mono{font-family:'Share Tech Mono',monospace}
+.serif{font-family:'Cormorant Garamond',serif}
+.eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--text-faint);text-transform:uppercase}
+h1,h2,h3{font-family:'Orbitron',monospace;color:var(--white);letter-spacing:1px;line-height:1.15}
+.display{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--white);line-height:1.05}
+
+/* ── Раскладка ── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
+.section{padding:34px 0}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:8px 0}
+.center{text-align:center}
+.muted{color:var(--text-dim)}
+.faint{color:var(--text-faint)}
+.hidden{display:none!important}
+
+/* ── Верхняя навигация ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:14px;
+  padding:10px 16px;
+  background:rgba(7,9,14,0.86);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.topbar .brand{font-family:'Orbitron',monospace;font-weight:700;font-size:12px;letter-spacing:2px;color:var(--white);white-space:nowrap}
+.topbar .brand b{color:var(--gold)}
+.topbar .sp{flex:1}
+.topbar a.nav{font-family:'Share Tech Mono',monospace;font-size:10.5px;letter-spacing:1.5px;color:var(--text-dim);padding:6px 8px;border:1px solid transparent;text-transform:uppercase;white-space:nowrap}
+.topbar a.nav:hover,.topbar a.nav.active{color:var(--gold);border-color:var(--line)}
+.topbar .menu-toggle{display:none;background:none;border:1px solid var(--line);color:var(--text);font-size:16px;padding:5px 10px;cursor:pointer;border-radius:3px}
+.topbar-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+@media(max-width:860px){
+  .topbar .menu-toggle{display:block}
+  .topbar-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;background:rgba(7,9,14,0.98);border-bottom:1px solid var(--line);padding:6px}
+  .topbar-links.open{display:flex}
+  .topbar-links a.nav{padding:11px 12px;border-bottom:1px solid var(--line2)}
+}
+
+/* ── Кнопки ── */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Orbitron',monospace;font-weight:700;font-size:12px;letter-spacing:2px;
+  padding:13px 20px;border:1px solid var(--gold);color:var(--white);
+  background:linear-gradient(90deg,rgba(217,182,120,0.14),rgba(20,26,38,0.5));
+  cursor:pointer;transition:.2s;text-transform:uppercase;
+}
+.btn:hover{background:linear-gradient(90deg,rgba(217,182,120,0.26),rgba(20,26,38,0.7));box-shadow:0 0 22px rgba(217,182,120,0.18)}
+.btn.ghost{border-color:var(--line);background:rgba(15,20,30,0.5);color:var(--text)}
+.btn.ghost:hover{border-color:var(--silver);color:var(--white);box-shadow:none}
+.btn.block{width:100%;justify-content:center}
+
+/* ── Ленты/бейджи ── */
+.tag{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 8px;border:1px solid var(--line);color:var(--text-dim);display:inline-block}
+.tag.fac{border-color:var(--fc,var(--line));color:var(--fc,var(--text-dim))}
+.tag.gold{border-color:var(--gold-dim);color:var(--gold)}
+.rank-chip{font-family:'Orbitron',monospace;font-weight:900;font-size:13px;color:var(--gold)}
+
+/* ── Карточки участниц (сетка) ── */
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pcard{
+  position:relative;border:1px solid var(--line);background:var(--bg2);overflow:hidden;
+  transition:.2s;display:block;
+}
+.pcard:hover{border-color:var(--fc,var(--gold));transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+.pcard .ph{position:relative;aspect-ratio:1/1;background:#0c1016;overflow:hidden}
+.pcard .ph img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(.95) contrast(1.02)}
+.pcard .ph .noimg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--fc,var(--gold)) 16%,transparent),transparent 70%)}
+.pcard .ph .noimg .mono{font-size:8.5px;color:var(--text-faint);letter-spacing:2px;text-align:center;padding:0 10px}
+.pcard .ph .glyph{font-size:30px;opacity:.5}
+.pcard .place{position:absolute;top:6px;left:6px;z-index:3;background:rgba(7,9,14,.82);border:1px solid var(--gold-dim);
+  font-family:'Orbitron',monospace;font-weight:900;font-size:12px;color:var(--gold);padding:2px 7px}
+.pcard .facbar{position:absolute;top:0;left:0;right:0;height:2px;background:var(--fc,var(--gold));box-shadow:0 0 10px var(--fc,var(--gold));z-index:2}
+.pcard .meta{padding:9px 10px 11px}
+.pcard .nm{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;color:var(--white);line-height:1.05}
+.pcard .rl{font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--text-faint);letter-spacing:1px;margin-top:3px;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .fc{font-size:11px;color:var(--fc,var(--text-dim));margin-top:4px;letter-spacing:.5px}
+.pcard.spoiler-safe .place{display:none}
+
+/* ── Модное досье (карточка наряда) ── */
+.dossier{border:1px solid var(--line);background:linear-gradient(180deg,var(--bg3),var(--bg2));position:relative;overflow:hidden}
+.dossier::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--fc,var(--gold));box-shadow:0 0 12px var(--fc,var(--gold))}
+.dossier .dh{padding:14px 16px 10px;border-bottom:1px solid var(--line2)}
+.dossier .dkind{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--fc,var(--gold));text-transform:uppercase}
+.dossier .dconcept{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:22px;color:var(--white);margin-top:3px;line-height:1.1}
+.dossier .palette{display:flex;gap:0;margin-top:10px;height:8px;border:1px solid var(--line2)}
+.dossier .palette span{flex:1}
+.dossier .drows{padding:10px 16px 14px;display:grid;gap:7px}
+.drow{display:grid;grid-template-columns:118px 1fr;gap:10px;font-size:13.5px;align-items:baseline}
+.drow .k{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text-faint);text-transform:uppercase;padding-top:2px}
+.drow .v{color:var(--text)}
+.dossier .climax{margin:0 16px 14px;padding:10px 12px;border:1px solid var(--gold-dim);background:rgba(217,182,120,0.05);
+  font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:#e8dcc4}
+.dossier .impression{margin:0 16px 16px;font-size:13px;color:var(--text-dim)}
+.dossier .impression b{color:var(--silver);font-weight:600;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:3px}
+
+/* ── Протокол / таблица баллов ── */
+.protocol{border:1px solid var(--line);background:var(--bg2)}
+.protocol .ph{padding:10px 14px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:10px}
+.protocol .ph .ttl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+.protocol .ph .avg{margin-left:auto;font-family:'Orbitron',monospace;font-weight:900;font-size:20px;color:var(--gold)}
+.jrow{display:flex;align-items:center;gap:10px;padding:7px 14px;border-bottom:1px solid var(--line2);font-size:13px}
+.jrow:last-child{border-bottom:none}
+.jrow .jn{flex:1;color:var(--text-dim)}
+.jrow .jn b{color:var(--text);font-weight:600;display:block;font-size:13px}
+.jrow .jn span{font-family:'Share Tech Mono',monospace;font-size:8.5px;color:var(--text-faint);letter-spacing:1px}
+.jrow .bar{width:90px;height:5px;background:rgba(255,255,255,.06);position:relative;flex-shrink:0}
+.jrow .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--gold);box-shadow:0 0 8px var(--gold-dim)}
+.jrow .sc{width:34px;text-align:right;font-family:'Share Tech Mono',monospace;color:var(--silver);font-size:13px}
+
+/* ── Интервью Q&A ── */
+.qa{border-left:2px solid var(--fc,var(--gold));padding:2px 0 2px 14px;margin:12px 0;display:grid;gap:6px}
+.qa .q{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5px;color:var(--gold);text-transform:none}
+.qa .a{font-size:15px;color:var(--text);font-family:'Cormorant Garamond',serif;line-height:1.35}
+
+/* ── Речь/манифест блок ── */
+.speech{border:1px solid var(--line);background:linear-gradient(180deg,rgba(20,26,38,.6),rgba(11,15,22,.6));padding:20px 22px;position:relative}
+.speech .txt{font-family:'Cormorant Garamond',serif;font-size:20px;line-height:1.5;color:#e8ecf3}
+.speech .txt::first-letter{font-size:1px}
+.speech .meta{margin-top:14px;display:grid;gap:5px}
+.speech .meta .m{font-size:13px;color:var(--text-dim)}
+.speech .meta .m b{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;margin-right:6px}
+
+/* ── Хроника (проза) ── */
+.chron{font-size:15.5px;color:var(--text);line-height:1.6}
+.chron p{margin:0 0 12px}
+.lead{font-family:'Cormorant Garamond',serif;font-size:19px;color:#e2e7f0;line-height:1.45}
+
+/* ── Полоски-атрибуты (радар текстом) ── */
+.attrs{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.attr{display:grid;grid-template-columns:96px 1fr 24px;gap:8px;align-items:center;font-size:12px}
+.attr .k{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text-faint);text-transform:uppercase}
+.attr .bar{height:4px;background:rgba(255,255,255,.06);position:relative}
+.attr .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--fc,var(--gold))}
+.attr .n{text-align:right;font-family:'Share Tech Mono',monospace;color:var(--silver)}
+
+/* ── Секции-заголовки ── */
+.shead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.shead .n{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.shead::after{content:'';flex:1;height:1px;background:var(--line)}
+.shead.big .n{font-size:14px}
+
+/* ── Ворота доступа (пароль) ── */
+#gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(1000px 600px at 50% 30%,rgba(20,26,38,.9),#05070b)}
+#gate.ok{animation:gateOut .5s forwards}
+@keyframes gateOut{to{opacity:0;visibility:hidden}}
+#gate.shake .gate-box{animation:shake .4s}
+@keyframes shake{10%,90%{transform:translateX(-2px)}30%,70%{transform:translateX(5px)}50%{transform:translateX(-7px)}}
+.gate-box{max-width:400px;width:100%;text-align:center;border:1px solid var(--gold-dim);background:rgba(10,13,20,.9);padding:34px 26px}
+.gate-icon{font-size:34px;margin-bottom:14px;filter:drop-shadow(0 0 12px rgba(217,182,120,.5))}
+.gate-title{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:2px;color:var(--white);margin-bottom:6px}
+.gate-sub{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-faint);margin-bottom:20px;text-transform:uppercase}
+#gate input{width:100%;background:rgba(7,9,14,.8);border:1px solid var(--line);color:var(--white);font-family:'Share Tech Mono',monospace;
+  font-size:15px;text-align:center;letter-spacing:4px;padding:13px;margin-bottom:12px;outline:none}
+#gate input:focus{border-color:var(--gold)}
+.gate-err{color:var(--danger);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;min-height:14px;margin-top:10px}
+.gate-back{position:absolute;top:18px;left:18px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px}
+.gate-back:hover{color:var(--gold)}
+
+/* ── Подвал ── */
+.foot{border-top:1px solid var(--line);padding:22px 16px;text-align:center;
+  font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text-faint);background:rgba(7,9,14,.6)}
+.foot a{color:var(--text-dim)}
+.foot a:hover{color:var(--gold)}
+
+/* ── Утилиты ── */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stack{display:grid;gap:14px}
+.card{border:1px solid var(--line);background:var(--bg2);padding:16px}
+.card h3{font-size:14px;margin-bottom:8px}
+.scroll-x{overflow-x:auto}
+@media(max-width:720px){
+  .two-col,.three-col{grid-template-columns:1fr}
+  .attrs{grid-template-columns:1fr}
+  .drow{grid-template-columns:96px 1fr}
+  .grid-cards{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+}
+@media(max-width:420px){
+  .grid-cards{grid-template-columns:1fr 1fr;gap:9px}
+}
+
+/* прогресс/навигация глав */
+.chapnav{display:flex;gap:10px;margin:28px 0 6px}
+.chapnav a{flex:1;border:1px solid var(--line);background:var(--bg2);padding:12px 14px;display:flex;flex-direction:column;gap:3px;transition:.2s}
+.chapnav a:hover{border-color:var(--gold);background:rgba(217,182,120,.06)}
+.chapnav a.next{text-align:right}
+.chapnav .dir{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text-faint)}
+.chapnav .t{font-family:'Orbitron',monospace;font-size:12px;color:var(--white)}
+.chapnav a.disabled{opacity:.35;pointer-events:none}
+
+/* индикатор прогресса конкурса */
+.progress{display:flex;gap:3px;margin:4px 0}
+.progress i{flex:1;height:3px;background:rgba(255,255,255,.08)}
+.progress i.done{background:var(--gold);box-shadow:0 0 6px var(--gold-dim)}
+.progress i.here{background:var(--white)}

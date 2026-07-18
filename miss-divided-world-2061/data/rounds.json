@@ -1,0 +1,122 @@
+{
+ "presentation": {
+  "title": "Представление",
+  "weight": 0.1,
+  "phase": "prelim",
+  "attrs": {
+   "beauty": 3,
+   "style": 2,
+   "command": 2,
+   "memorable": 2,
+   "physique": 1
+  }
+ },
+ "interview": {
+  "title": "Закрытое интервью",
+  "weight": 0.25,
+  "phase": "prelim",
+  "attrs": {
+   "intellect": 3,
+   "rhetoric": 3,
+   "charisma": 2,
+   "coherence": 1,
+   "individ": 1
+  }
+ },
+ "swimwear": {
+  "title": "Выход в купальнике",
+  "weight": 0.2,
+  "phase": "prelim",
+  "attrs": {
+   "physique": 3,
+   "beauty": 2,
+   "presence": 2,
+   "command": 2,
+   "individ": 1
+  }
+ },
+ "gown": {
+  "title": "Вечернее платье",
+  "weight": 0.2,
+  "phase": "prelim",
+  "attrs": {
+   "style": 3,
+   "beauty": 2,
+   "coherence": 2,
+   "command": 2,
+   "memorable": 1
+  }
+ },
+ "costume": {
+  "title": "Фракционный костюм",
+  "weight": 0.25,
+  "phase": "prelim",
+  "attrs": {
+   "individ": 3,
+   "coherence": 3,
+   "memorable": 2,
+   "style": 1,
+   "presence": 1
+  }
+ },
+ "manifesto": {
+  "title": "Манифест",
+  "weight": null,
+  "phase": "top20",
+  "attrs": {
+   "rhetoric": 3,
+   "command": 3,
+   "presence": 2,
+   "coherence": 1,
+   "memorable": 1
+  }
+ },
+ "stage_question": {
+  "title": "Персональный вопрос",
+  "weight": null,
+  "phase": "top10",
+  "attrs": {
+   "intellect": 3,
+   "rhetoric": 2,
+   "coherence": 2,
+   "individ": 2,
+   "charisma": 1
+  }
+ },
+ "final_look": {
+  "title": "Финальный образ",
+  "weight": null,
+  "phase": "top5",
+  "attrs": {
+   "style": 3,
+   "beauty": 2,
+   "memorable": 2,
+   "coherence": 2,
+   "command": 1
+  }
+ },
+ "final_question": {
+  "title": "Общий вопрос",
+  "weight": null,
+  "phase": "top5",
+  "attrs": {
+   "rhetoric": 3,
+   "coherence": 2,
+   "charisma": 2,
+   "individ": 2,
+   "intellect": 1
+  }
+ },
+ "last_word": {
+  "title": "Последнее слово",
+  "weight": null,
+  "phase": "top3",
+  "attrs": {
+   "command": 3,
+   "memorable": 2,
+   "rhetoric": 2,
+   "presence": 2,
+   "coherence": 1
+  }
+ }
+}

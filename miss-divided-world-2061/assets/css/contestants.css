@@ -1,0 +1,55 @@
+/* Страница участницы + каталог */
+.participant-hero{position:relative;border:1px solid var(--line);background:var(--bg2);overflow:hidden;margin-top:16px}
+.participant-hero .cinema{position:relative;aspect-ratio:16/9;max-height:440px;overflow:hidden;background:#0a0d13}
+.participant-hero .cinema img{width:100%;height:100%;object-fit:cover;object-position:center 22%;filter:brightness(.72) saturate(.95)}
+.participant-hero .cinema .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-faint);
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;
+  background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--fc,var(--gold)) 18%,transparent),transparent 70%)}
+.participant-hero .grad{position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,9,14,.96) 6%,rgba(7,9,14,.3) 55%,transparent 100%)}
+.participant-hero .facbar{position:absolute;top:0;left:0;right:0;height:3px;background:var(--fc,var(--gold));box-shadow:0 0 14px var(--fc,var(--gold))}
+.participant-hero .hinfo{position:relative;padding:0 22px 20px;margin-top:-70px}
+.participant-hero .avatar{width:120px;height:120px;border:2px solid var(--fc,var(--gold));object-fit:cover;object-position:center top;
+  background:#0c1016;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.participant-hero .avatar.noimg{display:flex;align-items:center;justify-content:center;font-size:34px}
+.participant-hero .pname{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:38px;color:var(--white);line-height:1;margin-top:12px}
+.participant-hero .parch{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--gold);margin-top:2px}
+.participant-hero .pmeta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.place-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--gold);background:rgba(217,182,120,.08);
+  padding:5px 12px;font-family:'Orbitron',monospace;font-weight:900;color:var(--gold);font-size:14px}
+.place-badge.win{background:rgba(217,182,120,.18);box-shadow:0 0 20px rgba(217,182,120,.25)}
+
+.portraits3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.portraits3 figure{border:1px solid var(--line);background:var(--bg2);overflow:hidden}
+.portraits3 .cap{font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1.5px;color:var(--text-faint);
+  padding:6px 8px;text-transform:uppercase;text-align:center;border-top:1px solid var(--line2)}
+.portraits3 .frame{aspect-ratio:1/1;overflow:hidden;background:#0a0d13;position:relative}
+.portraits3 .frame img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.portraits3 .frame .noimg{position:absolute;inset:0;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;
+  color:var(--text-faint);font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;text-align:center;padding:8px;
+  background:radial-gradient(ellipse at 50% 40%,color-mix(in srgb,var(--fc,var(--gold)) 14%,transparent),transparent 70%)}
+.portraits3 .frame .noimg .g{font-size:26px;opacity:.5}
+@media(max-width:720px){
+  .participant-hero .pname{font-size:30px}
+  .portraits3{grid-template-columns:1fr 1fr}
+  .participant-hero .hinfo{margin-top:-56px;padding:0 16px 18px}
+}
+
+/* блок раунда на странице участницы */
+.round-block{border:1px solid var(--line);background:var(--bg2);margin-bottom:14px;overflow:hidden}
+.round-block .rb-head{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--line2);cursor:pointer;user-select:none}
+.round-block .rb-head .rt{font-family:'Orbitron',monospace;font-size:12px;color:var(--white);letter-spacing:1px}
+.round-block .rb-head .ravg{margin-left:auto;font-family:'Orbitron',monospace;font-weight:900;color:var(--gold);font-size:16px}
+.round-block .rb-head .chev{color:var(--text-faint);transition:.2s;font-size:12px}
+.round-block .rb-head.open .chev{transform:rotate(90deg)}
+.round-block .rb-body{padding:14px 15px;display:grid;gap:14px}
+.round-block .rb-body.collapsed{display:none}
+
+/* каталог: панель фильтров */
+.filterbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.filterbar input[type=text]{flex:1;min-width:160px;background:var(--bg2);border:1px solid var(--line);color:var(--white);
+  font-family:'Rajdhani',sans-serif;font-size:15px;padding:9px 12px;outline:none}
+.filterbar input[type=text]:focus{border-color:var(--gold)}
+.chip{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;
+  padding:6px 11px;border:1px solid var(--line);color:var(--text-dim);cursor:pointer;background:var(--bg2);transition:.15s}
+.chip:hover{color:var(--text)}
+.chip.active{border-color:var(--fc,var(--gold));color:var(--fc,var(--gold));background:color-mix(in srgb,var(--fc,var(--gold)) 8%,transparent)}

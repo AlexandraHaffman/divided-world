@@ -1,0 +1,16 @@
+/* Хронология — вертикальная интерактивная шкала */
+.timeline{position:relative;margin:20px 0 10px;padding-left:26px}
+.timeline::before{content:'';position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,var(--gold-dim),var(--line),var(--gold-dim))}
+.tl-item{position:relative;margin-bottom:14px;display:block;border:1px solid var(--line);background:var(--bg2);
+  padding:14px 16px;transition:.2s}
+.tl-item:hover{border-color:var(--gold);background:rgba(217,182,120,.05);transform:translateX(2px)}
+.tl-item::before{content:'';position:absolute;left:-26px;top:18px;width:12px;height:12px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--gold);box-shadow:0 0 10px var(--gold-dim)}
+.tl-item.crown::before{background:var(--gold);box-shadow:0 0 16px var(--gold)}
+.tl-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tl-date{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--text-faint)}
+.tl-remain{margin-left:auto;font-family:'Orbitron',monospace;font-size:11px;color:var(--gold);white-space:nowrap}
+.tl-title{font-family:'Orbitron',monospace;font-size:14px;color:var(--white);margin:4px 0 2px}
+.tl-desc{font-size:13.5px;color:var(--text-dim)}
+.tl-item .arrow{font-family:'Share Tech Mono',monospace;color:var(--gold);font-size:12px;margin-top:6px;display:inline-block}

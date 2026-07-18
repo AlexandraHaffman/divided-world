@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Жюри · Мисс Разделённый мир 2061</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/rounds.css">
+</head>
+<body>
+<div class="page">
+  <div id="topbar"></div>
+  <div class="wrap"><div id="main"></div></div>
+  <div id="foot"></div>
+</div>
+<script src="data/data.js"></script>
+<script>window.CB="";</script>
+<script src="assets/js/main.js"></script>
+<script>
+(function(){
+  if(!window.DWguard()) return;
+  window.DWinit("jury.html");
+  const DW=window.DWget(), esc=window.DWesc;
+  const ATTR_RU={beauty:"красота",individ:"индивидуальность",physique:"пластика",charisma:"харизма",
+    intellect:"интеллект",rhetoric:"речь",style:"стиль",command:"владение залом",coherence:"цельность",
+    memorable:"запоминаемость",presence:"сцен. сила"};
+  const cards=(DW.jury||[]).map((j,i)=>{
+    const acc=Object.keys(j.accent||{}).map(k=>ATTR_RU[k]||k);
+    return `<div class="card" style="border-left:3px solid var(--gold)">`+
+      `<div class="mono" style="font-size:9px;letter-spacing:2px;color:var(--text-faint)">СУДЬЯ ${i+1} / 7</div>`+
+      `<h3 style="font-size:18px;font-family:'Cormorant Garamond',serif;font-weight:600">${esc(j.name)}</h3>`+
+      `<div class="mono" style="font-size:9.5px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:2px 0 8px">${esc(j.role)}</div>`+
+      `<p class="muted" style="font-size:12px;margin-bottom:6px">${esc(j.origin)}</p>`+
+      `<p style="font-size:13.5px;margin-bottom:8px">${esc(j.bio)}</p>`+
+      `<div class="drow"><div class="k">Компетенция</div><div class="v" style="font-size:13px">${esc(j.focus)}</div></div>`+
+      `<div class="drow"><div class="k">Предпочтения</div><div class="v" style="font-size:13px">${esc(j.bias)}</div></div>`+
+      (acc.length?`<div class="chips" style="margin-top:8px">${acc.map(a=>`<span class="tag gold">${a}</span>`).join("")}</div>`:
+        `<div class="chips" style="margin-top:8px"><span class="tag">ровное среднее по всем критериям</span></div>`)+
+      `</div>`;
+  }).join("");
+  const rules=[
+    "не учитывать уровень боевой силы","не награждать высокий политический статус","не наказывать злодеек автоматически за мораль",
+    "не отдавать победу самой известной героине","не путать личную симпатию с качеством выступления",
+    "не завышать оценку из-за объёма биографии","не выбирать победительницу заранее","не менять баллы ради драматургии",
+    "не ставить всем фавориткам одинаково высокие оценки","не делать мораль главным критерием"];
+  const crit=["физическая красота","индивидуальность","сексуальная выразительность","харизма","интеллект",
+    "риторика","сценическая дисциплина","пластика","оригинальность","цельность образа",
+    "соответствие образа личности","способность стать лицом конкурса"];
+  document.getElementById("main").innerHTML=
+    `<div class="section"><div class="round-hero" style="border:none;padding:0 0 8px">`+
+    `<div class="rn">судейская коллегия</div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,7vw,52px)">Семь независимых судей</h1>`+
+    `<div class="sub">Коллегия разделена на семь ролей. Каждый судья оценивает только свою область компетенции, выставляет собственный балл, не повторяет мнение остальных, не знает будущих результатов и не может менять оценки задним числом. Средний балл раунда — среднее семи оценок.</div></div>`+
+    `<div class="section"><div class="three-col">${cards}</div></div>`+
+    `<div class="section"><div class="two-col">`+
+    `<div class="card"><h3>Что жюри различает</h3><div class="chips">${crit.map(c=>`<span class="tag">${c}</span>`).join("")}</div></div>`+
+    `<div class="card"><h3>Правила объективности</h3><ul style="list-style:none;display:grid;gap:6px">`+
+    rules.map(r=>`<li style="font-size:13.5px;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:var(--danger)">✕</span> ${r}</li>`).join("")+
+    `</ul></div></div></div>`+
+    `<div class="section"><div class="card" style="border-color:var(--gold-dim)"><h3>Аудит предвзятости</h3>`+
+    `<p class="muted" style="font-size:13.5px">После каждого раунда и сокращения проводится внутренняя проверка: не получили ли известные персонажи системное преимущество, не наказаны ли злодейки за мораль, не завышены ли традиционные типажи и не проигнорированы ли необычные, совпадают ли комментарии с баллами, нет ли арифметических ошибок и не выбран ли финал заранее. `+
+    `Модель судейства не содержит ни одного слагаемого за славу, политический статус, боевую силу или мораль — только конкурсные качества. `+
+    `Полная формула и результаты проверок — на <a class="tag gold" href="rules.html">странице правил</a> и в техническом отчёте.</p></div></div>`;
+})();
+</script>
+</body>
+</html>

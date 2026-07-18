@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пролог · Мисс Разделённый мир 2061</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/rounds.css">
+</head>
+<body>
+<div class="page">
+  <div id="topbar"></div>
+  <div class="wrap"><div id="main"></div></div>
+  <div id="foot"></div>
+</div>
+<script src="../data/data.js"></script>
+<script>window.CB="../";</script>
+<script src="../assets/js/main.js"></script>
+<script>
+if(window.DWguard()){
+  window.DWinit("chronology.html");
+  const DW=window.DWget(), esc=window.DWesc;
+  const c=DW.contest, v=c.venue, cr=c.crown;
+  const jcards=(DW.jury||[]).map(j=>
+    `<div class="card"><h3 style="font-size:13px">${esc(j.name)}</h3>`+
+    `<div class="mono" style="font-size:9px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin-bottom:6px">${esc(j.role)}</div>`+
+    `<p class="muted" style="font-size:13px">${esc(j.bio)}</p>`+
+    `<p style="font-size:12px;margin-top:6px"><b class="mono" style="font-size:8.5px;letter-spacing:1px;color:var(--text-faint)">КОМПЕТЕНЦИЯ</b> ${esc(j.focus)}</p></div>`).join("");
+  document.getElementById("main").innerHTML=
+    `<div class="round-hero"><div class="rn">${esc(c.dates)} · пролог</div>`+
+    `<h1>Пролог</h1><div class="sub">Как расколотый мир согласился на один вечер сесть в один амфитеатр — и что поставлено на кон.</div>`+
+    window.DWprogress("prologue")+`</div>`+
+
+    `<div class="stage-scene chron"><p class="lead">${esc(c.symbol)}</p></div>`+
+
+    `<div class="section"><div class="shead"><span class="n">Площадка</span></div>`+
+    `<div class="card"><h3>${esc(v.name)}</h3><p class="muted" style="margin-bottom:10px">${esc(v.place)}</p>`+
+    `<div class="chron"><p><b>Почему здесь.</b> ${esc(v.why)}</p>`+
+    `<p><b>Организаторы.</b> ${esc(v.organizers)}</p>`+
+    `<p><b>Вещание.</b> ${esc(v.broadcast)}</p>`+
+    `<p><b>Сцена.</b> ${esc(v.stage)}</p>`+
+    `<p><b>Безопасность.</b> ${esc(v.security)}</p></div></div></div>`+
+
+    `<div class="section"><div class="shead"><span class="n">Корона «${esc(cr.name)}»</span></div>`+
+    `<div class="two-col"><div class="card"><div class="chron">`+
+    `<p><b>Форма.</b> ${esc(cr.form)}</p><p><b>Материал.</b> ${esc(cr.material)}</p>`+
+    `<p><b>Технология.</b> ${esc(cr.tech)}</p></div></div>`+
+    `<div class="card"><div class="chron"><p class="lead">${esc(cr.symbolism)}</p>`+
+    `<p class="muted" style="margin-top:10px"><b>Лента.</b> ${esc(c.sash)}</p>`+
+    `<p class="muted"><b>Тема.</b> ${esc(c.music)}</p></div></div></div></div>`+
+
+    `<div class="section"><div class="shead"><span class="n">Судейская коллегия · семь независимых ролей</span></div>`+
+    `<p class="muted" style="margin-bottom:12px">Каждый судья оценивает только свою область компетенции, выставляет собственный балл и не может менять оценки задним числом. `+
+    `<a class="tag gold" href="../jury.html">Подробно о жюри →</a></p>`+
+    `<div class="three-col">${jcards}</div></div>`+
+
+    `<div class="section"><div class="stage-scene chron">`+
+    `<p><b>Перед открытием.</b> За неделю до эфира переговоры едва не сорвались трижды. Тенебрион требовал отдельной ложи для духовенства; Единая Америка — контроля над сигналом; Ракшасы прислали делегацию с формулировкой «наблюдатели», которую охрана Мыса читала как угрозу. Ходили слухи о срыве, о подмене участниц, о том, что кто-то из Квартета явится лично. Пресса съехалась за трое суток и заполнила остров ещё до первой участницы. Публика по обе стороны Рубежа ждала не столько красоты, сколько того, выдержит ли «Пакт одного вечера» — или расколотый мир не сумеет даже посмотреть в одно лицо, не подравшись.</p></div></div>`+
+
+    window.DWchapnav("prologue");
+}
+</script>
+</body>
+</html>

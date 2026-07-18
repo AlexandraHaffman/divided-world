@@ -7,6 +7,18 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="dossier-landscape.css">
 <link rel="stylesheet" href="desktop.css">
+<style>
+  /* ── Секретный вход в закрытую трансляцию «Мисс Разделённый мир — 2061».
+     Неприметный глиф в служебной строке: без подсказок и без курсора-указателя;
+     проявляется золотым свечением только при наведении (пароль запрашивается на входе). ── */
+  .miss-gate{
+    color:inherit;text-decoration:none;cursor:text;opacity:.32;margin-left:6px;
+    font-size:.9em;transition:color .4s, opacity .4s, text-shadow .4s;
+  }
+  .miss-gate:hover{
+    color:#d9b678;opacity:1;text-shadow:0 0 10px rgba(217,182,120,.85);
+  }
+</style>
 </head>
 <body>
 
@@ -16,7 +28,7 @@
 <div class="header">
   <div class="header-top">
     <a href="../index.html" class="back-btn">← ТЕРМИНАЛ</a>
-    <span class="sys-label">SYS.<span>PERSONNEL_DB</span> // CLEARANCE: OMNI</span>
+    <span class="sys-label">SYS.<span>PERSONNEL_DB</span> // CLEARANCE: OMNI<a class="miss-gate" href="../miss-divided-world-2061/index.html" aria-label="Закрытый раздел" title="">♛</a></span>
   </div>
   <div class="page-title">Персонажи</div>
   <div class="stats-row">

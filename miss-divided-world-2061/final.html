@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финал · Мисс Разделённый мир 2061</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/leaderboard.css">
+<link rel="stylesheet" href="assets/css/rounds.css">
+</head>
+<body>
+<div class="page">
+  <div id="topbar"></div>
+  <div class="wrap"><div id="main"></div></div>
+  <div id="foot"></div>
+</div>
+<script src="data/data.js"></script>
+<script>window.CB="";</script>
+<script src="assets/js/main.js"></script>
+<script>
+(function(){
+  if(!window.DWguard()) return;
+  window.DWinit("final.html");
+  const DW=window.DWget(), esc=window.DWesc, img=window.DWimg, fac=window.DWfac, fmt=window.DWfmt;
+  const host=document.getElementById("main");
+  const hero=`<div class="round-hero" style="border:none;padding:0 0 8px"><div class="rn">развязка</div>`+
+    `<h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,7vw,52px)">Финал</h1>`+
+    `<div class="sub">Топ-5, топ-3 и корона. Финальные образы, общий вопрос и последнее слово.</div></div>`;
+  if(!window.DWspoilers()){
+    host.innerHTML=`<div class="section">${hero}<div class="spoiler-shield">`+
+      `<div class="serif" style="font-size:20px;color:var(--white)">Финал скрыт</div>`+
+      `<p class="muted" style="margin-top:8px">Вы в режиме последовательного чтения. Откройте развязку или пройдите хронику до конца.</p>`+
+      `<button class="btn" onclick="window.DWsetSpoilers(true);location.reload()">♛ Показать финал</button></div></div>`;
+    return;
+  }
+  const perf=s=>(DW.performances||{})[s]||{};
+  const top5=(DW.rankings.top5||[]).map(r=>r.slug);
+  const top3=(DW.rankings.top3||[]);
+  const w=window.DWby(DW.results.winner.slug), r=window.DWby(DW.results.runnerup.slug), th=window.DWby(DW.results.third.slug);
+  const pod=(c,rank,cls,medal)=>{ const src=img(c.img.system_1x1)||img(c.img.reference);
+    const ph=src?`<img src="${src}" alt="${esc(c.name)}">`:`<div class="noimg" style="${fac(c)}">◈</div>`;
+    return `<a class="pod ${cls}" style="${fac(c)}" href="contestants/participant.html?slug=${c.slug}">`+
+      (cls==="p1"?`<div class="crown-emoji">♛</div>`:"")+
+      `<div class="ph">${ph}</div><div class="cap"><div class="rank">${medal} ${rank}</div>`+
+      `<div class="nm">${esc(c.name)}</div><div class="fc">${esc(c.faction)}</div></div></a>`; };
+  // финалистки: финальный образ + общий ответ
+  const finalists=top5.map(s=>{ const c=window.DWby(s); const p=perf(s); const fl=p.final_look, fa=p.final_answer;
+    const sc=(DW.scores.final_look||{})[s], sq=(DW.scores.final_question||{})[s];
+    return `<div class="perf" style="${fac(c)}"><div class="facbar"></div>`+
+      `<div class="phead"><div class="who"><a href="contestants/participant.html?slug=${s}"><div class="nm">${esc(c.name)}</div></a>`+
+      `<div class="fc">${esc(c.faction)}</div></div>`+
+      `<div class="rr"><div class="lbl">образ · ответ</div><div class="val">${fmt(sc?sc.avg:0)} · ${fmt(sq?sq.avg:0)}</div></div></div>`+
+      `<div class="pbody"><div class="cols"><div>${window.DWdossier(fl,fac(c))}</div>`+
+      `<div><div class="speech"><div class="txt">«${esc((fa&&fa.text||"")).replace(/^«|»$/g,'')}»</div>`+
+      (fa&&fa.jury?`<div class="meta"><div class="m"><b>Жюри</b>${esc(fa.jury)}</div></div>`:"")+`</div></div></div></div></div>`;
+  }).join("");
+  // последнее слово топ-3
+  const lastwords=top3.map(r0=>{ const c=window.DWby(r0.slug); const p=perf(r0.slug);
+    return `<div class="perf" style="${fac(c)}"><div class="facbar"></div>`+
+      `<div class="phead"><div class="who"><div class="nm">${esc(c.name)}</div><div class="fc">${esc(c.faction)}</div></div>`+
+      `<div class="rr"><div class="lbl">итог финала</div><div class="val">${fmt(r0.total)}</div></div></div>`+
+      `<div class="pbody">${window.DWspeech(p.last_word)}</div></div>`;
+  }).join("");
+  host.innerHTML=`<div class="section">${hero}`+
+    `<div class="podium"><div>${pod(r,"1-я вице-мисс","p2","✦")}</div>`+
+    `<div>${pod(w,"МИСС РАЗДЕЛЁННЫЙ МИР","p1","♛")}</div>`+
+    `<div>${pod(th,"2-я вице-мисс","p3","✦")}</div></div>`+
+    `<div class="center"><a class="btn ghost" href="chronology/coronation.html">Полная сцена коронации →</a></div></div>`+
+    `<div class="section"><div class="shead big"><span class="n">Финальный образ и общий вопрос · Топ-5</span></div>${finalists}</div>`+
+    `<div class="section"><div class="shead big"><span class="n">Последнее слово · Топ-3</span></div>${lastwords}</div>`+
+    `<div class="center section"><a class="btn ghost" href="epilogue.html">Что было после эфира → Эпилог</a></div>`;
+})();
+</script>
+</body>
+</html>

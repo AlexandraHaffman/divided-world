@@ -1,0 +1,82 @@
+{
+ "reference_dir": "data/images/characters/",
+ "total": 35,
+ "with_system_portrait": 20,
+ "missing_system_portrait": [
+  {
+   "slug": "абигейл-ли",
+   "name": "Абигейл Ли",
+   "expected": "data/images/characters/abigeyl-li-portrait-web.jpg"
+  },
+  {
+   "slug": "айша-хан",
+   "name": "Айша Хан",
+   "expected": "data/images/characters/aysha-khan-portrait-web.jpg"
+  },
+  {
+   "slug": "бьянка-скардино",
+   "name": "Бьянка Скардино",
+   "expected": "data/images/characters/byanka-skardino-portrait-web.jpg"
+  },
+  {
+   "slug": "кавита-рао",
+   "name": "Кавита Рао",
+   "expected": "data/images/characters/kavita-rao-portrait-web.jpg"
+  },
+  {
+   "slug": "кассандра-стерлинг",
+   "name": "Кассандра Стерлинг",
+   "expected": "data/images/characters/kassandra-sterling-portrait-web.jpg"
+  },
+  {
+   "slug": "катарина-меланье",
+   "name": "Катарина Меланье",
+   "expected": "data/images/characters/katarina-melane-portrait-web.jpg"
+  },
+  {
+   "slug": "клара-уолш",
+   "name": "Клара Уолш",
+   "expected": "data/images/characters/klara-uolsh-portrait-web.jpg"
+  },
+  {
+   "slug": "кристина-новак",
+   "name": "Кристина Новак",
+   "expected": "data/images/characters/kristina-novak-portrait-web.jpg"
+  },
+  {
+   "slug": "мириам-блум",
+   "name": "Мириам Блум",
+   "expected": "data/images/characters/miriam-blum-portrait-web.jpg"
+  },
+  {
+   "slug": "нимфея-эленис",
+   "name": "Нимфея Эленис",
+   "expected": "data/images/characters/nimfeya-elenis-portrait-web.jpg"
+  },
+  {
+   "slug": "саманта-чен",
+   "name": "Саманта Чен",
+   "expected": "data/images/characters/samanta-chen-portrait-web.jpg"
+  },
+  {
+   "slug": "тенебриа",
+   "name": "Тенебриа",
+   "expected": "data/images/characters/tenebria-portrait-web.jpg"
+  },
+  {
+   "slug": "элари-уолш",
+   "name": "Элари Уолш",
+   "expected": "data/images/characters/elari-uolsh-portrait-web.jpg"
+  },
+  {
+   "slug": "эмили-грей",
+   "name": "Эмили Грей",
+   "expected": "data/images/characters/emili-grey-portrait-web.jpg"
+  },
+  {
+   "slug": "эмилия-эверетт",
+   "name": "Эмилия Эверетт",
+   "expected": "data/images/characters/emiliya-everett-portrait-web.jpg"
+  }
+ ]
+}
