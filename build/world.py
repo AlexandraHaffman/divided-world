@@ -98,9 +98,11 @@ STAGES = [
     ("manifesto",      "Манифест · Топ-20",   "17 октября", 20, "chronology/manifesto.html"),
     ("top-10",         "Второе сокращение · 20→10", "17 октября", 10, "chronology/top-10.html"),
     ("stage-questions","Персональный вопрос · Топ-10", "18 октября", 10, "chronology/stage-questions.html"),
+    ("talent",         "Конкурс талантов · Топ-10", "18 октября", 10, "chronology/talent.html"),
     ("top-5",          "Третье сокращение · 10→5", "18 октября", 5, "chronology/top-5.html"),
     ("interlude-2",    "Вечер финалисток", "18 октября", 5, "chronology/interlude-2.html"),
     ("final-looks",    "Финальный образ · Топ-5", "19 октября", 5, "chronology/final-looks.html"),
+    ("photo",          "Фотосессия · Топ-5", "19 октября", 5, "chronology/photo.html"),
     ("final-question", "Общий финальный вопрос", "19 октября", 5, "chronology/final-question.html"),
     ("top-3",          "Четвёртое сокращение · 5→3", "19 октября", 3, "chronology/top-3.html"),
     ("last-word",      "Последнее слово · Топ-3", "19 октября", 3, "chronology/last-word.html"),
@@ -112,7 +114,7 @@ AGG = {
     "prelim_weights": {"presentation":0.10,"interview":0.25,"swimwear":0.20,
                        "gown":0.20,"costume":0.25},
     "semifinal": {"prelim":0.65,"manifesto":0.35},          # 20 -> 10
-    "top10":     {"semifinal":0.60,"stage_question":0.40},  # 10 -> 5
-    "top5_final":{"final_look":0.50,"final_question":0.50},  # 5 -> 3 (собственная система финала)
+    "top10":     {"semifinal":0.45,"stage_question":0.25,"talent":0.30},  # 10 -> 5
+    "top5_final":{"final_look":0.40,"photo":0.35,"final_question":0.25},  # 5 -> 3 (собственная система финала)
     "crown":     {"final_look":0.40,"final_question":0.30,"last_word":0.30},  # 3 -> 1
 }

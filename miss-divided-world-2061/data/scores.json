@@ -2473,6 +2473,128 @@
    "avg": 7.3818
   }
  },
+ "talent": {
+  "нимфея-эленис": {
+   "judges": {
+    "j_couture": 9.0364,
+    "j_director": 8.4542,
+    "j_press": 7.7821,
+    "j_orator": 9.1722,
+    "j_culture": 8.08,
+    "j_movement": 8.2816,
+    "j_chair": 8.3384
+   },
+   "avg": 8.4493
+  },
+  "ульяна-спасская": {
+   "judges": {
+    "j_couture": 8.8259,
+    "j_director": 9.0856,
+    "j_press": 8.1873,
+    "j_orator": 8.2381,
+    "j_culture": 8.7007,
+    "j_movement": 8.9424,
+    "j_chair": 9.1558
+   },
+   "avg": 8.7337
+  },
+  "валентина-блажек": {
+   "judges": {
+    "j_couture": 8.5881,
+    "j_director": 9.1939,
+    "j_press": 7.8608,
+    "j_orator": 8.1648,
+    "j_culture": 8.5239,
+    "j_movement": 9.082,
+    "j_chair": 8.4431
+   },
+   "avg": 8.5509
+  },
+  "тенебриа": {
+   "judges": {
+    "j_couture": 8.4335,
+    "j_director": 8.2984,
+    "j_press": 9.9645,
+    "j_orator": 9.1824,
+    "j_culture": 9.9478,
+    "j_movement": 8.0098,
+    "j_chair": 8.5842
+   },
+   "avg": 8.9172
+  },
+  "ольга-гончарова": {
+   "judges": {
+    "j_couture": 7.6501,
+    "j_director": 8.1119,
+    "j_press": 7.8016,
+    "j_orator": 7.7014,
+    "j_culture": 7.7481,
+    "j_movement": 8.2985,
+    "j_chair": 7.6939
+   },
+   "avg": 7.8579
+  },
+  "анаиса-аскирион": {
+   "judges": {
+    "j_couture": 8.451,
+    "j_director": 7.885,
+    "j_press": 8.7063,
+    "j_orator": 7.7817,
+    "j_culture": 8.8736,
+    "j_movement": 8.2072,
+    "j_chair": 8.1606
+   },
+   "avg": 8.2951
+  },
+  "амели-бертран": {
+   "judges": {
+    "j_couture": 8.1502,
+    "j_director": 7.9529,
+    "j_press": 9.3063,
+    "j_orator": 7.9539,
+    "j_culture": 9.4448,
+    "j_movement": 7.5198,
+    "j_chair": 8.3251
+   },
+   "avg": 8.379
+  },
+  "харпер-вэнс": {
+   "judges": {
+    "j_couture": 6.4059,
+    "j_director": 7.1319,
+    "j_press": 5.223,
+    "j_orator": 7.8711,
+    "j_culture": 5.6813,
+    "j_movement": 7.3451,
+    "j_chair": 6.3491
+   },
+   "avg": 6.5725
+  },
+  "аша-наир": {
+   "judges": {
+    "j_couture": 7.0876,
+    "j_director": 8.2861,
+    "j_press": 6.8244,
+    "j_orator": 5.9666,
+    "j_culture": 8.1413,
+    "j_movement": 7.8507,
+    "j_chair": 7.9451
+   },
+   "avg": 7.4431
+  },
+  "эва-найт": {
+   "judges": {
+    "j_couture": 7.5008,
+    "j_director": 8.2873,
+    "j_press": 7.953,
+    "j_orator": 6.8928,
+    "j_culture": 8.5529,
+    "j_movement": 8.6375,
+    "j_chair": 8.1603
+   },
+   "avg": 7.9978
+  }
+ },
  "final_look": {
   "нимфея-эленис": {
    "judges": {
@@ -2498,18 +2620,6 @@
    },
    "avg": 9.4777
   },
-  "валентина-блажек": {
-   "judges": {
-    "j_couture": 9.6687,
-    "j_director": 9.7671,
-    "j_press": 9.2241,
-    "j_orator": 7.8708,
-    "j_culture": 9.3207,
-    "j_movement": 9.9066,
-    "j_chair": 9.7396
-   },
-   "avg": 9.3568
-  },
   "тенебриа": {
    "judges": {
     "j_couture": 8.0055,
@@ -2522,17 +2632,91 @@
    },
    "avg": 8.5154
   },
-  "ольга-гончарова": {
+  "валентина-блажек": {
    "judges": {
-    "j_couture": 7.6991,
-    "j_director": 7.7915,
-    "j_press": 7.784,
-    "j_orator": 7.8566,
-    "j_culture": 7.6624,
-    "j_movement": 7.4449,
-    "j_chair": 7.7793
+    "j_couture": 9.6687,
+    "j_director": 9.7671,
+    "j_press": 9.2241,
+    "j_orator": 7.8708,
+    "j_culture": 9.3207,
+    "j_movement": 9.9066,
+    "j_chair": 9.7396
    },
-   "avg": 7.7168
+   "avg": 9.3568
+  },
+  "анаиса-аскирион": {
+   "judges": {
+    "j_couture": 7.3215,
+    "j_director": 7.319,
+    "j_press": 7.6796,
+    "j_orator": 7.7286,
+    "j_culture": 9.07,
+    "j_movement": 6.9062,
+    "j_chair": 7.7467
+   },
+   "avg": 7.6817
+  }
+ },
+ "photo": {
+  "нимфея-эленис": {
+   "judges": {
+    "j_couture": 10.0,
+    "j_director": 9.4543,
+    "j_press": 9.4532,
+    "j_orator": 9.2653,
+    "j_culture": 8.9086,
+    "j_movement": 9.3698,
+    "j_chair": 9.2823
+   },
+   "avg": 9.3905
+  },
+  "ульяна-спасская": {
+   "judges": {
+    "j_couture": 9.8797,
+    "j_director": 9.3636,
+    "j_press": 9.5587,
+    "j_orator": 9.7755,
+    "j_culture": 8.9325,
+    "j_movement": 9.9527,
+    "j_chair": 9.7926
+   },
+   "avg": 9.6079
+  },
+  "тенебриа": {
+   "judges": {
+    "j_couture": 7.948,
+    "j_director": 7.6935,
+    "j_press": 8.1467,
+    "j_orator": 8.1904,
+    "j_culture": 9.7337,
+    "j_movement": 7.8299,
+    "j_chair": 8.1519
+   },
+   "avg": 8.242
+  },
+  "валентина-блажек": {
+   "judges": {
+    "j_couture": 9.4008,
+    "j_director": 9.8136,
+    "j_press": 9.7003,
+    "j_orator": 9.4435,
+    "j_culture": 9.1103,
+    "j_movement": 9.406,
+    "j_chair": 9.6445
+   },
+   "avg": 9.5027
+  },
+  "анаиса-аскирион": {
+   "judges": {
+    "j_couture": 7.69,
+    "j_director": 6.9735,
+    "j_press": 7.5138,
+    "j_orator": 7.8968,
+    "j_culture": 8.9582,
+    "j_movement": 7.3373,
+    "j_chair": 7.4938
+   },
+   "avg": 7.6948
   }
  },
  "final_question": {
@@ -2560,18 +2744,6 @@
    },
    "avg": 8.6111
   },
-  "валентина-блажек": {
-   "judges": {
-    "j_couture": 8.9168,
-    "j_director": 10.0,
-    "j_press": 6.1019,
-    "j_orator": 5.5943,
-    "j_culture": 7.3312,
-    "j_movement": 10.0,
-    "j_chair": 7.9127
-   },
-   "avg": 7.9796
-  },
   "тенебриа": {
    "judges": {
     "j_couture": 8.6249,
@@ -2584,17 +2756,29 @@
    },
    "avg": 7.3762
   },
-  "ольга-гончарова": {
+  "валентина-блажек": {
    "judges": {
-    "j_couture": 8.3297,
-    "j_director": 7.4405,
-    "j_press": 7.0931,
-    "j_orator": 7.1027,
-    "j_culture": 8.8434,
-    "j_movement": 7.5155,
-    "j_chair": 7.2791
+    "j_couture": 8.9168,
+    "j_director": 10.0,
+    "j_press": 6.1019,
+    "j_orator": 5.5943,
+    "j_culture": 7.3312,
+    "j_movement": 10.0,
+    "j_chair": 7.9127
    },
-   "avg": 7.6577
+   "avg": 7.9796
+  },
+  "анаиса-аскирион": {
+   "judges": {
+    "j_couture": 7.9132,
+    "j_director": 6.7588,
+    "j_press": 6.6468,
+    "j_orator": 6.4327,
+    "j_culture": 8.7518,
+    "j_movement": 6.688,
+    "j_chair": 6.5672
+   },
+   "avg": 7.1084
   }
  },
  "last_word": {

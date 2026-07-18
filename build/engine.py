@@ -71,6 +71,14 @@ ROUNDS = {
         "title":"Персональный вопрос","phase":"top10",
         "attrs":{"intellect":2,"rhetoric":2,"coherence":2,"beauty":2,"charisma":1,"individ":1},
     },
+    "talent": {        # топ-10 конкурс талантов — кто во что горазд
+        "title":"Конкурс талантов","phase":"top10",
+        "attrs":{"individ":3,"physique":2,"presence":2,"memorable":2,"sex":1,"style":1,"command":1},
+    },
+    "photo": {         # топ-5 фотосессия — чистый визуал и чувственность
+        "title":"Фотосессия","phase":"top5",
+        "attrs":{"beauty":4,"sex":3,"style":2,"memorable":2,"physique":1},
+    },
     "final_look": {    # топ-5 финальный образ
         "title":"Финальный образ","phase":"top5",
         "attrs":{"beauty":3,"sex":3,"style":2,"memorable":2,"command":1},

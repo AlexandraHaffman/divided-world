@@ -337,61 +337,61 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.4974,
+   "total": 9.1672,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.744,
+   "total": 8.7433,
    "rank": 2
-  },
-  {
-   "slug": "валентина-блажек",
-   "name": "Валентина Блажек",
-   "total": 8.1499,
-   "rank": 3
   },
   {
    "slug": "тенебриа",
    "name": "Тенебриа",
-   "total": 8.0776,
-   "rank": 4
+   "total": 8.3326,
+   "rank": 3
   },
   {
-   "slug": "ольга-гончарова",
-   "name": "Ольга Гончарова",
-   "total": 7.8085,
-   "rank": 5
+   "slug": "валентина-блажек",
+   "name": "Валентина Блажек",
+   "total": 8.2873,
+   "rank": 4
   },
   {
    "slug": "анаиса-аскирион",
    "name": "Анаиса Аскирион",
-   "total": 7.7631,
-   "rank": 6
+   "total": 7.9204,
+   "rank": 5
   },
   {
    "slug": "амели-бертран",
    "name": "Амели Бертран",
-   "total": 7.6337,
-   "rank": 7
+   "total": 7.853,
+   "rank": 6
   },
   {
-   "slug": "харпер-вэнс",
-   "name": "Харпер Вэнс",
-   "total": 7.5917,
-   "rank": 8
+   "slug": "ольга-гончарова",
+   "name": "Ольга Гончарова",
+   "total": 7.8178,
+   "rank": 7
   },
   {
    "slug": "эва-найт",
    "name": "Эва Найт",
-   "total": 7.3666,
-   "rank": 9
+   "total": 7.5552,
+   "rank": 8
   },
   {
    "slug": "аша-наир",
    "name": "Аша Наир",
-   "total": 7.2417,
+   "total": 7.3112,
+   "rank": 9
+  },
+  {
+   "slug": "харпер-вэнс",
+   "name": "Харпер Вэнс",
+   "total": 7.2788,
    "rank": 10
   }
  ],
@@ -399,31 +399,31 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.6641,
+   "total": 9.5458,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 9.0444,
+   "total": 9.3066,
    "rank": 2
   },
   {
    "slug": "валентина-блажек",
    "name": "Валентина Блажек",
-   "total": 8.6682,
+   "total": 9.0636,
    "rank": 3
   },
   {
    "slug": "тенебриа",
    "name": "Тенебриа",
-   "total": 7.9458,
+   "total": 8.1349,
    "rank": 4
   },
   {
-   "slug": "ольга-гончарова",
-   "name": "Ольга Гончарова",
-   "total": 7.6873,
+   "slug": "анаиса-аскирион",
+   "name": "Анаиса Аскирион",
+   "total": 7.543,
    "rank": 5
   }
  ],
@@ -492,19 +492,7 @@
    "faction_color": "#ff9d00",
    "place": 4,
    "band": "Выбыла 5→3 (Топ-5)",
-   "total": 7.9458,
-   "best_round": "costume",
-   "worst_round": "interview"
-  },
-  {
-   "slug": "ольга-гончарова",
-   "name": "Ольга Гончарова",
-   "faction": "Тенебрион",
-   "faction_id": "tenebrion",
-   "faction_color": "#ff9d00",
-   "place": 5,
-   "band": "Выбыла 5→3 (Топ-5)",
-   "total": 7.6873,
+   "total": 8.1349,
    "best_round": "costume",
    "worst_round": "interview"
   },
@@ -514,9 +502,9 @@
    "faction": "Тенебрион",
    "faction_id": "tenebrion",
    "faction_color": "#ff9d00",
-   "place": 6,
-   "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.7631,
+   "place": 5,
+   "band": "Выбыла 5→3 (Топ-5)",
+   "total": 7.543,
    "best_round": "costume",
    "worst_round": "interview"
   },
@@ -526,22 +514,22 @@
    "faction": "Ракшасы",
    "faction_id": "rakshasy",
    "faction_color": "#a55eea",
-   "place": 7,
+   "place": 6,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.6337,
+   "total": 7.853,
    "best_round": "costume",
    "worst_round": "swimwear"
   },
   {
-   "slug": "харпер-вэнс",
-   "name": "Харпер Вэнс",
-   "faction": "Единая Америка",
-   "faction_id": "america",
-   "faction_color": "#4a9eff",
-   "place": 8,
+   "slug": "ольга-гончарова",
+   "name": "Ольга Гончарова",
+   "faction": "Тенебрион",
+   "faction_id": "tenebrion",
+   "faction_color": "#ff9d00",
+   "place": 7,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.5917,
-   "best_round": "presentation",
+   "total": 7.8178,
+   "best_round": "costume",
    "worst_round": "interview"
   },
   {
@@ -550,9 +538,9 @@
    "faction": "Независимые",
    "faction_id": "independent",
    "faction_color": "#c0c8d4",
-   "place": 9,
+   "place": 8,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.3666,
+   "total": 7.5552,
    "best_round": "swimwear",
    "worst_round": "interview"
   },
@@ -562,9 +550,21 @@
    "faction": "Ракшасы",
    "faction_id": "rakshasy",
    "faction_color": "#a55eea",
+   "place": 9,
+   "band": "Выбыла 10→5 (Топ-10)",
+   "total": 7.3112,
+   "best_round": "presentation",
+   "worst_round": "interview"
+  },
+  {
+   "slug": "харпер-вэнс",
+   "name": "Харпер Вэнс",
+   "faction": "Единая Америка",
+   "faction_id": "america",
+   "faction_color": "#4a9eff",
    "place": 10,
    "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.2417,
+   "total": 7.2788,
    "best_round": "presentation",
    "worst_round": "interview"
   },

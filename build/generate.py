@@ -125,20 +125,24 @@ def run():
     top10 = order20[:10]
     out10 = order20[10:]  # 11..20
 
-    # ПЕРСОНАЛЬНЫЙ ВОПРОС (топ-10)
+    # ПЕРСОНАЛЬНЫЙ ВОПРОС + КОНКУРС ТАЛАНТОВ (топ-10)
     do_round("stage_question", top10)
+    do_round("talent", top10)
     t10tot = {s: round(AGG["top10"]["semifinal"]*semifinal[s]
-                       + AGG["top10"]["stage_question"]*round_avg[s]["stage_question"],4)
+                       + AGG["top10"]["stage_question"]*round_avg[s]["stage_question"]
+                       + AGG["top10"]["talent"]*round_avg[s]["talent"],4)
               for s in top10}
     order10 = sorted(top10, key=lambda s:(t10tot[s], round_avg[s]["stage_question"],
                      round_avg[s]["costume"], _rng("t10",s)), reverse=True)
     top5 = order10[:5]
     out5 = order10[5:]  # 6..10
 
-    # ФИНАЛЬНЫЙ ОБРАЗ + ОБЩИЙ ВОПРОС (топ-5)
+    # ФИНАЛЬНЫЙ ОБРАЗ + ФОТОСЕССИЯ + ОБЩИЙ ВОПРОС (топ-5)
     do_round("final_look", top5)
+    do_round("photo", top5)
     do_round("final_question", top5)
     finalstage = {s: round(AGG["top5_final"]["final_look"]*round_avg[s]["final_look"]
+                           + AGG["top5_final"]["photo"]*round_avg[s]["photo"]
                            + AGG["top5_final"]["final_question"]*round_avg[s]["final_question"],4)
                   for s in top5}
     order5 = sorted(top5, key=lambda s:(finalstage[s], round_avg[s]["final_look"],

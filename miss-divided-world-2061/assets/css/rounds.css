@@ -79,3 +79,8 @@
 .perf-index a{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--text-dim);
   border:1px solid var(--line);padding:4px 9px;transition:.15s}
 .perf-index a:hover{border-color:var(--fc,var(--gold));color:var(--fc,var(--gold))}
+
+/* конкурс талантов — хроника номера с акцентом на кульминацию */
+.talent-chron .climax-line{border-left:2px solid var(--gold-dim);padding-left:12px;color:var(--silver)}
+.talent-chron .climax-line b{color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:9px;
+  letter-spacing:2px;text-transform:uppercase;margin-right:4px}

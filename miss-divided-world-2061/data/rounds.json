@@ -88,6 +88,32 @@
    "individ": 1
   }
  },
+ "talent": {
+  "title": "Конкурс талантов",
+  "weight": null,
+  "phase": "top10",
+  "attrs": {
+   "individ": 3,
+   "physique": 2,
+   "presence": 2,
+   "memorable": 2,
+   "sex": 1,
+   "style": 1,
+   "command": 1
+  }
+ },
+ "photo": {
+  "title": "Фотосессия",
+  "weight": null,
+  "phase": "top5",
+  "attrs": {
+   "beauty": 4,
+   "sex": 3,
+   "style": 2,
+   "memorable": 2,
+   "physique": 1
+  }
+ },
  "final_look": {
   "title": "Финальный образ",
   "weight": null,

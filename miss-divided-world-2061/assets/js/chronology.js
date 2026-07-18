@@ -13,12 +13,12 @@ const PRELIM = ["presentation","interview","swimwear","gown","costume"];
 const ROUND_TITLE = {
   presentation:"Представление",interview:"Закрытое интервью",swimwear:"Выход в купальнике",
   gown:"Вечернее платье",costume:"Фракционный костюм",manifesto:"Манифест",
-  stage_question:"Персональный вопрос",final_look:"Финальный образ",
-  final_question:"Общий финальный вопрос",last_word:"Последнее слово"
+  stage_question:"Персональный вопрос",talent:"Конкурс талантов",final_look:"Финальный образ",
+  photo:"Фотосессия",final_question:"Общий финальный вопрос",last_word:"Последнее слово"
 };
 const SECTION = {presentation:"opening",interview:"interview",swimwear:"swimwear",gown:"gown",
-  costume:"costume",manifesto:"manifesto",stage_question:"stage_question",
-  final_look:"final_look",final_question:"final_answer",last_word:"last_word"};
+  costume:"costume",manifesto:"manifesto",stage_question:"stage_question",talent:"talent",
+  final_look:"final_look",photo:"photo",final_question:"final_answer",last_word:"last_word"};
 
 /* участницы, участвовавшие в раунде (есть балл), в порядке убывания балла */
 function poolFor(rk){
@@ -119,6 +119,28 @@ function perfBlock(rk,slug,rr){
       (q.crowd?`<p><b>Зал.</b> ${esc(q.crowd)}</p>`:"")+
       (q.jury?`<p class="muted">${esc(q.jury)}</p>`:"")+
       `</div><div>${window.DWprotocol(rk,slug,"Протокол · Вопрос")}</div></div>`;
+  } else if(rk==="talent"){
+    const tl=p.talent||{};
+    body = `<div class="cols"><div class="chron talent-chron">`+
+      (tl.act?`<p class="lead">${esc(tl.act)}</p>`:"")+
+      (tl.staging?`<p><b>Постановка.</b> ${esc(tl.staging)}</p>`:"")+
+      (tl.climax?`<p class="climax-line"><b>Кульминация.</b> ${esc(tl.climax)}</p>`:"")+
+      (tl.crowd?`<p><b>Зал.</b> ${esc(tl.crowd)}</p>`:"")+
+      (tl.jury?`<p class="muted">${esc(tl.jury)}</p>`:"")+
+      `</div><div>${window.DWprotocol(rk,slug,"Протокол · Таланты")}</div></div>`;
+  } else if(rk==="photo"){
+    const ph=p.photo||{};
+    body = `<div class="cols"><div><div class="dossier" style="${fac(c)}">`+
+      `<div class="dh"><div class="dkind">Фотосессия</div><div class="dconcept">${esc(ph.concept||"")}</div></div>`+
+      `<div class="drows">`+
+      (ph.look?`<div class="drow"><div class="k">Образ</div><div class="v">${esc(ph.look)}</div></div>`:"")+
+      (ph.pose?`<div class="drow"><div class="k">Кадр</div><div class="v">${esc(ph.pose)}</div></div>`:"")+
+      (ph.crowd?`<div class="drow"><div class="k">Площадка</div><div class="v">${esc(ph.crowd)}</div></div>`:"")+
+      `</div>`+
+      (ph.hot?`<div class="impression"><b>Чувственность</b>${esc(ph.hot)}</div>`:"")+
+      (ph.jury?`<div class="climax">${esc(ph.jury)}</div>`:"")+
+      `</div></div>`+
+      `<div>${window.DWprotocol(rk,slug,"Протокол · Фотосессия")}</div></div>`;
   } else if(rk==="final_question"){
     const q=p.final_answer||{};
     body = `<div class="cols"><div><div class="speech"><div class="txt">«${esc(q.text).replace(/^«|»$/g,'')}»</div>`+
