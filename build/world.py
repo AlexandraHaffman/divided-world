@@ -96,6 +96,7 @@ STAGES = [
     ("interlude-1",    "Закулисье · Свободный день", "16 октября", 35, "chronology/interlude-1.html"),
     ("top-20",         "Первое сокращение · 35→20", "16 октября", 20, "chronology/top-20.html"),
     ("manifesto",      "Манифест · Топ-20",   "17 октября", 20, "chronology/manifesto.html"),
+    ("improv",         "Импровизация · Топ-20", "17 октября", 20, "chronology/improv.html"),
     ("top-10",         "Второе сокращение · 20→10", "17 октября", 10, "chronology/top-10.html"),
     ("stage-questions","Персональный вопрос · Топ-10", "18 октября", 10, "chronology/stage-questions.html"),
     ("talent",         "Конкурс талантов · Топ-10", "18 октября", 10, "chronology/talent.html"),
@@ -113,7 +114,7 @@ STAGES = [
 AGG = {
     "prelim_weights": {"presentation":0.10,"interview":0.25,"swimwear":0.20,
                        "gown":0.20,"costume":0.25},
-    "semifinal": {"prelim":0.65,"manifesto":0.35},          # 20 -> 10
+    "semifinal": {"prelim":0.55,"manifesto":0.25,"improv":0.20},   # 20 -> 10
     "top10":     {"semifinal":0.45,"stage_question":0.25,"talent":0.30},  # 10 -> 5
     "top5_final":{"final_look":0.40,"photo":0.35,"final_question":0.25},  # 5 -> 3 (собственная система финала)
     "crown":     {"final_look":0.40,"final_question":0.30,"last_word":0.30},  # 3 -> 1

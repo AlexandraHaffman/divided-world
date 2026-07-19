@@ -13,11 +13,11 @@ const PRELIM = ["presentation","interview","swimwear","gown","costume"];
 const ROUND_TITLE = {
   presentation:"Представление",interview:"Закрытое интервью",swimwear:"Выход в купальнике",
   gown:"Вечернее платье",costume:"Фракционный костюм",manifesto:"Манифест",
-  stage_question:"Персональный вопрос",talent:"Конкурс талантов",final_look:"Финальный образ",
+  improv:"Импровизация",stage_question:"Персональный вопрос",talent:"Конкурс талантов",final_look:"Финальный образ",
   photo:"Фотосессия",final_question:"Общий финальный вопрос",last_word:"Последнее слово"
 };
 const SECTION = {presentation:"opening",interview:"interview",swimwear:"swimwear",gown:"gown",
-  costume:"costume",manifesto:"manifesto",stage_question:"stage_question",talent:"talent",
+  costume:"costume",manifesto:"manifesto",improv:"improv",stage_question:"stage_question",talent:"talent",
   final_look:"final_look",photo:"photo",final_question:"final_answer",last_word:"last_word"};
 
 /* участницы, участвовавшие в раунде (есть балл), в порядке убывания балла */
@@ -119,6 +119,14 @@ function perfBlock(rk,slug,rr){
       (q.crowd?`<p><b>Зал.</b> ${esc(q.crowd)}</p>`:"")+
       (q.jury?`<p class="muted">${esc(q.jury)}</p>`:"")+
       `</div><div>${window.DWprotocol(rk,slug,"Протокол · Вопрос")}</div></div>`;
+  } else if(rk==="improv"){
+    const q=p.improv||{};
+    body = `<div class="cols"><div>`+
+      `<div class="qa" style="${fac(c)}"><div class="q">🎲 ${esc(q.task)}</div>`+
+      `<div class="a">${esc(q.answer)}</div></div>`+
+      (q.crowd?`<p><b>Зал.</b> ${esc(q.crowd)}</p>`:"")+
+      (q.jury?`<p class="muted">${esc(q.jury)}</p>`:"")+
+      `</div><div>${window.DWprotocol(rk,slug,"Протокол · Импровизация")}</div></div>`;
   } else if(rk==="talent"){
     const tl=p.talent||{};
     body = `<div class="cols"><div class="chron talent-chron">`+
@@ -240,11 +248,29 @@ window.DWrenderCut = function(cfg){
       `<div class="pl">${r.rank}</div><div class="nm"><b>${esc(r.name)}</b><span>${esc(c.faction)}</span></div>`+
       `<div class="tot">${fmt(r.total)}</div></div>`;
   }).join("");
+  // Промежуточные итоги в цифрах: лидер этапа, разрыв на линии отсечения, общий разброс
+  let statStrip="";
+  if(ranking.length){
+    const nAdv=cut.advanced.length;
+    const leader=ranking[0];
+    const lastIn=ranking[nAdv-1], firstOut=ranking[nAdv];
+    const cutGap = (lastIn&&firstOut)?(lastIn.total-firstOut.total):null;
+    const spread = ranking[0].total - ranking[ranking.length-1].total;
+    const stat=(lbl,val,sub)=>`<div class="stat"><div class="sv">${val}</div><div class="sl">${lbl}</div>${sub?`<div class="ss">${sub}</div>`:""}</div>`;
+    statStrip = `<div class="shead"><span class="n">Итоги этапа в цифрах</span></div>`+
+      `<div class="stat-strip">`+
+      stat("Лидер этапа",esc(leader.name.split(' ')[0]),fmt(leader.total)+" балла")+
+      stat("Проходят / выбывают",nAdv+" / "+cut.eliminated.length,"из "+ranking.length)+
+      (cutGap!=null?stat("Разрыв на линии отсечения",fmt(cutGap),esc((lastIn.name.split(' ')[0]))+" → "+esc(firstOut.name.split(' ')[0])+(cutGap<0.15?" · на волоске":"")):"")+
+      stat("Разброс этапа",fmt(spread),"от первой до последней")+
+      `</div>`;
+  }
   el.innerHTML =
     `<div class="round-hero"><div class="rn">${esc(t.date||"")} · ${cut.advanced.length} проходят</div>`+
     `<h1>${esc(cfg.title)}</h1><div class="sub">${esc(cfg.subtitle||"")}</div>`+
     window.DWprogress(cfg.key)+`</div>`+
     (cfg.scene?`<div class="stage-scene chron">${cfg.scene}</div>`:"")+
+    (statStrip?`<div class="section">${statStrip}</div>`:"")+
     `<div class="cut-grid">`+
       `<div class="cut-col adv"><h3>▲ Проходят дальше</h3><div class="cut-list">${advanced}</div></div>`+
       `<div class="cut-col out"><h3>▼ Покидают конкурс</h3><div class="cut-list">${eliminated}</div></div>`+

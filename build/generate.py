@@ -91,6 +91,7 @@ def _translit(s):
 def run():
     C = load_contestants()
     attrs = {s: C[s]["attrs"] for s in C}
+    E.FACTION_OF = {s: C[s]["faction"] for s in C}   # предвзятость судей по фракциям
     scores = {}   # round_key -> score_round output
     round_avg = {}  # slug -> {round: avg}
     for s in C: round_avg[s] = {}
@@ -115,10 +116,12 @@ def run():
     top20 = order35[:20]
     out20 = order35[20:]   # 21..35 (в порядке убывания)
 
-    # МАНИФЕСТ (топ-20)
+    # МАНИФЕСТ + ИМПРОВИЗАЦИЯ (топ-20)
     do_round("manifesto", top20)
+    do_round("improv", top20)
     semifinal = {s: round(AGG["semifinal"]["prelim"]*prelim[s]
-                          + AGG["semifinal"]["manifesto"]*round_avg[s]["manifesto"],4)
+                          + AGG["semifinal"]["manifesto"]*round_avg[s]["manifesto"]
+                          + AGG["semifinal"]["improv"]*round_avg[s]["improv"],4)
                  for s in top20}
     order20 = sorted(top20, key=lambda s:(semifinal[s], round_avg[s]["manifesto"],
                      round_avg[s]["interview"], _rng("t20",s)), reverse=True)

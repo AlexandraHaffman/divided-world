@@ -26,40 +26,41 @@
     memorable:"запоминаемость",presence:"сцен. сила",sex:"сексуальность"};
   const cards=(DW.jury||[]).map((j,i)=>{
     const acc=Object.keys(j.accent||{}).map(k=>ATTR_RU[k]||k);
-    return `<div class="card" style="border-left:3px solid var(--gold)">`+
-      `<div class="mono" style="font-size:9px;letter-spacing:2px;color:var(--text-faint)">СУДЬЯ ${i+1} / 7</div>`+
+    const objective = (j.id==="j_gilbert");
+    return `<div class="card" style="border-left:3px solid ${objective?'var(--gold)':'var(--fc,var(--gold))'}">`+
+      `<div class="mono" style="font-size:9px;letter-spacing:2px;color:var(--text-faint)">СУДЬЯ ${i+1} / 7${objective?' · ПРЕДСЕДАТЕЛЬ':''}</div>`+
       `<h3 style="font-size:18px;font-family:'Cormorant Garamond',serif;font-weight:600">${esc(j.name)}</h3>`+
-      `<div class="mono" style="font-size:9.5px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:2px 0 8px">${esc(j.role)}</div>`+
-      `<p class="muted" style="font-size:12px;margin-bottom:6px">${esc(j.origin)}</p>`+
+      `<div class="mono" style="font-size:9.5px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:2px 0 6px">${esc(j.role)}</div>`+
+      `<div class="chips" style="margin-bottom:8px"><span class="tag ${objective?'':'gold'}">${objective?'судит по делу, а не по флагу':'фракция: '+esc(j.faction||'—')}</span></div>`+
       `<p style="font-size:13.5px;margin-bottom:8px">${esc(j.bio)}</p>`+
-      `<div class="drow"><div class="k">Компетенция</div><div class="v" style="font-size:13px">${esc(j.focus)}</div></div>`+
-      `<div class="drow"><div class="k">Предпочтения</div><div class="v" style="font-size:13px">${esc(j.bias)}</div></div>`+
+      `<div class="drow"><div class="k">На что смотрит</div><div class="v" style="font-size:13px">${esc(j.focus)}</div></div>`+
+      `<div class="drow"><div class="k">Кому благоволит</div><div class="v" style="font-size:13px">${esc(j.bias)}</div></div>`+
       (acc.length?`<div class="chips" style="margin-top:8px">${acc.map(a=>`<span class="tag gold">${a}</span>`).join("")}</div>`:
         `<div class="chips" style="margin-top:8px"><span class="tag">ровное среднее по всем критериям</span></div>`)+
       `</div>`;
   }).join("");
-  const rules=[
-    "не учитывать уровень боевой силы","не награждать высокий политический статус","не наказывать злодеек автоматически за мораль",
-    "не отдавать победу самой известной героине","не путать личную симпатию с качеством выступления",
-    "не завышать оценку из-за объёма биографии","не выбирать победительницу заранее","не менять баллы ради драматургии",
-    "не ставить всем фавориткам одинаково высокие оценки","не делать мораль главным критерием"];
   const crit=["физическая красота","индивидуальность","сексуальная выразительность","харизма","интеллект",
     "риторика","сценическая дисциплина","пластика","оригинальность","цельность образа",
     "соответствие образа личности","способность стать лицом конкурса"];
   document.getElementById("main").innerHTML=
     `<div class="section"><div class="round-hero" style="border:none;padding:0 0 8px">`+
-    `<div class="rn">судейская коллегия</div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,7vw,52px)">Семь независимых судей</h1>`+
-    `<div class="sub">Коллегия разделена на семь ролей. Каждый судья оценивает только свою область компетенции, выставляет собственный балл, не повторяет мнение остальных, не знает будущих результатов и не может менять оценки задним числом. Средний балл раунда — среднее семи оценок.</div></div>`+
+    `<div class="rn">судейская ложа</div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(32px,7vw,52px)">Семь мужчин, решающих судьбу короны</h1>`+
+    `<div class="sub">В этом году организаторы отдали судейство не экспертам, а власти — семерым первым лицам держав. За каждым баллом теперь стоит человек, привыкший решать судьбы, — со своими симпатиями, старой дружбой, родством и слабостями. Ложа не притворяется беспристрастной: подсуживать своим и холодеть к чужим здесь никто не запрещал. Единственный якорь честности — председатель Гилберт, который демонстративно судит по делу. Средний балл раунда — среднее семи оценок; кто и почему завысил или занизил, видно прямо в протоколе каждого выхода.</div></div>`+
     `<div class="section"><div class="three-col">${cards}</div></div>`+
     `<div class="section"><div class="two-col">`+
-    `<div class="card"><h3>Что жюри различает</h3><div class="chips">${crit.map(c=>`<span class="tag">${c}</span>`).join("")}</div></div>`+
-    `<div class="card"><h3>Правила объективности</h3><ul style="list-style:none;display:grid;gap:6px">`+
-    rules.map(r=>`<li style="font-size:13.5px;padding-left:16px;position:relative"><span style="position:absolute;left:0;color:var(--danger)">✕</span> ${r}</li>`).join("")+
+    `<div class="card"><h3>Что ложа различает</h3><div class="chips">${crit.map(c=>`<span class="tag">${c}</span>`).join("")}</div>`+
+    `<p class="muted" style="font-size:12px;margin-top:8px">Мораль, слава, политический статус и боевая сила в оценку по-прежнему не входят — только конкурсные качества. Судят красоту, а не биографию.</p></div>`+
+    `<div class="card"><h3>Как читать оценки этой ложи</h3><ul style="list-style:none;display:grid;gap:7px;font-size:13px">`+
+    [["Гилберт","эталон: его балл — почти «чистая» оценка без флага. Расхождение остальных с ним и есть мера их симпатии."],
+     ["Остерман","теплее к Тенебриону, прохладнее к Ракшасам; отдельно ценит своего человека — Ирэн Штайнер — и свою «богиню» Тенебрию."],
+     ["Уолш","тянет вверх Forge и не может судить беспристрастно двух Уолш — дочь Элари и её мать Клару."],
+     ["Сорель","откровенно любуется молодыми и чувственными и завышает их; своих Ракшасов тоже; падок на женское внимание — чем Нимфея и Валентина пользуются."],
+     ["Вистнер / Дорн / Грей","трое Спасителей Аркадии мягки к единственной аркадийке — Эмили Грей; для Грея это и вовсе невеста. В остальном Дорн близок к объективности, Вистнер холоден к «пустой красоте»."],
+    ].map(([n,d])=>`<li><b style="color:var(--gold)">${n}.</b> ${d}</li>`).join("")+
     `</ul></div></div></div>`+
-    `<div class="section"><div class="card" style="border-color:var(--gold-dim)"><h3>Аудит предвзятости</h3>`+
-    `<p class="muted" style="font-size:13.5px">После каждого раунда и сокращения проводится внутренняя проверка: не получили ли известные персонажи системное преимущество, не наказаны ли злодейки за мораль, не завышены ли традиционные типажи и не проигнорированы ли необычные, совпадают ли комментарии с баллами, нет ли арифметических ошибок и не выбран ли финал заранее. `+
-    `Модель судейства не содержит ни одного слагаемого за славу, политический статус, боевую силу или мораль — только конкурсные качества. `+
-    `Полная формула и результаты проверок — на <a class="tag gold" href="rules.html">странице правил</a> и в техническом отчёте.</p></div></div>`;
+    `<div class="section"><div class="card" style="border-color:var(--gold-dim)"><h3>Честная предвзятость</h3>`+
+    `<p class="muted" style="font-size:13.5px">Предвзятость этой ложи не прячут — её моделируют открыто и детерминированно. Балл каждого судьи складывается из оценки конкурсных качеств <b>плюс</b> задокументированной надбавки: симпатия к фракции, личное отношение к конкретной участнице и результат «работы с ложей» (кто и как расположил к себе судей за кулисами). Величины малые — десятые доли балла: подсуживание смещает картину, но не переворачивает её. Именно поэтому итог по-прежнему вытекает из арифметики, а не назначается заранее, — просто теперь арифметика честно включает и человеческую слабость семерых мужчин. `+
+    `Полная формула, величины надбавок и проверки — на <a class="tag gold" href="rules.html">странице правил</a>.</p></div></div>`;
 })();
 </script>
 </body>

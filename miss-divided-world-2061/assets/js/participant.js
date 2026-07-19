@@ -7,11 +7,11 @@ const by=window.DWby;
 
 function qs(k){ return new URLSearchParams(location.search).get(k); }
 const ROUND_TITLE={presentation:"Представление",interview:"Закрытое интервью",swimwear:"Выход в купальнике",
-  gown:"Вечернее платье",costume:"Фракционный костюм",manifesto:"Манифест",stage_question:"Персональный вопрос",
+  gown:"Вечернее платье",costume:"Фракционный костюм",manifesto:"Манифест",improv:"Импровизация",stage_question:"Персональный вопрос",
   talent:"Конкурс талантов",final_look:"Финальный образ",photo:"Фотосессия",final_question:"Общий финальный вопрос",last_word:"Последнее слово"};
 const SECTION={presentation:"opening",interview:"interview",swimwear:"swimwear",gown:"gown",costume:"costume",
-  manifesto:"manifesto",stage_question:"stage_question",talent:"talent",final_look:"final_look",photo:"photo",final_question:"final_answer",last_word:"last_word"};
-const ORDER=["presentation","interview","swimwear","gown","costume","manifesto","stage_question","talent","final_look","photo","final_question","last_word"];
+  manifesto:"manifesto",improv:"improv",stage_question:"stage_question",talent:"talent",final_look:"final_look",photo:"photo",final_question:"final_answer",last_word:"last_word"};
+const ORDER=["presentation","interview","swimwear","gown","costume","manifesto","improv","stage_question","talent","final_look","photo","final_question","last_word"];
 
 function portrait(frameCls,src,capText,noimgText,c){
   const inner = src
@@ -35,6 +35,11 @@ function roundBody(rk,c,p){
   if(["manifesto","last_word"].includes(rk)) return window.DWspeech(p[sec])+window.DWprotocol(rk,c.slug,"Протокол");
   if(rk==="stage_question"){ const q=p.stage_question||{};
     return `<div class="qa" style="${fac(c)}"><div class="q">— ${esc(q.q)}</div><div class="a">${esc(q.answer)}</div></div>`+
+      (q.jury?`<p class="muted">${esc(q.jury)}</p>`:"")+window.DWprotocol(rk,c.slug,"Протокол");
+  }
+  if(rk==="improv"){ const q=p.improv||{};
+    return `<div class="qa" style="${fac(c)}"><div class="q">🎲 ${esc(q.task)}</div><div class="a">${esc(q.answer)}</div></div>`+
+      (q.crowd?`<p><b>Зал.</b> ${esc(q.crowd)}</p>`:"")+
       (q.jury?`<p class="muted">${esc(q.jury)}</p>`:"")+window.DWprotocol(rk,c.slug,"Протокол");
   }
   if(rk==="talent"){ const tl=p.talent||{};

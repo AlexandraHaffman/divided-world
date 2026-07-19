@@ -84,3 +84,13 @@
 .talent-chron .climax-line{border-left:2px solid var(--gold-dim);padding-left:12px;color:var(--silver)}
 .talent-chron .climax-line b{color:var(--gold);font-family:'Share Tech Mono',monospace;font-size:9px;
   letter-spacing:2px;text-transform:uppercase;margin-right:4px}
+
+/* ═══ v5: промежуточные итоги — «табло в цифрах» ═══ */
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:6px}
+.stat{border:1px solid var(--line);border-top:2px solid var(--gold-dim);background:var(--bg2);
+  padding:14px 16px;text-align:center;transition:.2s}
+.stat:hover{border-top-color:var(--gold);transform:translateY(-2px)}
+.stat .sv{font-family:'Orbitron',monospace;font-weight:900;font-size:24px;color:var(--gold);line-height:1}
+.stat .sl{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:1.5px;color:var(--text-dim);
+  text-transform:uppercase;margin-top:7px}
+.stat .ss{font-size:11px;color:var(--text-faint);margin-top:4px}

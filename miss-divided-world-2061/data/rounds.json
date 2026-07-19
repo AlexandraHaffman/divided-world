@@ -75,6 +75,20 @@
    "memorable": 1
   }
  },
+ "improv": {
+  "title": "Импровизация",
+  "weight": null,
+  "phase": "top20",
+  "attrs": {
+   "individ": 3,
+   "charisma": 2,
+   "rhetoric": 2,
+   "presence": 2,
+   "memorable": 2,
+   "beauty": 1,
+   "sex": 1
+  }
+ },
  "stage_question": {
   "title": "Персональный вопрос",
   "weight": null,
