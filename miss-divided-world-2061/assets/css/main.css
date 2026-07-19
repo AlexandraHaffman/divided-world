@@ -327,3 +327,96 @@ h1,h2,h3{font-family:'Orbitron',monospace;color:var(--white);letter-spacing:1px;
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+
+/* ═══ v5: дизайн от ворот до эпилога ═══ */
+
+/* индикатор прямого эфира в топбаре */
+.live-badge{display:inline-flex;align-items:center;gap:6px;margin-left:12px;
+  font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:#e05656;flex-shrink:0}
+.live-badge i{width:6px;height:6px;border-radius:50%;background:#e05656;box-shadow:0 0 8px #e05656;
+  animation:dwLive 1.6s ease-in-out infinite}
+@keyframes dwLive{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* эффект вещания: сканлайны и виньетка на хиро-блоках */
+.round-hero{position:relative;overflow:hidden}
+.round-hero::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.012) 3px 4px)}
+.round-hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 10%,transparent 60%,rgba(0,0,0,.28))}
+.round-hero h1{animation:dwTitleIn .8s cubic-bezier(.2,.7,.2,1) both}
+@keyframes dwTitleIn{from{opacity:0;letter-spacing:.14em;transform:translateY(8px)}
+  to{opacity:1;letter-spacing:0;transform:none}}
+.round-hero .rn{animation:dwFadeUp .6s .1s both}
+.round-hero .sub{animation:dwFadeUp .6s .2s both}
+
+/* прогресс конкурса: пульс текущей точки */
+.progress i.here{animation:dwHere 1.8s ease-in-out infinite}
+@keyframes dwHere{0%,100%{box-shadow:0 0 6px var(--gold)}50%{box-shadow:0 0 16px var(--gold),0 0 30px var(--gold-dim)}}
+
+/* кнопки: световая протяжка */
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:-70%;width:45%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.14),transparent);
+  transform:skewX(-20deg);transition:left .5s ease}
+.btn:hover::after{left:130%}
+
+/* ворота доступа: дыхание короны и свечение ввода */
+#gate .gate-icon{animation:dwGateIcon 3.4s ease-in-out infinite}
+@keyframes dwGateIcon{0%,100%{text-shadow:0 0 12px var(--gold-dim)}50%{text-shadow:0 0 26px var(--gold),0 0 50px var(--gold-dim)}}
+#gate .gate-box{animation:dwFadeUp .7s cubic-bezier(.2,.7,.2,1) both}
+#gate input:focus{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold-dim),0 0 18px rgba(217,182,120,.2);outline:none}
+
+/* спойлер-щит: пульсирующая рамка */
+.spoiler-shield{animation:dwShield 3s ease-in-out infinite}
+@keyframes dwShield{0%,100%{border-color:var(--line)}50%{border-color:var(--gold-dim)}}
+
+/* навигация по главам: стрелки тянутся */
+.chapnav a .dir{transition:.25s;display:inline-block}
+.chapnav a:hover .dir{color:var(--gold);transform:translateX(-3px)}
+.chapnav a.next:hover .dir{transform:translateX(3px)}
+.chapnav a:hover{border-color:var(--gold-dim)}
+
+/* рейтинг: строки оживают */
+.lb-row{transition:.2s}
+.lb-row:hover{transform:translateX(4px);border-color:var(--fc,var(--gold))}
+.lb-row:hover .facbar{box-shadow:0 0 12px var(--fc,var(--gold))}
+
+/* герой участницы: медленный кен-бёрнс фона и пульс аватара */
+.participant-hero .cinema img{animation:dwKen 24s ease-in-out infinite alternate}
+@keyframes dwKen{from{transform:scale(1)}to{transform:scale(1.06)}}
+.participant-hero .avatar{transition:.3s}
+.participant-hero .avatar:hover{box-shadow:0 0 0 2px var(--fc,var(--gold)),0 0 24px var(--fc,var(--gold))}
+
+/* сцены: живая золотая кромка */
+.stage-scene{position:relative}
+.stage-scene::before{content:"";position:absolute;left:-1px;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--gold-dim),transparent 45%,var(--gold-dim));
+  background-size:100% 300%;animation:dwEdge 7s linear infinite;opacity:.7}
+@keyframes dwEdge{to{background-position:0 300%}}
+
+/* подиум топ-3: корона парит, победительница мерцает */
+.pod .crown-emoji{display:inline-block;animation:dwCrown 3.2s ease-in-out infinite}
+@keyframes dwCrown{0%,100%{transform:translateY(0);text-shadow:0 0 10px var(--gold-dim)}
+  50%{transform:translateY(-5px);text-shadow:0 0 22px var(--gold)}}
+.pod.p1 .ph{position:relative}
+.pod.p1 .ph::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(217,182,120,.14) 46%,transparent 62%);
+  background-size:250% 100%;animation:dwShimmer 4.5s linear infinite}
+
+/* эпилог: нити */
+.threads{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.thread{border:1px solid var(--line);border-top:2px solid var(--gold-dim);background:var(--bg2);
+  padding:15px 17px;position:relative;overflow:hidden;transition:.25s}
+.thread:hover{border-top-color:var(--gold);transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.thread .tt{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2.5px;
+  color:var(--gold);text-transform:uppercase;margin-bottom:8px}
+.thread p{font-size:13.5px;line-height:1.55;color:var(--text-dim)}
+.thread::after{content:"❋";position:absolute;right:10px;top:8px;color:var(--gold-dim);opacity:.35;font-size:12px}
+
+/* полировка чтения */
+::selection{background:rgba(217,182,120,.25);color:var(--white)}
+html{scroll-behavior:smooth}
+*{scrollbar-width:thin;scrollbar-color:#2a3140 transparent}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#232a36;border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-dim)}

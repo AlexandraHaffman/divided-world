@@ -88,6 +88,7 @@ window.DWtopbar = function(active){
   host.className="topbar";
   host.innerHTML =
     `<a class="brand" href="${CB}index.html">МИСС <b>РАЗДЕЛЁННЫЙ МИР</b> · 2061</a>`+
+    `<span class="live-badge"><i></i>ЭФИР</span>`+
     `<div class="sp"></div>`+
     `<button class="menu-toggle" aria-label="Меню">≡</button>`+
     `<div class="topbar-links">`+

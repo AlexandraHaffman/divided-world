@@ -1,15 +1,15 @@
 {
  "prelim": [
   {
-   "slug": "нимфея-эленис",
-   "name": "Нимфея Эленис",
-   "total": 9.2393,
+   "slug": "ульяна-спасская",
+   "name": "Ульяна Спасская",
+   "total": 9.0132,
    "rank": 1
   },
   {
-   "slug": "ульяна-спасская",
-   "name": "Ульяна Спасская",
-   "total": 8.9833,
+   "slug": "нимфея-эленис",
+   "name": "Нимфея Эленис",
+   "total": 8.9564,
    "rank": 2
   },
   {
@@ -25,39 +25,39 @@
    "rank": 4
   },
   {
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "total": 8.3011,
+   "rank": 5
+  },
+  {
    "slug": "анаиса-аскирион",
    "name": "Анаиса Аскирион",
    "total": 7.9991,
-   "rank": 5
+   "rank": 6
   },
   {
    "slug": "ольга-гончарова",
    "name": "Ольга Гончарова",
    "total": 7.9474,
-   "rank": 6
+   "rank": 7
   },
   {
    "slug": "амели-бертран",
    "name": "Амели Бертран",
    "total": 7.7306,
-   "rank": 7
+   "rank": 8
   },
   {
    "slug": "эва-найт",
    "name": "Эва Найт",
    "total": 7.6059,
-   "rank": 8
+   "rank": 9
   },
   {
    "slug": "аша-наир",
    "name": "Аша Наир",
    "total": 7.4009,
-   "rank": 9
-  },
-  {
-   "slug": "лилия-спасская",
-   "name": "Лилия Спасская",
-   "total": 7.3621,
    "rank": 10
   },
   {
@@ -215,13 +215,13 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.2872,
+   "total": 9.0538,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.7758,
+   "total": 8.8909,
    "rank": 2
   },
   {
@@ -237,69 +237,69 @@
    "rank": 4
   },
   {
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "total": 8.0014,
+   "rank": 5
+  },
+  {
    "slug": "ольга-гончарова",
    "name": "Ольга Гончарова",
    "total": 7.7344,
-   "rank": 5
+   "rank": 6
   },
   {
    "slug": "анаиса-аскирион",
    "name": "Анаиса Аскирион",
    "total": 7.7324,
-   "rank": 6
+   "rank": 7
   },
   {
    "slug": "амели-бертран",
    "name": "Амели Бертран",
    "total": 7.5767,
-   "rank": 7
+   "rank": 8
   },
   {
    "slug": "харпер-вэнс",
    "name": "Харпер Вэнс",
    "total": 7.4971,
-   "rank": 8
+   "rank": 9
   },
   {
    "slug": "аша-наир",
    "name": "Аша Наир",
    "total": 7.3627,
-   "rank": 9
+   "rank": 10
   },
   {
    "slug": "эва-найт",
    "name": "Эва Найт",
    "total": 7.3565,
-   "rank": 10
+   "rank": 11
   },
   {
    "slug": "изабелла-родригес",
    "name": "Изабелла Родригес",
    "total": 7.2754,
-   "rank": 11
+   "rank": 12
   },
   {
    "slug": "кавита-рао",
    "name": "Кавита Рао",
    "total": 7.2235,
-   "rank": 12
+   "rank": 13
   },
   {
    "slug": "лилит-блэквуд",
    "name": "Лилит Блэквуд",
    "total": 7.1951,
-   "rank": 13
+   "rank": 14
   },
   {
    "slug": "кассандра-стерлинг",
    "name": "Кассандра Стерлинг",
    "total": 7.0219,
-   "rank": 14
-  },
-  {
-   "slug": "лилия-спасская",
-   "name": "Лилия Спасская",
-   "total": 7.0095,
    "rank": 15
   },
   {
@@ -337,13 +337,13 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.1672,
+   "total": 8.9874,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.7433,
+   "total": 8.8337,
    "rank": 2
   },
   {
@@ -359,27 +359,27 @@
    "rank": 4
   },
   {
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "total": 8.2325,
+   "rank": 5
+  },
+  {
    "slug": "анаиса-аскирион",
    "name": "Анаиса Аскирион",
    "total": 7.9204,
-   "rank": 5
+   "rank": 6
   },
   {
    "slug": "амели-бертран",
    "name": "Амели Бертран",
    "total": 7.853,
-   "rank": 6
+   "rank": 7
   },
   {
    "slug": "ольга-гончарова",
    "name": "Ольга Гончарова",
    "total": 7.8178,
-   "rank": 7
-  },
-  {
-   "slug": "эва-найт",
-   "name": "Эва Найт",
-   "total": 7.5552,
    "rank": 8
   },
   {
@@ -397,15 +397,15 @@
  ],
  "top5": [
   {
-   "slug": "нимфея-эленис",
-   "name": "Нимфея Эленис",
-   "total": 9.5458,
+   "slug": "ульяна-спасская",
+   "name": "Ульяна Спасская",
+   "total": 9.3599,
    "rank": 1
   },
   {
-   "slug": "ульяна-спасская",
-   "name": "Ульяна Спасская",
-   "total": 9.3066,
+   "slug": "нимфея-эленис",
+   "name": "Нимфея Эленис",
+   "total": 9.0751,
    "rank": 2
   },
   {
@@ -415,15 +415,15 @@
    "rank": 3
   },
   {
-   "slug": "тенебриа",
-   "name": "Тенебриа",
-   "total": 8.1349,
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "total": 8.2351,
    "rank": 4
   },
   {
-   "slug": "анаиса-аскирион",
-   "name": "Анаиса Аскирион",
-   "total": 7.543,
+   "slug": "тенебриа",
+   "name": "Тенебриа",
+   "total": 8.1349,
    "rank": 5
   }
  ],
@@ -431,13 +431,13 @@
   {
    "slug": "нимфея-эленис",
    "name": "Нимфея Эленис",
-   "total": 9.5377,
+   "total": 9.1984,
    "rank": 1
   },
   {
    "slug": "ульяна-спасская",
    "name": "Ульяна Спасская",
-   "total": 8.8767,
+   "total": 9.0146,
    "rank": 2
   },
   {
@@ -456,8 +456,8 @@
    "faction_color": "#4a9eff",
    "place": 1,
    "band": "Победительница",
-   "total": 9.5377,
-   "best_round": "gown",
+   "total": 9.1984,
+   "best_round": "interview",
    "worst_round": "swimwear"
   },
   {
@@ -468,7 +468,7 @@
    "faction_color": "#00ced1",
    "place": 2,
    "band": "1-я вице-мисс",
-   "total": 8.8767,
+   "total": 9.0146,
    "best_round": "gown",
    "worst_round": "interview"
   },
@@ -485,12 +485,24 @@
    "worst_round": "interview"
   },
   {
+   "slug": "лилия-спасская",
+   "name": "Лилия Спасская",
+   "faction": "Независимые",
+   "faction_id": "independent",
+   "faction_color": "#c0c8d4",
+   "place": 4,
+   "band": "Выбыла 5→3 (Топ-5)",
+   "total": 8.2351,
+   "best_round": "costume",
+   "worst_round": "interview"
+  },
+  {
    "slug": "тенебриа",
    "name": "Тенебриа",
    "faction": "Тенебрион",
    "faction_id": "tenebrion",
    "faction_color": "#ff9d00",
-   "place": 4,
+   "place": 5,
    "band": "Выбыла 5→3 (Топ-5)",
    "total": 8.1349,
    "best_round": "costume",
@@ -502,9 +514,9 @@
    "faction": "Тенебрион",
    "faction_id": "tenebrion",
    "faction_color": "#ff9d00",
-   "place": 5,
-   "band": "Выбыла 5→3 (Топ-5)",
-   "total": 7.543,
+   "place": 6,
+   "band": "Выбыла 10→5 (Топ-10)",
+   "total": 7.9204,
    "best_round": "costume",
    "worst_round": "interview"
   },
@@ -514,7 +526,7 @@
    "faction": "Ракшасы",
    "faction_id": "rakshasy",
    "faction_color": "#a55eea",
-   "place": 6,
+   "place": 7,
    "band": "Выбыла 10→5 (Топ-10)",
    "total": 7.853,
    "best_round": "costume",
@@ -526,22 +538,10 @@
    "faction": "Тенебрион",
    "faction_id": "tenebrion",
    "faction_color": "#ff9d00",
-   "place": 7,
+   "place": 8,
    "band": "Выбыла 10→5 (Топ-10)",
    "total": 7.8178,
    "best_round": "costume",
-   "worst_round": "interview"
-  },
-  {
-   "slug": "эва-найт",
-   "name": "Эва Найт",
-   "faction": "Независимые",
-   "faction_id": "independent",
-   "faction_color": "#c0c8d4",
-   "place": 8,
-   "band": "Выбыла 10→5 (Топ-10)",
-   "total": 7.5552,
-   "best_round": "swimwear",
    "worst_round": "interview"
   },
   {
@@ -569,12 +569,24 @@
    "worst_round": "interview"
   },
   {
+   "slug": "эва-найт",
+   "name": "Эва Найт",
+   "faction": "Независимые",
+   "faction_id": "independent",
+   "faction_color": "#c0c8d4",
+   "place": 11,
+   "band": "Выбыла 20→10 (Топ-20)",
+   "total": 7.3565,
+   "best_round": "swimwear",
+   "worst_round": "interview"
+  },
+  {
    "slug": "изабелла-родригес",
    "name": "Изабелла Родригес",
    "faction": "Forge",
    "faction_id": "forge",
    "faction_color": "#a8d8ff",
-   "place": 11,
+   "place": 12,
    "band": "Выбыла 20→10 (Топ-20)",
    "total": 7.2754,
    "best_round": "interview",
@@ -586,7 +598,7 @@
    "faction": "Ракшасы",
    "faction_id": "rakshasy",
    "faction_color": "#a55eea",
-   "place": 12,
+   "place": 13,
    "band": "Выбыла 20→10 (Топ-20)",
    "total": 7.2235,
    "best_round": "interview",
@@ -598,7 +610,7 @@
    "faction": "Тенебрион",
    "faction_id": "tenebrion",
    "faction_color": "#ff9d00",
-   "place": 13,
+   "place": 14,
    "band": "Выбыла 20→10 (Топ-20)",
    "total": 7.1951,
    "best_round": "gown",
@@ -610,23 +622,11 @@
    "faction": "Единая Америка",
    "faction_id": "america",
    "faction_color": "#4a9eff",
-   "place": 14,
+   "place": 15,
    "band": "Выбыла 20→10 (Топ-20)",
    "total": 7.0219,
    "best_round": "interview",
    "worst_round": "presentation"
-  },
-  {
-   "slug": "лилия-спасская",
-   "name": "Лилия Спасская",
-   "faction": "Независимые",
-   "faction_id": "independent",
-   "faction_color": "#c0c8d4",
-   "place": 15,
-   "band": "Выбыла 20→10 (Топ-20)",
-   "total": 7.0095,
-   "best_round": "costume",
-   "worst_round": "interview"
   },
   {
    "slug": "александра-вегас",
