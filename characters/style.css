@@ -294,7 +294,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .dossier-scroll-hint span{font-family:'Share Tech Mono',monospace;font-size:7px;color:rgba(255,255,255,0.2);letter-spacing:0.15em;}
 .scroll-arrow{width:16px;height:16px;border-right:1px solid rgba(var(--dr),0.4);border-bottom:1px solid rgba(var(--dr),0.4);transform:rotate(45deg);animation:bounce 1.5s infinite;margin-top:-6px;}
 @keyframes bounce{0%,100%{transform:rotate(45deg) translate(0,0);opacity:0.4}50%{transform:rotate(45deg) translate(3px,3px);opacity:1}}
-.dossier-data{background:var(--bg);position:relative;z-index:10;}
+.dossier-data{background:linear-gradient(168deg,rgba(var(--dr),0.14) 0%,rgba(var(--dr),0.06) 30%,rgba(var(--dr),0.025) 62%,rgba(var(--dr),0.05) 100%),radial-gradient(120% 60% at 100% 0%,rgba(var(--dr),0.10),transparent 70%),var(--bg);position:relative;z-index:10;}
 .dossier-data-line{height:1px;background:linear-gradient(90deg,transparent,rgba(var(--dr),0.3),transparent);}
 .dossier-meta{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:6px;padding:14px 16px 0;}
 .dossier-meta-cell{background:rgba(var(--dr),0.04);border:1px solid rgba(var(--dr),0.1);border-radius:4px;padding:6px 9px;}
