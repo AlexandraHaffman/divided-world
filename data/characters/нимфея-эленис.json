@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Женский",
   "role": "Владелица компании",
-  "birthdate": "08.08.1995",
+  "birthdate": "08.08",
   "faction": "Единая Америка",
   "subfaction": "Парфюмерная компания «Эленис»",
   "location": "Единая Америка",
@@ -18,7 +18,8 @@
     "Бизнес-стратегия",
     "Дипломатия",
     "Психологическое влияние",
-    "Аналитический ум"
+    "Аналитический ум",
+    "Перцепция"
   ],
   "threat_level": 58,
   "stats": {
@@ -40,5 +41,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E9709DFE-E713-4D1D-8804-55275B534835.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/80FCA5EE-1B0D-4146-BE8D-3D2632652081.jpeg",
   "tier": "legendary",
-  "exported_at": "2026-07-01T07:04:49.220Z"
+  "appearance": {
+    "height": 179,
+    "weight": 61,
+    "eye_color": "Янтарные",
+    "hair_color": "Чёрные",
+    "bust_size": 3,
+    "marks": ""
+  },
+  "exported_at": "2026-07-23T18:26:26.067Z"
 }
