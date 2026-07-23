@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Председатель правительства",
-  "birthdate": "04.07.1995",
+  "birthdate": "04.07",
   "faction": "Единая Америка",
   "subfaction": "Единая Америка",
   "location": "Единая Америка",
@@ -39,5 +39,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/365C9A63-D4B5-4751-B622-25D788D227C6.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E923352E-D84A-4EF3-B5DA-93CCA67ED833.png",
   "tier": "epic",
-  "exported_at": "2026-07-16T16:30:23.859Z"
+  "appearance": {
+    "height": 179,
+    "weight": 79,
+    "eye_color": "Серые",
+    "hair_color": "Каштановые",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-07-23T18:28:28.796Z"
 }
