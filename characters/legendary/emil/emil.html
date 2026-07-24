@@ -138,6 +138,8 @@
 
   /* ── 6. АМЕЛИ ── */
   .amelie-portrait-wrap{display:flex;gap:14px;align-items:center;margin-bottom:16px;}
+  .amelie-id{flex:1;}
+  .amelie-sound-btn{width:30px;height:30px;font-size:14px;flex-shrink:0;}
   .amelie-portrait{width:76px;height:76px;flex-shrink:0;border-radius:6px;overflow:hidden;
     border:2px solid rgba(var(--magma),0.55);box-shadow:0 0 20px -6px rgba(var(--magma),0.5);}
   .amelie-name{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--ink);}
@@ -436,11 +438,13 @@
     <div class="amelie-portrait img-wrap" data-label="нет фото">
       <img src="emil-amelie-portrait.jpg" alt="Амели Бертран">
     </div>
-    <div>
+    <div class="amelie-id">
       <div class="amelie-name">Амели Бертран</div>
       <div class="amelie-role">Хозяйка Бастиона</div>
     </div>
+    <button class="sound-btn amelie-sound-btn" id="amelieSoundBtn" onclick="toggleAmelieSound()">🔇</button>
   </div>
+  <audio id="amelieAudio" src="theme-amelie.mp3" loop></audio>
 
   <div class="mirror">
     <div class="mirror-pathos">Это любовь — я знаю, как это называется, и не путаю чувство с зависимостью, что бы ни говорили остальные трое. К ней я езжу не за трофеями — трофеи лишь повод.</div>
@@ -467,11 +471,14 @@
 
 <script>
 let soundOn = false;
+let amelieSoundOn = false;
+
 function toggleSound() {
   const audio = document.getElementById('themeAudio');
   const btn = document.getElementById('soundBtn');
   soundOn = !soundOn;
   if (soundOn) {
+    if (amelieSoundOn) { toggleAmelieSound(); }
     audio.play().then(() => {
       btn.textContent = '🔊';
     }).catch((err) => {
@@ -486,6 +493,28 @@ function toggleSound() {
 }
 document.getElementById('themeAudio').addEventListener('error', () => {
   console.log('Audio failed to load. Check theme.mp3 exists next to emil.html.');
+});
+
+function toggleAmelieSound() {
+  const audio = document.getElementById('amelieAudio');
+  const btn = document.getElementById('amelieSoundBtn');
+  amelieSoundOn = !amelieSoundOn;
+  if (amelieSoundOn) {
+    if (soundOn) { toggleSound(); }
+    audio.play().then(() => {
+      btn.textContent = '🔊';
+    }).catch((err) => {
+      alert('Не удалось запустить звук: ' + err.message);
+      amelieSoundOn = false;
+      btn.textContent = '🔇';
+    });
+  } else {
+    audio.pause();
+    btn.textContent = '🔇';
+  }
+}
+document.getElementById('amelieAudio').addEventListener('error', () => {
+  console.log('Audio failed to load. Check theme-amelie.mp3 exists next to emil.html.');
 });
 
 /* ── отсутствующие изображения → «нет сигнала» ── */
