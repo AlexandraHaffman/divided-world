@@ -4,10 +4,10 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Ужас Белой зоны",
-  "birthdate": "13.11.2005",
+  "birthdate": "13.11",
   "faction": "Гарнизон",
   "subfaction": "",
-  "location": "Гарнизон",
+  "location": "Белая зона",
   "faction_color": "#aaaaaa",
   "aliases": [
     "Златан Стефанов",
@@ -41,6 +41,14 @@
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AF7BC85E-BB4B-49EB-A104-4F5C15DD7B97.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/606F1413-6431-4362-91CF-DDE466F220B0.jpeg",
-  "tier": "legendary",
-  "exported_at": "2026-07-06T11:59:51.301Z"
+  "tier": "mythical",
+  "appearance": {
+    "height": 188,
+    "weight": 78,
+    "eye_color": "Серые",
+    "hair_color": "Чёрные",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-07-24T22:31:10.855Z"
 }
