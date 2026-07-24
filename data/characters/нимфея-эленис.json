@@ -19,7 +19,7 @@
     "Дипломатия",
     "Психологическое влияние",
     "Аналитический ум",
-    "Перцепция"
+    "Мета-перцепция"
   ],
   "threat_level": 58,
   "stats": {
@@ -40,7 +40,7 @@
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E9709DFE-E713-4D1D-8804-55275B534835.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/80FCA5EE-1B0D-4146-BE8D-3D2632652081.jpeg",
-  "tier": "legendary",
+  "tier": "mythical",
   "appearance": {
     "height": 179,
     "weight": 61,
@@ -49,5 +49,5 @@
     "bust_size": 3,
     "marks": ""
   },
-  "exported_at": "2026-07-24T16:15:56.738Z"
+  "exported_at": "2026-07-24T22:30:08.130Z"
 }
