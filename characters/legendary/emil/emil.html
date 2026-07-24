@@ -111,6 +111,7 @@
 
   /* ── 3. РОЛЬ / ФРОНТ ── */
   .front-photo{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin:14px 0;}
+  .front-photo.tall{aspect-ratio:4/5;max-width:340px;margin-left:auto;margin-right:auto;}
   .front-photo::after{content:'';position:absolute;inset:0;
     background:radial-gradient(50% 60% at 50% 100%, rgba(var(--magma),0.28), transparent 70%);
     animation:breathe 5s ease-in-out infinite;pointer-events:none;}
@@ -146,6 +147,10 @@
     margin-top:14px;padding-top:14px;border-top:1px dashed rgba(var(--fact),0.25);}
 
   /* ── 7. ФИЛОСОФИЯ ── */
+  .philosophy-photo{position:relative;aspect-ratio:4/5;max-width:340px;margin:0 auto 18px;
+    border-radius:6px;overflow:hidden;}
+  .philosophy-photo::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(11,7,5,0.35),transparent 55%);pointer-events:none;}
   .philosophy-quote{font-family:'Spectral',serif;font-style:italic;font-size:17px;color:rgba(var(--ember),0.92);
     border-left:2px solid rgba(var(--magma),0.5);padding-left:14px;line-height:1.6;margin:16px 0;}
   .philosophy-fact{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgb(var(--fact));
@@ -397,7 +402,7 @@
     <div class="mirror-pathos">Затишье — не отдых, а трата времени, которое я мог бы отдать рубежу. Каждая тихая неделя — сигнал, что где-то ослабили хватку.</div>
     <div class="mirror-fact">Паузы переносит плохо: придирки к прислуге, срывы на офицерах, инициирует «разведку боем» без оперативной необходимости.</div>
   </div>
-  <div class="front-photo img-wrap" data-label="нет сигнала · срыв">
+  <div class="front-photo tall img-wrap" data-label="нет сигнала · срыв">
     <img src="emil-rage-officer.jpg" alt="Срыв на офицере, земля светится под ногами">
   </div>
 </section>
@@ -416,6 +421,9 @@
   <div class="harem-block">
     <div class="harem-photo img-wrap" data-label="нет сигнала">
       <img src="emil-harem-room.jpg" alt="Резиденция, холодная галерея">
+    </div>
+    <div class="harem-photo img-wrap" data-label="нет сигнала">
+      <img src="emil-harem-cold.jpg" alt="Резиденция, тот же зал с другого ракурса">
     </div>
     <div class="harem-text">В резиденции содержится около десятка женщин, отобранных по внешнему сходству с Амели Бертран — осанка, тёмные волосы, холодная манера держаться. Обращение грубое и равнодушное, способ выработать остаток боевого возбуждения после операций. Иллюзий на этот счёт он не питает и объяснений не ищет.</div>
   </div>
@@ -449,6 +457,9 @@
 <!-- 7. ФИЛОСОФИЯ -->
 <section>
   <div class="sec-eyebrow">ФИЛОСОФИЯ</div>
+  <div class="philosophy-photo img-wrap" data-label="нет сигнала · философия">
+    <img src="emil-philosophy.jpg" alt="Эмиль произносит заученную формулировку">
+  </div>
   <div class="philosophy-quote">«Композиция катастроф — высшая форма искусства, доступная человеку»</div>
   <div class="philosophy-quote">«Разрушение, лишённое смысла, — просто вандализм. Моё разрушение имеет форму»</div>
   <div class="philosophy-fact">Формулировки заучены и повторяются годами почти без изменений. Заменить их ему нечем.</div>
