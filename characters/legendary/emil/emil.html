@@ -26,11 +26,13 @@
 
   body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
     background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 4px);}
+  /* угольки — тлеющий фон, а не слой поверх текста: слабая яркость, размытие, z-index ниже секций */
   body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
     background-image:url('texture-embers.png'), radial-gradient(circle at 18% 8%, rgba(var(--magma),0.06), transparent 45%),
                       radial-gradient(circle at 88% 85%, rgba(var(--deep),0.08), transparent 45%);
-    background-size:340px, auto, auto; opacity:0.5; animation:emberDrift 34s linear infinite;}
-  @keyframes emberDrift{0%{background-position:0 0, 0 0, 0 0;}100%{background-position:-340px -680px, 0 0, 0 0;}}
+    background-size:520px, auto, auto; opacity:0.16; filter:blur(1.5px);
+    animation:emberDrift 46s linear infinite;}
+  @keyframes emberDrift{0%{background-position:0 0, 0 0, 0 0;}100%{background-position:-520px -1040px, 0 0, 0 0;}}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.32}}
   @keyframes breathe{0%,100%{opacity:0.55;transform:scale(1);}50%{opacity:0.9;transform:scale(1.06);}}
 
@@ -49,6 +51,9 @@
   .hero-img-wrap.broken{align-items:flex-start;padding-top:18px;}
 
   section{padding:28px 16px;position:relative;z-index:2;}
+  /* приподнимаем прозу над тлеющим фоном — угольки не должны спорить с буквами */
+  .mirror-pathos, .mirror-fact, .bio-text, .asur-text, .harem-text, .amelie-root,
+  .philosophy-fact, .philosophy-quote{text-shadow:0 1px 5px rgba(6,3,2,0.75);}
   .sec-eyebrow{font-size:11px;letter-spacing:0.18em;color:rgba(var(--magma),0.9);margin-bottom:14px;
     display:flex;align-items:center;gap:8px;overflow:hidden;}
   .sec-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right, rgba(var(--magma),0.5), transparent);
