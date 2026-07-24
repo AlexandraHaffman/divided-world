@@ -27,6 +27,7 @@ const TIER_FILTER_COLORS = {
   rare:      { hex: "#60a5fa", rgb: "96,165,250" },
   epic:      { hex: "#a78bfa", rgb: "167,139,250" },
   legendary: { hex: "#fbbf24", rgb: "251,191,36" },
+  mythical:  { hex: "#d946ef", rgb: "217,70,239" },
   divine:    { hex: "#ffffff", rgb: "255,255,255" }
 };
 
@@ -308,7 +309,7 @@ function setFilter(faction) {
 
 function buildTierFilters() {
   const wrap = document.getElementById("tier-filters");
-  ["common","rare","epic","legendary","divine"].forEach(t => {
+  ["common","rare","epic","legendary","mythical","divine"].forEach(t => {
     const col = TIER_FILTER_COLORS[t];
     const btn = document.createElement("button");
     btn.className = "filter-btn"; btn.dataset.tier = t; btn.textContent = t.toUpperCase();
@@ -379,7 +380,7 @@ function openDossier(idx) {
   ];
   const radar = buildRadar(stats, col.rgb, 150);
 
-  const factionBarStyle = (tier === "legendary" || tier === "divine")
+  const factionBarStyle = (tier === "legendary" || tier === "mythical" || tier === "divine")
     ? `style="--dr:${col.rgb}"`
     : `style="background:linear-gradient(90deg,transparent,rgb(${col.rgb}),transparent)"`;
 

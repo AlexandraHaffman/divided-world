@@ -169,21 +169,68 @@
   50%      { box-shadow: inset 0 0 90px rgba(var(--dr),0.18); }
 }
 
-.dossier-overlay[data-tier="divine"] .dossier-art {
-  outline: 2px solid rgba(var(--dr),0.5);
+.dossier-overlay[data-tier="mythical"] .dossier-art {
+  outline: 2.25px solid rgba(var(--dr),0.55);
   outline-offset: -2px;
-  animation: dossierDivineGlow 5s ease-in-out infinite;
+  animation: dossierMythicalGlow 6s ease-in-out infinite;
+}
+@keyframes dossierMythicalGlow {
+  0%,100% { box-shadow: inset 0 0 60px rgba(var(--dr),0.1), 0 0 22px rgba(var(--dr),0.16); }
+  50%      { box-shadow: inset 0 0 100px rgba(var(--dr),0.22), 0 0 45px rgba(var(--dr),0.35); }
+}
+
+.dossier-overlay[data-tier="mythical"] .dossier-art::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 15;
+  --cs: 32px; --cw: 2.25px;
+  background:
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--cs) var(--cw) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--cw) var(--cs) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--cs) var(--cw) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top right/var(--cw) var(--cs) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--cs) var(--cw) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom left/var(--cw) var(--cs) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--cs) var(--cw) no-repeat,
+    linear-gradient(rgb(var(--dr)),rgb(var(--dr))) bottom right/var(--cw) var(--cs) no-repeat;
+  opacity: 0.95;
+}
+
+.dossier-overlay[data-tier="mythical"] .dossier-art::after {
+  content: '';
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 2.5px;
+  background: linear-gradient(to bottom, transparent, rgb(var(--dr)), rgba(var(--dr),0.9), rgb(var(--dr)), transparent);
+  animation: mythicalEdge 3.5s ease-in-out infinite;
+  pointer-events: none; z-index: 20;
+}
+@keyframes mythicalEdge {
+  0%,100% { opacity: 0.35; box-shadow: 0 0 8px rgba(var(--dr),0.45); }
+  50%      { opacity: 1;   box-shadow: 0 0 24px rgba(var(--dr),0.95), 0 0 44px rgba(var(--dr),0.4); }
+}
+
+.dossier-overlay[data-tier="mythical"] .dossier-faction-bar {
+  height: 4.5px;
+  background: linear-gradient(90deg, transparent, rgba(var(--dr),0.5), rgb(var(--dr)), rgba(var(--dr),0.9), rgb(var(--dr)), rgba(var(--dr),0.5), transparent) !important;
+  background-size: 260% 100% !important;
+  animation: mythicalBar 4.5s linear infinite;
+}
+
+.dossier-overlay[data-tier="divine"] .dossier-art {
+  outline: 3px solid rgba(var(--dr),0.65);
+  outline-offset: -2px;
+  animation: dossierDivineGlow 4s ease-in-out infinite;
 }
 @keyframes dossierDivineGlow {
-  0%,100% { box-shadow: inset 0 0 70px rgba(var(--dr),0.12), 0 0 40px rgba(var(--dr),0.25); }
-  50%      { box-shadow: inset 0 0 130px rgba(var(--dr),0.28), 0 0 80px rgba(var(--dr),0.55); }
+  0%,100% { box-shadow: inset 0 0 90px rgba(var(--dr),0.16), 0 0 55px rgba(var(--dr),0.32); }
+  50%      { box-shadow: inset 0 0 150px rgba(var(--dr),0.34), 0 0 100px rgba(var(--dr),0.65); }
 }
 
 .dossier-overlay[data-tier="divine"] .dossier-art::before {
   content: '';
   position: absolute; inset: 0;
   pointer-events: none; z-index: 15;
-  --cs: 36px; --cw: 2px;
+  --cs: 40px; --cw: 2.75px;
   background:
     linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--cs) var(--cw) no-repeat,
     linear-gradient(rgb(var(--dr)),rgb(var(--dr))) top left/var(--cw) var(--cs) no-repeat,
@@ -199,23 +246,28 @@
 .dossier-overlay[data-tier="divine"] .dossier-art::after {
   content: '';
   position: absolute; top: 0; right: 0; bottom: 0;
-  width: 3px;
+  width: 3.5px;
   background: linear-gradient(to bottom, transparent, rgb(var(--dr)), #fff, rgb(var(--dr)), transparent);
-  animation: divineEdge 3s ease-in-out infinite;
+  animation: divineEdge 2.5s ease-in-out infinite;
   pointer-events: none; z-index: 20;
 }
 @keyframes divineEdge {
-  0%,100% { opacity: 0.4; box-shadow: 0 0 10px rgba(var(--dr),0.5); }
-  50%      { opacity: 1;   box-shadow: 0 0 30px rgba(var(--dr),1), 0 0 60px rgba(var(--dr),0.5); }
+  0%,100% { opacity: 0.45; box-shadow: 0 0 14px rgba(var(--dr),0.6); }
+  50%      { opacity: 1;   box-shadow: 0 0 40px rgba(var(--dr),1), 0 0 80px rgba(var(--dr),0.6); }
 }
 
 .dossier-overlay[data-tier="divine"] .dossier-faction-bar {
-  height: 5px;
+  height: 6px;
   background: linear-gradient(90deg, transparent, rgba(var(--dr),0.4), rgb(var(--dr)), #fff, rgb(var(--dr)), rgba(var(--dr),0.4), transparent) !important;
   background-size: 300% 100% !important;
-  animation: divineBar 5s linear infinite;
+  animation: divineBar 3.5s linear infinite;
 }
 @keyframes divineBar {
+  0%   { background-position: 0% 50% }
+  50%  { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+@keyframes mythicalBar {
   0%   { background-position: 0% 50% }
   50%  { background-position: 100% 50% }
   100% { background-position: 0% 50% }

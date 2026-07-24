@@ -541,7 +541,7 @@ function joinNamesRu(names) {
   return names.slice(0, -1).join(", ") + " и " + names[names.length - 1];
 }
 
-const TIER_RANK = { divine: 0, legendary: 1, epic: 2, rare: 3, common: 4 };
+const TIER_RANK = { divine: 0, mythical: 1, legendary: 2, epic: 3, rare: 4, common: 5 };
 
 /* Авто-вердикт словами: собираем ВСЕ сработавшие условия, перемешиваем,
    показываем до 5 — каждый раз с новой случайной формулировкой из банка.
@@ -627,7 +627,7 @@ async function autoVerdictLines(chars) {
 
   // разрыв тиров (например legendary против common)
   const tiers = chars.map(c => getTier(c));
-  const ranks = tiers.map(t => TIER_RANK[t] ?? 4);
+  const ranks = tiers.map(t => TIER_RANK[t] ?? 5);
   const minR = Math.min(...ranks), maxR = Math.max(...ranks);
   if (maxR - minR >= 2) {
     const hiI = ranks.indexOf(minR), loI = ranks.indexOf(maxR);

@@ -2,9 +2,9 @@
    РЕЖИМ «ПО 1» — КАРУСЕЛИ ПО ТИРАМ
    ══════════════════════════════════════════ */
 
-const TIER_ORDER = ["divine", "legendary", "epic", "rare", "common"];
-const TIER_LABELS = { divine:"DIVINE", legendary:"LEGENDARY", epic:"EPIC", rare:"RARE", common:"COMMON" };
-const TIER_COLORS = { divine:"255,157,0", legendary:"200,160,255", epic:"79,195,247", rare:"79,195,247", common:"79,195,247" };
+const TIER_ORDER = ["divine", "mythical", "legendary", "epic", "rare", "common"];
+const TIER_LABELS = { divine:"DIVINE", mythical:"MYTHICAL", legendary:"LEGENDARY", epic:"EPIC", rare:"RARE", common:"COMMON" };
+const TIER_COLORS = { divine:"255,157,0", mythical:"217,70,239", legendary:"200,160,255", epic:"79,195,247", rare:"79,195,247", common:"79,195,247" };
 
 function injectCarouselContainer() {
   if (document.getElementById("carousel-mode")) return;
