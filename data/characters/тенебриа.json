@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Женский",
   "role": "Верховное божество и покровительница державы",
-  "birthdate": "12.12.1999",
+  "birthdate": "12.12",
   "faction": "Тенебрион",
   "subfaction": "",
   "location": "Парящая резиденция Тенебрии",
@@ -40,5 +40,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/2C41A19D-4070-47FE-A7A2-10CDBBCD6934.jpeg",
   "tier": "divine",
-  "exported_at": "2026-07-16T09:33:28.108Z"
+  "appearance": {
+    "height": 165,
+    "weight": 48,
+    "eye_color": "Зелёные",
+    "hair_color": "Блонд",
+    "bust_size": 2,
+    "marks": "Золотые кудри"
+  },
+  "exported_at": "2026-07-24T22:33:45.069Z"
 }
