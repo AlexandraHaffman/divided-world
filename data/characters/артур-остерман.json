@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Апостол",
-  "birthdate": "15.01.1995",
+  "birthdate": "15.01",
   "faction": "Тенебрион",
   "subfaction": "Церковь Тенебрии",
   "location": "Резиденция Артура Остермана",
@@ -37,6 +37,14 @@
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B39B88D-7167-48A5-B512-1FC2F572B4F5.png",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A4408787-2925-4278-9368-7E298B5BCC2F.png",
-  "tier": "legendary",
-  "exported_at": "2026-07-16T09:22:56.711Z"
+  "tier": "mythical",
+  "appearance": {
+    "height": 185,
+    "weight": 84,
+    "eye_color": "Тёмно-карие",
+    "hair_color": "Лысый",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-07-24T22:29:18.804Z"
 }
