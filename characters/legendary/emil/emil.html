@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Эмиль Грант | Разделённый мир</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0705; --magma:255,88,34; --deep:150,26,12; --ember:255,176,74;
+    --paper:#c9c0b1; --paper-dim:#8a8074; --ink:#ece7df; --dim:#6e655c;
+    --fact:150,158,158; --heat:0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;position:relative;overflow-x:hidden;}
+
+  /* ── ФОН СТРАНИЦЫ ── */
+  #pageBg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  #pageBg img{width:100%;height:100%;object-fit:cover;
+    filter:saturate(calc(0.72 + var(--heat) * 0.4)) brightness(calc(0.78 + var(--heat) * 0.14));
+    transition:filter 0.4s linear;}
+  #pageBg::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(11,7,5,0.35) 0%,rgba(11,7,5,0.55) 45%,rgba(11,7,5,0.85) 100%);}
+  #heatGlow{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(65% 55% at 50% 100%, rgba(var(--magma), calc(0.08 + var(--heat) * 0.30)), transparent 72%);}
+
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 4px);}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:url('texture-embers.png'), radial-gradient(circle at 18% 8%, rgba(var(--magma),0.06), transparent 45%),
+                      radial-gradient(circle at 88% 85%, rgba(var(--deep),0.08), transparent 45%);
+    background-size:340px, auto, auto; opacity:0.5; animation:emberDrift 34s linear infinite;}
+  @keyframes emberDrift{0%{background-position:0 0, 0 0, 0 0;}100%{background-position:-340px -680px, 0 0, 0 0;}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.32}}
+  @keyframes breathe{0%,100%{opacity:0.55;transform:scale(1);}50%{opacity:0.9;transform:scale(1.06);}}
+
+  img{display:block;width:100%;height:100%;object-fit:cover;}
+
+  /* ── ОБЁРТКА ИЗОБРАЖЕНИЙ (отсутствующее фото → «нет данных») ── */
+  .img-wrap{position:relative;overflow:hidden;background:#160c09;}
+  .img-wrap .crack-hover{position:absolute;inset:0;background-image:url('texture-cracks.jpg');
+    background-size:cover;mix-blend-mode:overlay;opacity:0;transition:opacity 0.5s;pointer-events:none;}
+  .img-wrap:hover .crack-hover{opacity:0.55;}
+  .img-wrap.broken img{display:none;}
+  .img-wrap.broken{display:flex;align-items:center;justify-content:center;
+    background:repeating-linear-gradient(135deg, rgba(var(--magma),0.07) 0 2px, transparent 2px 14px), #160c09;}
+  .img-wrap.broken::after{content:attr(data-label);font-family:'Share Tech Mono',monospace;font-size:9px;
+    letter-spacing:0.14em;color:rgba(var(--magma),0.55);text-align:center;padding:16px;text-transform:uppercase;}
+  .hero-img-wrap.broken{align-items:flex-start;padding-top:18px;}
+
+  section{padding:28px 16px;position:relative;z-index:2;}
+  .sec-eyebrow{font-size:11px;letter-spacing:0.18em;color:rgba(var(--magma),0.9);margin-bottom:14px;
+    display:flex;align-items:center;gap:8px;overflow:hidden;}
+  .sec-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right, rgba(var(--magma),0.5), transparent);
+    transform:scaleX(0);transform-origin:left;transition:transform 1s cubic-bezier(.2,.8,.2,1);}
+  section.crack-in .sec-eyebrow::after{transform:scaleX(1);}
+
+  /* ── КНОПКА ВЫЙТИ ── */
+  .exit-btn{position:fixed;top:14px;left:14px;z-index:100;font-family:'Share Tech Mono',monospace;
+    font-size:10px;color:rgba(255,255,255,0.6);background:rgba(9,5,4,0.6);border:1px solid rgba(255,255,255,0.15);
+    padding:6px 12px;border-radius:3px;text-decoration:none;letter-spacing:0.08em;backdrop-filter:blur(4px);}
+
+  /* ── 1. ШАПКА (без счётчика threat) ── */
+  .hero{min-height:76vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;
+    padding:0;overflow:hidden;z-index:2;}
+  .hero-img-wrap{position:absolute;inset:0;}
+  .hero-img-wrap img{filter:saturate(1.05);}
+  .hero-gradient{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(11,7,5,0.08) 0%,transparent 32%,rgba(11,7,5,0.86) 76%,rgba(11,7,5,1) 100%);}
+  .hero-tools{position:absolute;top:16px;right:16px;z-index:3;}
+  .sound-btn{background:rgba(9,5,4,0.55);border:1px solid rgba(var(--magma),0.5);
+    color:rgb(var(--magma));font-size:16px;width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);cursor:pointer;}
+  .hero-content{position:relative;z-index:2;padding:20px 16px 30px;}
+  .hero-alias{font-size:10px;letter-spacing:0.22em;color:rgb(var(--ember));text-shadow:0 0 12px rgba(var(--magma),0.6);margin-bottom:8px;}
+  .hero-name{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;text-shadow:0 2px 14px rgba(0,0,0,0.85);}
+  .hero-role{font-size:13px;color:rgba(var(--magma),1);letter-spacing:0.03em;margin:10px 0 6px;line-height:1.55;}
+  .hero-birth{font-size:12px;color:var(--dim);letter-spacing:0.04em;}
+
+  /* ── ЗЕРКАЛО: два параллельных потока ── */
+  .mirror{margin:16px 0 22px;}
+  .mirror-pathos{font-family:'Spectral',serif;font-size:16px;font-style:italic;color:var(--paper);
+    line-height:1.78;border-left:2px solid rgba(var(--magma),0.45);padding-left:14px;position:relative;}
+  .mirror-pathos::before{content:'ЭМИЛЬ О СЕБЕ';display:block;font-family:'Share Tech Mono',monospace;
+    font-style:normal;font-size:9px;letter-spacing:0.18em;color:rgba(var(--magma),0.65);margin-bottom:8px;}
+  .mirror-fact{font-family:'Share Tech Mono',monospace;font-size:11.5px;color:rgb(var(--fact));
+    line-height:1.6;letter-spacing:0.01em;margin-top:12px;max-width:85%;margin-left:auto;text-align:right;
+    padding-top:10px;border-top:1px dashed rgba(var(--fact),0.3);}
+  .mirror-fact::before{content:'ДОСЬЕ';display:block;font-size:9px;letter-spacing:0.18em;
+    color:rgba(var(--fact),0.7);margin-bottom:6px;}
+
+  /* ── 2. БИОГРАФИЯ ── */
+  .bio-list{display:flex;flex-direction:column;gap:20px;}
+  .bio-item{border:1px solid rgba(var(--magma),0.22);border-radius:8px;overflow:hidden;
+    background:rgba(var(--magma),0.025);}
+  .bio-item-photo{position:relative;aspect-ratio:16/10;}
+  .bio-item-photo::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(to bottom,transparent 55%,rgba(9,5,4,0.9) 100%);pointer-events:none;}
+  .bio-item-body{padding:14px 16px 18px;}
+  .bio-period{font-size:11px;color:rgba(var(--magma),0.85);letter-spacing:0.1em;}
+  .bio-title{font-family:'JetBrains Mono',monospace;font-size:17px;margin:4px 0 10px;color:var(--ink);}
+  .bio-text{font-size:13.5px;color:var(--paper-dim);line-height:1.65;}
+  .bio-note{margin-top:12px;padding-left:12px;border-left:1px solid rgba(var(--magma),0.4);
+    font-size:12px;font-style:italic;color:var(--dim);line-height:1.6;opacity:0;transform:translateY(6px);
+    transition:opacity 0.7s,transform 0.7s;}
+  .bio-note.in{opacity:1;transform:none;}
+  .bio-note::before{content:'на полях';display:block;font-family:'Share Tech Mono',monospace;
+    font-style:normal;font-size:8.5px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.6;margin-bottom:5px;}
+  .bio-item .mirror{padding:0 16px 16px;}
+
+  /* ── 3. РОЛЬ / ФРОНТ ── */
+  .front-photo{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin:14px 0;}
+  .front-photo::after{content:'';position:absolute;inset:0;
+    background:radial-gradient(50% 60% at 50% 100%, rgba(var(--magma),0.28), transparent 70%);
+    animation:breathe 5s ease-in-out infinite;pointer-events:none;}
+
+  .asur-eyebrow{font-size:10px;letter-spacing:0.16em;color:rgba(var(--ember),0.85);margin:26px 0 12px;}
+  .asur-grid{display:flex;flex-direction:column;gap:16px;}
+  .asur-card{display:flex;gap:12px;align-items:flex-start;}
+  .asur-portrait{width:66px;height:66px;flex-shrink:0;border-radius:4px;overflow:hidden;
+    border:1px solid rgba(var(--magma),0.4);position:relative;}
+  .asur-name{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--ink);}
+  .asur-role{font-size:10.5px;color:rgba(var(--magma),0.75);letter-spacing:0.06em;margin:2px 0 6px;}
+  .asur-text{font-size:13px;color:var(--paper-dim);line-height:1.6;}
+  .asur-strip{display:flex;gap:10px;margin-top:16px;}
+  .asur-strip-slot{flex:1;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid rgba(var(--magma),0.28);}
+  .asur-caption{font-size:10.5px;color:var(--dim);letter-spacing:0.03em;margin-top:6px;line-height:1.5;}
+
+  /* ── 5. ПОВСЕДНЕВНОСТЬ ── */
+  .daily-photo{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin:16px 0 14px;}
+  .daily-photo::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(11,7,5,0.55),transparent 55%);pointer-events:none;}
+  .harem-block{margin-top:26px;}
+  .harem-photo{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin:12px 0;}
+  .harem-text{font-family:'Spectral',serif;font-size:14.5px;color:var(--paper-dim);line-height:1.7;}
+
+  /* ── 6. АМЕЛИ ── */
+  .amelie-portrait-wrap{display:flex;gap:14px;align-items:center;margin-bottom:16px;}
+  .amelie-portrait{width:76px;height:76px;flex-shrink:0;border-radius:6px;overflow:hidden;
+    border:2px solid rgba(var(--magma),0.55);box-shadow:0 0 20px -6px rgba(var(--magma),0.5);}
+  .amelie-name{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--ink);}
+  .amelie-role{font-size:11px;color:rgba(var(--magma),0.75);letter-spacing:0.05em;margin-top:3px;}
+  .bastion-photo{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;margin:16px 0;}
+  .amelie-root{font-family:'Spectral',serif;font-size:14px;color:var(--paper-dim);line-height:1.7;
+    margin-top:14px;padding-top:14px;border-top:1px dashed rgba(var(--fact),0.25);}
+
+  /* ── 7. ФИЛОСОФИЯ ── */
+  .philosophy-quote{font-family:'Spectral',serif;font-style:italic;font-size:17px;color:rgba(var(--ember),0.92);
+    border-left:2px solid rgba(var(--magma),0.5);padding-left:14px;line-height:1.6;margin:16px 0;}
+  .philosophy-fact{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgb(var(--fact));
+    line-height:1.65;margin-top:18px;padding-top:14px;border-top:1px dashed rgba(var(--fact),0.3);}
+  .philosophy-fact::before{content:'ДОСЬЕ';display:block;font-size:9px;letter-spacing:0.18em;
+    color:rgba(var(--fact),0.7);margin-bottom:6px;}
+
+  .ph{border:1px dashed rgba(var(--magma),0.5);background:rgba(var(--magma),0.05);color:rgba(var(--magma),0.9);
+    font-size:11px;padding:12px;text-align:center;border-radius:4px;}
+
+  /* ══════════════════════════════════════════
+     МОБИЛЬНЫЙ ПОРТРЕТ (≤600px) — базовый рендер
+     ══════════════════════════════════════════ */
+  @media (max-width:600px){
+    .hero-name{font-size:32px;}
+    .mirror-fact{max-width:88%;}
+  }
+
+  /* ══════════════════════════════════════════
+     МОБИЛЬНЫЙ ЛАНДШАФТ / ПЛАНШЕТ (601–900px)
+     ══════════════════════════════════════════ */
+  @media (min-width:601px) and (max-width:900px){
+    section{max-width:640px;margin:0 auto;padding-left:22px;padding-right:22px;}
+    .hero{min-height:64vh;}
+    .hero-name{font-size:38px;}
+
+    .mirror{display:flex;gap:22px;align-items:flex-start;}
+    .mirror-pathos{flex:1 1 56%;}
+    .mirror-fact{flex:0 0 200px;margin-top:20px;max-width:none;text-align:left;}
+    .mirror-fact::before{text-align:left;}
+
+    .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+    /* колонки биографии узкие даже в этой раскладке — зеркало внутри карточки остаётся сложенным */
+    .bio-item .mirror{display:block;}
+    .bio-item .mirror-fact{margin-top:12px;max-width:88%;text-align:right;margin-left:auto;}
+    .bio-item .mirror-fact::before{text-align:right;}
+
+    .asur-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:20px;}
+  }
+  @media (max-width:900px) and (orientation:landscape){
+    .hero{min-height:auto;padding-top:22vh;}
+  }
+
+  /* ══════════════════════════════════════════
+     ДЕСКТОП (≥901px)
+     ══════════════════════════════════════════ */
+  @media (min-width:901px){
+    section{max-width:760px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px;}
+
+    .hero-img-wrap img{object-position:center 18%;}
+    .hero-content{padding:26px 24px 34px;}
+    .hero-name{font-size:46px;}
+    .hero-role{font-size:15px;}
+
+    .mirror{display:flex;gap:44px;align-items:flex-start;margin:22px 0 30px;}
+    .mirror-pathos{flex:1 1 58%;font-size:17px;}
+    .mirror-fact{flex:0 0 250px;margin-top:40px;max-width:none;text-align:left;font-size:12px;}
+    .mirror-fact::before{text-align:left;}
+
+    .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+    /* колонки биографии узкие даже на десктопе (2 в ряд) — зеркало внутри карточки остаётся сложенным */
+    .bio-item .mirror{display:block;margin:0;padding:0 18px 18px;}
+    .bio-item .mirror-fact{margin-top:12px;max-width:88%;text-align:right;margin-left:auto;font-size:11.5px;}
+    .bio-item .mirror-fact::before{text-align:right;}
+
+    .asur-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
+    .asur-strip{max-width:none;}
+
+    .harem-text, .philosophy-quote{font-size:16px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="pageBg">
+  <picture>
+    <source media="(max-width:600px)" srcset="page-bg-vertical.webp">
+    <img src="page-bg.webp" alt="">
+  </picture>
+</div>
+<div id="heatGlow"></div>
+
+<a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
+
+<!-- 1. ШАПКА -->
+<section class="hero">
+  <div class="hero-img-wrap img-wrap" data-label="нет сигнала · портрет">
+    <img src="emil-portrait-main.jpg" alt="Эмиль Грант">
+    <div class="crack-hover"></div>
+  </div>
+  <div class="hero-gradient"></div>
+  <div class="hero-tools">
+    <button class="sound-btn" id="soundBtn" onclick="toggleSound()">🔇</button>
+  </div>
+  <audio id="themeAudio" src="theme.mp3" loop></audio>
+  <div class="hero-content">
+    <div class="hero-alias">ЩИТ РАКШАСОВ</div>
+    <div class="hero-name">ЭМИЛЬ ГРАНТ</div>
+    <div class="hero-role">Хозяин приграничного домена · Пинсян<br>Постоянная война на границе с Forge</div>
+    <div class="hero-birth">р. 14 июля 2014, Северная Европа</div>
+  </div>
+</section>
+
+<!-- 2. ПОЛОЖЕНИЕ -->
+<section>
+  <div class="sec-eyebrow">ПОЛОЖЕНИЕ</div>
+  <div class="mirror">
+    <div class="mirror-pathos">Дариан правит из тени, Валентина — страхом, который внушает одним своим именем, Амели — из Бастиона, куда почти никого не допускают. Я — единственный, кто правит с фронта. Пока трое заседают в глубине, я держу границу Ракшасов лично, разлом за разломом, рубеж за рубежом. Щит не подписывает указы. Щит стоит.</div>
+    <div class="mirror-fact">Домен с центром в Пинсяне, провинция Цзянси — около 600 км вглубь от анклава Forge в Чжэцзяне. Единственное место, где ему действительно хорошо, — передовая.</div>
+  </div>
+</section>
+
+<!-- 3. БИОГРАФИЯ -->
+<section id="bioSection">
+  <div class="sec-eyebrow">БИОГРАФИЯ</div>
+  <div class="bio-list">
+
+    <div class="bio-item">
+      <div class="bio-item-body">
+        <div class="bio-period">2014 · Северная Европа</div>
+        <div class="bio-title">Рождение</div>
+        <div class="bio-text">Родился 14 июля 2014 года в благополучной семье. Мета-сила проявилась к четырём годам: раскалённый пол под ногами ребёнка, лопающийся кафель, ожоги у домашних. Родители продержались меньше года.</div>
+      </div>
+    </div>
+
+    <div class="bio-item">
+      <div class="bio-item-photo img-wrap" data-label="нет сигнала · камера, Грац">
+        <img src="emil-grats-cell.jpg" alt="Пустая камера, Грац, 2019">
+      </div>
+      <div class="bio-item-body">
+        <div class="bio-period">январь 2019 · Грац</div>
+        <div class="bio-title">Объект</div>
+      </div>
+      <div class="mirror">
+        <div class="mirror-pathos">Меня сдали, как сдают вещь, которая перестала быть удобной. Родители нашли слово получше — «лечение» — и с этим словом уснули спокойно.</div>
+        <div class="mirror-fact">15.01.2019 — передан в приёмный пункт Вистнера. Доставлен в тюрьму Граца. Учётная категория: объект (исследование тепловых аномалий).</div>
+      </div>
+      <div class="bio-note">Кадр снят пустым: браслет с номером дела на полу камеры, следы ожогов на стене. Пятилетнего ребёнка в кадре нет — он уже не то, чем его сюда привезли.</div>
+    </div>
+
+    <div class="bio-item">
+      <div class="bio-item-body" style="padding-bottom:0">
+        <div class="bio-period">1 марта 2019 · «День Стеклянных Стен»</div>
+        <div class="bio-title">Освобождение</div>
+      </div>
+      <div class="mirror">
+        <div class="mirror-pathos">В тот день подавители погасли, и я впервые за шесть недель почувствовал собственный жар, а не чужой холод решётки. Меня никто не спасал — я вышел сам, вместе с остальными, кто был достаточно быстр.</div>
+        <div class="mirror-fact">Всплеск Натали Рут гасит подавители тюрьмы Граца. Пятилетний Эмиль Грант выходит на свободу в общем потоке беглецов.</div>
+      </div>
+    </div>
+
+    <div class="bio-item">
+      <div class="bio-item-body">
+        <div class="bio-period">2019–2024 · Война в Тени</div>
+        <div class="bio-title">Стая</div>
+      </div>
+      <div class="mirror">
+        <div class="mirror-pathos">Дариан командовал, Валентина внушала животный страх одним присутствием — а я запомнил единственный голос, который хоть что-то значил: сухое «сделано чисто» Амели Бертран после удачной работы. Этого хватило, чтобы понять, чего я стою.</div>
+        <div class="mirror-fact">Шесть лет среди выживающих взрослых. Единственный устойчивый вывод: ценность человека равна его полезности. Единственная зафиксированная похвала — от А. Бертран.</div>
+      </div>
+    </div>
+
+    <div class="bio-item">
+      <div class="bio-item-body">
+        <div class="bio-period">2024</div>
+        <div class="bio-title">Квартет</div>
+        <div class="bio-text">Четвёрка беглецов — Дариан Сорель, Валентина Блажек, Амели Бертран и Эмиль Грант — окончательно оформляется в Квартет Ракшасов.</div>
+      </div>
+    </div>
+
+    <div class="bio-item">
+      <div class="bio-item-body">
+        <div class="bio-period">после разгрома Тенебрии</div>
+        <div class="bio-title">Рубеж</div>
+        <div class="bio-text">Ракшасы уходят за Рубеж. Эмилю выделяют приграничный домен с центром в Пинсяне — самый неспокойный из четырёх.</div>
+      </div>
+    </div>
+
+    <div class="bio-item">
+      <div class="bio-item-photo img-wrap" data-label="нет сигнала · фронт">
+        <picture>
+          <source media="(max-width:600px)" srcset="emil-front-vertical.webp">
+          <img src="emil-front-magma.jpg" alt="Вскрытие разлома, линия фронта">
+        </picture>
+        <div class="crack-hover"></div>
+      </div>
+      <div class="bio-item-body">
+        <div class="bio-period">2061 · настоящее время</div>
+        <div class="bio-title">Фронт</div>
+      </div>
+      <div class="mirror">
+        <div class="mirror-pathos">Мне сорок семь. Я всё ещё здесь, всё ещё держу линию, которую трое остальных предпочитают не видеть. Это не жертва — это то немногое, в чём я безусловно хорош.</div>
+        <div class="mirror-fact">47 лет. Постоянные боевые действия на границе с анклавом Forge. Ротации не предусмотрено.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 4. РОЛЬ / ФРОНТ -->
+<section>
+  <div class="sec-eyebrow">РОЛЬ · ФРОНТ</div>
+
+  <div class="mirror">
+    <div class="mirror-pathos">Высокое искусство разрушения не терпит суеты. Я не марширую в грязь — я нахожу трещину и решаю исход издалека, чисто, без беспорядка ближнего боя.</div>
+    <div class="mirror-fact">Вскрывает разломы и поднимает магму с безопасной дистанции. Причина — не эстетика: ближний бой ему физически неприятен, он брезглив и не любит утруждаться.</div>
+  </div>
+
+  <div class="front-photo img-wrap" data-label="нет сигнала · вскрытие разлома">
+    <img src="emil-front-magma.jpg" alt="Вскрытие разлома">
+  </div>
+
+  <p class="bio-text">Отряды под командованием Асуров уходят в рейды и на убой ради очередной дозы его адреналина; потери списываются на «необходимость». Единственный, кому позволено оспаривать его планы, — Сюй Лэй: его решения слишком часто оказываются верными, чтобы ими пренебречь.</p>
+
+  <div class="asur-eyebrow">АСУРЫ · ПОЛЕВОЕ КОМАНДОВАНИЕ</div>
+  <div class="asur-grid">
+    <div class="asur-card">
+      <div class="asur-portrait img-wrap" data-label="нет фото">
+        <img src="emil-xu-lei-portrait.jpg" alt="Сюй Лэй">
+      </div>
+      <div>
+        <div class="asur-name">Сюй Лэй</div>
+        <div class="asur-role">Полевой командир</div>
+        <div class="asur-text">Единственный в окружении Эмиля, кто вправе оспорить план операции — и делает это достаточно часто, чтобы это право не отобрали.</div>
+      </div>
+    </div>
+    <div class="asur-card">
+      <div class="asur-portrait img-wrap" data-label="нет фото">
+        <img src="emil-asha-nair-portrait.jpg" alt="Аша Наир">
+      </div>
+      <div>
+        <div class="asur-name">Аша Наир</div>
+        <div class="asur-role">Хозяйка Патны</div>
+        <div class="asur-text">Соляные преграды на юго-западном рубеже держат направление без единого доклада о ходе работ — Эмиля это устраивает.</div>
+      </div>
+    </div>
+  </div>
+  <div class="asur-strip">
+    <div class="asur-strip-slot img-wrap" data-label="нет сигнала">
+      <img src="emil-xu-lei-dispute.jpg" alt="Спор над картой в командной палатке">
+    </div>
+    <div class="asur-strip-slot img-wrap" data-label="нет сигнала">
+      <img src="emil-asha-battle.jpg" alt="Аша Наир в бою, Эмиль наблюдает издалека">
+    </div>
+  </div>
+  <div class="asur-caption">Слева — командная палатка, спор над картой. Справа — Эмиль наблюдает издалека, пока Аша возводит соляные преграды.</div>
+
+  <div class="mirror" style="margin-top:26px">
+    <div class="mirror-pathos">Затишье — не отдых, а трата времени, которое я мог бы отдать рубежу. Каждая тихая неделя — сигнал, что где-то ослабили хватку.</div>
+    <div class="mirror-fact">Паузы переносит плохо: придирки к прислуге, срывы на офицерах, инициирует «разведку боем» без оперативной необходимости.</div>
+  </div>
+  <div class="front-photo img-wrap" data-label="нет сигнала · срыв">
+    <img src="emil-rage-officer.jpg" alt="Срыв на офицере, земля светится под ногами">
+  </div>
+</section>
+
+<!-- 5. ПОВСЕДНЕВНОСТЬ -->
+<section>
+  <div class="sec-eyebrow">ПОВСЕДНЕВНОСТЬ</div>
+  <div class="daily-photo img-wrap" data-label="нет сигнала · резиденция">
+    <img src="emil-residence.jpg" alt="Резиденция в Пинсяне, стена экранов">
+  </div>
+  <div class="mirror">
+    <div class="mirror-pathos">Записи я пересматриваю не из тщеславия — для анализа композиции. И каждый раз прихожу к одному выводу: ни Дариан, ни Валентина не сделали бы это чище.</div>
+    <div class="mirror-fact">Хранит и регулярно пересматривает записи собственных разрушений. Сравнение с другими членами Квартета — воображаемое, всегда в его пользу.</div>
+  </div>
+
+  <div class="harem-block">
+    <div class="harem-photo img-wrap" data-label="нет сигнала">
+      <img src="emil-harem-room.jpg" alt="Резиденция, холодная галерея">
+    </div>
+    <div class="harem-text">В резиденции содержится около десятка женщин, отобранных по внешнему сходству с Амели Бертран — осанка, тёмные волосы, холодная манера держаться. Обращение грубое и равнодушное, способ выработать остаток боевого возбуждения после операций. Иллюзий на этот счёт он не питает и объяснений не ищет.</div>
+  </div>
+</section>
+
+<!-- 6. АМЕЛИ -->
+<section>
+  <div class="sec-eyebrow">АМЕЛИ</div>
+  <div class="amelie-portrait-wrap">
+    <div class="amelie-portrait img-wrap" data-label="нет фото">
+      <img src="emil-amelie-portrait.jpg" alt="Амели Бертран">
+    </div>
+    <div>
+      <div class="amelie-name">Амели Бертран</div>
+      <div class="amelie-role">Хозяйка Бастиона</div>
+    </div>
+  </div>
+
+  <div class="mirror">
+    <div class="mirror-pathos">Это любовь — я знаю, как это называется, и не путаю чувство с зависимостью, что бы ни говорили остальные трое. К ней я езжу не за трофеями — трофеи лишь повод.</div>
+    <div class="mirror-fact">Цикл: поездка в Бастион с трофеями → эйфория несколько дней → раздражительность, вспышки, показательная жестокость на фронте. Периодичность — несколько раз в год.</div>
+  </div>
+
+  <div class="bastion-photo img-wrap" data-label="нет сигнала · трофеи">
+    <img src="emil-bastion-gifts.jpg" alt="Трофеи, поездка в Бастион">
+  </div>
+
+  <div class="amelie-root">Корень тянется в Войну в Тени: единственная похвала, что-либо значившая для него ребёнком, — сухие отметки Амели Бертран за чисто сделанную работу. С тех пор он не нашёл, чем её заменить.</div>
+</section>
+
+<!-- 7. ФИЛОСОФИЯ -->
+<section>
+  <div class="sec-eyebrow">ФИЛОСОФИЯ</div>
+  <div class="philosophy-quote">«Композиция катастроф — высшая форма искусства, доступная человеку»</div>
+  <div class="philosophy-quote">«Разрушение, лишённое смысла, — просто вандализм. Моё разрушение имеет форму»</div>
+  <div class="philosophy-fact">Формулировки заучены и повторяются годами почти без изменений. Заменить их ему нечем.</div>
+</section>
+
+<script>
+let soundOn = false;
+function toggleSound() {
+  const audio = document.getElementById('themeAudio');
+  const btn = document.getElementById('soundBtn');
+  soundOn = !soundOn;
+  if (soundOn) {
+    audio.play().then(() => {
+      btn.textContent = '🔊';
+    }).catch((err) => {
+      alert('Не удалось запустить звук: ' + err.message);
+      soundOn = false;
+      btn.textContent = '🔇';
+    });
+  } else {
+    audio.pause();
+    btn.textContent = '🔇';
+  }
+}
+document.getElementById('themeAudio').addEventListener('error', () => {
+  console.log('Audio failed to load. Check theme.mp3 exists next to emil.html.');
+});
+
+/* ── отсутствующие изображения → «нет сигнала» ── */
+document.querySelectorAll('.img-wrap').forEach(wrap => {
+  const img = wrap.querySelector('img');
+  if (!img) return;
+  const onFail = () => wrap.classList.add('broken');
+  img.addEventListener('error', onFail);
+  if (img.complete && img.naturalWidth === 0) onFail();
+});
+
+/* ── трещины: проявление разделителя секции при скролле ── */
+if ('IntersectionObserver' in window) {
+  const secObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('crack-in'); secObserver.unobserve(e.target); } });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('section').forEach(s => secObserver.observe(s));
+
+  const noteObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); noteObserver.unobserve(e.target); } });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.bio-note').forEach(n => noteObserver.observe(n));
+} else {
+  document.querySelectorAll('section').forEach(s => s.classList.add('crack-in'));
+  document.querySelectorAll('.bio-note').forEach(n => n.classList.add('in'));
+}
+
+/* ── глубина = жар: чем дальше вниз, тем сильнее магматическое свечение ── */
+function updateHeat() {
+  const doc = document.documentElement;
+  const scrollable = doc.scrollHeight - window.innerHeight;
+  const p = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
+  doc.style.setProperty('--heat', p.toFixed(3));
+}
+window.addEventListener('scroll', () => requestAnimationFrame(updateHeat), { passive: true });
+window.addEventListener('resize', updateHeat);
+updateHeat();
+</script>
+</body>
+</html>
