@@ -39,6 +39,7 @@
   .img-wrap{position:relative;overflow:hidden;background:#160c09;}
   .img-wrap .crack-hover{position:absolute;inset:0;background-image:url('texture-cracks.jpg');
     background-size:cover;mix-blend-mode:overlay;opacity:0;transition:opacity 0.5s;pointer-events:none;}
+  .img-wrap .crack-hover.fine{background-image:url('texture-cracks-fine.jpg');}
   .img-wrap:hover .crack-hover{opacity:0.55;}
   .img-wrap.broken img{display:none;}
   .img-wrap.broken{display:flex;align-items:center;justify-content:center;
@@ -72,6 +73,7 @@
   .sound-btn{background:rgba(9,5,4,0.55);border:1px solid rgba(var(--magma),0.5);
     color:rgb(var(--magma));font-size:16px;width:34px;height:34px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);cursor:pointer;}
+  .sound-btn img{width:62%;height:62%;object-fit:contain;pointer-events:none;}
   .hero-content{position:relative;z-index:2;padding:20px 16px 30px;}
   .hero-alias{font-size:10px;letter-spacing:0.22em;color:rgb(var(--ember));text-shadow:0 0 12px rgba(var(--magma),0.6);margin-bottom:8px;}
   .hero-name{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;text-shadow:0 2px 14px rgba(0,0,0,0.85);}
@@ -245,7 +247,7 @@
   </div>
   <div class="hero-gradient"></div>
   <div class="hero-tools">
-    <button class="sound-btn" id="soundBtn" onclick="toggleSound()">🔇</button>
+    <button class="sound-btn" id="soundBtn" onclick="toggleSound()"><img id="soundIcon" src="ui-sound-off.png" alt=""></button>
   </div>
   <audio id="themeAudio" src="theme.mp3" loop></audio>
   <div class="hero-content">
@@ -259,6 +261,9 @@
 <!-- 2. ПОЛОЖЕНИЕ -->
 <section>
   <div class="sec-eyebrow">ПОЛОЖЕНИЕ</div>
+  <div class="bastion-photo img-wrap" data-label="нет сигнала · домен">
+    <img src="emil-domain-wide.jpg" alt="Пинсян, «Цитадель Эха» — приграничный домен Эмиля">
+  </div>
   <div class="mirror">
     <div class="mirror-pathos">Дариан правит из тени, Валентина — страхом, который внушает одним своим именем, Амели — из Бастиона, куда почти никого не допускают. Я — единственный, кто правит с фронта. Пока трое заседают в глубине, я держу границу Ракшасов лично, разлом за разломом, рубеж за рубежом. Щит не подписывает указы. Щит стоит.</div>
     <div class="mirror-fact">Домен с центром в Пинсяне, провинция Цзянси — около 600 км вглубь от анклава Forge в Чжэцзяне. Единственное место, где ему действительно хорошо, — передовая.</div>
@@ -372,6 +377,7 @@
     <div class="asur-card">
       <div class="asur-portrait img-wrap" data-label="нет фото">
         <img src="emil-xu-lei-portrait.jpg" alt="Сюй Лэй">
+        <div class="crack-hover fine"></div>
       </div>
       <div>
         <div class="asur-name">Сюй Лэй</div>
@@ -382,6 +388,7 @@
     <div class="asur-card">
       <div class="asur-portrait img-wrap" data-label="нет фото">
         <img src="emil-asha-nair-portrait.jpg" alt="Аша Наир">
+        <div class="crack-hover fine"></div>
       </div>
       <div>
         <div class="asur-name">Аша Наир</div>
@@ -430,7 +437,7 @@
       <img src="emil-harem-room.jpg" alt="Резиденция, холодная галерея">
     </div>
     <div class="harem-photo img-wrap" data-label="нет сигнала">
-      <img src="emil-harem-cold.jpg" alt="Резиденция, тот же зал с другого ракурса">
+      <img src="emil-harem-cold.jpg" alt="Резиденция, коридор одинаковых дверей">
     </div>
     <div class="harem-text">В резиденции содержится около десятка женщин, отобранных по внешнему сходству с Амели Бертран — осанка, тёмные волосы, холодная манера держаться. Обращение грубое и равнодушное, способ выработать остаток боевого возбуждения после операций. Иллюзий на этот счёт он не питает и объяснений не ищет.</div>
   </div>
@@ -442,12 +449,13 @@
   <div class="amelie-portrait-wrap">
     <div class="amelie-portrait img-wrap" data-label="нет фото">
       <img src="emil-amelie-portrait.jpg" alt="Амели Бертран">
+      <div class="crack-hover fine"></div>
     </div>
     <div class="amelie-id">
       <div class="amelie-name">Амели Бертран</div>
       <div class="amelie-role">Хозяйка Бастиона</div>
     </div>
-    <button class="sound-btn amelie-sound-btn" id="amelieSoundBtn" onclick="toggleAmelieSound()">🔇</button>
+    <button class="sound-btn amelie-sound-btn" id="amelieSoundBtn" onclick="toggleAmelieSound()"><img id="amelieSoundIcon" src="ui-sound-off.png" alt=""></button>
   </div>
   <audio id="amelieAudio" src="theme-amelie.mp3" loop></audio>
 
@@ -484,20 +492,20 @@ let amelieSoundOn = false;
 
 function toggleSound() {
   const audio = document.getElementById('themeAudio');
-  const btn = document.getElementById('soundBtn');
+  const icon = document.getElementById('soundIcon');
   soundOn = !soundOn;
   if (soundOn) {
     if (amelieSoundOn) { toggleAmelieSound(); }
     audio.play().then(() => {
-      btn.textContent = '🔊';
+      icon.src = 'ui-sound-on.png';
     }).catch((err) => {
       alert('Не удалось запустить звук: ' + err.message);
       soundOn = false;
-      btn.textContent = '🔇';
+      icon.src = 'ui-sound-off.png';
     });
   } else {
     audio.pause();
-    btn.textContent = '🔇';
+    icon.src = 'ui-sound-off.png';
   }
 }
 document.getElementById('themeAudio').addEventListener('error', () => {
@@ -506,20 +514,20 @@ document.getElementById('themeAudio').addEventListener('error', () => {
 
 function toggleAmelieSound() {
   const audio = document.getElementById('amelieAudio');
-  const btn = document.getElementById('amelieSoundBtn');
+  const icon = document.getElementById('amelieSoundIcon');
   amelieSoundOn = !amelieSoundOn;
   if (amelieSoundOn) {
     if (soundOn) { toggleSound(); }
     audio.play().then(() => {
-      btn.textContent = '🔊';
+      icon.src = 'ui-sound-on.png';
     }).catch((err) => {
       alert('Не удалось запустить звук: ' + err.message);
       amelieSoundOn = false;
-      btn.textContent = '🔇';
+      icon.src = 'ui-sound-off.png';
     });
   } else {
     audio.pause();
-    btn.textContent = '🔇';
+    icon.src = 'ui-sound-off.png';
   }
 }
 document.getElementById('amelieAudio').addEventListener('error', () => {
