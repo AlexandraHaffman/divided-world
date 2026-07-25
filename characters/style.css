@@ -61,11 +61,11 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .filter-btn.active{color:var(--white);border-color:var(--fc,#4fc3f7);background:rgba(var(--fr,79,195,247),0.08);box-shadow:0 0 8px rgba(var(--fr,79,195,247),0.15);}
 
 /* ── ГРИД ── */
-.grid{position:relative;z-index:10;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;align-items:stretch;}
+.grid{position:relative;z-index:10;display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:12px;align-items:stretch;}
 .grid[data-cols="1"]{grid-template-columns:1fr;}
 .grid[data-cols="2"]{grid-template-columns:1fr 1fr;}
-.grid[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;}
-.grid[data-cols="5"]{grid-template-columns:repeat(5,1fr);}
+.grid[data-cols="3"]{grid-template-columns:1fr 1fr 1fr;gap:10px 9px;}
+.grid[data-cols="5"]{grid-template-columns:repeat(5,1fr);gap:9px 6px;}
 
 /* ── КАРТОЧКА БЕЗ ФОТО ── */
 .char-card{position:relative;background:linear-gradient(135deg,rgba(8,13,24,0.95),rgba(5,8,15,0.98));border:1px solid rgba(var(--cr),0.25);border-radius:6px;cursor:pointer;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;animation:cardIn 0.4s both;display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
@@ -201,12 +201,28 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .char-card[data-tier="legendary"]{border-color:rgba(var(--cr),0.6);animation:cardIn 0.4s both,legendaryGlow 7s ease-in-out infinite;}
 .char-card[data-tier="legendary"] .card-top-bar{height:4px;opacity:1;background:linear-gradient(90deg,transparent,rgb(var(--cr)),rgba(var(--cr),0.4),rgb(var(--cr)),transparent);background-size:200% 100%;animation:shimmerBar 6s linear infinite;}
 .char-card[data-tier="legendary"] .tier-corners{opacity:0.9;--corner-size:18px;--corner-w:1.5px;}
-.char-card[data-tier="mythical"]{border:1px solid rgb(var(--cr));outline:1.75px solid rgba(var(--cr),0.42);outline-offset:4px;animation:cardIn 0.4s both,mythicalGlow 5.5s ease-in-out infinite;}
+.char-card[data-tier="mythical"]{border:1px solid rgb(var(--cr));outline:1.5px solid rgba(var(--cr),0.42);outline-offset:3.25px;animation:cardIn 0.4s both,mythicalGlow 5.5s ease-in-out infinite;}
 .char-card[data-tier="mythical"] .card-top-bar{height:5px;opacity:1;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.5),rgb(var(--cr)),rgba(var(--cr),0.9),rgb(var(--cr)),rgba(var(--cr),0.5),transparent);background-size:260% 100%;animation:mythicalBar 4.5s linear infinite;}
-.char-card[data-tier="mythical"] .tier-corners{opacity:1;--corner-size:22px;--corner-w:1.75px;}
-.char-card[data-tier="divine"]{border:1.5px solid rgb(var(--cr));outline:2.5px solid rgba(var(--cr),0.6);outline-offset:5px;animation:cardIn 0.4s both,divineGlow 4s ease-in-out infinite;}
+.char-card[data-tier="mythical"] .tier-corners{opacity:1;--corner-size:20px;--corner-w:1.6px;}
+.char-card[data-tier="divine"]{border:1.25px solid rgb(var(--cr));outline:2px solid rgba(var(--cr),0.6);outline-offset:4px;animation:cardIn 0.4s both,divineGlow 4s ease-in-out infinite;}
 .char-card[data-tier="divine"] .card-top-bar{height:6px;opacity:1;background:linear-gradient(90deg,transparent,rgba(var(--cr),0.4),rgb(var(--cr)),#fff,rgb(var(--cr)),rgba(var(--cr),0.4),transparent);background-size:300% 100%;animation:divineBar 4s linear infinite;}
-.char-card[data-tier="divine"] .tier-corners{opacity:1;--corner-size:28px;--corner-w:2.5px;}
+.char-card[data-tier="divine"] .tier-corners{opacity:1;--corner-size:25px;--corner-w:2px;}
+
+/* Компакт-3/5: карточки мельче, поэтому обводки и уголки тира тоже
+   мельче — иначе на плотной сетке они наезжают на соседей. */
+.char-card.compact-3[data-tier="legendary"]{outline:1px solid rgba(var(--cr),0.3);outline-offset:2px;}
+.char-card.compact-3[data-tier="legendary"] .tier-corners{--corner-size:13px;--corner-w:1.2px;}
+.char-card.compact-3[data-tier="mythical"]{outline-offset:2.25px;}
+.char-card.compact-3[data-tier="mythical"] .tier-corners{--corner-size:15px;--corner-w:1.3px;}
+.char-card.compact-3[data-tier="divine"]{outline-offset:2.5px;}
+.char-card.compact-3[data-tier="divine"] .tier-corners{--corner-size:18px;--corner-w:1.5px;}
+
+.char-card.compact-5[data-tier="legendary"]{outline:1px solid rgba(var(--cr),0.3);outline-offset:1.5px;}
+.char-card.compact-5[data-tier="legendary"] .tier-corners{--corner-size:9px;--corner-w:1px;}
+.char-card.compact-5[data-tier="mythical"]{outline-offset:1.75px;}
+.char-card.compact-5[data-tier="mythical"] .tier-corners{--corner-size:10px;--corner-w:1.1px;}
+.char-card.compact-5[data-tier="divine"]{outline-offset:2px;}
+.char-card.compact-5[data-tier="divine"] .tier-corners{--corner-size:12px;--corner-w:1.25px;}
 @keyframes shimmerBar{0%{background-position:-100% 0}100%{background-position:200% 0}}
 @keyframes mythicalBar{0%,100%{background-position:-30% 0}50%{background-position:130% 0}}
 @keyframes divineBar{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
@@ -478,8 +494,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-card[data-tier="rare"]{outline:1px solid rgba(var(--cr),0.12);outline-offset:2px;}
 .c-card[data-tier="epic"]{outline:1px solid rgba(var(--cr),0.2);outline-offset:3px;}
 .c-card[data-tier="legendary"]{outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:legendaryGlow 7s ease-in-out infinite;}
-.c-card[data-tier="mythical"]{outline:1.75px solid rgba(var(--cr),0.42);outline-offset:4px;animation:mythicalGlow 5.5s ease-in-out infinite;}
-.c-card[data-tier="divine"]{outline:2.5px solid rgba(var(--cr),0.6);outline-offset:5px;animation:divineGlow 4s ease-in-out infinite;}
+.c-card[data-tier="mythical"]{outline:1.5px solid rgba(var(--cr),0.42);outline-offset:3.25px;animation:mythicalGlow 5.5s ease-in-out infinite;}
+.c-card[data-tier="divine"]{outline:1.75px solid rgba(var(--cr),0.6);outline-offset:3.75px;animation:divineGlow 4s ease-in-out infinite;}
 
 @keyframes cGlitchOut{0%{transform:none;filter:none;opacity:1;}15%{transform:translateX(-5px);filter:hue-rotate(90deg) brightness(1.8);}30%{transform:translateX(7px) scaleX(1.02);filter:hue-rotate(-60deg) brightness(1.4);clip-path:polygon(0 25%,100% 25%,100% 50%,0 50%);}45%{transform:translateX(-3px);filter:brightness(2.5);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);}60%{transform:translateX(4px) skewX(-2deg);filter:hue-rotate(180deg) brightness(1.6);}75%{transform:translateX(-1px);filter:brightness(3);clip-path:polygon(0 70%,100% 70%,100% 85%,0 85%);}90%{transform:none;filter:brightness(1.2);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);}100%{opacity:0;transform:none;filter:none;}}
 @keyframes cGlitchIn{0%{opacity:0;transform:translateX(10px);filter:hue-rotate(90deg) brightness(2);}20%{opacity:1;transform:translateX(-6px);filter:hue-rotate(-30deg) brightness(1.5);}40%{transform:translateX(4px) skewX(1deg);filter:brightness(1.3);}60%{transform:translateX(-2px);filter:brightness(1.1);}80%{transform:translateX(1px);filter:none;}100%{opacity:1;transform:none;filter:none;}}
