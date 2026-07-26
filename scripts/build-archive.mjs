@@ -18,7 +18,7 @@ const COLLECTIONS = {
   elenis: { code: 'ELENIS', prefix: 'ELE', layers: [0], flash: false, restricted: false },
   icon: { code: 'ICON', prefix: 'ICO', layers: [0, 1, 2, 3], flash: false, restricted: false },
   lumiere: { code: 'LUMIERE', prefix: 'LUM', layers: [0, 1], flash: false, restricted: false },
-  nocturne: { code: 'NOCTURNE', prefix: 'NOC', layers: [2], flash: false, restricted: null }, // decided manually per photo
+  nocturne: { code: 'NOCTURNE', prefix: 'NOC', layers: [2], flash: false, restricted: false }, // overridden true manually per photo when warranted
   persona: { code: 'PERSONA', prefix: 'PER', layers: [1], flash: false, restricted: false },
   private: { code: 'PRIVATE', prefix: 'PRI', layers: [2], flash: false, restricted: true },
   sculpted: { code: 'SCULPTED', prefix: 'SCU', layers: [1, 2], flash: false, restricted: false },
@@ -226,7 +226,7 @@ async function main() {
         accent,
         layers: meta.layers,
         flash: meta.flash,
-        restricted: meta.restricted === null ? null : meta.restricted, // null = decide manually (nocturne)
+        restricted: meta.restricted,
       };
       if (folder === 'icon') entry.crop = defaultCropForLayers(meta.layers);
 
