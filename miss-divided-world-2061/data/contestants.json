@@ -481,7 +481,7 @@
   "appear": "Вечно юная, лет шестнадцати на вид: золотые кудри, огромные зелёные глаза, сияние, от которого больно смотреть. Платья творит из света прямо на ходу, меняя фасон по капризу. Красота её неземная, почти асексуальная — притягивает как рассвет или чудо, а не как женщина; хочется не обладать, а смотреть, приоткрыв рот.",
   "soul": "Живая богиня, а внутри — одинокий ребёнок, которому все молятся и никто не говорит просто так. Ей скучно и одиноко до слёз; конкурс для неё — редкая радость побыть среди тех, кто злится на неё по-настоящему. Способна стереть континент — и мечтает, чтобы её обняли.",
   "img": {
-   "reference": "data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.png",
+   "reference": "data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.webp",
    "cinematic": "data/images/characters/2C41A19D-4070-47FE-A7A2-10CDBBCD6934.jpeg",
    "system_1x1": "data/images/characters/tenebria-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/tenebria-portrait-web.jpg"
@@ -1529,7 +1529,7 @@
   "soul": "Элитный Пилигрим Аркадии, ходящий туда, откуда не возвращаются, и старшая сестра богини, отрёкшаяся от родства. Не играет на зал, держит всё под контролем; за холодом — годы боли и очень много несказанного.",
   "img": {
    "reference": "data/images/characters/3054195D-272F-4FBB-B57A-8D17F77FDC08.jpeg",
-   "cinematic": "data/images/characters/36D7CACD-0A34-4E91-BBF0-25FD1451710A.png",
+   "cinematic": "data/images/characters/36D7CACD-0A34-4E91-BBF0-25FD1451710A.webp",
    "system_1x1": "data/images/characters/emily-grey-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/emili-grey-portrait-web.jpg"
   },
@@ -1617,7 +1617,7 @@
   "appear": "Мягкая, тёплая красота: нежные черты, спокойные глаза врача, гибкая фигура, которую она не выставляет, но и не прячет. Тёмные волосы, светлые скромные одежды без золота; чувственность её — целительная, тихая, из тех, к которым тянутся согреться, а не сгореть.",
   "soul": "Живая Святая, обратившая пугающий дар в исцеление. В зале хищниц — редкая искренняя душа: играть в игры отказывается, дружит только с теми, кому нужна помощь. Тихое тепло, которое обезоруживает даже циников.",
   "img": {
-   "reference": "data/images/characters/C0289A0D-F98E-4399-B099-1F71B1EA426E.png",
+   "reference": "data/images/characters/C0289A0D-F98E-4399-B099-1F71B1EA426E.webp",
    "cinematic": "data/images/characters/B71EF63A-BD66-42A8-84AF-CB12BA0F5BBC.jpeg",
    "system_1x1": "data/images/characters/kristina-novak-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/kristina-novak-portrait-web.jpg"
@@ -1711,7 +1711,7 @@
   "soul": "За хрупкостью и застенчивостью — очень крепкий стержень и острый, наблюдательный ум. Дочь самого влиятельного человека мира, что бережёт отца и выращивает сады среди стали; не играет в интриги, но видит их насквозь. Тихая, глубокая, недооценённая сила. Очень сильная участница.",
   "img": {
    "reference": "data/images/characters/F254ADB9-8242-4A0C-8577-A8015ECCA77D.jpeg",
-   "cinematic": "data/images/characters/3CF5EF09-F365-4A45-8BF8-2603577F4FCB.png",
+   "cinematic": "data/images/characters/3CF5EF09-F365-4A45-8BF8-2603577F4FCB.webp",
    "system_1x1": "data/images/characters/elari-walsh-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/elari-uolsh-portrait-web.jpg"
   },
@@ -2171,7 +2171,7 @@
   "appear": "Адмиральская выправка, статная фигура, строгое красивое лицо зрелой военной; тёмно‑синий с золотом мундир сидит идеально, ни складки не на месте. Красота дисциплины и парадной формы — притяжение безупречной выправки, а не тепла.",
   "soul": "Командующая корпусом «Солнце», перфекционистка, для которой безупречность — образ жизни. Не играет в интриги: считает их неряшливостью. За холодной планкой — цена, которую платят те, кто её не выдержал, и бессонные ночи, о которых она не говорит.",
   "img": {
-   "reference": "data/images/characters/6ABBA230-D8F1-4A02-9D6D-72D9C267418E.png",
+   "reference": "data/images/characters/6ABBA230-D8F1-4A02-9D6D-72D9C267418E.webp",
    "cinematic": "data/images/characters/FDF611D7-EC46-48FA-996C-52188694514D.jpeg",
    "system_1x1": "data/images/characters/emilia-everett-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/emiliya-everett-portrait-web.jpg"
@@ -2889,8 +2889,8 @@
   "appear": "Собранная, элегантно‑строгая женщина с деловой выправкой и живой искрой азарта в глазах; подтянутая фигура, дорогой сдержанный вкус. Красота собранного, острого ума, за которой прячется человек, спрятавшийся в работу от собственной нерешительности.",
   "soul": "Хранительница казны Forge, мастер просчитанного риска: говорит «нет» глупости и «да» математике с малым шансом и большим кушем. Её интрига — личная: один баланс, который она так и не решается закрыть, спрятанный за колонками цифр.",
   "img": {
-   "reference": "data/images/characters/D14D67FF-D3B6-402B-910C-2265DA9B3F40.png",
-   "cinematic": "data/images/characters/119793A8-B2FA-490C-B833-E659E8A74531.png",
+   "reference": "data/images/characters/D14D67FF-D3B6-402B-910C-2265DA9B3F40.webp",
+   "cinematic": "data/images/characters/119793A8-B2FA-490C-B833-E659E8A74531.webp",
    "system_1x1": "data/images/characters/samantha-chen-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/samanta-chen-portrait-web.jpg"
   },
@@ -2977,7 +2977,7 @@
   "appear": "Спокойная, тёплая женщина с усталыми добрыми глазами; простая, человечная красота без глянца, землистые и небесные тона, достоинство служения. К ней тянутся согреться и довериться.",
   "soul": "Совесть Белой зоны, лидер «Ковчега», кормящая всех без разбора флагов. Вторую закулисную программу конкурса даже не заметила — весь вечер кормила обслугу. Редкая подлинная доброта без наивности, которую невозможно ни купить, ни сыграть.",
   "img": {
-   "reference": "data/images/characters/AFF2994B-65BD-4466-B2C8-E068A86C7787.png",
+   "reference": "data/images/characters/AFF2994B-65BD-4466-B2C8-E068A86C7787.webp",
    "cinematic": "data/images/characters/4822C508-5302-4099-8DB6-CAE674F0E46A.jpeg",
    "system_1x1": "data/images/characters/maria-zhdanova-portrait-web.jpg",
    "system_1x1_expected": "data/images/characters/mariya-zhdanova-portrait-web.jpg"
