@@ -413,7 +413,7 @@ window.META_TREE = {
     "исцеление",
     "ускоренная деструкция органики)"
    ],
-   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C0289A0D-F98E-4399-B099-1F71B1EA426E.png",
+   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C0289A0D-F98E-4399-B099-1F71B1EA426E.webp",
    "aliases": []
   },
   {
@@ -903,7 +903,7 @@ window.META_TREE = {
     "Манипуляция",
     "Идеологическая обработка"
    ],
-   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B39B88D-7167-48A5-B512-1FC2F572B4F5.png",
+   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B39B88D-7167-48A5-B512-1FC2F572B4F5.webp",
    "aliases": [
     "Апостол"
    ],
@@ -1052,7 +1052,7 @@ window.META_TREE = {
     "Левитация и телепортация",
     "Поглощение ментальной энергии"
    ],
-   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.png",
+   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/63E1504E-0ACC-4675-A938-6EB4A527DD38.webp",
    "aliases": [
     "Натали Рут",
     "Богиня Тенебриона"
