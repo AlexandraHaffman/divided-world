@@ -22,7 +22,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked back, low ponytail",
+    "makeup": "Sultry bronze, nude lip",
+    "set_design": "Mirrored steel plinth, deep blue drape"
   },
   {
     "id": "CHR-002",
@@ -47,7 +50,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked back low pony",
+    "makeup": "Clean natural glam",
+    "set_design": "Bare studio backdrop, single shadow"
   },
   {
     "id": "CHR-003",
@@ -72,7 +78,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek short bob",
+    "makeup": "Warm bronze smoky eye",
+    "set_design": "Circular mirror prop, dual gel lighting (amber/teal)"
   },
   {
     "id": "CHR-004",
@@ -97,7 +106,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail with long braid",
+    "makeup": "Bronze glam",
+    "set_design": "Backlit ring light, column"
   },
   {
     "id": "CHR-005",
@@ -122,7 +134,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked back",
+    "makeup": "Bronze glam, statement earrings",
+    "set_design": "Dark studio, green gel accent"
   },
   {
     "id": "CHR-006",
@@ -147,7 +162,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Bun with loose tendrils",
+    "makeup": "Sultry bronze, nude lip",
+    "set_design": "Red velvet curtains, spotlight pool"
   },
   {
     "id": "CHR-007",
@@ -172,7 +190,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Bronze glam",
+    "set_design": "Bare dark stage, single spot"
   },
   {
     "id": "CHR-008",
@@ -197,7 +218,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "High bun",
+    "makeup": "Bronze glam",
+    "set_design": "Warm gold ribbon backdrop"
   },
   {
     "id": "CHR-009",
@@ -222,7 +246,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked back",
+    "makeup": "Bronze glam, dark liner",
+    "set_design": "Mirrored glass panel, crystal prism prop"
   },
   {
     "id": "ELE-001",
@@ -245,7 +272,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam",
+    "set_design": "Carved ice block pedestal, scattered ice shards"
   },
   {
     "id": "ELE-002",
@@ -268,7 +298,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Braided low bun",
+    "makeup": "Soft glam",
+    "set_design": "Glass alembic apparatus, purple vapor"
   },
   {
     "id": "ELE-003",
@@ -291,7 +324,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam, warm bronze",
+    "set_design": "Dark vanity, smoke wisps"
   },
   {
     "id": "ELE-004",
@@ -314,7 +350,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Upswept, loose tendrils",
+    "makeup": "Bold glam",
+    "set_design": "Elenis Parfums boutique counter, branded shelving"
   },
   {
     "id": "ELE-005",
@@ -337,7 +376,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam, dewy",
+    "set_design": "Sculptural plaster wall, falling amber petals"
   },
   {
     "id": "ELE-006",
@@ -360,7 +402,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Long fishtail braid",
+    "makeup": "Bold bronze glam",
+    "set_design": "Hanging gold teardrop ornaments, black lacquer bowl"
   },
   {
     "id": "ELE-007",
@@ -383,7 +428,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose fishtail braid",
+    "makeup": "Soft glam",
+    "set_design": "Hanging saffron-filled vials, smoking brazier"
   },
   {
     "id": "ICO-001",
@@ -410,7 +458,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "eye"
+    "crop": "eye",
+    "hair": "Voluminous upswept, jeweled pin",
+    "makeup": "Smoky bronze eye",
+    "set_design": "Bare black backdrop, sheer tulle veil"
   },
   {
     "id": "ICO-002",
@@ -437,7 +488,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "half"
+    "crop": "half",
+    "hair": "Wet-look slick back",
+    "makeup": "Bare dewy skin",
+    "set_design": "Bare backdrop, fine water mist"
   },
   {
     "id": "ICO-003",
@@ -464,7 +518,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "eye"
+    "crop": "eye",
+    "hair": "Fine cornrow braids",
+    "makeup": "Glossy red lip, applied on camera",
+    "set_design": "Bare dark backdrop"
   },
   {
     "id": "ICO-004",
@@ -491,7 +548,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "half"
+    "crop": "half",
+    "hair": "Vintage side-swept waves",
+    "makeup": "Soft bronze glam",
+    "set_design": "Bare dark backdrop, warm rim light"
   },
   {
     "id": "ICO-005",
@@ -518,7 +578,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "half"
+    "crop": "half",
+    "hair": "Sleek side part",
+    "makeup": "Bronze smoky eye",
+    "set_design": "Bare black backdrop"
   },
   {
     "id": "ICO-006",
@@ -545,7 +608,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "half"
+    "crop": "half",
+    "hair": "Slicked back",
+    "makeup": "Bronze smoky eye",
+    "set_design": "Bare dark backdrop"
   },
   {
     "id": "ICO-007",
@@ -572,7 +638,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "eye"
+    "crop": "eye",
+    "hair": "Sleek bob",
+    "makeup": "Classic glam (b&w)",
+    "set_design": "Bare backdrop, silk scarf"
   },
   {
     "id": "LUM-001",
@@ -596,7 +665,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low ponytail, gold cuff",
+    "makeup": "Soft glam",
+    "set_design": "Gold ribbed panel hall, hanging brass rods"
   },
   {
     "id": "LUM-002",
@@ -620,7 +692,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Braided updo, windswept",
+    "makeup": "Soft natural glam",
+    "set_design": "Ring-light halos, wind machine"
   },
   {
     "id": "LUM-003",
@@ -644,7 +719,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail",
+    "makeup": "Clean glam",
+    "set_design": "Mirrored glass panels"
   },
   {
     "id": "LUM-004",
@@ -668,7 +746,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Half-up voluminous",
+    "makeup": "Soft glam",
+    "set_design": "Sheer curtain, warm backlight"
   },
   {
     "id": "LUM-005",
@@ -692,7 +773,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Half-up, ribbon bow",
+    "makeup": "Bright glam smile",
+    "set_design": "Satin ribbon staircase, gold champagne bucket"
   },
   {
     "id": "LUM-006",
@@ -716,7 +800,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose updo, wind-blown",
+    "makeup": "Soft glam, closed eyes",
+    "set_design": "Hanging crystal prisms, wind, rainbow refraction"
   },
   {
     "id": "LUM-007",
@@ -740,7 +827,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Messy bun",
+    "makeup": "Soft glam",
+    "set_design": "White sheer curtain backdrop"
   },
   {
     "id": "NOC-001",
@@ -763,7 +853,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Long loose waves",
+    "makeup": "Bronze glam",
+    "set_design": "Antique vanity mirror, warm lamp"
   },
   {
     "id": "NOC-002",
@@ -786,7 +879,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek low bun",
+    "makeup": "Classic glam",
+    "set_design": "Bare corridor, metal handrail"
   },
   {
     "id": "NOC-003",
@@ -809,7 +905,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Long fishtail braid",
+    "makeup": "Bold glam",
+    "set_design": "Leather throne chair, hanging brass rings"
   },
   {
     "id": "NOC-004",
@@ -832,7 +931,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose curls",
+    "makeup": "Sultry glam",
+    "set_design": "Antique gilt mirror, tufted velvet"
   },
   {
     "id": "NOC-005",
@@ -855,7 +957,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Top bun, hairpin",
+    "makeup": "Bold glam",
+    "set_design": "Giant folding fan backdrop, hanging crystals"
   },
   {
     "id": "NOC-006",
@@ -878,7 +983,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Finger waves, vintage",
+    "makeup": "Classic glam",
+    "set_design": "Red velvet curtain, leather stool"
   },
   {
     "id": "PER-001",
@@ -901,7 +1009,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sculpted pompadour updo",
+    "makeup": "Bold showgirl glam",
+    "set_design": "Stage spotlight, ostrich feather fan, velvet curtain"
   },
   {
     "id": "PER-002",
@@ -924,7 +1035,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Vintage finger-wave bob",
+    "makeup": "Classic Hollywood glam",
+    "set_design": "Antique vanity, oval mirror, powder compact"
   },
   {
     "id": "PER-003",
@@ -947,7 +1061,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek bob",
+    "makeup": "Clean glam",
+    "set_design": "Navy study, leather books, desk lamp"
   },
   {
     "id": "PER-004",
@@ -970,7 +1087,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Side-swept bob",
+    "makeup": "Sultry glam",
+    "set_design": "Velvet rope, glass jewel case, spotlight"
   },
   {
     "id": "PER-005",
@@ -993,7 +1113,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked back low",
+    "makeup": "Sultry glam",
+    "set_design": "Gallery, bronze bust sculpture, gilt frame painting"
   },
   {
     "id": "PER-006",
@@ -1016,7 +1139,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Braided crown updo",
+    "makeup": "Classic glam",
+    "set_design": "City-view lounge, marble chess table, brass lamp"
   },
   {
     "id": "PER-007",
@@ -1039,7 +1165,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose updo",
+    "makeup": "Soft glam",
+    "set_design": "Wood-paneled parlor, lily arrangement, antique console"
   },
   {
     "id": "PER-008",
@@ -1062,7 +1191,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked pixie-length wave",
+    "makeup": "Sharp glam",
+    "set_design": "Gold panel backdrop, brass rod chair"
   },
   {
     "id": "PER-009",
@@ -1085,7 +1217,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Braided updo",
+    "makeup": "Classic glam",
+    "set_design": "Suspended brass instruments, spotlight, music stand"
   },
   {
     "id": "PRI-001",
@@ -1108,7 +1243,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Sleek straight, center part",
+    "makeup": "Soft, half-worn glam",
+    "set_design": "Hotel bench, curtained window light"
   },
   {
     "id": "PRI-002",
@@ -1131,7 +1269,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Undone waves, fanned out",
+    "makeup": "Bare, soft",
+    "set_design": "Round bed, oval mirror headboard"
   },
   {
     "id": "PRI-003",
@@ -1154,7 +1295,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Messy top knot, ribbon",
+    "makeup": "Bare, sultry",
+    "set_design": "Folding screen, garment rack of gowns"
   },
   {
     "id": "PRI-004",
@@ -1177,7 +1321,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Undone waves",
+    "makeup": "Bare-faced",
+    "set_design": "Bare sunlit room, window light"
   },
   {
     "id": "PRI-005",
@@ -1200,7 +1347,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose waves",
+    "makeup": "Soft glam",
+    "set_design": "Dark paneled dressing room, open jewelry case"
   },
   {
     "id": "PRI-006",
@@ -1223,7 +1373,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose waves",
+    "makeup": "Bare, soft",
+    "set_design": "Plush sofa, warm lamp"
   },
   {
     "id": "PRI-007",
@@ -1246,7 +1399,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose waves",
+    "makeup": "Bare-faced",
+    "set_design": "Rumpled bed, morning light through curtain"
   },
   {
     "id": "PRI-008",
@@ -1269,7 +1425,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Messy updo",
+    "makeup": "Soft glam",
+    "set_design": "Pink vanity, mirror reflection, perfume bottles"
   },
   {
     "id": "SCU-001",
@@ -1293,7 +1452,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Braided crown",
+    "makeup": "Classic glam",
+    "set_design": "Industrial steel frame, concrete plinth"
   },
   {
     "id": "SCU-002",
@@ -1317,7 +1479,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek bob",
+    "makeup": "Clean glam",
+    "set_design": "Sunlit concrete blocks, hard shadow"
   },
   {
     "id": "SCU-003",
@@ -1341,7 +1506,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek center part",
+    "makeup": "Clean glam",
+    "set_design": "Mirror cube plinth, studio grey"
   },
   {
     "id": "SCU-004",
@@ -1365,7 +1533,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek center part",
+    "makeup": "Smoky dramatic eye",
+    "set_design": "Bare grey backdrop"
   },
   {
     "id": "SCU-005",
@@ -1389,7 +1560,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek bun, metal hairpins",
+    "makeup": "Sharp glam",
+    "set_design": "Architectural throne, fluted columns"
   },
   {
     "id": "CHR-010",
@@ -1414,7 +1588,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek top bun",
+    "makeup": "Bold glam",
+    "set_design": "Neon teal light rods, mirror cube, purple ground"
   },
   {
     "id": "CHR-011",
@@ -1440,7 +1617,10 @@
     ],
     "flash": true,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Slicked bob",
+    "makeup": "Bronze glam",
+    "set_design": "Gold ring motif backdrop, smoke, glass table"
   },
   {
     "id": "CHR-012",
@@ -1465,7 +1645,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail, colour ties",
+    "makeup": "Bright glam smile",
+    "set_design": "Pop-art sphere backdrop, poolside"
   },
   {
     "id": "CHR-013",
@@ -1490,7 +1673,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked back",
+    "makeup": "Bronze glam",
+    "set_design": "Glass cube, cobalt/neon-green gel lighting"
   },
   {
     "id": "CHR-014",
@@ -1516,7 +1702,10 @@
     ],
     "flash": true,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Braided, metal circlet",
+    "makeup": "Dramatic bronze glam",
+    "set_design": "Purple lightning FX, dark fantasy set, gold statues"
   },
   {
     "id": "CHR-015",
@@ -1541,7 +1730,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Long braid",
+    "makeup": "Bronze glam",
+    "set_design": "Magenta/orange glass panels, smoke"
   },
   {
     "id": "CHR-016",
@@ -1566,7 +1758,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek bob",
+    "makeup": "Bronze glam",
+    "set_design": "Circular mirror disc, pink/red gel light"
   },
   {
     "id": "CHR-017",
@@ -1591,7 +1786,10 @@
       2
     ],
     "flash": true,
-    "restricted": false
+    "restricted": false,
+    "hair": "Short tousled",
+    "makeup": "Bronze glam",
+    "set_design": "Sports car hood, purple neon stripes"
   },
   {
     "id": "ELE-008",
@@ -1614,7 +1812,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam",
+    "set_design": "Boutique counter, wax-seal envelopes, cufflink trays"
   },
   {
     "id": "ELE-009",
@@ -1637,7 +1838,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low braided bun",
+    "makeup": "Soft glam",
+    "set_design": "Dark stone counter, halved figs, ceramic vessel"
   },
   {
     "id": "ELE-010",
@@ -1660,7 +1864,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek center part",
+    "makeup": "Soft glam",
+    "set_design": "Himalayan salt spa, rose-gold accents"
   },
   {
     "id": "ELE-011",
@@ -1683,7 +1890,10 @@
       0
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam",
+    "set_design": "Warm suede steps, perfume bottle"
   },
   {
     "id": "ELE-012",
@@ -1707,7 +1917,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Loose waves",
+    "makeup": "Bronze glam",
+    "set_design": "Gilt cabinet, smoke, glass decanters"
   },
   {
     "id": "ICO-008",
@@ -1734,7 +1947,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "half"
+    "crop": "half",
+    "hair": "Loose waves, side part",
+    "makeup": "Soft glam",
+    "set_design": "Bare backdrop, statement gem necklace draped over shoulder"
   },
   {
     "id": "ICO-009",
@@ -1762,7 +1978,10 @@
     "flash": false,
     "restricted": false,
     "crop": "eye",
-    "flagship": true
+    "flagship": true,
+    "hair": "Slicked back",
+    "makeup": "Bold graphic liner",
+    "set_design": "Gold halo ring light, cage corset choker"
   },
   {
     "id": "ICO-010",
@@ -1789,7 +2008,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "crop": "half"
+    "crop": "half",
+    "hair": "Fanned out, overhead",
+    "makeup": "Soft glam",
+    "set_design": "White fur wrap, overhead angle"
   },
   {
     "id": "LUM-008",
@@ -1813,7 +2035,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Wet-look slick back",
+    "makeup": "Bare, dewy",
+    "set_design": "Stone outdoor shower, brass fixture"
   },
   {
     "id": "LUM-009",
@@ -1837,7 +2062,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low ponytail",
+    "makeup": "Soft glam",
+    "set_design": "Gold panel corridor, sunlit"
   },
   {
     "id": "LUM-010",
@@ -1861,7 +2089,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked low bun",
+    "makeup": "Soft glam, closed eyes",
+    "set_design": "Marble pool step, gold visor prop"
   },
   {
     "id": "LUM-011",
@@ -1885,7 +2116,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked low bun",
+    "makeup": "Soft glam",
+    "set_design": "Round gold-framed mirrors, sunlit colonnade"
   },
   {
     "id": "LUM-012",
@@ -1909,7 +2143,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek top bun",
+    "makeup": "Soft glam",
+    "set_design": "Billowing sailcloth tent, sunlit"
   },
   {
     "id": "LUM-013",
@@ -1933,7 +2170,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail, ribbon",
+    "makeup": "Soft glam",
+    "set_design": "Marble stairwell, gold rail"
   },
   {
     "id": "LUM-014",
@@ -1958,7 +2198,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Sleek low bun",
+    "makeup": "Soft glam",
+    "set_design": "Gold sunburst halo crown, columned hall"
   },
   {
     "id": "NOC-007",
@@ -1981,7 +2224,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Short tousled curls",
+    "makeup": "Sultry glam",
+    "set_design": "Reflecting pool, dim corridor, brass panel light"
   },
   {
     "id": "NOC-008",
@@ -2004,7 +2250,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose waves",
+    "makeup": "Sultry glam",
+    "set_design": "Grand piano, black rose, sheet music"
   },
   {
     "id": "NOC-009",
@@ -2028,7 +2277,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Slicked back",
+    "makeup": "Sultry glam",
+    "set_design": "Penthouse bar, burning city skyline, bronze sculpture"
   },
   {
     "id": "NOC-010",
@@ -2051,7 +2303,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Slicked low bun",
+    "makeup": "Sultry glam",
+    "set_design": "Open vault corridor, brass safe deposit boxes"
   },
   {
     "id": "NOC-011",
@@ -2074,7 +2329,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Fishtail braid",
+    "makeup": "Sultry glam",
+    "set_design": "Leather lounge chaise, warm floor lamp"
   },
   {
     "id": "NOC-012",
@@ -2097,7 +2355,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low ponytail",
+    "makeup": "Sultry glam",
+    "set_design": "Glass elevator, night skyline, brass panel"
   },
   {
     "id": "NOC-013",
@@ -2120,7 +2381,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Wet slicked back",
+    "makeup": "Bare, dewy",
+    "set_design": "Indoor rain installation, clear umbrella"
   },
   {
     "id": "NOC-014",
@@ -2143,7 +2407,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Sleek high bun",
+    "makeup": "Sultry glam",
+    "set_design": "Long dark dinner table, single place setting, candlestick"
   },
   {
     "id": "NOC-015",
@@ -2167,7 +2434,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Slicked back, spiked crown",
+    "makeup": "Dramatic sultry",
+    "set_design": "Flaming aisle, dark hall, smoke"
   },
   {
     "id": "PER-010",
@@ -2190,7 +2460,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail",
+    "makeup": "Fresh glam",
+    "set_design": "Snowy polo field, riding helmet stand"
   },
   {
     "id": "PER-011",
@@ -2213,7 +2486,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Clean glam",
+    "set_design": "Film set, camera rig, garment rack"
   },
   {
     "id": "PER-012",
@@ -2236,7 +2512,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Braided crown",
+    "makeup": "Fresh glam smile",
+    "set_design": "Wooden velodrome track"
   },
   {
     "id": "PER-013",
@@ -2259,7 +2538,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low bun, hairpin",
+    "makeup": "Soft glam, red nails",
+    "set_design": "Observatory telescope, brass wheel, mountain view"
   },
   {
     "id": "PER-014",
@@ -2282,7 +2564,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek bob",
+    "makeup": "Clean glam",
+    "set_design": "Jeweler's loupe lamp, gem tray"
   },
   {
     "id": "PER-015",
@@ -2305,7 +2590,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Long braid",
+    "makeup": "Clean glam",
+    "set_design": "City-view terrace, leather glove, falcon perch"
   },
   {
     "id": "PER-016",
@@ -2329,7 +2617,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Sleek center part, gold circlet",
+    "makeup": "Sharp glam",
+    "set_design": "Marble dais, floating dust, gold-etched circle"
   },
   {
     "id": "PER-017",
@@ -2352,7 +2643,10 @@
       1
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail",
+    "makeup": "Clean glam",
+    "set_design": "Drafting table, rope winch, blueprints"
   },
   {
     "id": "PRI-009",
@@ -2375,7 +2669,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Braided crown",
+    "makeup": "Sultry glam",
+    "set_design": "Private shoe closet, lit shelving"
   },
   {
     "id": "PRI-010",
@@ -2398,7 +2695,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose waves",
+    "makeup": "Sultry glam",
+    "set_design": "Home cinema, projector beam, velvet seats"
   },
   {
     "id": "PRI-011",
@@ -2421,7 +2721,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Loose low updo, jeweled pin",
+    "makeup": "Soft glam",
+    "set_design": "Dim bedroom, velvet ring box, table lamp"
   },
   {
     "id": "PRI-012",
@@ -2444,7 +2747,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Undone waves",
+    "makeup": "Bare-faced",
+    "set_design": "Home library, leather ottoman, snow at window"
   },
   {
     "id": "PRI-013",
@@ -2467,7 +2773,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Sleek bob",
+    "makeup": "Soft glam",
+    "set_design": "Walk-in closet, garment bags, ladder"
   },
   {
     "id": "PRI-014",
@@ -2490,7 +2799,10 @@
       2
     ],
     "flash": false,
-    "restricted": true
+    "restricted": true,
+    "hair": "Long single braid",
+    "makeup": "Soft glam",
+    "set_design": "Private shoe collection, lit display shelves"
   },
   {
     "id": "SCU-006",
@@ -2514,7 +2826,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Sleek low chignon",
+    "makeup": "Clean glam",
+    "set_design": "Parting concrete walls, single skylight"
   },
   {
     "id": "SCU-007",
@@ -2539,7 +2854,10 @@
     ],
     "flash": false,
     "restricted": false,
-    "flagship": true
+    "flagship": true,
+    "hair": "Sleek high bun",
+    "makeup": "Clean glam",
+    "set_design": "Sheer smoke curtains, jeweled spine chain"
   },
   {
     "id": "SCU-008",
@@ -2563,7 +2881,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low bun",
+    "makeup": "Clean glam",
+    "set_design": "Spiral concrete rotunda"
   },
   {
     "id": "SCU-009",
@@ -2587,7 +2908,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low bun",
+    "makeup": "Clean glam",
+    "set_design": "Ribbed sculptural wall, warm light"
   },
   {
     "id": "SCU-010",
@@ -2611,7 +2935,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Messy top bun",
+    "makeup": "Fresh athletic",
+    "set_design": "Pilates reformer studio"
   },
   {
     "id": "SCU-011",
@@ -2635,7 +2962,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Loose braid",
+    "makeup": "Fresh athletic",
+    "set_design": "Wooden rowing machine, sunlit slats"
   },
   {
     "id": "SCU-012",
@@ -2659,7 +2989,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low bun",
+    "makeup": "Clean glam",
+    "set_design": "Black sphere sculptures, warm light"
   },
   {
     "id": "SCU-013",
@@ -2683,7 +3016,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "High ponytail, ribbon tie",
+    "makeup": "Sharp glam",
+    "set_design": "Gymnastics pommel horse, concrete studio"
   },
   {
     "id": "SCU-014",
@@ -2707,7 +3043,10 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low bun",
+    "makeup": "Clean glam",
+    "set_design": "Suspended steel arc sculptures, gallery"
   },
   {
     "id": "SCU-015",
@@ -2731,6 +3070,700 @@
       2
     ],
     "flash": false,
-    "restricted": false
+    "restricted": false,
+    "hair": "Low braid",
+    "makeup": "Clean glam",
+    "set_design": "Angular beige plaster blocks"
+  },
+  {
+    "id": "CHR-018",
+    "file": "characters/mythical/elenis/collections/chroma/2C23C523-1A72-4AAE-B64D-558C42AE179D.webp",
+    "collection": "CHROMA",
+    "title": "CHEVRON SLEEVE",
+    "model": "Nymphaea Elenis",
+    "photographer": "R. Sato",
+    "date": "2029-01-30",
+    "location": "Private residence",
+    "styling": "Personal wardrobe",
+    "light": "Hard key, no fill",
+    "publication": "Chroma campaign, winter line",
+    "edition": "03/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#764D36",
+    "layers": [
+      0,
+      1,
+      2
+    ],
+    "flash": true,
+    "restricted": false,
+    "hair": "Sleek, center part",
+    "makeup": "Dewy bronze, nude lip",
+    "set_design": "Mirrored glass cubes, blue-green gel light"
+  },
+  {
+    "id": "ELE-013",
+    "file": "characters/mythical/elenis/collections/elenis/194C25D6-26B4-4D8B-9FF7-7CD48627F8D7.webp",
+    "collection": "ELENIS",
+    "title": "THE SCENT CARD",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2041-01-11",
+    "location": "On location",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Elenis campaign, winter line",
+    "edition": "09/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#4E301C",
+    "layers": [
+      0
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Low bun, face-framing waves",
+    "makeup": "Soft bronze glam",
+    "set_design": "Leather library, lit glass shelving"
+  },
+  {
+    "id": "ELE-014",
+    "file": "characters/mythical/elenis/collections/elenis/1E61B05A-A62E-4F5C-8427-FDDAC4EDB16F.webp",
+    "collection": "ELENIS",
+    "title": "GILDED VEINS",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2035-08-19",
+    "location": "On location",
+    "styling": "Personal wardrobe",
+    "light": "Two-point, soft",
+    "publication": "Elenis campaign, summer line",
+    "edition": "14/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#4E321E",
+    "layers": [
+      0
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Long loose waves",
+    "makeup": "Smoky bronze eye",
+    "set_design": "Smoke-filled studio, amber pin spots"
+  },
+  {
+    "id": "ELE-015",
+    "file": "characters/mythical/elenis/collections/elenis/25343572-9F81-4CF0-B2E6-2E36033789C8.webp",
+    "collection": "ELENIS",
+    "title": "LAUNCH NIGHT",
+    "model": "Nymphaea Elenis",
+    "photographer": "M. Duquesne",
+    "date": "2042-10-03",
+    "location": "Elenis Flagship, Washington",
+    "styling": "Personal wardrobe",
+    "light": "Hard key, no fill",
+    "publication": "Elenis campaign, autumn line",
+    "edition": "16/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#654A36",
+    "layers": [
+      0
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Sleek high ponytail",
+    "makeup": "Bold matte bronze",
+    "set_design": "Press-call backdrop, gold ottoman"
+  },
+  {
+    "id": "ELE-016",
+    "file": "characters/mythical/elenis/collections/elenis/59107D40-DE9D-4E89-84AA-127BF4B0C615.webp",
+    "collection": "ELENIS",
+    "title": "MOLTEN GOLD",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2059-04-03",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Two-point, soft",
+    "publication": "Elenis campaign, spring line",
+    "edition": "02/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#462C18",
+    "layers": [
+      0
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Slicked low bun",
+    "makeup": "Bronze drama, glossy lip",
+    "set_design": "Gold-lit corridor, lacquer bowl on plinth"
+  },
+  {
+    "id": "ELE-017",
+    "file": "characters/mythical/elenis/collections/elenis/9F902D6F-DDC3-4DD5-AB74-847578002590.webp",
+    "collection": "ELENIS",
+    "title": "THE SKETCHBOOK",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2034-04-26",
+    "location": "Elenis Atelier, Montevideo",
+    "styling": "Personal wardrobe",
+    "light": "Two-point, soft",
+    "publication": "Elenis campaign, spring line",
+    "edition": "04/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#51321C",
+    "layers": [
+      0
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam",
+    "set_design": "Atelier desk, sketchbooks, product shelving"
+  },
+  {
+    "id": "ICO-011",
+    "file": "characters/mythical/elenis/collections/icon/4FD5D59E-4C7B-4C53-B132-D54CE4B9B15E.webp",
+    "collection": "ICON",
+    "title": "SHEER AT THE THROAT",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2044-05-27",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Mixed, colour gel",
+    "publication": "Icon campaign, spring line",
+    "edition": "01/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#7B5A46",
+    "layers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "flash": false,
+    "restricted": false,
+    "crop": "eye",
+    "hair": "Loose down, side part, soft waves",
+    "makeup": "Natural glam, soft brown smoky eye, glossy nude lip",
+    "set_design": "Plain seamless studio backdrop"
+  },
+  {
+    "id": "ICO-012",
+    "file": "characters/mythical/elenis/collections/icon/818136AA-90CE-4C35-84AD-E157696BE9CC.webp",
+    "collection": "ICON",
+    "title": "WARM PROFILE",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2034-06-20",
+    "location": "Mercury Studio, Washington",
+    "styling": "Atelier Elenis",
+    "light": "Hard key, no fill",
+    "publication": "Icon campaign, summer line",
+    "edition": "03/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#694630",
+    "layers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "flash": false,
+    "restricted": false,
+    "crop": "half",
+    "hair": "Loose waves swept to one side",
+    "makeup": "Soft glam, glossy lip",
+    "set_design": "Plain warm-lit backdrop"
+  },
+  {
+    "id": "LUM-015",
+    "file": "characters/mythical/elenis/collections/lumiere/2D7C4DF2-3F81-46D1-B570-130408D7026F.webp",
+    "collection": "LUMIERE",
+    "title": "PEARL AND PLUME",
+    "model": "Nymphaea Elenis",
+    "photographer": "R. Sato",
+    "date": "2037-06-25",
+    "location": "Elenis Atelier, Montevideo",
+    "styling": "Personal wardrobe",
+    "light": "Hard key, no fill",
+    "publication": "Lumiere campaign, summer line",
+    "edition": "13/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#BC9578",
+    "layers": [
+      0,
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Down, loose waves",
+    "makeup": "Soft glam, natural",
+    "set_design": "Backlit sheer drapery, feather fan prop"
+  },
+  {
+    "id": "LUM-016",
+    "file": "characters/mythical/elenis/collections/lumiere/786C8E18-C354-410B-8225-72BCE9E7F238.webp",
+    "collection": "LUMIERE",
+    "title": "CRYSTAL CORRIDOR",
+    "model": "Nymphaea Elenis",
+    "photographer": "V. Okonkwo",
+    "date": "2020-06-08",
+    "location": "Private residence",
+    "styling": "House archive",
+    "light": "Hard key, no fill",
+    "publication": "Lumiere campaign, summer line",
+    "edition": "04/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#BAA393",
+    "layers": [
+      0,
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "High sleek ponytail",
+    "makeup": "Clean glam",
+    "set_design": "Glass column maze, prism refractions"
+  },
+  {
+    "id": "LUM-017",
+    "file": "characters/mythical/elenis/collections/lumiere/B52F1495-8D85-4E20-A673-0402A22722FB.webp",
+    "collection": "LUMIERE",
+    "title": "GILDED LACE",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2040-01-30",
+    "location": "Elenis Atelier, Montevideo",
+    "styling": "Atelier Elenis",
+    "light": "Single source, reflector",
+    "publication": "Lumiere campaign, winter line",
+    "edition": "03/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#C5B096",
+    "layers": [
+      0,
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Long loose waves",
+    "makeup": "Soft glam",
+    "set_design": "Marble rotunda, halo ring light, pearl pedestals"
+  },
+  {
+    "id": "LUM-018",
+    "file": "characters/mythical/elenis/collections/lumiere/D273B78B-E438-4A76-89FE-E0A637E14A94.webp",
+    "collection": "LUMIERE",
+    "title": "SILVER FILIGREE",
+    "model": "Nymphaea Elenis",
+    "photographer": "M. Duquesne",
+    "date": "2023-11-14",
+    "location": "Elenis Atelier, Montevideo",
+    "styling": "Atelier Elenis",
+    "light": "Two-point, soft",
+    "publication": "Commissioned by the owner",
+    "edition": "16/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#CFBDA6",
+    "layers": [
+      0,
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Braided side plait",
+    "makeup": "Soft glam",
+    "set_design": "Pleated pearlescent sculptural backdrop"
+  },
+  {
+    "id": "NOC-016",
+    "file": "characters/mythical/elenis/collections/nocturne/24F6058A-AA0E-46CE-8FAF-760F984B303D.webp",
+    "collection": "NOCTURNE",
+    "title": "THE ACRYLIC CHAIR",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2035-05-05",
+    "location": "Elenis Flagship, Washington",
+    "styling": "Personal wardrobe",
+    "light": "Hard key, no fill",
+    "publication": "Nocturne campaign, spring line",
+    "edition": "17/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#3F2C22",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Sleek bob",
+    "makeup": "Matte sultry",
+    "set_design": "Acrylic wingback chair, skyline at night"
+  },
+  {
+    "id": "NOC-017",
+    "file": "characters/mythical/elenis/collections/nocturne/A77598A6-6B26-4FB8-A55D-4F6ADB6400D1.webp",
+    "collection": "NOCTURNE",
+    "title": "THE GILDED MARK",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2048-05-09",
+    "location": "Mercury Studio, Washington",
+    "styling": "Atelier Elenis",
+    "light": "Two-point, soft",
+    "publication": "Nocturne campaign, spring line",
+    "edition": "01/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#553B2E",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Slicked back low",
+    "makeup": "Bronze body art, bold liner",
+    "set_design": "Marble geometric throne, hanging gold rings"
+  },
+  {
+    "id": "NOC-018",
+    "file": "characters/mythical/elenis/collections/nocturne/A836A2EB-8642-4D69-93BB-55B464AF58EB.webp",
+    "collection": "NOCTURNE",
+    "title": "CRIMSON GLASS",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2028-08-08",
+    "location": "Mercury Studio, Washington",
+    "styling": "Atelier Elenis",
+    "light": "Single source, reflector",
+    "publication": "Nocturne campaign, summer line",
+    "edition": "03/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#3F0D0B",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Sleek low bun, jeweled pin",
+    "makeup": "Bold red lip",
+    "set_design": "Red glass blocks, smoke"
+  },
+  {
+    "id": "NOC-019",
+    "file": "characters/mythical/elenis/collections/nocturne/C074D0FC-3ADD-49CA-B09D-5C2556D22DC5.webp",
+    "collection": "NOCTURNE",
+    "title": "STORM ABOVE THE CITY",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2030-03-10",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Two-point, soft",
+    "publication": "Nocturne campaign, spring line",
+    "edition": "12/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#2A3440",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Windswept high ponytail",
+    "makeup": "Bold glam, playful",
+    "set_design": "Storm terrace, lightning, purple uplight"
+  },
+  {
+    "id": "PER-018",
+    "file": "characters/mythical/elenis/collections/persona/12400EA5-4A81-4ECA-A1FB-86F5B2BF9684.webp",
+    "collection": "PERSONA",
+    "title": "THE ART DEALER",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2051-06-12",
+    "location": "Private residence",
+    "styling": "House archive",
+    "light": "Two-point, soft",
+    "publication": "Persona campaign, summer line",
+    "edition": "12/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#634D3F",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Slicked back, gold clip",
+    "makeup": "Minimal sultry",
+    "set_design": "Gallery space, sculptural wire chair"
+  },
+  {
+    "id": "PER-019",
+    "file": "characters/mythical/elenis/collections/persona/2FB88381-7413-4362-9284-D8DD67F6FE56.webp",
+    "collection": "PERSONA",
+    "title": "THE WINTER SOVEREIGN",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2055-04-09",
+    "location": "Elenis Flagship, Washington",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Persona campaign, spring line",
+    "edition": "08/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#8D7162",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Loose waves",
+    "makeup": "Soft glam, frosted",
+    "set_design": "Glass conservatory, frosted branches, candelabra"
+  },
+  {
+    "id": "PER-020",
+    "file": "characters/mythical/elenis/collections/persona/459D4146-36DC-4E0F-B7FF-38BF19198D15.webp",
+    "collection": "PERSONA",
+    "title": "THE HANDLER",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2019-07-05",
+    "location": "On location",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Commissioned by the owner",
+    "edition": "07/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#4F3D2E",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Sleek bob",
+    "makeup": "Warm glam",
+    "set_design": "Futuristic control desk, backlit panels"
+  },
+  {
+    "id": "PER-021",
+    "file": "characters/mythical/elenis/collections/persona/A238BFE3-C13A-4F80-87AC-C5C813B64931.webp",
+    "collection": "PERSONA",
+    "title": "THE TREASURER",
+    "model": "Nymphaea Elenis",
+    "photographer": "M. Duquesne",
+    "date": "2017-10-25",
+    "location": "Private residence",
+    "styling": "House archive",
+    "light": "Hard key, no fill",
+    "publication": "Persona campaign, autumn line",
+    "edition": "07/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#4A2D1A",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "High sleek bun",
+    "makeup": "Bold glam",
+    "set_design": "Vault room, open jewel cases, cash stacks"
+  },
+  {
+    "id": "PER-022",
+    "file": "characters/mythical/elenis/collections/persona/C6373F57-7C94-4A2E-A99B-5E70322E885D.webp",
+    "collection": "PERSONA",
+    "title": "THE FENCER",
+    "model": "Nymphaea Elenis",
+    "photographer": "R. Sato",
+    "date": "2032-09-03",
+    "location": "Mercury Studio, Washington",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Persona campaign, autumn line",
+    "edition": "02/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#6A5346",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "High bun",
+    "makeup": "Fresh athletic",
+    "set_design": "Fencing hall, institutional signage"
+  },
+  {
+    "id": "PER-023",
+    "file": "characters/mythical/elenis/collections/persona/E82541B6-48BB-4A27-9E70-8608695CDEAA.webp",
+    "collection": "PERSONA",
+    "title": "THE LAUREATE",
+    "model": "Nymphaea Elenis",
+    "photographer": "V. Okonkwo",
+    "date": "2054-09-13",
+    "location": "Elenis Atelier, Montevideo",
+    "styling": "Personal wardrobe",
+    "light": "Hard key, no fill",
+    "publication": "Persona campaign, autumn line",
+    "edition": "05/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#573A2A",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Loose waves, tiara",
+    "makeup": "Glam, bright smile",
+    "set_design": "Empty theater, spotlight, velvet chair"
+  },
+  {
+    "id": "PER-024",
+    "file": "characters/mythical/elenis/collections/persona/F6BFD309-A3BF-4BFA-9FB7-B8EA49FB7FF3.webp",
+    "collection": "PERSONA",
+    "title": "THE MATRIARCH",
+    "model": "Nymphaea Elenis",
+    "photographer": "M. Duquesne",
+    "date": "2049-11-16",
+    "location": "On location",
+    "styling": "House archive",
+    "light": "Available light",
+    "publication": "Persona campaign, autumn line",
+    "edition": "15/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#443020",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Slicked back, chain headpiece",
+    "makeup": "Sharp glam",
+    "set_design": "Round boardroom, candlelight, empty chairs"
+  },
+  {
+    "id": "PRI-015",
+    "file": "characters/mythical/elenis/collections/private/3F4161D5-D2F1-4E95-93D2-115C8645B946.webp",
+    "collection": "PRIVATE",
+    "title": "UNDER THE BLAZER",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2023-12-11",
+    "location": "Elenis Flagship, Washington",
+    "styling": "Personal wardrobe",
+    "light": "Two-point, soft",
+    "publication": "Unpublished, house archive",
+    "edition": "09/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#835B42",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": true,
+    "hair": "Wet-look slick back",
+    "makeup": "Bare-faced glam, glossy lip",
+    "set_design": "Bare studio, tubular steel chair"
+  },
+  {
+    "id": "PRI-016",
+    "file": "characters/mythical/elenis/collections/private/A2CDE86A-6009-45E4-91E7-A7BFE59768A2.webp",
+    "collection": "PRIVATE",
+    "title": "MORNING STRETCH",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2043-05-29",
+    "location": "Elenis Flagship, Washington",
+    "styling": "Personal wardrobe",
+    "light": "Two-point, soft",
+    "publication": "Unpublished, house archive",
+    "edition": "06/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#4F3A2C",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": true,
+    "hair": "Messy top bun",
+    "makeup": "No makeup, fresh",
+    "set_design": "Home gym, glass display shelf"
+  },
+  {
+    "id": "SCU-016",
+    "file": "characters/mythical/elenis/collections/sculpted/BA948AA1-66C5-4C1E-973E-2418B1813E23.webp",
+    "collection": "SCULPTED",
+    "title": "PAINT SPLATTER",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2059-10-12",
+    "location": "On location",
+    "styling": "House archive",
+    "light": "Two-point, soft",
+    "publication": "Sculpted campaign, autumn line",
+    "edition": "02/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#152E4C",
+    "layers": [
+      1,
+      2
+    ],
+    "flash": false,
+    "restricted": false,
+    "hair": "Low bun",
+    "makeup": "Graphic paint extending to face-adjacent skin, minimal base",
+    "set_design": "Circular mirror platform, vertical neon rods"
   }
 ]
