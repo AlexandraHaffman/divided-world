@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Женский",
   "role": "Пленница",
-  "birthdate": "15.05.2039",
+  "birthdate": "15.05",
   "faction": "Ракшасы",
   "subfaction": "",
   "location": "Куньмин",
@@ -19,7 +19,7 @@
     "Сопереживание",
     "Творчество (поэзия и живопись)"
   ],
-  "threat_level": 25,
+  "threat_level": 23,
   "stats": {
     "intelligence": 8,
     "combat": 0,
@@ -39,5 +39,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/C74D6DA0-0ECE-48DE-88A9-2072005B4139.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E23315D3-2ED1-42D0-9D48-3DB65E981045.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-27T22:34:29.689Z"
+  "appearance": {
+    "height": 173,
+    "weight": 55,
+    "eye_color": "Тёмно-карие",
+    "hair_color": "Чёрные",
+    "bust_size": 3,
+    "marks": ""
+  },
+  "exported_at": "2026-07-28T19:22:46.152Z"
 }

@@ -121,13 +121,13 @@
   .asur-eyebrow{font-size:10px;letter-spacing:0.16em;color:rgba(var(--ember),0.85);margin:26px 0 12px;}
   .asur-grid{display:flex;flex-direction:column;gap:16px;}
   .asur-card{display:flex;gap:12px;align-items:flex-start;}
-  .asur-portrait{width:66px;height:66px;flex-shrink:0;border-radius:4px;overflow:hidden;
+  .asur-portrait{width:72px;height:90px;flex-shrink:0;border-radius:6px;overflow:hidden;
     border:1px solid rgba(var(--magma),0.4);position:relative;}
   .asur-name{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--ink);}
   .asur-role{font-size:10.5px;color:rgba(var(--magma),0.75);letter-spacing:0.06em;margin:2px 0 6px;}
   .asur-text{font-size:13px;color:var(--paper-dim);line-height:1.6;}
-  .asur-strip{display:flex;gap:10px;margin-top:16px;}
-  .asur-strip-slot{flex:1;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid rgba(var(--magma),0.28);}
+  .asur-strip{margin-top:16px;}
+  .asur-strip-slot{aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid rgba(var(--magma),0.28);}
   .asur-caption{font-size:10.5px;color:var(--dim);letter-spacing:0.03em;margin-top:6px;line-height:1.5;}
 
   /* ── 5. ПОВСЕДНЕВНОСТЬ ── */
@@ -142,7 +142,7 @@
   .amelie-portrait-wrap{display:flex;gap:14px;align-items:center;margin-bottom:16px;}
   .amelie-id{flex:1;}
   .amelie-sound-btn{width:30px;height:30px;font-size:14px;flex-shrink:0;}
-  .amelie-portrait{width:76px;height:76px;flex-shrink:0;border-radius:6px;overflow:hidden;
+  .amelie-portrait{width:76px;height:95px;flex-shrink:0;border-radius:6px;overflow:hidden;
     border:2px solid rgba(var(--magma),0.55);box-shadow:0 0 20px -6px rgba(var(--magma),0.5);}
   .amelie-name{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--ink);}
   .amelie-role{font-size:11px;color:rgba(var(--magma),0.75);letter-spacing:0.05em;margin-top:3px;}
@@ -171,6 +171,8 @@
   @media (max-width:600px){
     .hero-name{font-size:32px;}
     .mirror-fact{max-width:88%;}
+    /* здесь картинка становится вертикальной (emil-front-vertical.webp) — 16/10 срезал бы голову */
+    .bio-item-photo.front-card-photo{aspect-ratio:3/4;}
   }
 
   /* ══════════════════════════════════════════
@@ -336,7 +338,7 @@
     </div>
 
     <div class="bio-item">
-      <div class="bio-item-photo img-wrap" data-label="нет сигнала · фронт">
+      <div class="bio-item-photo front-card-photo img-wrap" data-label="нет сигнала · фронт">
         <picture>
           <source media="(max-width:600px)" srcset="emil-front-vertical.webp">
           <img src="emil-front-magma.jpg" alt="Вскрытие разлома, линия фронта">
@@ -400,11 +402,8 @@
     <div class="asur-strip-slot img-wrap" data-label="нет сигнала">
       <img src="emil-xu-lei-dispute.jpg" alt="Спор над картой в командной палатке">
     </div>
-    <div class="asur-strip-slot img-wrap" data-label="нет сигнала">
-      <img src="emil-asha-battle.jpg" alt="Аша Наир в бою, Эмиль наблюдает издалека">
-    </div>
   </div>
-  <div class="asur-caption">Слева — командная палатка, спор над картой. Справа — Эмиль наблюдает издалека, пока Аша возводит соляные преграды.</div>
+  <div class="asur-caption">Командная палатка, спор над картой.</div>
 
   <div class="bastion-photo img-wrap" data-label="нет сигнала · соляной рубеж">
     <img src="emil-asha-crystals-wide.jpg" alt="Соляной рубеж Аши Наир, руины под кристаллами">
