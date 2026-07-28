@@ -4,14 +4,14 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Повстанец",
-  "birthdate": "05.11.2035",
+  "birthdate": "05.11",
   "faction": "Единая Америка",
   "subfaction": "Сопротивление",
   "location": "Нью-Йорк",
   "faction_color": "#4a9eff",
   "aliases": [],
   "abilities": [
-    "Механические знания (работа на складе)",
+    "Механические знания",
     "Пение",
     "Физическая сила"
   ],
@@ -35,5 +35,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4CD0E579-10C5-4C3D-9CE2-589119BF7D3C.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/54473D46-9246-4039-9D9D-3F159B80D856.jpeg",
   "tier": "common",
-  "exported_at": "2026-06-28T07:46:57.278Z"
+  "appearance": {
+    "height": 186,
+    "weight": 100,
+    "eye_color": "Тёмно-карие",
+    "hair_color": "Чёрные",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-07-28T19:24:54.881Z"
 }
