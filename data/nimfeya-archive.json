@@ -3765,5 +3765,120 @@
     "hair": "Low bun",
     "makeup": "Graphic paint extending to face-adjacent skin, minimal base",
     "set_design": "Circular mirror platform, vertical neon rods"
+  },
+  {
+    "id": "DEB-001",
+    "file": "characters/mythical/elenis/collections/debut/03D90CFF-A897-46E6-B315-F339FB8B8F12.webp",
+    "collection": "DEBUT",
+    "title": "BUTTONED",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-12-05",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "08/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#CEC3B5",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-002",
+    "file": "characters/mythical/elenis/collections/debut/098443C3-2DB5-4241-9814-4F00383CD5B8.webp",
+    "collection": "DEBUT",
+    "title": "THE HEADSHOT",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-08-06",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "01/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#72442B",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-003",
+    "file": "characters/mythical/elenis/collections/debut/BB85A571-F67D-40BD-AF23-B07730057437.webp",
+    "collection": "DEBUT",
+    "title": "THE COMP SHOT",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-07-14",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "06/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#6D432D",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-004",
+    "file": "characters/mythical/elenis/collections/debut/CD14085B-06FF-4939-9FD3-2644227EEFC6.webp",
+    "collection": "DEBUT",
+    "title": "STOOL TEST",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-05-16",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "04/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#A78269",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-005",
+    "file": "characters/mythical/elenis/collections/debut/DBD43A59-9BA2-4DDB-93D0-334D49171B50.webp",
+    "collection": "DEBUT",
+    "title": "AGAINST THE WALL",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2017-04-21",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "01/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#785440",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]

@@ -22,6 +22,17 @@ const COLLECTIONS = {
   persona: { code: 'PERSONA', prefix: 'PER', layers: [1], flash: false, restricted: false },
   private: { code: 'PRIVATE', prefix: 'PRI', layers: [2], flash: false, restricted: true },
   sculpted: { code: 'SCULPTED', prefix: 'SCU', layers: [1, 2], flash: false, restricted: false },
+  // Pre-fame test/comp shoots, years before the Elenis house photographers came on board.
+  // Fixed era and photographer for the whole collection.
+  debut: {
+    code: 'DEBUT',
+    prefix: 'DEB',
+    layers: [2],
+    flash: false,
+    restricted: false,
+    dateRange: [new Date('2017-01-01T00:00:00Z').getTime(), new Date('2020-06-30T00:00:00Z').getTime()],
+    photographer: 'P. Kalantzis',
+  },
 };
 
 const CRISIS_START = new Date('2020-07-04T00:00:00Z').getTime();
@@ -71,12 +82,14 @@ function weightedRandom(items) {
 }
 
 function randomDate(collectionKey) {
+  const override = COLLECTIONS[collectionKey].dateRange;
   const isElenis = collectionKey === 'elenis';
-  const [start, end] = isElenis ? ELENIS_RANGE : GENERAL_RANGE;
+  const [start, end] = override || (isElenis ? ELENIS_RANGE : GENERAL_RANGE);
+  const skipCrisisCheck = Boolean(override) || isElenis;
   let ts;
   do {
     ts = start + Math.random() * (end - start);
-  } while (!isElenis && ts >= CRISIS_START && ts <= CRISIS_END);
+  } while (!skipCrisisCheck && ts >= CRISIS_START && ts <= CRISIS_END);
   return new Date(ts).toISOString().slice(0, 10);
 }
 
@@ -213,7 +226,7 @@ async function main() {
         collection: meta.code,
         title: null, // filled manually after visual review
         model: 'Nymphaea Elenis',
-        photographer: weightedRandom(PHOTOGRAPHERS),
+        photographer: meta.photographer || weightedRandom(PHOTOGRAPHERS),
         date: randomDate(folder),
         location: randomFrom(LOCATIONS),
         styling: randomFrom(STYLING),
