@@ -3880,5 +3880,120 @@
     ],
     "flash": false,
     "restricted": false
+  },
+  {
+    "id": "DEB-006",
+    "file": "characters/mythical/elenis/collections/debut/2EA67411-6AB2-4A09-A2EF-B356703A2061.webp",
+    "collection": "DEBUT",
+    "title": "BEIGE BENCH",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2017-08-02",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "12/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#AC7C5C",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-007",
+    "file": "characters/mythical/elenis/collections/debut/7DE35024-851C-47D6-881E-2C1CCF78CF8E.webp",
+    "collection": "DEBUT",
+    "title": "WHITE BOX",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-05-02",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "05/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#8F6248",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-008",
+    "file": "characters/mythical/elenis/collections/debut/957724A2-09B4-4FD8-9F90-85BAEB9BAF57.webp",
+    "collection": "DEBUT",
+    "title": "HAND WRAPS",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2020-01-14",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "01/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#794C34",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-009",
+    "file": "characters/mythical/elenis/collections/debut/AE6B449A-D0FF-4365-BBFC-B2424469B29D.webp",
+    "collection": "DEBUT",
+    "title": "GREEN ON BLACK",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-03-31",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "07/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#60351F",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-010",
+    "file": "characters/mythical/elenis/collections/debut/F43E660D-64D7-4AE0-93B8-A91B06EE0CD3.webp",
+    "collection": "DEBUT",
+    "title": "WINDOW LIGHT",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2019-12-10",
+    "location": "Private residence",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "13/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#6E4C38",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]
