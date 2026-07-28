@@ -3995,5 +3995,51 @@
     ],
     "flash": false,
     "restricted": false
+  },
+  {
+    "id": "DEB-011",
+    "file": "characters/mythical/elenis/collections/debut/7C553853-81C6-4687-B1A4-3BF74E33A911.webp",
+    "collection": "DEBUT",
+    "title": "FIRE ESCAPE VIEW",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2019-01-15",
+    "location": "Private residence",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "08/12",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#734E37",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "DEB-012",
+    "file": "characters/mythical/elenis/collections/debut/AEA451E2-EE1F-4453-B93A-97D103AD333C.webp",
+    "collection": "DEBUT",
+    "title": "STUDIO STAND",
+    "model": "Nymphaea Elenis",
+    "photographer": "P. Kalantzis",
+    "date": "2018-03-16",
+    "location": "Rented studio, New York",
+    "styling": "Personal wardrobe",
+    "light": "Single source, reflector",
+    "publication": "Agency test shoot, unreleased",
+    "edition": "01/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#805135",
+    "layers": [
+      2
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]
