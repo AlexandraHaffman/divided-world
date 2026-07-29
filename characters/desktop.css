@@ -87,7 +87,13 @@
 
 @media (min-width: 1024px) {
 
-  :root { --gal-quote-h: 128px; }
+  /* Высота полосы цитаты. Всё, что здесь не занято, уходит портрету —
+     карточка по высоте равна окну, поэтому сэкономленные пиксели прямо
+     превращаются в размер портрета. 80px — минимум, при котором ни одна
+     из цитат архива не обрезается (проверено на всех, включая самую
+     длинную — 155 символов у Элиаса Дорна). Если будете добавлять
+     реплики длиннее, поднимите это значение. */
+  :root { --gal-quote-h: 80px; }
 
   .grid { gap: 34px; padding: 22px 28px 30px; }
 
@@ -95,7 +101,7 @@
      Контейнер шире общих 1440px: в галерее размер диктует высота окна,
      и на широком мониторе общий лимит только мешал карточкам вырасти. */
   .grid[data-cols="2"] {
-    max-width: 1900px;
+    max-width: min(2100px, 100%);
     grid-template-columns: repeat(2, minmax(0, var(--gal-card-w, 520px)));
     justify-content: center;
     padding: 20px 28px 28px;
@@ -149,7 +155,7 @@
   .card-quote-a {
     height: var(--gal-quote-h);
     flex: 0 0 var(--gal-quote-h);
-    padding: 14px 18px 16px;
+    padding: 10px 18px 12px;
     border-top: none;
     background: linear-gradient(180deg, rgba(var(--cr),0.07), rgba(var(--cr),0.02));
   }
@@ -166,8 +172,8 @@
   /* Полоса цитаты фиксированной высоты — реплику центрируем по вертикали,
      иначе на широкой карточке короткая цитата «висит» у верхнего края. */
   .card-quote-a-text {
-    font-size: clamp(13px, calc(var(--gal-card-w, 520px) * 0.026), 22px);
-    line-height: 1.5;
+    font-size: clamp(12px, calc(var(--gal-card-w, 520px) * 0.0195), 16.5px);
+    line-height: 1.4;
     max-height: none;
     height: 100%;
     border-left-width: 3px;

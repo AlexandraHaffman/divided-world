@@ -29,7 +29,7 @@
 
   const MQ = window.matchMedia("(min-width: 1024px)");
   const MIN_W = 300;    // ниже карточка уже не «основной режим», а марка
-  const MAX_W = 980;    // выше двум колонкам на экране становится тесно
+  const MAX_W = 1100;   // выше двум колонкам на экране становится тесно
   const BREATH = 44;    // «запас воздуха» сверху и снизу от ряда карточек
   const root = document.documentElement;
 
@@ -52,7 +52,7 @@
     const gap  = parseFloat(gs.columnGap) || 0;
 
     // Всё, что в карточке не портрет: блок цитаты + верхняя полоса тира.
-    const quoteH = px(grid.querySelector(".card-quote-a"), "height", 128);
+    const quoteH = px(grid.querySelector(".card-quote-a"), "height", 80);
     const barH   = px(grid.querySelector(".card-top-bar"), "height", 8);
 
     const avail = window.innerHeight - BREATH;
