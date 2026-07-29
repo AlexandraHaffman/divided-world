@@ -83,7 +83,7 @@ function injectFeedbackStyles() {
   const style = document.createElement("style");
   style.id = "feedback-styles";
   style.textContent = `
-    .dossier-view-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:#4a6a80;letter-spacing:0.1em;margin-top:8px;}
+    .dossier-view-count{font-family:var(--font-mono);font-size:11px;color:#4a6a80;letter-spacing:0.1em;margin-top:8px;}
   `;
   document.head.appendChild(style);
 }
