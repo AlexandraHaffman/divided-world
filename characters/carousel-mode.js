@@ -105,12 +105,14 @@ function buildCarouselCard(c, idx) {
         <span class="c-card-no-photo-text">NO SIGNAL</span>
       </div>`;
 
-  return `<div class="c-card" data-tier="${tier}" data-idx="${idx}" style="--cr:${col.rgb}">
+  const facAttr = typeof factionSlug === "function" && factionSlug(c) ? ` data-faction="${factionSlug(c)}"` : "";
+  return `<div class="c-card" data-tier="${tier}" data-idx="${idx}"${facAttr} style="--cr:${col.rgb}">
     <div class="c-card-face" style="border:1px solid rgba(${col.rgb},0.35);background:linear-gradient(160deg,#0d1020,#05080f);">
       <div class="c-card-bar"></div>
       ${faceContent}
     </div>
     <div class="c-card-back" style="--cr:${col.rgb}">
+      <div class="tex-layer" aria-hidden="true"></div>
       <div class="c-card-bar"></div>
       <div class="c-back-header">
         <div>

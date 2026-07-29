@@ -16,6 +16,28 @@ const FACTION_COLORS = {
   "Отражение бездны":       { hex: "#3d5a3e", rgb: "61,90,62" },
 };
 const DEFAULT_COLOR = { hex: "#4fc3f7", rgb: "79,195,247" };
+
+/* Латинские слуги фракций — только для CSS-хука data-faction, по которому
+   textures.css подставляет фоновую текстуру фракции. Название фракции
+   кириллицей в селекторе работать не будет, поэтому нужен слуг. */
+const FACTION_SLUGS = {
+  "Тенебрион":                 "tenebrion",
+  "Единая Америка":            "america",
+  "Ракшасы":                   "rakshasy",
+  "Аркадия":                   "arcadia",
+  "Forge":                     "forge",
+  "Тихая гавань":              "quiet-harbor",
+  "Белая зона":                "white-zone",
+  "Независимые":               "independent",
+  "Экваториальная сеть":       "equatorial",
+  "Гарнизон":                  "garrison",
+  "Ковчег":                    "ark",
+  "Титаны":                    "titans",
+  "Джамахирия Нар":            "nar",
+  "Австралийский протекторат": "australia",
+  "Отражение бездны":          "abyss"
+};
+function factionSlug(c) { return FACTION_SLUGS[c && c.faction] || ""; }
 const STATUS_COLORS = {
   "Активен":    "#5dd98a",
   "Мёртв":      "#f87171",
@@ -183,11 +205,12 @@ function buildCard(c, i, cols) {
   const globalIdx = allChars.indexOf(c);
   const isDead = (c.status || '').trim() === 'Мёртв';
   const deadAttr = isDead ? ' data-status="dead"' : '';
+  const facAttr = factionSlug(c) ? ` data-faction="${factionSlug(c)}"` : '';
   const deadDelay = (Math.random() * 6).toFixed(2);
   const deadGlass = isDead ? `<div class="dead-glitch" style="animation-delay:${deadDelay}s"></div>` : '';
 
   if (cols >= 5 && hasPhoto) {
-    return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+    return `<div class="char-card compact-5" data-tier="${tier}"${metaAttr}${deadAttr}${facAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="card-body">
         <div class="compact-5-photo">
@@ -201,7 +224,7 @@ function buildCard(c, i, cols) {
   }
 
   if (cols >= 3 && hasPhoto) {
-    return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+    return `<div class="char-card compact-3" data-tier="${tier}"${metaAttr}${deadAttr}${facAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="cmp-check"></div>
       <div class="card-body">
@@ -226,7 +249,7 @@ function buildCard(c, i, cols) {
     const factionEl = top
       ? `<div class="faction-badge">${factionLabel}</div>`
       : `<div class="card-photo-faction-bottom">${factionLabel}</div>`;
-    return `<div class="char-card has-photo" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+    return `<div class="char-card has-photo" data-tier="${tier}"${metaAttr}${deadAttr}${facAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
       <div class="card-top-bar"></div><div class="tier-corners"></div>
       <div class="card-body">
         <div class="card-photo-wrap">
@@ -255,7 +278,7 @@ function buildCard(c, i, cols) {
   const factionEl = top
     ? `<div class="faction-badge">${factionLabel}</div>`
     : `<div class="card-faction-bottom">${factionLabel}</div>`;
-  return `<div class="char-card" data-tier="${tier}"${metaAttr}${deadAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
+  return `<div class="char-card" data-tier="${tier}"${metaAttr}${deadAttr}${facAttr} style="--cr:${col.rgb};animation-delay:${delay}s" data-idx="${i}" data-gidx="${globalIdx}">
     <div class="card-top-bar"></div><div class="tier-corners"></div>
     ${deadGlass}
     <div class="card-body">
@@ -423,6 +446,7 @@ function openDossier(idx) {
       </div>
     </div>
     <div class="dossier-data" style="--dr:${col.rgb}">
+      <div class="tex-layer" aria-hidden="true"></div>
       <div class="dossier-data-line"></div>
       <div class="dossier-meta">
         <div class="dossier-meta-cell"><div class="dossier-meta-label">Пол</div><div class="dossier-meta-val">${c.gender || '—'}</div></div>
@@ -456,6 +480,7 @@ function openDossier(idx) {
 
   const overlay = document.getElementById("dossier");
   overlay.dataset.tier = tier;
+  overlay.dataset.faction = factionSlug(c);
   overlay.classList.add("open");
   overlay.scrollTop = 0;
   document.body.style.overflow = "hidden";

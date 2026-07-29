@@ -1,0 +1,194 @@
+/* ══════════════════════════════════════════════════════
+   ФРАКЦИОННЫЕ ТЕКСТУРЫ
+
+   Три места, где под текстом лежит большое пустое поле:
+     1. оборот карточки в режиме «подборки»  → .c-card-back .tex-layer
+     2. поле имени / цитаты под чертой       → .card-quote-a,
+                                                .compact-3-name-area,
+                                                .compact-5-name-area
+     3. правое поле досье                    → .dossier-data .tex-layer
+
+   КАК ЭТО РАБОТАЕТ
+   Текстура НЕ раскрашена: файл — светло-серый рисунок на чёрном фоне.
+   Он используется как маска (mask-image), а заливкой служит цвет фракции
+   (--cr / --dr). Поэтому одна и та же картинка автоматически получает
+   правильный цвет, а яркость пикселя = его прозрачность: чёрный фон
+   пропадает целиком, светлые линии проявляются.
+
+   КАК ДОБАВИТЬ ТЕКСТУРУ ФРАКЦИИ
+   1. Положить файл в data/images/textures/<слуг>.webp
+      (слуги перечислены в FACTION_SLUGS в dossier.js)
+   2. Раскомментировать / добавить строку в блоке «РЕЕСТР» ниже.
+   Пока строки для фракции нет, --tex-on остаётся 0 и слой невидим —
+   ничего не ломается и не мигает битой картинкой.
+
+   СИЛА ЭФФЕКТА
+   --tex-strength — общая прозрачность (0.05 ≈ «еле угадывается»).
+   Можно переопределить для отдельного места, см. ниже.
+   ══════════════════════════════════════════════════════ */
+
+:root {
+  --tex-on: 0;            /* 1 включает слой; ставится в реестре фракций */
+  --tex-strength: 0.10;   /* базовая сила для оборота карточки и досье */
+  --tex-strength-bar: 0.14;  /* полосы имени/цитаты — мелкие, можно чуть ярче */
+}
+
+/* ── Слой-подложка. Красится в цвет фракции, форма берётся из маски. ── */
+.tex-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: rgb(var(--cr, var(--dr, 79,195,247)));
+  -webkit-mask-image: var(--tex, none);
+          mask-image: var(--tex, none);
+  -webkit-mask-size: cover;
+          mask-size: cover;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  /* Читаем ЯРКОСТЬ файла, а не его альфа-канал: текстура — светлый
+     рисунок на чёрном фоне, чёрное должно стать прозрачным. Без этого
+     маска смотрит на альфу, у непрозрачного JPG/WebP она везде единица,
+     и вместо узора получается ровная заливка. */
+  mask-mode: luminance;
+  -webkit-mask-source-type: luminance;
+  opacity: calc(var(--tex-strength) * var(--tex-on));
+}
+
+/* ── 1. Оборот карточки в «подборках» ──
+   Блок прокручивается, поэтому слой прибиваем к его рамке через sticky:
+   при прокрутке биографии текстура остаётся на месте, а не уезжает
+   вместе с текстом. margin-bottom компенсирует занятую высоту. */
+.c-card-back { position: relative; }
+.c-card-back .tex-layer {
+  /* Сам слой нулевой высоты, чтобы не занимать место в flex-колонке
+     (иначе он отодвигает текст вниз), а рисует его псевдоэлемент.
+     Отрицательный margin съедает gap колонки. */
+  position: sticky;
+  inset: auto;
+  top: 0;
+  flex: 0 0 auto;
+  height: 0;
+  margin-bottom: -10px;
+  overflow: visible;
+  background: none;
+  -webkit-mask-image: none;
+          mask-image: none;
+  opacity: 1;
+}
+.c-card-back .tex-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* высота оборота = ширина карточки × 1.25 (формат 4:5), --cw задаётся
+     в desktop.css отдельно для каждого тира */
+  height: calc(var(--cw, 300px) * 1.25);
+  pointer-events: none;
+  background-color: rgb(var(--cr));
+  -webkit-mask-image: var(--tex, none);
+          mask-image: var(--tex, none);
+  -webkit-mask-size: cover;
+          mask-size: cover;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  mask-mode: luminance;
+  -webkit-mask-source-type: luminance;
+  opacity: calc(var(--tex-strength) * var(--tex-on));
+}
+/* Текст оборота должен лежать ПОВЕРХ текстуры. */
+.c-card-back > *:not(.tex-layer) { position: relative; z-index: 1; }
+
+/* ── 2. Полосы имени и цитаты ──
+   Не прокручиваются, поэтому обычного псевдоэлемента достаточно. */
+.card-quote-a::after,
+.compact-3-name-area::after,
+.compact-5-name-area::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: rgb(var(--cr));
+  -webkit-mask-image: var(--tex, none);
+          mask-image: var(--tex, none);
+  -webkit-mask-size: cover;
+          mask-size: cover;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  /* Читаем ЯРКОСТЬ файла, а не его альфа-канал: текстура — светлый
+     рисунок на чёрном фоне, чёрное должно стать прозрачным. Без этого
+     маска смотрит на альфу, у непрозрачного JPG/WebP она везде единица,
+     и вместо узора получается ровная заливка. */
+  mask-mode: luminance;
+  -webkit-mask-source-type: luminance;
+  opacity: calc(var(--tex-strength-bar) * var(--tex-on));
+}
+.compact-3-name-area, .compact-5-name-area { position: relative; }
+/* Сам текст — над текстурой. */
+.card-quote-a-text,
+.compact-3-name,
+.compact-5-name { position: relative; z-index: 1; }
+
+/* ── 3. Правое поле досье ──
+   Тоже прокручивается — та же техника sticky. */
+.dossier-data { position: relative; }
+.dossier-data .tex-layer {
+  position: sticky;
+  inset: auto;
+  top: 0;
+  height: 100vh;
+  margin-bottom: -100vh;
+  background-color: rgb(var(--dr));
+}
+.dossier-data > *:not(.tex-layer) { position: relative; z-index: 1; }
+
+/* ══════════════════════════════════════════════════════
+   РЕЕСТР ТЕКСТУР ПО ФРАКЦИЯМ
+
+   Раскомментируй строку, когда положишь соответствующий файл в
+   data/images/textures/. Селектор [data-faction] стоит и на карточках
+   (.char-card, .c-card), и на оверлее досье, поэтому одна строка
+   включает текстуру сразу во всех трёх местах.
+   ══════════════════════════════════════════════════════ */
+
+/* ── ВРЕМЕННЫЕ ЗАГЛУШКИ ──
+   Процедурно нарисованные SVG, нужны только чтобы вживую оценить силу
+   эффекта и масштаб узора. Заменяются так: положить свой файл рядом и
+   поправить путь в строке (или удалить строку и файл-заглушку). */
+[data-faction="tenebrion"]    { --tex: url('../data/images/textures/tenebrion-placeholder.svg'); --tex-on: 1; }
+[data-faction="america"]      { --tex: url('../data/images/textures/america-placeholder.svg');   --tex-on: 1; }
+[data-faction="rakshasy"]     { --tex: url('../data/images/textures/rakshasy-placeholder.svg');  --tex-on: 1; }
+
+/* ── БОЕВЫЕ ТЕКСТУРЫ (раскомментировать по мере готовности файлов) ──
+[data-faction="tenebrion"]    { --tex: url('../data/images/textures/tenebrion.webp');    --tex-on: 1; }
+[data-faction="america"]      { --tex: url('../data/images/textures/america.webp');      --tex-on: 1; }
+[data-faction="rakshasy"]     { --tex: url('../data/images/textures/rakshasy.webp');     --tex-on: 1; }
+[data-faction="arcadia"]      { --tex: url('../data/images/textures/arcadia.webp');      --tex-on: 1; }
+[data-faction="forge"]        { --tex: url('../data/images/textures/forge.webp');        --tex-on: 1; }
+[data-faction="quiet-harbor"] { --tex: url('../data/images/textures/quiet-harbor.webp'); --tex-on: 1; }
+[data-faction="white-zone"]   { --tex: url('../data/images/textures/white-zone.webp');   --tex-on: 1; }
+[data-faction="independent"]  { --tex: url('../data/images/textures/independent.webp');  --tex-on: 1; }
+[data-faction="equatorial"]   { --tex: url('../data/images/textures/equatorial.webp');   --tex-on: 1; }
+[data-faction="garrison"]     { --tex: url('../data/images/textures/garrison.webp');     --tex-on: 1; }
+[data-faction="ark"]          { --tex: url('../data/images/textures/ark.webp');          --tex-on: 1; }
+[data-faction="titans"]       { --tex: url('../data/images/textures/titans.webp');       --tex-on: 1; }
+[data-faction="nar"]          { --tex: url('../data/images/textures/nar.webp');          --tex-on: 1; }
+[data-faction="australia"]    { --tex: url('../data/images/textures/australia.webp');    --tex-on: 1; }
+[data-faction="abyss"]        { --tex: url('../data/images/textures/abyss.webp');        --tex-on: 1; }
+*/
+
+/* Текстуры — украшение, на телефоне они только жрут трафик и внимание. */
+@media (max-width: 1023px) {
+  :root { --tex-strength: 0; --tex-strength-bar: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* текстуры статичны, здесь ничего отключать не нужно */
+}
