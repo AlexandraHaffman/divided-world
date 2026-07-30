@@ -188,7 +188,7 @@
     .mirror-fact{flex:0 0 200px;margin-top:20px;max-width:none;text-align:left;}
     .mirror-fact::before{text-align:left;}
 
-    .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+    .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start;}
     /* колонки биографии узкие даже в этой раскладке — зеркало внутри карточки остаётся сложенным */
     .bio-item .mirror{display:block;}
     .bio-item .mirror-fact{margin-top:12px;max-width:88%;text-align:right;margin-left:auto;}
@@ -204,23 +204,34 @@
      ДЕСКТОП (≥901px)
      ══════════════════════════════════════════ */
   @media (min-width:901px){
-    section{max-width:760px;margin-left:auto;margin-right:auto;padding-left:24px;padding-right:24px;}
+    /* секция шире, чтобы фото и карточки не тонули в пустом поле по бокам —
+       но прозу (.mirror, свободный bio-text) держим у́же для читаемости */
+    section{max-width:1140px;margin-left:auto;margin-right:auto;padding-left:32px;padding-right:32px;}
+    .hero{max-width:none;}
 
     .hero-img-wrap img{object-position:center 18%;}
-    .hero-content{padding:26px 24px 34px;}
+    .hero-content{padding:26px 32px 34px;}
     .hero-name{font-size:46px;}
     .hero-role{font-size:15px;}
 
-    .mirror{display:flex;gap:44px;align-items:flex-start;margin:22px 0 30px;}
+    .mirror{display:flex;gap:44px;align-items:flex-start;margin:22px 0 30px;max-width:840px;}
     .mirror-pathos{flex:1 1 58%;font-size:17px;}
     .mirror-fact{flex:0 0 250px;margin-top:40px;max-width:none;text-align:left;font-size:12px;}
     .mirror-fact::before{text-align:left;}
+    p.bio-text{max-width:840px;}
 
-    .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+    /* align-items:start — иначе короткая карточка растягивается до высоты соседней и внутри остаётся пустота */
+    .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;align-items:start;}
     /* колонки биографии узкие даже на десктопе (2 в ряд) — зеркало внутри карточки остаётся сложенным */
-    .bio-item .mirror{display:block;margin:0;padding:0 18px 18px;}
+    .bio-item .mirror{display:block;margin:0;padding:0 18px 18px;max-width:none;}
     .bio-item .mirror-fact{margin-top:12px;max-width:88%;text-align:right;margin-left:auto;font-size:11.5px;}
     .bio-item .mirror-fact::before{text-align:right;}
+    /* последняя карточка ("настоящее время") — не одна-в-ряду с пустой клеткой рядом, а полноширинный финал */
+    .bio-item:last-child{grid-column:1/-1;}
+    .bio-item:last-child .mirror{display:flex;gap:40px;align-items:flex-start;padding:0 20px 20px;}
+    .bio-item:last-child .mirror-pathos{flex:1 1 60%;}
+    .bio-item:last-child .mirror-fact{flex:0 0 260px;margin-top:0;max-width:none;text-align:left;}
+    .bio-item:last-child .mirror-fact::before{text-align:left;}
 
     .asur-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
     .asur-strip{max-width:none;}
