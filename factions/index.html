@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Терминал: Фракции — Разделённый мир</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+
+/* Кириллица: Orbitron/Rajdhani/Share Tech Mono её не содержат, поэтому
+   первыми идут Russo One / Exo 2 / JetBrains Mono — тот же техно-стиль,
+   но буквы и цифры в одной строке одной гарнитуры. */
+:root{
+  --font-display:'Russo One',var(--font-display);
+  --font-ui:'Exo 2',var(--font-ui);
+  --font-mono:'Share Tech Mono','JetBrains Mono',monospace;
+}
 
   :root {
     --bg: #080c12;
@@ -27,7 +36,7 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
+    font-family: var(--font-ui);
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
@@ -69,7 +78,7 @@
 
   .back-link {
     display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
@@ -83,7 +92,7 @@
   .back-link:hover { color: var(--blue); border-color: var(--blue); }
 
   .terminal-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 3px;
@@ -91,7 +100,7 @@
   }
 
   .terminal-title {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: clamp(22px, 6vw, 30px);
     font-weight: 900;
     color: #fff;
@@ -144,7 +153,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
@@ -166,7 +175,7 @@
   .faction-info { padding: 16px 18px 20px; }
 
   .faction-tag {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 3px;
     color: var(--card-color, var(--blue));
@@ -174,7 +183,7 @@
   }
 
   .faction-name {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: 17px;
     font-weight: 700;
     color: #fff;
@@ -196,7 +205,7 @@
   }
 
   .influence-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
@@ -215,7 +224,7 @@
   }
 
   .influence-val {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--card-color, var(--blue));
   }
@@ -223,7 +232,7 @@
   .terminal-footer {
     padding: 16px;
     border-top: 1px solid var(--border);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;

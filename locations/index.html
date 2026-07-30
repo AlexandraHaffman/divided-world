@@ -1,5 +1,101 @@
-<h1>🗺️ Локации</h1>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Терминал: Локации — Разделённый мир</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&display=swap');
 
-<p>Раздел находится в разработке.</p>
+  :root {
+    --font-display: 'Russo One', 'Orbitron', sans-serif;
+    --font-ui: 'Exo 2', 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', 'JetBrains Mono', monospace;
+    --bg: #080c12;
+    --blue: #4fc3f7;
+    --text: #c8d8e8;
+    --text-dim: #5a7a9a;
+    --border: rgba(79,195,247,0.2);
+  }
 
-<a href="../index.html">← На главную</a>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .card {
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: rgba(13,19,32,0.7);
+    padding: 36px 26px;
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  }
+
+  .icon { font-size: 30px; margin-bottom: 16px; }
+
+  .title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+
+  .text {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 26px;
+  }
+
+  .links { display: flex; flex-direction: column; gap: 10px; }
+
+  .btn {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--blue);
+    text-decoration: none;
+    border: 1px solid rgba(79,195,247,0.4);
+    padding: 10px 16px;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: rgba(79,195,247,0.1); box-shadow: 0 0 16px rgba(79,195,247,0.25); }
+  .btn.dim { color: var(--text-dim); border-color: rgba(255,255,255,0.12); }
+  .btn.dim:hover { color: var(--text); border-color: rgba(255,255,255,0.3); background: transparent; box-shadow: none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="icon">🗺️</div>
+  <div class="title">РАЗДЕЛ ПЕРЕЕХАЛ</div>
+  <div class="text">Локации теперь доступны в интерактивной карте — с координатами, статусами территорий и привязкой к фракциям.</div>
+  <div class="links">
+    <a href="../map/index.html" class="btn">→ ОТКРЫТЬ КАРТУ</a>
+    <a href="../index.html" class="btn dim">← НА ГЛАВНУЮ</a>
+  </div>
+</div>
+
+</body>
+</html>

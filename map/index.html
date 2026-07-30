@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Терминал: Глобус — Разделённый мир</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+
+/* Кириллица: Orbitron/Rajdhani/Share Tech Mono её не содержат, поэтому
+   первыми идут Russo One / Exo 2 / JetBrains Mono — тот же техно-стиль,
+   но буквы и цифры в одной строке одной гарнитуры. */
+:root{
+  --font-display:'Russo One',var(--font-display);
+  --font-ui:'Exo 2',var(--font-ui);
+  --font-mono:'Share Tech Mono','JetBrains Mono',monospace;
+}
 
   :root {
     --bg: #080c12;
@@ -22,7 +31,7 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
+    font-family: var(--font-ui);
     overflow: hidden;
     position: fixed;
     inset: 0;
@@ -63,7 +72,7 @@
   .back-link {
     pointer-events: auto;
     display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
@@ -76,14 +85,14 @@
   }
   .back-link:hover { color: var(--blue); border-color: var(--blue); }
   .hud-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 3px;
     margin-bottom: 5px;
   }
   .hud-title {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: clamp(16px, 4.5vw, 24px);
     font-weight: 900;
     color: #fff;
@@ -92,7 +101,7 @@
   }
   .hud-title span { color: var(--blue); }
   .hud-status {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 2px;
     margin-top: 5px;
@@ -128,14 +137,14 @@
   }
   .legend-head:hover .legend-title { color: var(--blue); }
   .legend-title {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 2.5px;
     color: var(--text-dim);
     transition: color .2s;
   }
   .legend-toggle {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--blue);
   }
@@ -173,7 +182,7 @@
   }
   .l-item.active .l-name { color: #fff; }
   .l-sub {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8px;
     color: var(--text-dim);
     letter-spacing: 1px;
@@ -225,7 +234,7 @@
     50%     { box-shadow: 0 0 16px var(--fc); }
   }
   .fcard-name {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: 13px;
     font-weight: 900;
     letter-spacing: 1.5px;
@@ -252,7 +261,7 @@
   .fcard-body::-webkit-scrollbar { width: 3px; }
   .fcard-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
   .f-badge {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8px;
     letter-spacing: 3px;
     color: var(--fc);
@@ -265,7 +274,7 @@
   }
   .f-row { margin-bottom: 10px; }
   .f-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -284,7 +293,7 @@
   }
   .f-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-left: 2px; }
   .f-chip {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 1px;
     padding: 3px 8px;
@@ -300,7 +309,7 @@
   /* ── ДОСЬЕ ЛОКАЦИИ ── */
   .lc-badges { display: flex; gap: 5px; margin-bottom: 9px; flex-wrap: wrap; }
   .lc-type {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8px;
     letter-spacing: 2px;
     font-weight: 700;
@@ -313,7 +322,7 @@
   }
   .lc-type.war { color: #ff5544; border-color: rgba(255,85,68,0.5); text-shadow: 0 0 6px #ff5544; }
   .lc-region {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8px;
     letter-spacing: 1px;
     color: var(--text-dim);
@@ -335,7 +344,7 @@
   .lc-desc { font-size: 12.5px; line-height: 1.5; color: var(--text); margin-bottom: 10px; }
   .lc-full { margin-bottom: 10px; }
   .lc-full summary {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8.5px;
     letter-spacing: 2px;
     color: var(--fc);
@@ -365,7 +374,7 @@
   }
   .lc-child:hover { background: color-mix(in srgb, var(--fc) 12%, rgba(2,4,9,0.8)); }
   .lc-child-type {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 7.5px;
     letter-spacing: 1px;
     color: var(--fc);
@@ -374,7 +383,7 @@
   .lc-child-name { font-size: 12px; font-weight: 700; color: var(--text); }
   .lc-back {
     display: inline-block;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 2px;
     color: var(--fc);
@@ -403,7 +412,7 @@
     backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     color: var(--blue);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 15px;
     cursor: pointer;
     transition: all .15s;
@@ -428,7 +437,7 @@
   }
   .scale-line { height: 2px; background: var(--blue); opacity: .5; border-radius: 1px; transition: width .2s; }
   .scale-text {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8.5px;
     letter-spacing: 1.5px;
     color: var(--blue);
@@ -443,7 +452,7 @@
     transform: translateX(-50%);
     z-index: 15;
     pointer-events: none;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 8.5px;
     letter-spacing: 2px;
     color: var(--text-dim);
@@ -474,7 +483,7 @@
   }
   #loader.gone { opacity: 0; pointer-events: none; }
   .load-text {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 4px;
     color: var(--blue);
@@ -534,7 +543,7 @@
   }
   .gate-icon { font-size: 30px; margin-bottom: 14px; filter: drop-shadow(0 0 12px rgba(79,195,247,0.5)); }
   .gate-title {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: 14px;
     font-weight: 900;
     letter-spacing: 2px;
@@ -544,7 +553,7 @@
     line-height: 1.35;
   }
   .gate-sub {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 3px;
     color: var(--text-dim);
@@ -557,7 +566,7 @@
     background: rgba(2,4,9,0.85);
     border: 1px solid var(--border);
     color: var(--blue);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 15px;
     letter-spacing: 4px;
     text-align: center;
@@ -570,7 +579,7 @@
     background: rgba(79,195,247,0.1);
     border: 1px solid var(--blue);
     color: var(--blue);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 3px;
@@ -581,7 +590,7 @@
   }
   #gateBtn:hover { background: rgba(79,195,247,0.2); box-shadow: 0 0 16px rgba(79,195,247,0.3); }
   .gate-err {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 2px;
     color: #ff5544;
@@ -592,7 +601,7 @@
   .gate-back {
     position: absolute;
     top: 16px; left: 18px;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 2px;
     color: var(--text-dim);
@@ -1286,7 +1295,7 @@ function drawLabel(name, x, y, offY, col, hot, alpha, big){
   if (alpha <= 0.04) return;
   const fs = Math.max(8, Math.min(big ? 12 : 10.5, R * (big ? 0.028 : 0.023)));
   octx.save();
-  octx.font = `${hot ? 700 : 500} ${fs}px 'Share Tech Mono', monospace`;
+  octx.font = `${hot ? 700 : 500} ${fs}px var(--font-mono)`;
   octx.textAlign = 'center';
   octx.textBaseline = 'top';
   const tw = octx.measureText(name).width;

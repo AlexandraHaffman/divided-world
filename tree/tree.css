@@ -2,7 +2,16 @@
    ДРЕВО МЕТА-СПОСОБНОСТЕЙ — архивный терминал таксономии
    Палитра: фосфорный зелёный + циан, тёмный ЭЛТ. Без тёплых тонов.
    ═══════════════════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+
+/* Кириллица: Orbitron/Rajdhani/Share Tech Mono её не содержат, поэтому
+   первыми идут Russo One / Exo 2 / JetBrains Mono — тот же техно-стиль,
+   но буквы и цифры в одной строке одной гарнитуры. */
+:root{
+  --font-display:'Russo One',var(--font-display);
+  --font-ui:'Exo 2',var(--font-ui);
+  --font-mono:'Share Tech Mono','JetBrains Mono',monospace;
+}
 
 :root {
   --bg: #030907;
@@ -16,8 +25,8 @@
   --text-dim: #4e7a67;
   --border: rgba(70,232,164,0.18);
   --err: #ff5544;
-  --mono: 'Share Tech Mono', monospace;
-  --orb: 'Orbitron', monospace;
+  --mono: var(--font-mono);
+  --orb: var(--font-display);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,7 +36,7 @@ html, body { height: 100%; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Rajdhani', sans-serif;
+  font-family: var(--font-ui);
   overflow: hidden;
   position: relative;
 }
@@ -707,7 +716,7 @@ text { user-select: none; }
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
 }
 .hc-code { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; color: var(--ph); }
-.hc-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; color: #eafff4; margin: 2px 0; }
+.hc-name { font-family: var(--font-ui); font-weight: 700; font-size: 14px; color: #eafff4; margin: 2px 0; }
 .hc-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--text-dim); }
 .hc-note {
   font-size: 11px;
@@ -891,7 +900,7 @@ text { user-select: none; }
 .cmp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 .cmp-col { border: 1px solid var(--border); padding: 9px; }
 .cmp-col .d-code { font-size: 10px; }
-.cmp-col .d-name { font-size: 12px; font-family: 'Rajdhani',sans-serif; }
+.cmp-col .d-name { font-size: 12px; font-family: var(--font-ui); }
 .cmp-stat { margin-top: 7px; }
 .cmp-stat .d-cap { margin-bottom: 2px; }
 .cmp-bar { height: 3px; background: rgba(255,255,255,0.07); }

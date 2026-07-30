@@ -5,9 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Терминал: Разделённый мир</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+  /* ── ШРИФТЫ ──
+     Orbitron, Rajdhani и Share Tech Mono не содержат кириллицы — русский текст
+     подменялся системным шрифтом, из-за чего буквы и цифры в одной строке
+     выглядели по-разному. Ставим первыми гарнитуры с кириллицей в том же
+     техно-стиле: Russo One (заголовки), Exo 2 (текст), JetBrains Mono
+     (моноширинные служебные подписи). Прежние шрифты остаются запасными. */
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
 
   :root {
+    --font-display: 'Russo One', 'Orbitron', sans-serif;
+    --font-ui: 'Exo 2', 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', 'JetBrains Mono', monospace;
     --bg: #080c12;
     --bg2: rgba(13,19,32,0.85);
     --bg3: rgba(17,24,39,0.9);
@@ -32,23 +41,27 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
+    font-family: var(--font-ui);
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
   }
 
-  /* ── ФОНОВЫЙ АРТ ── */
+  /* ── ФОНОВЫЙ АРТ ──
+     bg.webp теперь широкоформатный (16:9, под десктоп-монитор) — старая
+     версия была вертикальной под телефон и на широких экранах обрезалась
+     через cover почти до сплошного чёрного. Позиция/яркость/оверлей
+     настроены под кадр с «воздухом» по центру (как на факциях). */
   .bg-art {
     position: fixed;
     inset: 0;
     z-index: 0;
     background-image: url('bg.webp');
     background-size: cover;
-    background-position: center top;
+    background-position: center center;
     background-repeat: no-repeat;
     /* Затемняем чтобы текст читался */
-    filter: brightness(0.35);
+    filter: brightness(0.55);
   }
 
   /* Градиент поверх фона — снизу темнее */
@@ -58,9 +71,9 @@
     z-index: 1;
     background: linear-gradient(
       180deg,
-      rgba(8,12,18,0.3) 0%,
-      rgba(8,12,18,0.5) 40%,
-      rgba(8,12,18,0.85) 100%
+      rgba(8,12,18,0.45) 0%,
+      rgba(8,12,18,0.55) 40%,
+      rgba(8,12,18,0.88) 100%
     );
   }
 
@@ -103,7 +116,7 @@
   }
 
   .terminal-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 3px;
@@ -111,7 +124,7 @@
   }
 
   .terminal-title {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: clamp(22px, 6vw, 30px);
     font-weight: 900;
     color: #fff;
@@ -123,7 +136,7 @@
   .terminal-title span { color: var(--blue); }
 
   .terminal-status {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 2px;
@@ -187,7 +200,7 @@
   }
 
   .intro-btn-title {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 3px;
@@ -195,7 +208,7 @@
   }
 
   .intro-btn-sub {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 1px;
     color: var(--text-dim);
@@ -221,7 +234,7 @@
     backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     color: var(--text);
-    font-family: 'Rajdhani', sans-serif;
+    font-family: var(--font-ui);
     font-weight: 700;
     font-size: 11px;
     letter-spacing: 1.5px;
@@ -246,6 +259,18 @@
     font-size: 18px;
     margin-bottom: 6px;
   }
+
+  /* Кастомная иконка (PNG/SVG) с фолбэком на emoji, если файла ещё нет —
+     onerror на <img> прячет картинку и показывает соседний emoji-span. */
+  .btn-icon-img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 0 6px rgba(79,195,247,0.6));
+  }
+  .btn-icon-fallback { display: none; }
 
   /* ── Тултип с количеством записей (появляется при наведении) ── */
   .nav-tip {
@@ -277,14 +302,14 @@
     border-top-color: var(--blue);
   }
   .nav-tip b {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: 18px;
     font-weight: 700;
     color: var(--blue);
     line-height: 1;
   }
   .nav-tip span {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 1.5px;
     color: var(--text-dim);
@@ -300,7 +325,7 @@
 
   /* ── SECTION LABEL ── */
   .section-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 3px;
@@ -431,7 +456,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
@@ -470,7 +495,7 @@
   }
 
   .faction-tag {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     letter-spacing: 3px;
     color: var(--card-color, var(--blue));
@@ -478,7 +503,7 @@
   }
 
   .faction-name {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: 15px;
     font-weight: 700;
     color: #fff;
@@ -500,7 +525,7 @@
   }
 
   .influence-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
@@ -519,7 +544,7 @@
   }
 
   .influence-val {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--card-color, var(--blue));
   }
@@ -576,7 +601,7 @@
   .stat-card.wide { grid-column: 1 / -1; }
 
   .stat-label {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 3px;
@@ -584,7 +609,7 @@
   }
 
   .stat-value {
-    font-family: 'Orbitron', monospace;
+    font-family: var(--font-display);
     font-size: 22px;
     font-weight: 700;
     color: #fff;
@@ -593,7 +618,7 @@
   .stat-value span { color: var(--blue); }
 
   .stat-sub {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     margin-top: 4px;
@@ -604,7 +629,7 @@
   .terminal-footer {
     padding: 16px;
     border-top: 1px solid var(--border);
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
@@ -628,24 +653,65 @@
     text-shadow: 0 0 10px rgba(70,232,164,0.8);
   }
 
-  /* ═══ Десктоп: слегка сжимаем вертикальный ритм, чтобы титульная
-     страница ровно вмещалась по высоте на невысоких ноутбуках,
-     без «докручивания». Мобильная вёрстка не трогается. ═══ */
+  /* ═══ Десктоп: титульная страница подгоняется под высоту ОКНА браузера ═══
+     Страница — одна колонка (#app) высотой ровно в видимую область вкладки:
+     от верхней служебной строки до нижней. Свободное место распределяется
+     между блоками (justify-content: space-between), а высота герба фракции
+     задана в vh — поэтому и на высоком мониторе пустоты снизу нет, и на
+     невысоком ноутбуке ничего не приходится докручивать.
+     Мобильная вёрстка не трогается. ═══ */
   @media (min-width: 1024px) {
-    .terminal-header { padding: 22px 20px 14px; }
-    .intro-section { padding: 12px 16px 0; }
-    .section-label { padding: 16px 16px 8px; }
-    .faction-card { max-width: 300px; }
-    .slider-dots { margin-top: 10px; }
-    .nav-section { padding: 12px 16px 0; }
-    .terminal-footer { padding: 11px 16px; }
+    /* высота окна: dvh, если браузер её понимает (панели инструментов) */
+    :root { --screen-h: 100vh; }
+    @supports (height: 100dvh) { :root { --screen-h: 100dvh; } }
+
+    html, body { height: 100%; }
+
+    /* min-height, а не height: если окно совсем низкое и контент всё-таки
+       не поместился, страница просто прокрутится, а не обрежется. */
+    #app {
+      min-height: var(--screen-h);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .terminal-header { padding: clamp(14px, 2.4vh, 34px) 20px clamp(10px, 1.6vh, 22px); }
+    .terminal-title { font-size: clamp(26px, 3.4vh, 42px); }
+    .terminal-label, .terminal-status { font-size: clamp(10px, 1.15vh, 13px); }
+
+    .intro-section { padding: clamp(8px, 1.4vh, 20px) 16px 0; }
+    .intro-btn { padding: clamp(12px, 1.7vh, 22px) 18px; }
+    .intro-btn-title { font-size: clamp(14px, 1.7vh, 19px); }
+    .intro-btn-sub { font-size: clamp(10px, 1.2vh, 13px); }
+
+    .section-label { padding: clamp(10px, 1.8vh, 26px) 16px clamp(6px, 1vh, 14px); font-size: clamp(10px, 1.15vh, 13px); }
+
+    /* Карточка фракции: герб задаёт высоту, ширина = 3:2 от неё.
+       Обе величины считаются от высоты окна — отсюда автомасштаб. */
+    .slider-wrapper { --emblem-h: clamp(150px, 26vh, 330px); }
+    .faction-card { flex: 0 0 auto; width: calc(var(--emblem-h) * 1.5); max-width: none; }
+    .faction-art { height: var(--emblem-h); aspect-ratio: auto; }
+    .faction-info { padding: clamp(10px, 1.4vh, 18px) 16px clamp(12px, 1.6vh, 20px); }
+    .faction-name { font-size: clamp(14px, 1.7vh, 21px); }
+    .faction-ideology { font-size: clamp(12px, 1.45vh, 17px); }
+    .faction-tag, .influence-label { font-size: clamp(9px, 1.05vh, 12px); }
+    .slider-dots { margin-top: clamp(8px, 1.2vh, 16px); }
+
+    .nav-section { padding: clamp(8px, 1.4vh, 20px) 16px 0; }
+    .nav-btn { padding: clamp(11px, 1.6vh, 22px) 6px; font-size: clamp(11px, 1.3vh, 16px); }
+    .btn-icon { font-size: clamp(17px, 2vh, 26px); margin-bottom: clamp(4px, 0.7vh, 9px); }
+
+    .terminal-footer { padding: clamp(9px, 1.3vh, 18px) 16px; font-size: clamp(9px, 1.05vh, 12px); }
   }
 </style>
 </head>
 <body>
 
 <!-- ФОНОВЫЙ АРТ -->
-<!-- Положи файл в: images/backgrounds/bg-main.png -->
+<!-- Файл: bg.webp в корне проекта. Рекомендуемый формат — широкий кадр
+     (2560×1440 или 1920×1080, 16:9), с «воздухом»/негативным пространством
+     по центру — там ложится заголовок и кнопки. -->
 <div class="bg-art"></div>
 <div class="bg-overlay"></div>
 
@@ -793,15 +859,24 @@
 <div class="nav-section">
   <div class="nav-grid">
     <a href="characters/index.html" class="nav-btn">
-      <span class="btn-icon">👤</span>ПЕРСОНАЖИ
+      <span class="btn-icon">
+        <img src="assets/icons/nav-characters.png" alt="" class="btn-icon-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="btn-icon-fallback">👤</span>
+      </span>ПЕРСОНАЖИ
       <span class="nav-tip"><b id="count-chars">—</b><span id="count-chars-lbl">профилей</span></span>
     </a>
     <a href="map/index.html" class="nav-btn">
-      <span class="btn-icon">🌎</span>КАРТА
+      <span class="btn-icon">
+        <img src="assets/icons/nav-map.png" alt="" class="btn-icon-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="btn-icon-fallback">🌎</span>
+      </span>КАРТА
       <span class="nav-tip"><b id="count-locations">—</b><span id="count-locations-lbl">локаций</span></span>
     </a>
     <a href="timeline/index.html" class="nav-btn">
-      <span class="btn-icon">📜</span>ИСТОРИЯ
+      <span class="btn-icon">
+        <img src="assets/icons/nav-history.png" alt="" class="btn-icon-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="btn-icon-fallback">📜</span>
+      </span>ИСТОРИЯ
       <span class="nav-tip"><b id="count-events">—</b><span id="count-events-lbl">событий</span></span>
     </a>
   </div>

@@ -1,0 +1,19 @@
+{
+  "name": "divided-world",
+  "version": "1.0.0",
+  "description": "Encyclopaedia of the Divided World",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:41729/git/AlexandraHaffman/divided-world"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sharp": "^0.35.3"
+  }
+}

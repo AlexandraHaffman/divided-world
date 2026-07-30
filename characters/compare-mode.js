@@ -1033,7 +1033,7 @@ function injectCompareStyles() {
   s.id = "compare-enhance-styles";
   s.textContent = `
     .compare-verdict{padding:16px 16px 0;}
-    .cv-title{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+    .cv-title{font-family:var(--font-mono);font-size:8px;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
     .cv-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;margin-bottom:6px;background:rgba(255,255,255,0.02);}
     /* портрет + заглушка-сигил */
     .cv-portrait{position:relative;flex-shrink:0;overflow:hidden;background:#05080f;border:1px solid rgba(var(--pc),0.6);box-shadow:0 0 10px rgba(var(--pc),0.25);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));}
@@ -1042,20 +1042,20 @@ function injectCompareStyles() {
     .cv-portrait--ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.30) 2px,rgba(0,0,0,0.30) 3px);pointer-events:none;}
     .cv-sigil{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgb(var(--pc));}
     .cv-sigil-svg{width:58%;height:58%;filter:drop-shadow(0 0 4px rgba(var(--pc),0.7));}
-    .cv-monogram{font-family:'Share Tech Mono',monospace;font-weight:900;font-size:14px;letter-spacing:0.02em;text-shadow:0 0 8px rgba(var(--pc),0.6);}
+    .cv-monogram{font-family:var(--font-mono);font-weight:900;font-size:14px;letter-spacing:0.02em;text-shadow:0 0 8px rgba(var(--pc),0.6);}
     /* строки вердикта */
     .cv-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;background:currentColor;}
     .cv-sep{align-self:stretch;width:1px;margin:1px 3px;flex-shrink:0;background:linear-gradient(180deg,transparent,rgba(var(--rc,79,195,247),0.75),transparent);box-shadow:0 0 6px rgba(var(--rc,79,195,247),0.45);}
     .cv-name-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding-left:2px;}
     .cv-name{font-size:13px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;}
-    .cv-arch-tag{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .cv-arch-tag{font-family:var(--font-mono);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .cv-crown{font-size:12px;}
     .cv-metric{display:flex;flex-direction:column;align-items:center;min-width:44px;}
-    .cv-metric-lbl{font-family:'Share Tech Mono',monospace;font-size:6px;letter-spacing:0.06em;color:var(--dim);text-transform:uppercase;margin-bottom:1px;}
-    .cv-metric-val{font-family:'Share Tech Mono',monospace;font-size:16px;font-weight:900;line-height:1;transition:text-shadow 0.2s;}
+    .cv-metric-lbl{font-family:var(--font-mono);font-size:6px;letter-spacing:0.06em;color:var(--dim);text-transform:uppercase;margin-bottom:1px;}
+    .cv-metric-val{font-family:var(--font-mono);font-size:16px;font-weight:900;line-height:1;transition:text-shadow 0.2s;}
     .cv-metric.lead .cv-metric-val{text-shadow:0 0 12px currentColor;}
     .cv-metric.lead .cv-metric-lbl{color:var(--white);}
-    .cv-note{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dim);text-align:center;padding:6px 0 2px;letter-spacing:0.05em;}
+    .cv-note{font-family:var(--font-mono);font-size:8px;color:var(--dim);text-align:center;padding:6px 0 2px;letter-spacing:0.05em;}
     /* авто-разбор */
     .cv-auto{padding:0;}
     .cv-auto-line{font-size:12px;color:var(--text);line-height:1.5;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
@@ -1066,43 +1066,43 @@ function injectCompareStyles() {
     /* ранги по базе */
     .cv-arch-row{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
     .cv-arch-name{flex:1;font-size:12px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .cv-arch-val{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:0.04em;}
+    .cv-arch-val{font-family:var(--font-mono);font-size:11px;letter-spacing:0.04em;}
     .cv-arch-val b{font-size:13px;}
     /* дуэль */
-    .cv-duel-nums{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:900;margin-bottom:4px;text-shadow:0 0 12px currentColor;}
+    .cv-duel-nums{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:22px;font-weight:900;margin-bottom:4px;text-shadow:0 0 12px currentColor;}
     .cv-duel-track{display:flex;height:16px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,0.05);}
     .cv-duel-track>div{height:100%;transition:width 0.4s;}
-    .cv-duel-verdict{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);text-align:center;padding-top:8px;letter-spacing:0.04em;}
+    .cv-duel-verdict{font-family:var(--font-mono);font-size:10px;color:var(--dim);text-align:center;padding-top:8px;letter-spacing:0.04em;}
     .cv-duel-verdict b{color:var(--white);}
-    .cv-duel-factor{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);text-align:center;padding-top:4px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.75;}
+    .cv-duel-factor{font-family:var(--font-mono);font-size:9px;color:var(--dim);text-align:center;padding-top:4px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.75;}
     /* боевой рейтинг 3+ */
     .cv-rank-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
     .cv-rank-name{width:96px;flex-shrink:0;font-size:11px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .cv-rank-track{flex:1;height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;}
     .cv-rank-track>div{height:100%;border-radius:4px;transition:width 0.4s;}
-    .cv-rank-val{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:900;width:28px;text-align:right;flex-shrink:0;}
+    .cv-rank-val{font-family:var(--font-mono);font-size:12px;font-weight:900;width:28px;text-align:right;flex-shrink:0;}
     /* слоган-афиша матча */
-    .compare-slogan{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--white);text-transform:uppercase;margin-top:8px;padding:6px 10px;border-left:2px solid rgba(79,195,247,0.5);background:linear-gradient(90deg,rgba(79,195,247,0.08),transparent);border-radius:0 4px 4px 0;}
+    .compare-slogan{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--white);text-transform:uppercase;margin-top:8px;padding:6px 10px;border-left:2px solid rgba(79,195,247,0.5);background:linear-gradient(90deg,rgba(79,195,247,0.08),transparent);border-radius:0 4px 4px 0;}
     /* сценарии «что если» */
     .cv-scn-row{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
     .cv-scn-cond{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;flex-shrink:0;}
-    .cv-scn-arrow{font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:12px;flex-shrink:0;}
+    .cv-scn-arrow{font-family:var(--font-mono);color:var(--dim);font-size:12px;flex-shrink:0;}
     .cv-scn-win{font-size:13px;font-weight:800;text-shadow:0 0 10px currentColor;margin-left:auto;min-width:0;text-align:right;line-height:1.25;}
-    .cv-scn-tie{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);margin-left:auto;flex-shrink:0;}
+    .cv-scn-tie{font-family:var(--font-mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim);margin-left:auto;flex-shrink:0;}
     /* слабое звено */
     .cv-weak-row{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:5px;border-radius:5px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
     .cv-weak-name{flex:1;min-width:0;font-size:12px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .cv-weak-stat{font-size:11px;font-weight:600;color:var(--text);flex-shrink:0;}
-    .cv-weak-val{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:900;width:24px;text-align:right;flex-shrink:0;}
+    .cv-weak-val{font-family:var(--font-mono);font-size:15px;font-weight:900;width:24px;text-align:right;flex-shrink:0;}
     /* цитата победителя в дуэли */
-    .cv-duel-quote{font-family:'Rajdhani',sans-serif;font-style:italic;font-size:12px;color:var(--text);text-align:center;padding:10px 6px 2px;line-height:1.45;opacity:0.9;}
+    .cv-duel-quote{font-family:var(--font-ui);font-style:italic;font-size:12px;color:var(--text);text-align:center;padding:10px 6px 2px;line-height:1.45;opacity:0.9;}
     .cv-duel-quote-by{display:block;font-style:normal;font-size:10px;color:var(--dim);letter-spacing:0.04em;margin-top:3px;}
     /* всплывающие подсказки к архетипам / сценариям / уязвимостям
        (hover на десктопе, тап на тач-устройствах через .tip-open) */
     .cv-tip{position:relative;cursor:help;text-decoration:underline dotted rgba(255,255,255,0.28);text-underline-offset:2px;}
     /* display:none в скрытом состоянии — чтобы всплывашка не занимала место
        и не распирала страницу вбок (иначе её ширина создаёт горизонтальный сдвиг) */
-    .cv-tip[data-tip]::after{content:attr(data-tip);display:none;position:absolute;left:0;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:min(220px,72vw);white-space:normal;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:500;letter-spacing:normal;text-transform:none;line-height:1.4;color:var(--white);background:rgba(6,10,18,0.97);border:1px solid rgba(79,195,247,0.45);box-shadow:0 6px 18px rgba(0,0,0,0.5),0 0 12px rgba(79,195,247,0.12);padding:7px 10px;border-radius:4px;pointer-events:none;}
+    .cv-tip[data-tip]::after{content:attr(data-tip);display:none;position:absolute;left:0;bottom:calc(100% + 8px);z-index:60;width:max-content;max-width:min(220px,72vw);white-space:normal;font-family:var(--font-ui);font-size:11px;font-weight:500;letter-spacing:normal;text-transform:none;line-height:1.4;color:var(--white);background:rgba(6,10,18,0.97);border:1px solid rgba(79,195,247,0.45);box-shadow:0 6px 18px rgba(0,0,0,0.5),0 0 12px rgba(79,195,247,0.12);padding:7px 10px;border-radius:4px;pointer-events:none;}
     .cv-tip[data-tip]:hover::after,.cv-tip.tip-open[data-tip]::after{display:block;}
     /* подсказки у правого края открываем влево, чтобы не убегали за экран */
     .cv-weak-stat.cv-tip[data-tip]::after{left:auto;right:0;}

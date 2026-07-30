@@ -345,22 +345,16 @@
   padding: 10px 12px 14px;
 }
 
-/* Верхний блок */
+/* Верхний блок. Служебной строки SYS.RECORD здесь больше нет (мешала
+   портрету), поэтому чип фракции прижимаем к правому краю. */
 .c-card-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-start;
 }
 
-.c-card-sys {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 7px;
-  color: rgba(var(--cr), 0.45);
-  letter-spacing: 0.18em;
-}
-
 .c-face-faction {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 7px;
   color: rgb(var(--cr));
   border: 1px solid rgba(var(--cr), 0.35);
@@ -418,7 +412,7 @@
 }
 
 .c-card-threat-num {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 32px;
   font-weight: 900;
   color: rgb(var(--cr));
@@ -427,7 +421,7 @@
 }
 
 .c-card-threat-lbl {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 7px;
   color: rgba(var(--cr), 0.5);
   letter-spacing: 0.12em;
@@ -459,27 +453,40 @@
   max-height: unset !important;
   box-sizing: border-box;
 
-  /* Скролл внутри */
+  /* Скролл внутри: биография бывает длинной, и она обязана прокручиваться
+     внутри карточки. overscroll-behavior не даёт прокрутке «перепрыгнуть»
+     на страницу, когда текст домотан до конца. */
   overflow-y: auto !important;
   overflow-x: hidden;
+  overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--cr), 0.3) transparent;
+  scrollbar-color: rgba(var(--cr), 0.45) rgba(255,255,255,0.05);
 
   display: none;
   flex-direction: column;
   gap: 10px;
   padding: 18px 16px 20px;
-  background: linear-gradient(160deg, #060d1a, #05080f);
   border: 1px solid rgba(var(--cr), 0.4);
   border-radius: 10px;
+
+  /* «Тени прокрутки»: две подложки прибиты к элементу (scroll), две — к
+     содержимому (local) и закрывают их, пока текст в начале / в конце.
+     Получается автоматическая подсказка «ниже есть ещё» — без JS. */
+  background:
+    linear-gradient(180deg, #060d1a 40%, rgba(6,13,26,0)) local top / 100% 26px no-repeat,
+    linear-gradient(0deg, #05080f 40%, rgba(5,8,15,0)) local bottom / 100% 30px no-repeat,
+    radial-gradient(farthest-side at 50% 0, rgba(var(--cr),0.45), transparent) scroll top / 100% 12px no-repeat,
+    radial-gradient(farthest-side at 50% 100%, rgba(var(--cr),0.45), transparent) scroll bottom / 100% 14px no-repeat,
+    linear-gradient(160deg, #060d1a, #05080f);
 }
 
-.c-card-back::-webkit-scrollbar { width: 3px; }
+.c-card-back::-webkit-scrollbar { width: 6px; }
 .c-card-back::-webkit-scrollbar-thumb {
-  background: rgba(var(--cr), 0.4);
-  border-radius: 2px;
+  background: rgba(var(--cr), 0.5);
+  border-radius: 3px;
 }
-.c-card-back::-webkit-scrollbar-track { background: transparent; }
+.c-card-back::-webkit-scrollbar-thumb:hover { background: rgba(var(--cr), 0.8); }
+.c-card-back::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 3px; }
 
 .c-card.flipped .c-card-face { display: none; }
 .c-card.flipped .c-card-back { display: flex; }

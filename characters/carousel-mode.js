@@ -57,16 +57,19 @@ function buildCarouselCard(c, idx) {
   const abilitiesHTML = c.abilities?.length
     ? `<div class="c-back-abilities">${c.abilities.map(a=>`<div class="c-back-chip">${a}</div>`).join("")}</div>` : "";
 
+  /* Биографию НЕ режем: оборот карточки прокручивается (см. .c-card-back),
+     раньше обрезка на 300 символах обрывала текст на полуслове. */
   const bioHTML = c.biography
-    ? `<div class="c-back-bio">${c.biography.replace(/\n/g,"<br>").substring(0,300)}${c.biography.length>300?"…":""}</div>` : "";
+    ? `<div class="c-back-bio">${c.biography.replace(/\n/g,"<br>")}</div>` : "";
 
+  /* На лицевой стороне служебной строки SYS.RECORD нет намеренно — она
+     ложилась поверх портрета. Осталась только на обороте (c-back-sys). */
   const faceContent = photoUrl
     ? `<div class="c-card-photo">
         <img src="${photoUrl}" alt="${c.name}" loading="lazy">
         <div class="c-card-gradient"></div>
         <div class="c-card-overlay">
           <div class="c-card-top">
-            <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
             <div class="c-face-faction">${c.faction || "—"}</div>
           </div>
           <div class="c-card-bottom">
@@ -85,7 +88,6 @@ function buildCarouselCard(c, idx) {
     : `<div class="c-card-no-photo">
         <div class="c-card-overlay">
           <div class="c-card-top">
-            <div class="c-card-sys">SYS.RECORD // #${String(idx+1).padStart(3,"0")} // CLEARANCE: ALPHA</div>
             <div class="c-face-faction">${c.faction || "—"}</div>
           </div>
           <div class="c-card-bottom">
@@ -201,6 +203,31 @@ function attachCarouselEvents() {
   });
 }
 
+/* Оборот карточки прокручивается сам: если курсор над ним и там ещё есть
+   куда мотать, полка колесо не перехватывает. */
+function scrollableBackUnder(target) {
+  const back = target && target.closest ? target.closest(".c-card-back") : null;
+  return !!back && back.scrollHeight > back.clientHeight + 2;
+}
+
+/* Полка открывается «с середины»: если карточки не влезают, ставим прокрутку
+   в центр — листать можно и вправо, и влево. Если влезают, центрирование
+   делает сам flex (justify-content), скроллить нечего. */
+function centerTrack(track) {
+  const center = () => {
+    const extra = track.scrollWidth - track.clientWidth;
+    if (extra > 4 && !track.dataset.centered) {
+      track.scrollLeft = extra / 2;
+      track.dataset.centered = "1";
+      track.dispatchEvent(new Event("scroll"));
+    }
+  };
+  center();
+  // картинки грузятся лениво и меняют ширину полки — доцентровываем после них
+  requestAnimationFrame(center);
+  setTimeout(center, 400);
+}
+
 /* Десктоп: колесо мыши, драг мышью и стрелки для горизонтального
    скролла полок — на тачскрине им не пользуются, там свайп и так работает. */
 function attachCarouselScrollControls() {
@@ -222,19 +249,25 @@ function attachCarouselScrollControls() {
 
     const scrollByCard = dir => {
       const card = track.querySelector(".c-card");
-      const step = card ? card.getBoundingClientRect().width + 12 : track.clientWidth * 0.8;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 12;
+      const step = card ? card.getBoundingClientRect().width + gap : track.clientWidth * 0.8;
       track.scrollBy({ left: dir * step, behavior: "smooth" });
     };
     prevBtn?.addEventListener("click", () => scrollByCard(-1));
     nextBtn?.addEventListener("click", () => scrollByCard(1));
 
-    // колесо мыши -> горизонтальный скролл (только если есть чем скроллить)
+    // колесо мыши -> горизонтальный скролл (только если есть чем скроллить).
+    // ВАЖНО: над перевёрнутой карточкой колесо не перехватываем — там своя
+    // вертикальная прокрутка биографии, иначе текст промотать невозможно.
     track.addEventListener("wheel", e => {
+      if (scrollableBackUnder(e.target)) return;
       if (track.scrollWidth <= track.clientWidth) return;
       if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
       e.preventDefault();
       track.scrollLeft += e.deltaY;
     }, { passive: false });
+
+    centerTrack(track);
 
     // драг мышью.
     // ВАЖНО: класс .dragging (а с ним pointer-events:none на карточках)

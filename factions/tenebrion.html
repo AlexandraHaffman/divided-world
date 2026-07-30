@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Терминал: ТЕНЕБРИОН — Разделённый мир</title>
+<style>
+  /* Кириллица: Orbitron/Rajdhani/Share Tech Mono её не содержат, поэтому первыми
+     идут гарнитуры с кириллицей в том же техно-стиле (см. index.html). */
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+
+  :root {
+    --font-display: 'Russo One', 'Orbitron', sans-serif;
+    --font-ui: 'Exo 2', 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', 'JetBrains Mono', monospace;
+    --bg: #080c12;
+    --text: #c8d8e8;
+    --text-dim: #5a7a9a;
+    --border: rgba(79,195,247,0.2);
+    --accent: #ff9d00;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .bg-art {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 8%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 100%),
+      var(--bg);
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+  }
+
+  .terminal-header {
+    position: relative;
+    z-index: 2;
+    padding: 40px 20px 0;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    border: 1px solid rgba(79,195,247,0.3);
+    padding: 5px 12px;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .back-link:hover { color: var(--blue, #4fc3f7); border-color: var(--blue, #4fc3f7); }
+
+  .wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 44px 20px 70px;
+    text-align: center;
+  }
+
+  .emblem {
+    width: min(300px, 68vw);
+    margin: 0 auto 30px;
+    position: relative;
+  }
+  .emblem-glow {
+    position: absolute;
+    inset: -18%;
+    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 70%);
+    z-index: -1;
+  }
+  .emblem img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 0 24px color-mix(in srgb, var(--accent) 45%, transparent));
+  }
+
+  .faction-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .faction-name {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 6vw, 38px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    text-shadow: 0 0 30px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .faction-ideology {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 440px;
+    margin: 0 auto 34px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 0 auto 34px;
+    opacity: 0.6;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  .pending-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+  }
+
+  .pending-text {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    max-width: 420px;
+    margin: 0 auto 36px;
+  }
+
+  .back-btn {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    padding: 10px 20px;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .back-btn:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .terminal-footer {
+    position: relative;
+    z-index: 2;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-art"></div>
+
+<header class="terminal-header">
+  <a href="index.html" class="back-link">← ФРАКЦИИ</a>
+</header>
+
+<div class="wrap">
+  <div class="emblem">
+    <div class="emblem-glow"></div>
+    <img src="../data/images/factions/tenebrion.jpg" alt="Эмблема: ТЕНЕБРИОН">
+  </div>
+
+  <div class="faction-tag">УРОВЕНЬ ВЛИЯНИЯ: 14</div>
+  <div class="faction-name">ТЕНЕБРИОН</div>
+  <div class="faction-ideology">Теократический абсолютизм, воздвигнутый на руинах веры и тьмы.</div>
+
+  <div class="divider"></div>
+
+  <div class="status-pill"><span class="status-dot"></span>СТАТУС: АРХИВ НЕПОЛНЫЙ</div>
+  <div class="pending-title">ДОСЬЕ ФОРМИРУЕТСЯ</div>
+  <div class="pending-text">Расширенные материалы фракции — история, структура, ключевые фигуры и территории — обрабатываются и будут опубликованы по мере готовности.</div>
+
+  <a href="index.html" class="back-btn">← ВЕРНУТЬСЯ В РЕЕСТР ФРАКЦИЙ</a>
+</div>
+
+<div class="terminal-footer">SYS.RECORD // EARTH • YEAR 2061 // ARCHIVE PENDING</div>
+
+</body>
+</html>
