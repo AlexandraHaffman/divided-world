@@ -47,17 +47,21 @@
     position: relative;
   }
 
-  /* ── ФОНОВЫЙ АРТ ── */
+  /* ── ФОНОВЫЙ АРТ ──
+     bg.webp теперь широкоформатный (16:9, под десктоп-монитор) — старая
+     версия была вертикальной под телефон и на широких экранах обрезалась
+     через cover почти до сплошного чёрного. Позиция/яркость/оверлей
+     настроены под кадр с «воздухом» по центру (как на факциях). */
   .bg-art {
     position: fixed;
     inset: 0;
     z-index: 0;
     background-image: url('bg.webp');
     background-size: cover;
-    background-position: center top;
+    background-position: center center;
     background-repeat: no-repeat;
     /* Затемняем чтобы текст читался */
-    filter: brightness(0.35);
+    filter: brightness(0.55);
   }
 
   /* Градиент поверх фона — снизу темнее */
@@ -67,9 +71,9 @@
     z-index: 1;
     background: linear-gradient(
       180deg,
-      rgba(8,12,18,0.3) 0%,
-      rgba(8,12,18,0.5) 40%,
-      rgba(8,12,18,0.85) 100%
+      rgba(8,12,18,0.45) 0%,
+      rgba(8,12,18,0.55) 40%,
+      rgba(8,12,18,0.88) 100%
     );
   }
 
@@ -255,6 +259,18 @@
     font-size: 18px;
     margin-bottom: 6px;
   }
+
+  /* Кастомная иконка (PNG/SVG) с фолбэком на emoji, если файла ещё нет —
+     onerror на <img> прячет картинку и показывает соседний emoji-span. */
+  .btn-icon-img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 0 6px rgba(79,195,247,0.45));
+  }
+  .btn-icon-fallback { display: none; }
 
   /* ── Тултип с количеством записей (появляется при наведении) ── */
   .nav-tip {
@@ -693,7 +709,9 @@
 <body>
 
 <!-- ФОНОВЫЙ АРТ -->
-<!-- Положи файл в: images/backgrounds/bg-main.png -->
+<!-- Файл: bg.webp в корне проекта. Рекомендуемый формат — широкий кадр
+     (2560×1440 или 1920×1080, 16:9), с «воздухом»/негативным пространством
+     по центру — там ложится заголовок и кнопки. -->
 <div class="bg-art"></div>
 <div class="bg-overlay"></div>
 
@@ -841,15 +859,24 @@
 <div class="nav-section">
   <div class="nav-grid">
     <a href="characters/index.html" class="nav-btn">
-      <span class="btn-icon">👤</span>ПЕРСОНАЖИ
+      <span class="btn-icon">
+        <img src="assets/icons/nav-characters.png" alt="" class="btn-icon-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="btn-icon-fallback">👤</span>
+      </span>ПЕРСОНАЖИ
       <span class="nav-tip"><b id="count-chars">—</b><span id="count-chars-lbl">профилей</span></span>
     </a>
     <a href="map/index.html" class="nav-btn">
-      <span class="btn-icon">🌎</span>КАРТА
+      <span class="btn-icon">
+        <img src="assets/icons/nav-map.png" alt="" class="btn-icon-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="btn-icon-fallback">🌎</span>
+      </span>КАРТА
       <span class="nav-tip"><b id="count-locations">—</b><span id="count-locations-lbl">локаций</span></span>
     </a>
     <a href="timeline/index.html" class="nav-btn">
-      <span class="btn-icon">📜</span>ИСТОРИЯ
+      <span class="btn-icon">
+        <img src="assets/icons/nav-history.png" alt="" class="btn-icon-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+        <span class="btn-icon-fallback">📜</span>
+      </span>ИСТОРИЯ
       <span class="nav-tip"><b id="count-events">—</b><span id="count-events-lbl">событий</span></span>
     </a>
   </div>

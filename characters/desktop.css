@@ -410,12 +410,17 @@
      Второе значение в min() — потолок по высоте окна (карточка 4:5,
      поэтому ширина ≈ 0.8 от желаемой высоты), чтобы на невысоком мониторе
      divine не вылезал за экран. */
-  .c-card { --cw: min(285px, 25vh); width: var(--cw); max-width: var(--cw); }
-  .c-card[data-tier="rare"]      { --cw: min(315px, 27.7vh); }
-  .c-card[data-tier="epic"]      { --cw: min(355px, 31.2vh); }
-  .c-card[data-tier="legendary"] { --cw: min(400px, 35.2vh); }
-  .c-card[data-tier="mythical"]  { --cw: min(465px, 41vh); }
-  .c-card[data-tier="divine"]    { --cw: min(570px, 50vh); }
+  .c-card { --cw: min(356px, 31.3vh); width: var(--cw); max-width: var(--cw); }
+  .c-card[data-tier="rare"]      { --cw: min(394px, 34.6vh); }
+  .c-card[data-tier="epic"]      { --cw: min(444px, 39vh); }
+  .c-card[data-tier="legendary"] { --cw: min(500px, 44vh); }
+  .c-card[data-tier="mythical"]  { --cw: min(581px, 51.3vh); }
+  .c-card[data-tier="divine"]    { --cw: min(712px, 62.5vh); }
+
+  /* Карточки увеличены на ~25% по просьбе — высота растёт вместе с шириной,
+     чтобы пропорции (и разница между тирами) остались прежними. */
+  .c-card-face, .c-card-back { min-height: 85vh; }
+  .c-card-photo, .c-card-no-photo { height: 85vh; }
 
   /* Текст на лице карточки масштабируем вместе с ней: размер считается от
      --cw и зажимается clamp'ом, чтобы у divine подписи не выглядели мелкими,
