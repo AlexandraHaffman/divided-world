@@ -407,20 +407,19 @@
 
   /* ── Размер карточки по тиру ──
      common → divine ровно в два раза; промежуточные распределены плавно.
-     Второе значение в min() — потолок по высоте окна (карточка 4:5,
-     поэтому ширина ≈ 0.8 от желаемой высоты), чтобы на невысоком мониторе
-     divine не вылезал за экран. */
-  .c-card { --cw: min(356px, 31.3vh); width: var(--cw); max-width: var(--cw); }
-  .c-card[data-tier="rare"]      { --cw: min(394px, 34.6vh); }
-  .c-card[data-tier="epic"]      { --cw: min(444px, 39vh); }
-  .c-card[data-tier="legendary"] { --cw: min(500px, 44vh); }
-  .c-card[data-tier="mythical"]  { --cw: min(581px, 51.3vh); }
-  .c-card[data-tier="divine"]    { --cw: min(712px, 62.5vh); }
-
-  /* Карточки увеличены на ~25% по просьбе — высота растёт вместе с шириной,
-     чтобы пропорции (и разница между тирами) остались прежними. */
-  .c-card-face, .c-card-back { min-height: 85vh; }
-  .c-card-photo, .c-card-no-photo { height: 85vh; }
+     Второе значение в min() — потолок по высоте окна. Высота карточки
+     нигде не задаётся напрямую: .c-card-photo держит aspect-ratio:4/5
+     (см. dossier-landscape.css, !important, действует и на десктопе —
+     там же .c-card-face{min-height:unset!important} гасит любой height
+     отсюда), поэтому высота = ширина × 1.25. Отсюда и расчёт: чтобы
+     divine доходил почти до края окна (~90vh), его vh-потолок = 90/1.25
+     = 72vh; остальные тиры увеличены на тот же множитель (~6.5%). */
+  .c-card { --cw: min(410px, 36.1vh); width: var(--cw); max-width: var(--cw); }
+  .c-card[data-tier="rare"]      { --cw: min(454px, 39.9vh); }
+  .c-card[data-tier="epic"]      { --cw: min(511px, 44.9vh); }
+  .c-card[data-tier="legendary"] { --cw: min(576px, 50.7vh); }
+  .c-card[data-tier="mythical"]  { --cw: min(670px, 59.1vh); }
+  .c-card[data-tier="divine"]    { --cw: min(820px, 72vh); }
 
   /* Текст на лице карточки масштабируем вместе с ней: размер считается от
      --cw и зажимается clamp'ом, чтобы у divine подписи не выглядели мелкими,
