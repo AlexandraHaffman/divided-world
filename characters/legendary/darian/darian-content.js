@@ -24,8 +24,22 @@ const TEX = {
   glass: "darian-texture-smoked-glass.jpg",
   marble: "darian-texture-black-marble.jpg",
   paper: "darian-texture-archive-paper.jpg",
-  brass: "darian-texture-brass.jpg",
-  frame: "darian-architecture-frame.png", // тонкая декоративная рамка поверх открытой главы
+  brass: "darian-texture-blackened-brass.jpg",
+  lens: "darian-texture-damaged-lens.jpg",
+  crystal: "darian-texture-dark-crystal.jpg",
+};
+
+/* ── АРХИТЕКТУРА (рамки резиденции, применяются дозированно) ── */
+const FRAME_WIDE = "darian-frame-wide.png";
+const FRAME_VERTICAL = "darian-frame-vertical.png";
+
+/* ── СПЕКТРАЛЬНЫЙ ДИСК И ЛИНИИ ── */
+const DISC_IMG = "darian-spectral-disc.png";
+const SPECTRUM_LINES = {
+  normal: "darian-spectrum-line-base.png",
+  dark: "darian-spectrum-line-dark.png",
+  cold: "darian-spectrum-line-cold.png",
+  heat: "darian-spectrum-line-heat.png",
 };
 
 /* ── ГЛАВЫ ──
@@ -47,7 +61,7 @@ const CHAPTERS = [
   {
     id: "spectrum", num: "01", title: "СПЕКТР", kind: "c", mode: "spectrum",
     caption: "Свет и тьма по его воле",
-    hero: null,
+    hero: { src: "darian-spectrum-prism.jpg", alt: "Призма, разлагающая свет на спектр", label: "нет сигнала · призма" },
     blocks: [
       { t: "meta", text: "Мета-сила · 10 / 10" },
       { t: "lede", text: "Диск слева — не иллюстрация. Это тот же инструмент, которым Дариан управляет небом над Куньмином: четыре состояния одного и того же спектра, между которыми он переключается по прихоти." },
@@ -59,7 +73,7 @@ const CHAPTERS = [
   {
     id: "biography", num: "02", title: "БИОГРАФИЯ", kind: "a", mode: "normal",
     caption: "От светобоязни к власти над светом",
-    hero: { src: "darian-young-lab.jpg", alt: "Молодой Дариан в лаборатории", label: "нет сигнала · лаборатория" },
+    hero: { src: "darian-section-biography.jpg", alt: "Архивные материалы, плёнка и записи", label: "нет сигнала · архив" },
     blocks: [
       {
         t: "timeline",
@@ -130,7 +144,7 @@ const CHAPTERS = [
       { t: "p", text: "Годы превратили её в безупречную хозяйку дворцового этикета — дорогие церемониальные одежды и тяжёлые драгоценности служат символом власти Дариана над ней. За этой красотой — человек, давно утративший иллюзии, но не способность сострадать." },
       { t: "p", text: "По приказу Дариана она ежедневно ведёт «Летопись гибели» — хронику уничтожения собственного народа. То, что должно было её сломить, стало последним смыслом её жизни: пока она пишет, память продолжает жить." },
       { t: "p", text: "К Кавите Дариан привязан собственнически, с ревностью и постоянным стремлением к контролю: она принадлежит ему и приходится матерью его наследнику. То, что она умнее прочих его пленниц, остаётся его невысказанной гордостью — похвалить её значило бы задеть собственное самолюбие." },
-      { t: "image", src: "darian-kavita-documents.jpg", alt: "Кавита за документами", label: "нет сигнала · административный зал" },
+      { t: "image", src: "darian-section-household.jpg", alt: "Шёлк, золото и карты — её личные вещи среди рабочих бумаг", label: "нет сигнала · личные вещи" },
       { t: "p", text: "Несмотря на надзор, она помогает другим пленницам, делится едой, поддерживает словами и тайно продолжает писать стихи. Единственное, ради чего она готова рискнуть всем, — маленький сын, рождённый от Дариана." },
     ],
   },
@@ -171,4 +185,6 @@ const CHAPTERS = [
   },
 ];
 
-if (typeof module !== "undefined") module.exports = { ENV, HERO_IMG, TEX, CHAPTERS };
+const AMBIENT_IMG = "darian-section-ambient.jpg"; // подложка за диском на хабе
+
+if (typeof module !== "undefined") module.exports = { ENV, HERO_IMG, TEX, FRAME_WIDE, FRAME_VERTICAL, DISC_IMG, SPECTRUM_LINES, AMBIENT_IMG, CHAPTERS };

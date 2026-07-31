@@ -95,10 +95,15 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   background-size:cover;background-position:center;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border:1px solid rgba(var(--brass),.16)}
 
-/* ── спектральная линия ── */
-.spectral-line{height:2px;border-radius:2px;background-size:220% 100%;background-position-x:0%;
+/* ── спектральная линия: настоящие ассеты по режиму, с CSS-градиентом как основой ── */
+.spectral-line{height:3px;border-radius:2px;background-size:220% 100%;background-position-x:0%;background-repeat:repeat-x;
   background-image:linear-gradient(90deg,rgba(var(--violet),.8),rgba(var(--cold),.8),rgba(var(--amber),.8),rgba(var(--red),.8),rgba(var(--violet),.8));
-  animation:spectrum-drift 18s linear infinite}
+  animation:spectrum-drift 18s linear infinite;opacity:.85}
+.spectral-line[data-line-mode]{background-size:220% auto;background-position:center center}
+.spectral-line[data-line-mode="normal"]{background-image:url('darian-spectrum-line-base.png')}
+.spectral-line[data-line-mode="dark"]{background-image:url('darian-spectrum-line-dark.png')}
+.spectral-line[data-line-mode="cold"]{background-image:url('darian-spectrum-line-cold.png')}
+.spectral-line[data-line-mode="heat"]{background-image:url('darian-spectrum-line-heat.png')}
 @keyframes spectrum-drift{from{background-position-x:0%}to{background-position-x:100%}}
 
 /* ══════════════════════════════════════════
@@ -134,17 +139,22 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);flex:none}
 
 /* ── диск ── */
-.disc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px auto 6px}
+.disc-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px auto 6px}
+.disc-wrap::before{content:'';position:absolute;inset:-30px;z-index:-1;border-radius:50%;opacity:.35;
+  background-image:radial-gradient(circle,rgba(7,5,10,0) 40%,rgba(7,5,10,.9) 72%),url('darian-section-ambient.jpg');
+  background-size:cover;background-position:center;pointer-events:none}
 .disc{position:relative;width:150px;aspect-ratio:1;border-radius:50%;
+  background-image:url('darian-spectral-disc.png');background-size:cover;background-position:center;
   border:1px solid rgba(var(--brass),.5);box-shadow:0 0 0 6px rgba(5,5,8,.5),0 18px 50px -20px rgba(0,0,0,.8)}
 .disc-ring{position:absolute;inset:-9px;border-radius:50%;border:1px dashed rgba(var(--brass),.35);
   animation:disc-spin 22s linear infinite}
 @keyframes disc-spin{to{transform:rotate(360deg)}}
 .disc-wedges{position:absolute;inset:0;border-radius:50%;overflow:hidden}
-.wedge{position:absolute;inset:0;display:flex;color:rgba(255,255,255,.72);
+.wedge{position:absolute;inset:0;display:flex;color:rgba(255,255,255,.85);mix-blend-mode:color;
   font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
-  opacity:.62;transition:opacity .3s}
-.wedge.on{opacity:1}
+  opacity:.5;transition:opacity .3s}
+.wedge span{mix-blend-mode:normal;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.wedge.on{opacity:.92}
 .wedge[data-mode="normal"]{clip-path:polygon(50% 50%,0% 0%,100% 0%);background:radial-gradient(circle at 50% 20%,rgba(var(--white),.32),rgba(20,18,22,.9));
   align-items:flex-start;justify-content:center;padding-top:12px}
 .wedge[data-mode="heat"]{clip-path:polygon(50% 50%,100% 0%,100% 100%);background:radial-gradient(circle at 80% 50%,rgba(var(--red-br),.4),rgba(30,10,8,.9));
@@ -155,7 +165,8 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   align-items:center;justify-content:flex-start;padding-left:9px}
 .disc-hub{position:absolute;left:50%;top:50%;width:56%;height:56%;transform:translate(-50%,-50%);
   border-radius:50%;border:1px solid rgba(var(--brass),.6);
-  background:conic-gradient(rgba(var(--violet),.5),rgba(var(--cold),.5),rgba(var(--amber),.5),rgba(var(--red),.5),rgba(var(--violet),.5));
+  background-image:conic-gradient(rgba(var(--violet),.55),rgba(var(--cold),.55),rgba(var(--amber),.55),rgba(var(--red),.55),rgba(var(--violet),.55)),url('darian-texture-dark-crystal.jpg');
+  background-size:100% 100%,cover;background-blend-mode:normal,luminosity;background-position:center;
   display:flex;align-items:center;justify-content:center;text-align:center;
   font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);
   opacity:.7;transition:opacity .3s,box-shadow .3s}
@@ -179,6 +190,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 .tile .img-wrap{position:absolute;inset:0}
 .tile .img-wrap img{transition:filter .3s ease,transform .3s ease;filter:brightness(.78) saturate(.9)}
 .tile:hover .img-wrap img{filter:brightness(.94) saturate(1.05)}
+.tile .lens-hover{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .4s ease;
+  background-image:url('darian-texture-damaged-lens.jpg');background-size:cover;background-position:center;
+  mix-blend-mode:overlay}
+.tile:hover .lens-hover{opacity:.4}
 .tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,9,.1) 0%,transparent 40%,rgba(6,4,9,.86) 100%)}
 .tile-num{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
   color:rgba(var(--amber-br),1);z-index:2}
@@ -214,13 +229,16 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 .chapter-frame::before{content:'';position:fixed;inset:10px;z-index:1;pointer-events:none;border:1px solid rgba(var(--brass),.22);
   border-radius:2px}
 .chapter-frame::after{content:'';position:fixed;inset:10px;z-index:1;pointer-events:none;
-  background-image:url('darian-architecture-frame.png');background-size:100% 100%;opacity:.5}
+  background-image:url('darian-frame-wide.png');background-size:100% 100%;opacity:.4}
+.chapter-panel[data-id="kavita"] .chapter-hero::before{content:'';position:absolute;inset:0;z-index:1;
+  width:34%;background-image:url('darian-frame-vertical.png');background-size:cover;background-position:left center;
+  opacity:.5;mix-blend-mode:luminosity;pointer-events:none}
 .chapter-close{position:fixed;top:16px;right:16px;z-index:5;width:38px;height:38px;border-radius:50%;
   border:1px solid rgba(var(--brass),.5);background:rgba(7,5,10,.7);color:rgba(var(--amber-br),1);
   font-size:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 .chapter-hero{position:relative;min-height:44vh}
-.chapter-hero .img-wrap{position:absolute;inset:0}
-.chapter-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,3,8,.15) 0%,transparent 40%,rgba(5,3,8,.92) 100%)}
+.chapter-hero .img-wrap{position:absolute;inset:0;z-index:0}
+.chapter-hero::after{content:'';position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,3,8,.15) 0%,transparent 40%,rgba(5,3,8,.92) 100%)}
 .chapter-hero.no-img{min-height:26vh;background:radial-gradient(120% 100% at 50% 100%,rgba(var(--mode-c),.14),transparent 65%)}
 .chapter-head{position:relative;z-index:2;padding:26px 20px 0}
 .chapter-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:rgba(var(--amber-br),1)}
@@ -455,7 +473,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
     const media = ch.hero ? imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label) : '';
     return '<button class="tile k-'+ch.kind+'" data-id="'+ch.id+'" aria-label="Глава '+ch.num+'. '+ch.title+'">'
       + media
-      + (ch.hero ? '<div class="tile-scrim"></div>' : '')
+      + (ch.hero ? '<div class="lens-hover"></div><div class="tile-scrim"></div>' : '')
       + '<div class="tile-num">'+ch.num+'</div>'
       + '<div class="tile-body"><div class="tile-title">'+ch.title+'</div><div class="tile-caption">'+ch.caption+'</div></div>'
       + '<div class="tile-line spectral-line" data-line-mode="'+ch.mode+'"></div>'
@@ -504,7 +522,8 @@ body[data-mode="heat"] #envAtmo{opacity:1;
       + '<button class="chapter-close" aria-label="Закрыть">✕</button>'
       + '<div class="chapter-head"><div class="chapter-num">ГЛАВА '+ch.num+'</div>'
       + '<h2 class="chapter-title">'+ch.title+'</h2>'
-      + '<div class="chapter-caption">'+ch.caption+'</div></div>'
+      + '<div class="chapter-caption">'+ch.caption+'</div>'
+      + '<div class="spectral-line chapter-progress" data-line-mode="'+ch.mode+'" style="margin-top:16px"></div></div>'
       + '<div class="chapter-body">' + ch.blocks.map(renderBlock).join('') + '</div>'
       + '</div>';
     panel.querySelector('.chapter-close').addEventListener('click', closeChapter);
