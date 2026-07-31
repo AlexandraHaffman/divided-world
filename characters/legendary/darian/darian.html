@@ -113,6 +113,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   clip-path:polygon(0 0,100% 0,100% 84%,82% 100%,0 100%);
   box-shadow:0 40px 90px -40px rgba(0,0,0,.85)}
 .hero-visual .img-wrap{position:absolute;inset:0}
+/* фото горизонтальное (16:9), рамка вертикальная — cover показывает лишь ~40% ширины
+   кадра. Дариан стоит у правого края фотографии, поэтому окно показа обязано быть
+   прижато вправо: с дефолтным center его лицо срезается правой кромкой рамки. */
+.hero-visual .img-wrap img{object-position:right center}
 .hero-visual::after{content:'';position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(200deg,rgba(7,5,10,.05) 0%,transparent 40%,rgba(7,5,10,.55) 78%,rgba(7,5,10,.85) 100%)}
 .hero-alias{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:rgba(var(--amber-br),1);
