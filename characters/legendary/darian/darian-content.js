@@ -26,15 +26,13 @@ const TEX = {
   paper: "darian-texture-archive-paper.jpg",
   brass: "darian-texture-blackened-brass.jpg",
   lens: "darian-texture-damaged-lens.jpg",
-  crystal: "darian-texture-dark-crystal.jpg",
 };
 
 /* ── АРХИТЕКТУРА (рамки резиденции, применяются дозированно) ── */
 const FRAME_WIDE = "darian-frame-wide.png";
 const FRAME_VERTICAL = "darian-frame-vertical.png";
 
-/* ── СПЕКТРАЛЬНЫЙ ДИСК И ЛИНИИ ── */
-const DISC_IMG = "darian-spectral-disc.png";
+/* ── СПЕКТРАЛЬНЫЕ ЛИНИИ (тонкий разделитель внутри открытой главы) ── */
 const SPECTRUM_LINES = {
   normal: "darian-spectrum-line-base.png",
   dark: "darian-spectrum-line-dark.png",
@@ -59,12 +57,12 @@ const CHAPTERS = [
     ],
   },
   {
-    id: "spectrum", num: "01", title: "СПЕКТР", kind: "c", mode: "spectrum",
+    id: "spectrum", num: "01", title: "СПЕКТР", kind: "b", mode: "normal",
     caption: "Свет и тьма по его воле",
     hero: { src: "darian-spectrum-prism.jpg", alt: "Призма, разлагающая свет на спектр", label: "нет сигнала · призма" },
     blocks: [
       { t: "meta", text: "Мета-сила · 10 / 10" },
-      { t: "lede", text: "Диск слева — не иллюстрация. Это тот же инструмент, которым Дариан управляет небом над Куньмином: четыре состояния одного и того же спектра, между которыми он переключается по прихоти." },
+      { t: "lede", text: "Фон этой страницы сам плывёт между четырьмя состояниями Куньмина — тем же спектром, которым Дариан управляет небом над городом, переключаясь по прихоти." },
       { t: "p", text: "Управление солнечным светом и спектрами. Создание температурных и световых аномалий — от гипотермии до ожогов в пределах одного помещения. Психологическая дезориентация через визуальные искажения: хаотичный спектр лишает зрения и рассудка быстрее, чем боль." },
       { t: "p", text: "Манипуляция ионосферой позволяет ему держать над целым городом искусственную тьму годами — не как эффект, а как климат." },
       { t: "p", text: "С детства он страдал тяжёлой светочувствительностью и учился приглушать солнечные лучи, чтобы выжить. Разрушительная сила выросла из способа не умереть от собственного тела." },
@@ -91,7 +89,7 @@ const CHAPTERS = [
   {
     id: "quartet", num: "03", title: "КВАРТЕТ", kind: "d", mode: "normal",
     caption: "Голос, который всегда слушают",
-    hero: { src: "darian-quartet-early.jpg", alt: "Ранний Квартет Ракшасов", label: "нет сигнала · квартет" },
+    hero: { src: "darian-quartet-early.jpg", alt: "Ранний Квартет Ракшасов", label: "нет сигнала · квартет", pos: "center 22%" },
     blocks: [
       { t: "meta", text: "Дариан · Эмиль · Амели · Валентина" },
       { t: "lede", text: "«Решающим голосом» в Квартете Дариан стал не по уму, а по остаточному принципу: он старший из четверых и единственный, кого не поглотил собственный кризис." },
@@ -161,7 +159,7 @@ const CHAPTERS = [
     ],
   },
   {
-    id: "aging", num: "09", title: "СТАРЕНИЕ", kind: "c", mode: "cold",
+    id: "aging", num: "09", title: "СТАРЕНИЕ", kind: "b", mode: "cold",
     caption: "Единственный, кто стареет по-настоящему",
     hero: { src: "darian-aging-lens.jpg", alt: "Повреждённые защитные очки", label: "нет сигнала · очки" },
     blocks: [
@@ -185,6 +183,4 @@ const CHAPTERS = [
   },
 ];
 
-const AMBIENT_IMG = "darian-section-ambient.jpg"; // подложка за диском на хабе
-
-if (typeof module !== "undefined") module.exports = { ENV, HERO_IMG, TEX, FRAME_WIDE, FRAME_VERTICAL, DISC_IMG, SPECTRUM_LINES, AMBIENT_IMG, CHAPTERS };
+if (typeof module !== "undefined") module.exports = { ENV, HERO_IMG, TEX, FRAME_WIDE, FRAME_VERTICAL, SPECTRUM_LINES, CHAPTERS };

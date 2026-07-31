@@ -47,10 +47,6 @@ body[data-mode="heat"] #envHeat{opacity:1}
 body[data-mode="dark"] #envBase,
 body[data-mode="cold"] #envBase,
 body[data-mode="heat"] #envBase{opacity:0}
-body[data-mode="spectrum"] #envBase{opacity:1}
-body[data-mode="spectrum"] #envDark{opacity:.4}
-body[data-mode="spectrum"] #envCold{opacity:.25}
-body[data-mode="spectrum"] #envHeat{opacity:.3}
 
 #envShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,3,8,.35) 0%,rgba(5,3,8,.55) 55%,rgba(5,3,8,.88) 100%)}
 
@@ -63,10 +59,6 @@ body[data-mode="cold"] #envSpectral{opacity:.55;
   background:radial-gradient(110% 75% at 50% 10%,rgba(var(--cold),.20),transparent 60%)}
 body[data-mode="heat"] #envSpectral{opacity:.6;
   background:radial-gradient(110% 80% at 50% 100%,rgba(var(--red),.24),transparent 62%)}
-body[data-mode="spectrum"] #envSpectral{opacity:.5;
-  background:conic-gradient(from 0deg,rgba(var(--violet),.18),rgba(var(--cold),.16),rgba(var(--amber),.16),rgba(var(--red),.18),rgba(var(--violet),.18));
-  animation:spectrum-hue 22s linear infinite}
-@keyframes spectrum-hue{to{filter:hue-rotate(360deg)}}
 
 /* ── атмосферные эффекты: холод / жара ── */
 #envAtmo{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity 1200ms ease}
@@ -95,7 +87,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   background-size:cover;background-position:center;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border:1px solid rgba(var(--brass),.16)}
 
-/* ── спектральная линия: настоящие ассеты по режиму, с CSS-градиентом как основой ── */
+/* ── спектральная линия: остаётся только как тонкий разделитель внутри открытой главы ── */
 .spectral-line{height:3px;border-radius:2px;background-size:220% 100%;background-position-x:0%;background-repeat:repeat-x;
   background-image:linear-gradient(90deg,rgba(var(--violet),.8),rgba(var(--cold),.8),rgba(var(--amber),.8),rgba(var(--red),.8),rgba(var(--violet),.8));
   animation:spectrum-drift 18s linear infinite;opacity:.85}
@@ -113,8 +105,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
 /* ── герой ── */
 .hero{position:relative;display:flex;flex-direction:column;gap:18px}
+/* верхний и левый край держим прямыми (без диагонального среза) — асимметрия только
+   в нижнем правом углу, так лицо в кадре никогда не окажется рядом со срезом маски */
 .hero-visual{position:relative;width:74%;max-width:340px;aspect-ratio:3/4;align-self:flex-end;
-  clip-path:polygon(9% 3%,97% 0%,100% 90%,68% 100%,0% 96%,0% 16%);
+  clip-path:polygon(0 0,100% 0,100% 84%,82% 100%,0 100%);
   box-shadow:0 40px 90px -40px rgba(0,0,0,.85)}
 .hero-visual .img-wrap{position:absolute;inset:0}
 .hero-visual::after{content:'';position:absolute;inset:0;pointer-events:none;
@@ -138,51 +132,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   background:rgba(7,5,10,.55);color:rgba(var(--amber-br),1);font-size:14px;
   display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);flex:none}
 
-/* ── диск ── */
-.disc-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px auto 6px}
-/* подложка привязана к самому диску (150px), а не к disc-wrap (он на всю ширину колонки) —
-   иначе inset:-30px растягивал невидимый фон на 30px за пределы вьюпорта и давал
-   горизонтальный скролл на телефоне */
-.disc::before{content:'';position:absolute;inset:-30px;z-index:-1;border-radius:50%;opacity:.35;
-  background-image:radial-gradient(circle,rgba(7,5,10,0) 40%,rgba(7,5,10,.9) 72%),url('darian-section-ambient.jpg');
-  background-size:cover;background-position:center;pointer-events:none}
-.disc{position:relative;width:150px;aspect-ratio:1;border-radius:50%;
-  background-image:url('darian-spectral-disc.png');background-size:cover;background-position:center;
-  border:1px solid rgba(var(--brass),.5);box-shadow:0 0 0 6px rgba(5,5,8,.5),0 18px 50px -20px rgba(0,0,0,.8)}
-.disc-ring{position:absolute;inset:-9px;border-radius:50%;border:1px dashed rgba(var(--brass),.35);
-  animation:disc-spin 22s linear infinite}
-@keyframes disc-spin{to{transform:rotate(360deg)}}
-.disc-wedges{position:absolute;inset:0;border-radius:50%;overflow:hidden}
-.wedge{position:absolute;inset:0;display:flex;color:rgba(255,255,255,.85);mix-blend-mode:color;
-  font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
-  opacity:.5;transition:opacity .3s}
-.wedge span{mix-blend-mode:normal;text-shadow:0 1px 3px rgba(0,0,0,.8)}
-.wedge.on{opacity:.92}
-.wedge[data-mode="normal"]{clip-path:polygon(50% 50%,0% 0%,100% 0%);background:radial-gradient(circle at 50% 20%,rgba(var(--white),.32),rgba(20,18,22,.9));
-  align-items:flex-start;justify-content:center;padding-top:12px}
-.wedge[data-mode="heat"]{clip-path:polygon(50% 50%,100% 0%,100% 100%);background:radial-gradient(circle at 80% 50%,rgba(var(--red-br),.4),rgba(30,10,8,.9));
-  align-items:center;justify-content:flex-end;padding-right:9px}
-.wedge[data-mode="dark"]{clip-path:polygon(50% 50%,100% 100%,0% 100%);background:radial-gradient(circle at 50% 80%,rgba(var(--violet-br),.35),rgba(8,6,14,.94));
-  align-items:flex-end;justify-content:center;padding-bottom:12px}
-.wedge[data-mode="cold"]{clip-path:polygon(50% 50%,0% 100%,0% 0%);background:radial-gradient(circle at 20% 50%,rgba(var(--cold-br),.4),rgba(10,16,24,.9));
-  align-items:center;justify-content:flex-start;padding-left:9px}
-.disc-hub{position:absolute;left:50%;top:50%;width:56%;height:56%;transform:translate(-50%,-50%);
-  border-radius:50%;border:1px solid rgba(var(--brass),.6);
-  background-image:conic-gradient(rgba(var(--violet),.55),rgba(var(--cold),.55),rgba(var(--amber),.55),rgba(var(--red),.55),rgba(var(--violet),.55)),url('darian-texture-dark-crystal.jpg');
-  background-size:100% 100%,cover;background-blend-mode:normal,luminosity;background-position:center;
-  display:flex;align-items:center;justify-content:center;text-align:center;
-  font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);
-  opacity:.7;transition:opacity .3s,box-shadow .3s}
-.disc-hub.on{opacity:1;box-shadow:0 0 22px rgba(var(--amber-br),.5)}
-.disc-mode-label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-  color:rgba(var(--amber-br),1)}
-
-.disc-list{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-.disc-list button{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(233,228,222,.6);border:1px solid rgba(var(--brass),.24);padding:7px 12px;border-radius:14px;
-  transition:.2s}
-.disc-list button.on{color:#0c0a0e;background:rgba(var(--amber-br),.9);border-color:transparent}
-
 /* ══════════════════════════════════════════
    ПРЕВЬЮ ГЛАВ — журнальная сетка
    ══════════════════════════════════════════ */
@@ -203,21 +152,9 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 .tile-body{position:relative;z-index:2;padding:14px 14px 16px;margin-top:auto}
 .tile-title{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.02em;color:#f2ede6}
 .tile-caption{font-family:var(--sans);font-size:11.5px;color:rgba(233,228,222,.62);margin-top:3px;line-height:1.4}
-.tile-line{position:absolute;left:14px;right:14px;bottom:8px;z-index:2}
 
 .tile.k-a{min-height:300px;display:flex;flex-direction:column;justify-content:flex-end}
 .tile.k-b{min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
-.tile.k-c{width:150px;height:150px;border-radius:50%;align-self:center;display:flex;
-  align-items:center;justify-content:center;background:radial-gradient(circle,rgba(var(--violet),.22),rgba(8,6,12,.95));
-  border-color:rgba(var(--brass),.3)}
-.tile.k-c .tile-scrim,.tile.k-c .tile-num{display:none}
-/* margin-top:auto унаследован от базового .tile-body (там он прижимает подпись к низу
-   прямоугольных карточек) — во flex-row круглой карточки те же auto-margin вместо этого
-   толкают подпись к нижнему краю круга, где он уже сужается, и текст обрезает маска.
-   Обнуляем, чтобы align-items:center реально центрировал подпись по кругу. */
-.tile.k-c .tile-body{padding:0 22px;margin-top:0;text-align:center;max-width:100%}
-.tile.k-c .tile-title{font-size:15px}
-.tile.k-c .tile-caption{display:none}
 .tile.k-d{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
 .tile.k-e{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
 .tile.k-e::before{content:'';position:absolute;inset:0;z-index:1;opacity:.5;
@@ -295,7 +232,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.15s!important}
-  .disc-ring{animation:none}
 }
 
 /* ══════════════════════════════════════════
@@ -306,7 +242,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   .hero-visual{width:56%}
   .journal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .tile.k-a,.tile.k-d,.tile.k-e{grid-column:span 2}
-  .tile.k-c{grid-column:span 1;justify-self:center}
   .chapter-body{padding:26px 30px 0}
   .timeline{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;margin:6px -30px 4px;padding-left:30px;padding-right:30px}
   .tl-item{flex:0 0 320px;scroll-snap-align:start}
@@ -330,18 +265,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   .hero-lede{font-size:19px}
   .hero-name{font-size:clamp(52px,6vw,76px)}
 
-  /* диск больше не наложен на портрет (наполовину на фото, наполовину в обрезанном
-     углу — читалось как случайная нестыковка, а не решение). Стоит в потоке под
-     текстом, полностью в стороне от фото — лицо ничем не может перекрыть. */
-  .disc-wrap{margin:36px 0 0;align-items:flex-start}
-  .disc-list{display:none}
-
   .journal{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:54px;gap:18px;
     margin-top:56px}
   .tile.k-a{grid-column:span 4;grid-row:span 6;min-height:0}
   .tile.k-b{grid-column:span 4;grid-row:span 3;min-height:0}
-  .tile.k-c{grid-column:span 4;grid-row:span 4;width:100%;height:auto;aspect-ratio:1;max-width:190px;
-    align-self:center;justify-self:center}
   .tile.k-d{grid-column:span 8;grid-row:span 4;min-height:0}
   .tile.k-e{grid-column:span 4;grid-row:span 4;min-height:0}
   .tile-title{font-size:22px}
@@ -395,27 +322,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
         <button class="sound-btn" id="soundBtn" aria-label="Звук" title="Звук">🔇</button>
         <button class="btn-toc" id="tocBtn">Открыть досье</button>
       </div>
-
-      <div class="disc-wrap" id="discWrapMobile">
-        <div class="disc" id="disc">
-          <div class="disc-ring"></div>
-          <div class="disc-wedges">
-            <button class="wedge on" data-mode="normal"><span>Свет</span></button>
-            <button class="wedge" data-mode="heat"><span>Жара</span></button>
-            <button class="wedge" data-mode="dark"><span>Тьма</span></button>
-            <button class="wedge" data-mode="cold"><span>Холод</span></button>
-          </div>
-          <button class="disc-hub" data-mode="spectrum">СПЕКТР</button>
-        </div>
-        <div class="disc-mode-label" id="discModeLabel">Обычный свет</div>
-        <div class="disc-list">
-          <button data-mode="normal" class="on">Свет</button>
-          <button data-mode="dark">Тьма</button>
-          <button data-mode="cold">Холод</button>
-          <button data-mode="heat">Жара</button>
-          <button data-mode="spectrum">Спектр</button>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -458,31 +364,22 @@ body[data-mode="heat"] #envAtmo{opacity:1;
     if(img.complete && img.naturalWidth===0) hide();
   });
 
-  /* ── СПЕКТРАЛЬНЫЙ РЕЖИМ ── */
-  const MODE_LABEL = {normal:'Обычный свет', dark:'Тьма', cold:'Холод', heat:'Жара', spectrum:'Полный спектр'};
-  const discModeLabel = document.getElementById('discModeLabel');
+  /* ── СПЕКТРАЛЬНЫЙ РЕЖИМ: без ручного управления — фон сам переключается между
+     четырьмя состояниями Куньмина. Открытая глава может задать свой режим (например,
+     «Куньмин» — тьму), это не «кнопка», а часть содержания главы. ── */
   let mode = 'normal';
   function setMode(m, opts){
     opts = opts || {};
     mode = m;
     body.dataset.mode = m;
-    document.querySelectorAll('[data-mode]').forEach(el=>{
-      if(!el.classList) return;
-      const isControl = el.classList.contains('wedge') || el.classList.contains('disc-hub') || el.closest('.disc-list');
-      if(isControl) el.classList.toggle('on', el.dataset.mode===m);
-    });
-    if(discModeLabel) discModeLabel.textContent = MODE_LABEL[m] || '';
     document.documentElement.style.setProperty('--mode-c',
-      m==='dark' ? '124,58,190' : m==='cold' ? '120,178,232' : m==='heat' ? '190,80,60' : m==='spectrum' ? '198,164,92' : '181,138,84');
+      m==='dark' ? '124,58,190' : m==='cold' ? '120,178,232' : m==='heat' ? '190,80,60' : '181,138,84');
     if(!opts.silent && window.switchAudioForMode) window.switchAudioForMode(m);
   }
-  document.querySelectorAll('.wedge, .disc-hub, .disc-list button').forEach(el=>{
-    el.addEventListener('click', ()=>{ setMode(el.dataset.mode); scheduleAuto(); });
-  });
   setMode('normal', {silent:true});
 
-  /* ── автопереключение спектра: каждые 5с случайный режим, пока не открыта глава ── */
-  const AUTO_MODES = ['normal','dark','cold','heat','spectrum'];
+  /* ── автопереключение фона: каждые 5с случайный режим, пока не открыта глава ── */
+  const AUTO_MODES = ['normal','dark','cold','heat'];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let autoTimer = null;
   function pickNextMode(){
@@ -510,7 +407,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
       + (ch.hero ? '<div class="lens-hover"></div><div class="tile-scrim"></div>' : '')
       + '<div class="tile-num">'+ch.num+'</div>'
       + '<div class="tile-body"><div class="tile-title">'+ch.title+'</div><div class="tile-caption">'+ch.caption+'</div></div>'
-      + '<div class="tile-line spectral-line" data-line-mode="'+ch.mode+'"></div>'
       + '</button>';
   }).join('');
   journal.innerHTML = tilesHTML;
