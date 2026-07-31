@@ -154,7 +154,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 .tile-caption{font-family:var(--sans);font-size:11.5px;color:rgba(233,228,222,.62);margin-top:3px;line-height:1.4}
 
 .tile.k-a{min-height:300px;display:flex;flex-direction:column;justify-content:flex-end}
-.tile.k-b{min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+/* 150px raньше давал aspect~2.6 против фото ~1.5 — на мобильном приходилось резать
+   ~42% высоты, а у героев в кадре и так нет запаса над головой (см. object-position
+   ниже). 190px снижает необходимую обрезку до ~26%. */
+.tile.k-b{min-height:190px;display:flex;flex-direction:column;justify-content:flex-end}
 .tile.k-d{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
 .tile.k-e{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
 .tile.k-e::before{content:'';position:absolute;inset:0;z-index:1;opacity:.5;
