@@ -28,7 +28,7 @@
   --tbar:64px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--bg);color:#e9e4de;font-family:var(--sans);font-weight:300;
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;
   min-height:100svh}
@@ -140,7 +140,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
 /* ── диск ── */
 .disc-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px auto 6px}
-.disc-wrap::before{content:'';position:absolute;inset:-30px;z-index:-1;border-radius:50%;opacity:.35;
+/* подложка привязана к самому диску (150px), а не к disc-wrap (он на всю ширину колонки) —
+   иначе inset:-30px растягивал невидимый фон на 30px за пределы вьюпорта и давал
+   горизонтальный скролл на телефоне */
+.disc::before{content:'';position:absolute;inset:-30px;z-index:-1;border-radius:50%;opacity:.35;
   background-image:radial-gradient(circle,rgba(7,5,10,0) 40%,rgba(7,5,10,.9) 72%),url('darian-section-ambient.jpg');
   background-size:cover;background-position:center;pointer-events:none}
 .disc{position:relative;width:150px;aspect-ratio:1;border-radius:50%;
@@ -208,7 +211,11 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   align-items:center;justify-content:center;background:radial-gradient(circle,rgba(var(--violet),.22),rgba(8,6,12,.95));
   border-color:rgba(var(--brass),.3)}
 .tile.k-c .tile-scrim,.tile.k-c .tile-num{display:none}
-.tile.k-c .tile-body{padding:0;text-align:center}
+/* margin-top:auto унаследован от базового .tile-body (там он прижимает подпись к низу
+   прямоугольных карточек) — во flex-row круглой карточки те же auto-margin вместо этого
+   толкают подпись к нижнему краю круга, где он уже сужается, и текст обрезает маска.
+   Обнуляем, чтобы align-items:center реально центрировал подпись по кругу. */
+.tile.k-c .tile-body{padding:0 22px;margin-top:0;text-align:center;max-width:100%}
 .tile.k-c .tile-title{font-size:15px}
 .tile.k-c .tile-caption{display:none}
 .tile.k-d{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
@@ -470,9 +477,27 @@ body[data-mode="heat"] #envAtmo{opacity:1;
     if(!opts.silent && window.switchAudioForMode) window.switchAudioForMode(m);
   }
   document.querySelectorAll('.wedge, .disc-hub, .disc-list button').forEach(el=>{
-    el.addEventListener('click', ()=>setMode(el.dataset.mode));
+    el.addEventListener('click', ()=>{ setMode(el.dataset.mode); scheduleAuto(); });
   });
   setMode('normal', {silent:true});
+
+  /* ── автопереключение спектра: каждые 5с случайный режим, пока не открыта глава ── */
+  const AUTO_MODES = ['normal','dark','cold','heat','spectrum'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let autoTimer = null;
+  function pickNextMode(){
+    const pool = AUTO_MODES.filter(m=>m!==mode);
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  function scheduleAuto(){
+    clearTimeout(autoTimer);
+    if(reduceMotion) return;
+    autoTimer = setTimeout(()=>{
+      if(!activeChapter && !document.hidden) setMode(pickNextMode());
+      scheduleAuto();
+    }, 5000);
+  }
+  scheduleAuto();
 
   /* ── ЖУРНАЛЬНЫЕ ПРЕВЬЮ ГЛАВ ── */
   const journal = document.getElementById('journal');
@@ -565,6 +590,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
     navChapterLabel.textContent = 'Хаб · Дариан Сорель';
     navClose.hidden = true;
     setTimeout(()=>{ if(!activeChapter) chapterLayer.innerHTML=''; }, 500);
+    scheduleAuto();
   }
   navClose.addEventListener('click', closeChapter);
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeChapter(); });
