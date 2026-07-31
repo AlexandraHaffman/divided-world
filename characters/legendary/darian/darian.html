@@ -255,6 +255,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   line-height:1.5;border-left:2px solid rgba(var(--amber),.6);padding-left:16px;margin:20px 0}
 .block-image{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;margin:18px 0;
   border:1px solid rgba(var(--brass),.2)}
+.block-image--portrait{aspect-ratio:4/5;max-width:420px;margin-left:auto;margin-right:auto}
 
 /* ── биография: временная лента ── */
 .timeline{display:flex;flex-direction:column;gap:18px;margin:6px 0 4px}
@@ -327,12 +328,12 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
   .journal{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:54px;gap:18px;
     margin-top:56px}
-  .tile.k-a{grid-column:span 3;grid-row:span 6;min-height:0}
-  .tile.k-b{grid-column:span 5;grid-row:span 3;min-height:0}
-  .tile.k-c{grid-column:span 3;grid-row:span 3;width:100%;height:auto;aspect-ratio:1;max-width:190px;
+  .tile.k-a{grid-column:span 4;grid-row:span 6;min-height:0}
+  .tile.k-b{grid-column:span 4;grid-row:span 3;min-height:0}
+  .tile.k-c{grid-column:span 4;grid-row:span 4;width:100%;height:auto;aspect-ratio:1;max-width:190px;
     align-self:center;justify-self:center}
-  .tile.k-d{grid-column:span 7;grid-row:span 4;min-height:0}
-  .tile.k-e{grid-column:span 5;grid-row:span 4;min-height:0}
+  .tile.k-d{grid-column:span 8;grid-row:span 4;min-height:0}
+  .tile.k-e{grid-column:span 4;grid-row:span 4;min-height:0}
   .tile-title{font-size:22px}
 
   .chapter-frame{max-width:1100px;margin:0 auto}
@@ -423,9 +424,9 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   const body = document.body;
 
   /* ── обёртка изображений с fallback ── */
-  function imgWrap(src, alt, label, extraClass){
+  function imgWrap(src, alt, label, extraClass, pos){
     return '<div class="img-wrap'+(extraClass?' '+extraClass:'')+'" data-label="'+(label||'нет сигнала')+'">'
-      +'<img src="'+src+'" alt="'+(alt||'')+'" loading="lazy"></div>';
+      +'<img src="'+src+'" alt="'+(alt||'')+'" loading="lazy"'+(pos?' style="object-position:'+pos+'"':'')+'></div>';
   }
   function bindImgFallback(root){
     (root||document).querySelectorAll('.img-wrap').forEach(wrap=>{
@@ -470,7 +471,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   /* ── ЖУРНАЛЬНЫЕ ПРЕВЬЮ ГЛАВ ── */
   const journal = document.getElementById('journal');
   const tilesHTML = CHAPTERS.map(ch=>{
-    const media = ch.hero ? imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label) : '';
+    const media = ch.hero ? imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label, null, ch.hero.pos) : '';
     return '<button class="tile k-'+ch.kind+'" data-id="'+ch.id+'" aria-label="Глава '+ch.num+'. '+ch.title+'">'
       + media
       + (ch.hero ? '<div class="lens-hover"></div><div class="tile-scrim"></div>' : '')
@@ -491,11 +492,11 @@ body[data-mode="heat"] #envAtmo{opacity:1;
       case 'lede': return '<p class="block-lede">'+b.text+'</p>';
       case 'p': return '<p class="block-p">'+b.text+'</p>';
       case 'quote': return '<div class="block-quote">'+b.text+'</div>';
-      case 'image': return '<div class="block-image">'+imgWrap(b.src,b.alt,b.label)+'</div>';
+      case 'image': return '<div class="block-image'+(b.orient==='portrait'?' block-image--portrait':'')+'">'+imgWrap(b.src,b.alt,b.label,null,b.pos)+'</div>';
       case 'timeline':
         return '<div class="timeline">' + b.items.map(it=>
           '<div class="tl-item">'
-          + (it.img ? imgWrap(it.img.src, it.img.alt, it.img.label) : '')
+          + (it.img ? imgWrap(it.img.src, it.img.alt, it.img.label, null, it.img.pos) : '')
           + '<div class="tl-body tx-paper"><div class="tl-date">'+it.date+'</div><div class="tl-title">'+it.title+'</div><div class="tl-text">'+it.text+'</div></div>'
           + '</div>'
         ).join('') + '</div>';
@@ -511,7 +512,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
   function buildChapterPanel(ch){
     const heroHTML = ch.hero
-      ? '<div class="chapter-hero">'+imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label)+'</div>'
+      ? '<div class="chapter-hero">'+imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label, null, ch.hero.pos)+'</div>'
       : '<div class="chapter-hero no-img"></div>';
     const panel = document.createElement('div');
     panel.className = 'chapter-panel glass-panel';
