@@ -106,8 +106,10 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 /* ── герой ── */
 .hero{position:relative;display:flex;flex-direction:column;gap:18px}
 /* верхний и левый край держим прямыми (без диагонального среза) — асимметрия только
-   в нижнем правом углу, так лицо в кадре никогда не окажется рядом со срезом маски */
-.hero-visual{position:relative;width:74%;max-width:340px;aspect-ratio:3/4;align-self:flex-end;
+   в нижнем правом углу, так лицо в кадре никогда не окажется рядом со срезом маски.
+   Ширина почти во весь экран: на 74% слева оставалась пустая чёрная полоса во всю
+   высоту портрета — не асимметрия, а дыра в композиции. */
+.hero-visual{position:relative;width:92%;max-width:380px;aspect-ratio:3/4;align-self:flex-end;
   clip-path:polygon(0 0,100% 0,100% 84%,82% 100%,0 100%);
   box-shadow:0 40px 90px -40px rgba(0,0,0,.85)}
 .hero-visual .img-wrap{position:absolute;inset:0}
@@ -242,7 +244,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
    ══════════════════════════════════════════ */
 @media(min-width:601px) and (max-width:900px){
   #hub{max-width:680px;margin:0 auto;padding-top:72px}
-  .hero-visual{width:56%}
+  .hero-visual{width:78%;max-width:420px}
   .journal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .tile.k-a,.tile.k-d,.tile.k-e{grid-column:span 2}
   .chapter-body{padding:26px 30px 0}
