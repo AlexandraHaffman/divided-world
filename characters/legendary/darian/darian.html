@@ -255,7 +255,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   line-height:1.5;border-left:2px solid rgba(var(--amber),.6);padding-left:16px;margin:20px 0}
 .block-image{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;margin:18px 0;
   border:1px solid rgba(var(--brass),.2)}
-.block-image--portrait{aspect-ratio:4/5;max-width:420px;margin-left:auto;margin-right:auto}
+.block-image--portrait{aspect-ratio:600/1402;max-width:340px;margin-left:auto;margin-right:auto}
 
 /* ── биография: временная лента ── */
 .timeline{display:flex;flex-direction:column;gap:18px;margin:6px 0 4px}
@@ -338,6 +338,9 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
   .chapter-frame{max-width:1100px;margin:0 auto}
   .chapter-hero{min-height:56vh}
+  /* портретный кадр (Кавита): полноширинный герой, но не растянутый до панорамного
+     кадра — иначе от вертикального фото остаётся только тонкая полоса по центру */
+  .chapter-panel[data-id="kavita"] .chapter-hero{min-height:0;aspect-ratio:4/3}
   .chapter-body{padding:34px 20px 0}
   .block-lede{font-size:22px}
   .block-p{font-size:16px}
