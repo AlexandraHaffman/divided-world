@@ -437,9 +437,9 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   const body = document.body;
 
   /* ── обёртка изображений с fallback ── */
-  function imgWrap(src, alt, label, extraClass, pos){
+  function imgWrap(src, alt, label, extraClass, pos, eager){
     return '<div class="img-wrap'+(extraClass?' '+extraClass:'')+'" data-label="'+(label||'нет сигнала')+'">'
-      +'<img src="'+src+'" alt="'+(alt||'')+'" loading="lazy"'+(pos?' style="object-position:'+pos+'"':'')+'></div>';
+      +'<img src="'+src+'" alt="'+(alt||'')+'" loading="'+(eager?'eager':'lazy')+'"'+(pos?' style="object-position:'+pos+'"':'')+'></div>';
   }
   function bindImgFallback(root){
     (root||document).querySelectorAll('.img-wrap').forEach(wrap=>{
@@ -502,7 +502,9 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   /* ── ЖУРНАЛЬНЫЕ ПРЕВЬЮ ГЛАВ ── */
   const journal = document.getElementById('journal');
   const tilesHTML = CHAPTERS.map(ch=>{
-    const media = ch.hero ? imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label, null, ch.hero.pos) : '';
+    /* превью глав — часть хаба, а не глубокого контента; грузим сразу (не lazy), чтобы
+       не оставались пустыми на медленной сети или в инструментах полноэкранного скрина */
+    const media = ch.hero ? imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label, null, ch.hero.pos, true) : '';
     return '<button class="tile k-'+ch.kind+'" data-id="'+ch.id+'" aria-label="Глава '+ch.num+'. '+ch.title+'">'
       + media
       + (ch.hero ? '<div class="lens-hover"></div><div class="tile-scrim"></div>' : '')
