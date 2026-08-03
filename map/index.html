@@ -833,12 +833,25 @@ function buildTexture(selectedKey){
   for (const ring of LAND_UW){
     for (const dx of OFFS){ tracePath(ring, dx); c.fillStyle = '#152219'; c.fill(); }
   }
-  // Свечение береговой линии
+  // Свечение береговой линии — вместо ctx.shadowBlur (дорогой программный
+  // блюр, особенно на текстуре 8k) рисуем несколько обводок нарастающей
+  // толщины и убывающей прозрачности. Визуально почти неотличимо, но на
+  // порядок дешевле, и это ещё разовая (не покадровая) операция.
   c.save();
+  c.strokeStyle = 'rgba(90,190,230,0.55)';
+  c.globalAlpha = 0.12;
+  c.lineWidth = 6 * k;
+  for (const ring of LAND_UW){
+    for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+  }
+  c.globalAlpha = 0.22;
+  c.lineWidth = 3 * k;
+  for (const ring of LAND_UW){
+    for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+  }
   c.strokeStyle = 'rgba(120,205,180,0.30)';
+  c.globalAlpha = 1;
   c.lineWidth = 1.6 * k;
-  c.shadowColor = 'rgba(90,190,230,0.55)';
-  c.shadowBlur = 7 * k;
   for (const ring of LAND_UW){
     for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
   }
@@ -859,12 +872,23 @@ function buildTexture(selectedKey){
   for (const f of FACTIONS){
     if (!f.polysUW.length) continue;
     const sel = f.key === selectedKey;
+    const baseA = sel ? 1 : (hasSel ? 0.55 : 0.9);
     c.save();
     c.strokeStyle = f.col;
-    c.globalAlpha = sel ? 1 : (hasSel ? 0.55 : 0.9);
+    // тот же слоёный глоу вместо shadowBlur — здесь раньше был самый большой
+    // радиус блюра (до 30*k), т.е. самая дорогая операция во всём приложении
+    c.globalAlpha = baseA * 0.10;
+    c.lineWidth = (sel ? 22 : 11) * k;
+    for (const ring of f.polysUW){
+      for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+    }
+    c.globalAlpha = baseA * 0.22;
+    c.lineWidth = (sel ? 11 : 6) * k;
+    for (const ring of f.polysUW){
+      for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+    }
+    c.globalAlpha = baseA;
     c.lineWidth = (sel ? 6 : 3) * k;
-    c.shadowColor = f.col;
-    c.shadowBlur = (sel ? 30 : 15) * k;
     for (const ring of f.polysUW){
       for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
     }
@@ -1290,6 +1314,35 @@ function labelFits(x, y, w, h){
   return true;
 }
 
+// ── дешёвая замена ctx.shadowBlur ──
+// Программный блюр Canvas2D — один из главных пожирателей кадров, особенно
+// на слабом/встроенном GPU: каждый shadowBlur — это отдельный проход растра
+// и свёртки, а тут он вызывался на КАЖДЫЙ маркер/подпись КАЖДЫЙ кадр.
+// Вместо блюра — заранее просчитанный (один раз на цвет) спрайт с радиальным
+// градиентом: дальше это просто дешёвый drawImage.
+const glowCache = new Map();
+function glowSprite(col){
+  let s = glowCache.get(col);
+  if (s) return s;
+  const SZ = 64;
+  s = document.createElement('canvas');
+  s.width = s.height = SZ;
+  const g = s.getContext('2d');
+  const grad = g.createRadialGradient(SZ/2, SZ/2, 0, SZ/2, SZ/2, SZ/2);
+  grad.addColorStop(0, col + 'ff');
+  grad.addColorStop(0.35, col + '55');
+  grad.addColorStop(1, col + '00');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, SZ, SZ);
+  glowCache.set(col, s);
+  return s;
+}
+function drawGlow(x, y, r, col, alpha){
+  if (alpha <= 0.01 || r <= 0) return;
+  octx.globalAlpha = alpha;
+  octx.drawImage(glowSprite(col), x - r, y - r, r * 2, r * 2);
+}
+
 // подпись с подложкой и защитой от наездов; важные подписи рисуются первыми
 function drawLabel(name, x, y, offY, col, hot, alpha, big){
   if (alpha <= 0.04) return;
@@ -1306,28 +1359,25 @@ function drawLabel(name, x, y, offY, col, hot, alpha, big){
   octx.fillRect(x - tw/2 - 4, py - 2, tw + 8, fs + 5);
   octx.globalAlpha = alpha;
   octx.fillStyle = hot ? '#ffffff' : col;
-  octx.shadowColor = '#000';
-  octx.shadowBlur = 4;
   octx.fillText(name, x, py);
   octx.restore();
 }
 
 // маркеры по типам — портировано из Obsidian-движка
+// (свечение — через glowSprite()/drawGlow(), не через ctx.shadowBlur: см. комментарий выше)
 function drawTypedMarker(type, x, y, sz, col, hot, t, seed, alpha){
   octx.save();
   octx.globalAlpha = alpha;
-  octx.shadowColor = col;
-  octx.shadowBlur = hot ? 20 : 8;
   const ring = (r, a, lw) => {
     octx.globalAlpha = a * alpha;
     octx.strokeStyle = col;
     octx.lineWidth = lw;
     octx.beginPath(); octx.arc(x, y, r, 0, Math.PI * 2); octx.stroke();
   };
-  const core = (a, blur) => {
+  const core = (a, glowR) => {
+    drawGlow(x, y, sz + glowR, col, a * alpha * 0.85);
     octx.globalAlpha = a * alpha;
     octx.fillStyle = col;
-    octx.shadowBlur = blur;
     octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
   };
   if (type === 'capital'){
@@ -1343,16 +1393,15 @@ function drawTypedMarker(type, x, y, sz, col, hot, t, seed, alpha){
   } else if (type === 'frontline'){
     const pulse = .5 + .5 * Math.sin(t * 2.2 + seed);
     const fl = '#ff3322';
-    octx.shadowColor = '#ff5500';
     octx.strokeStyle = fl;
     octx.lineWidth = hot ? 1.4 : .8;
     octx.globalAlpha = (.15 + .25 * pulse) * (hot ? 1.4 : 1) * alpha;
     octx.beginPath(); octx.arc(x, y, sz + 2 + pulse * 4, 0, Math.PI * 2); octx.stroke();
     octx.globalAlpha = (.08 + .12 * pulse) * (hot ? 1.4 : 1) * alpha;
     octx.beginPath(); octx.arc(x, y, sz + 5 + pulse * 6, 0, Math.PI * 2); octx.stroke();
+    drawGlow(x, y, sz + (hot ? 24 : 12), '#ff5500', (hot ? 1 : .88) * alpha * 0.85);
     octx.globalAlpha = (hot ? 1 : .88) * alpha;
     octx.fillStyle = fl;
-    octx.shadowBlur = hot ? 24 : 12;
     octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
   } else if (type === 'landmark'){
     // ромб
@@ -1361,18 +1410,18 @@ function drawTypedMarker(type, x, y, sz, col, hot, t, seed, alpha){
     octx.strokeStyle = col;
     octx.lineWidth = .8;
     octx.beginPath(); octx.arc(x, y, sz + 2.5 + p1 * 3, 0, Math.PI * 2); octx.stroke();
+    drawGlow(x, y, sz + (hot ? 20 : 9), col, (hot ? 1 : .88) * alpha * 0.85);
     octx.globalAlpha = (hot ? 1 : .88) * alpha;
     octx.fillStyle = col;
-    octx.shadowBlur = hot ? 20 : 9;
     octx.beginPath();
     octx.moveTo(x, y - sz); octx.lineTo(x + sz * .8, y); octx.lineTo(x, y + sz); octx.lineTo(x - sz * .8, y);
     octx.closePath(); octx.fill();
   } else if (type === 'base'){
     // квадрат
+    const s = sz * .85;
+    drawGlow(x, y, s + (hot ? 16 : 7), col, (hot ? 1 : .8) * alpha * 0.85);
     octx.globalAlpha = (hot ? 1 : .8) * alpha;
     octx.fillStyle = col;
-    octx.shadowBlur = hot ? 16 : 7;
-    const s = sz * .85;
     octx.fillRect(x - s, y - s, s * 2, s * 2);
     octx.globalAlpha = .35 * alpha;
     octx.strokeStyle = col;
@@ -1405,8 +1454,6 @@ function drawPing(t, M){
   const e2 = [c[1]*e1[2] - c[2]*e1[1], c[2]*e1[0] - c[0]*e1[2], c[0]*e1[1] - c[1]*e1[0]];
   octx.save();
   octx.strokeStyle = ping.col;
-  octx.shadowColor = ping.col;
-  octx.shadowBlur = 8;
   octx.globalAlpha = alpha;
   octx.lineWidth = 1.5;
   octx.beginPath();
@@ -1439,8 +1486,6 @@ function drawHarborArcs(t, M){
     const N = 44;
     octx.save();
     octx.strokeStyle = col;
-    octx.shadowColor = col;
-    octx.shadowBlur = 7;
     octx.lineWidth = 1.2;
     octx.globalAlpha = 0.55;
     octx.beginPath();
@@ -1463,9 +1508,9 @@ function drawHarborArcs(t, M){
       const idx = Math.min(N, Math.round(s * N));
       const p = pts[idx];
       if (p && p.vis){
+        drawGlow(p.x, p.y, 5, '#eaf8ff', 0.9);
         octx.globalAlpha = 0.95;
         octx.fillStyle = '#eaf8ff';
-        octx.shadowBlur = 10;
         octx.beginPath(); octx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); octx.fill();
       }
     }
@@ -1489,21 +1534,19 @@ function drawSats(t, M){
     octx.save();
     // хвост
     octx.strokeStyle = s.col;
-    octx.shadowColor = s.col;
     for (let j = 12; j >= 1; j--){
       const p1 = project3(satPos(s, t - j * 0.22), M);
       const p2 = project3(satPos(s, t - (j - 1) * 0.22), M);
       if (!p1.vis || !p2.vis) continue;
       octx.globalAlpha = 0.05 + (1 - j / 12) * 0.22;
       octx.lineWidth = 1;
-      octx.shadowBlur = 0;
       octx.beginPath(); octx.moveTo(p1.x, p1.y); octx.lineTo(p2.x, p2.y); octx.stroke();
     }
     const p = project3(satPos(s, t), M);
     if (p.vis){
+      drawGlow(p.x, p.y, 5, s.col, 0.9);
       octx.globalAlpha = 0.95;
       octx.fillStyle = s.col;
-      octx.shadowBlur = 9;
       octx.beginPath(); octx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); octx.fill();
     }
     octx.restore();
