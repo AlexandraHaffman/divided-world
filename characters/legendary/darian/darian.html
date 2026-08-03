@@ -111,7 +111,8 @@ body[data-mode="heat"] #envAtmo{opacity:1;
    высоту портрета — не асимметрия, а дыра в композиции. */
 .hero-visual{position:relative;width:92%;max-width:380px;aspect-ratio:3/4;align-self:flex-end;
   clip-path:polygon(0 0,100% 0,100% 84%,82% 100%,0 100%);
-  box-shadow:0 40px 90px -40px rgba(0,0,0,.85)}
+  border:1px solid rgba(var(--brass),.45);
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.85),inset 0 0 0 5px rgba(7,5,10,.35)}
 .hero-visual .img-wrap{position:absolute;inset:0}
 /* фото горизонтальное (16:9), рамка вертикальная — cover показывает лишь ~40% ширины
    кадра. Дариан стоит у правого края фотографии, поэтому окно показа обязано быть
@@ -129,9 +130,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 .hero-lede{font-family:var(--serif);font-size:18px;font-style:italic;color:#d8d2c8;line-height:1.6;
   max-width:52ch;margin-top:4px}
 .hero-actions{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap}
-.btn-toc{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-  color:#f0ece4;border:1px solid rgba(var(--brass),.4);padding:11px 18px;border-radius:2px;
-  background:linear-gradient(180deg,rgba(var(--brass),.14),rgba(var(--brass),.03))}
 
 /* ── звук ── */
 .sound-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(var(--brass),.4);
@@ -329,7 +327,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
       <p class="hero-lede">66-летний «решающий голос» Ракшасов и номинальный правитель Куньмина, подчиняющий себе солнечный свет — не расчётливый тиран, а заурядный, порочный человек, получивший абсолютную безнаказанность.</p>
       <div class="hero-actions">
         <button class="sound-btn" id="soundBtn" aria-label="Звук" title="Звук">🔇</button>
-        <button class="btn-toc" id="tocBtn">Открыть досье</button>
       </div>
     </div>
   </section>
@@ -389,7 +386,6 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 
   /* ── автопереключение фона: каждые 5с случайный режим, пока не открыта глава ── */
   const AUTO_MODES = ['normal','dark','cold','heat'];
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let autoTimer = null;
   function pickNextMode(){
     const pool = AUTO_MODES.filter(m=>m!==mode);
@@ -397,7 +393,9 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   }
   function scheduleAuto(){
     clearTimeout(autoTimer);
-    if(reduceMotion) return;
+    /* смена фона — не декоративная анимация, а часть содержания (см. ТЗ), поэтому
+       reduced-motion её не отключает; под этим флагом гасятся только вращение/дрожание/
+       параллакс (см. общее CSS-правило @media prefers-reduced-motion) */
     autoTimer = setTimeout(()=>{
       if(!activeChapter && !document.hidden) setMode(pickNextMode());
       scheduleAuto();
@@ -494,25 +492,15 @@ body[data-mode="heat"] #envAtmo{opacity:1;
     body.style.overflow = '';
     window.scrollTo(0, prevScroll);
     setMode(prevMode);
-    navChapterLabel.textContent = 'Хаб · Дариан Сорель';
     navClose.hidden = true;
+    navBar.classList.remove('show');
     setTimeout(()=>{ if(!activeChapter) chapterLayer.innerHTML=''; }, 500);
     scheduleAuto();
   }
   navClose.addEventListener('click', closeChapter);
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeChapter(); });
-  document.getElementById('tocBtn').addEventListener('click', ()=>{
-    journal.scrollIntoView({behavior:'smooth', block:'start'});
-  });
-
-  /* ── нижняя навигация: показать после первого скролла / на десктопе всегда ── */
-  function updateNav(){
-    if(window.innerWidth >= 901 || window.scrollY > 80 || activeChapter) navBar.classList.add('show');
-    else navBar.classList.remove('show');
-  }
-  window.addEventListener('scroll', updateNav, {passive:true});
-  window.addEventListener('resize', updateNav);
-  updateNav();
+  /* нижняя навигация теперь видна только пока открыта глава (класс show
+     добавляется/убирается в openChapter/closeChapter) — на хабе ей нечего показывать */
 
   /* ── звук: общий трек, глушится по умолчанию ── */
   const theme = document.getElementById('theme'), soundBtn = document.getElementById('soundBtn');
