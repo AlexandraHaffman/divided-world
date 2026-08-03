@@ -63,7 +63,7 @@ function isLegendaryThreat(c) {
    ссылки показывается только тем, кто и легендарен по угрозе, и есть
    в этом реестре — так что при добавлении новой страницы просто
    впиши сюда одну строку, без правки логики отображения. */
-const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner", "Эмиль Грант": "emil/emil", "Дариан Сорель": "darian/darian" };
+const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner", "Эмиль Грант": "emil/emil", "Дариан Сорель": "darian/darian", "Лилия Спасская": "liliya/liliya" };
 
 /* ══════════════════════════════════════════
    ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров (counterapi.dev v1)
