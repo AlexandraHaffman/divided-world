@@ -70,6 +70,13 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   background:radial-gradient(100% 60% at 50% 100%,rgba(190,70,30,.10),transparent 55%);
   animation:heat-shimmer 6s ease-in-out infinite}
 @keyframes heat-shimmer{0%,100%{filter:blur(0)}50%{filter:blur(.4px)}}
+
+/* ── вспышка при смене режима: свет, которым Дариан управляет, а не просто кроссфейд ── */
+#envFlash{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:radial-gradient(120% 90% at 50% 30%,var(--flash-c,rgba(255,255,255,.5)),transparent 68%)}
+#envFlash.flash{animation:mode-flash 900ms cubic-bezier(.15,.7,.3,1)}
+@keyframes mode-flash{0%{opacity:0}10%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){#envFlash.flash{animation:none}}
 #grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 
@@ -226,11 +233,16 @@ body[data-mode="heat"] #envAtmo{opacity:1;
   color:rgba(var(--brass),.6);text-align:center;padding:14px;text-transform:uppercase}
 
 /* ── нижняя навигация (мобильный) ── */
+/* на десктопе плашка сдвинута от края (bottom:24px), поэтому translateY(100%) сдвигает её
+   лишь на собственную высоту — эти 24px оставались торчать в углу экрана даже «скрытой».
+   Добавляем visibility с задержкой: анимация слайда всё ещё видна, но по её завершении
+   элемент правда пропадает из раскладки, а не просто уезжает частично за край. */
 #navBar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:10px;
   padding:10px 14px calc(10px + env(safe-area-inset-bottom));
   background:linear-gradient(0deg,rgba(5,3,8,.92),rgba(5,3,8,.5) 80%,transparent);
-  transform:translateY(100%);transition:transform .3s ease}
-#navBar.show{transform:translateY(0)}
+  transform:translateY(100%);visibility:hidden;
+  transition:transform .3s ease,visibility 0s linear .3s}
+#navBar.show{transform:translateY(0);visibility:visible;transition:transform .3s ease}
 #navBar .nav-chapter{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(233,228,222,.75);flex:1;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #navBar button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(var(--brass),.4);
@@ -309,6 +321,7 @@ body[data-mode="heat"] #envAtmo{opacity:1;
 </div>
 <div id="envAtmo"></div>
 <div id="envSpectral"></div>
+<div id="envFlash"></div>
 <div id="grain"></div>
 
 <a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
@@ -374,12 +387,25 @@ body[data-mode="heat"] #envAtmo{opacity:1;
      четырьмя состояниями Куньмина. Открытая глава может задать свой режим (например,
      «Куньмин» — тьму), это не «кнопка», а часть содержания главы. ── */
   let mode = 'normal';
+  const envFlash = document.getElementById('envFlash');
+  const FLASH_COLOR = {normal:'rgba(255,238,214,.55)', dark:'rgba(170,110,230,.5)',
+    cold:'rgba(205,234,255,.55)', heat:'rgba(255,142,90,.55)'};
   function setMode(m, opts){
     opts = opts || {};
     mode = m;
     body.dataset.mode = m;
     document.documentElement.style.setProperty('--mode-c',
       m==='dark' ? '124,58,190' : m==='cold' ? '120,178,232' : m==='heat' ? '190,80,60' : '181,138,84');
+    if(!opts.silent){
+      /* режимы Дариана переключаются вспышкой света, а не тихим кроссфейдом —
+         это его сила, а не просто смена подложки. Реflow между remove/add
+         позволяет анимации перезапускаться, даже если смена идёт чаще, чем
+         вспышка успевает угаснуть. */
+      document.documentElement.style.setProperty('--flash-c', FLASH_COLOR[m] || FLASH_COLOR.normal);
+      envFlash.classList.remove('flash');
+      void envFlash.offsetWidth;
+      envFlash.classList.add('flash');
+    }
     if(!opts.silent && window.switchAudioForMode) window.switchAudioForMode(m);
   }
   setMode('normal', {silent:true});
