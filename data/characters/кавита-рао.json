@@ -19,15 +19,15 @@
     "Сопереживание",
     "Творчество (поэзия и живопись)"
   ],
-  "threat_level": 23,
+  "threat_level": 26,
   "stats": {
     "intelligence": 8,
-    "combat": 0,
-    "influence": 1,
+    "combat": 1,
+    "influence": 2,
     "meta_power": 0,
     "cruelty": 1,
     "will": 7,
-    "stealth": 3,
+    "stealth": 4,
     "unpredictability": 3
   },
   "card_quote": "Пока я могу писать, они ещё не уничтожили всё",
@@ -47,5 +47,5 @@
     "bust_size": 3,
     "marks": ""
   },
-  "exported_at": "2026-07-28T19:22:46.152Z"
+  "exported_at": "2026-08-03T13:23:36.303Z"
 }
