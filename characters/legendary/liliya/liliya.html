@@ -1,15 +1,17 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" class="locked">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080b0c">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="description" content="Закрытое досье Белой зоны: Лилия Спасская и истории, сделавшие её имя предупреждением.">
   <title>Лилия Спасская — ветер помнит</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Oswald:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap');
     :root{--ink:#080b0c;--paper:#d9d8cf;--muted:#858982;--line:rgba(222,225,215,.16);--white:#edf0e8;--rust:#b64b32;--cold:#a9d9d1;--glass:rgba(10,14,15,.76)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--paper);font-family:Manrope,Arial,sans-serif;overflow-x:hidden}button,a{font:inherit}a{color:inherit}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--paper);font-family:Manrope,Arial,sans-serif;overflow-x:hidden}button,a{font:inherit}a{color:inherit}.locked body{overflow:hidden}.locked .shell{visibility:hidden}
+    .pin-gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 42%,rgba(169,217,209,.07),transparent 34%),#070a0b;color:var(--paper)}.pin-gate[hidden]{display:none}.pin-gate:before{content:"";position:absolute;inset:0;opacity:.14;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.035) 3px 4px)}.pin-panel{position:relative;width:min(100%,430px);padding:clamp(30px,7vw,58px);border:1px solid rgba(169,217,209,.22);background:rgba(10,14,15,.86);box-shadow:0 34px 100px rgba(0,0,0,.55);text-align:center}.pin-sigil{width:48px;height:48px;margin:0 auto 28px;border:1px solid var(--cold);border-radius:50%;display:grid;place-items:center;color:var(--cold);font:400 19px/1 Roboto Mono,monospace;box-shadow:0 0 35px rgba(169,217,209,.12)}.pin-label{font:500 9px/1 Roboto Mono,monospace;letter-spacing:.26em;text-transform:uppercase;color:var(--rust);margin-bottom:16px}.pin-panel h1{font:500 clamp(34px,8vw,52px)/1 Oswald,sans-serif;text-transform:uppercase;letter-spacing:-.02em;margin:0 0 14px;color:var(--white)}.pin-panel p{margin:0 0 28px;color:var(--muted);font-size:13px;line-height:1.7}.pin-form{display:grid;gap:12px}.pin-input{width:100%;border:1px solid rgba(169,217,209,.25);background:#06090a;color:var(--white);padding:16px;text-align:center;font:500 22px/1 Roboto Mono,monospace;letter-spacing:.65em;text-indent:.65em;outline:none}.pin-input:focus{border-color:var(--cold);box-shadow:0 0 0 3px rgba(169,217,209,.06)}.pin-submit{border:1px solid rgba(169,217,209,.35);background:rgba(169,217,209,.06);color:var(--cold);padding:15px;font:500 10px/1 Roboto Mono,monospace;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}.pin-submit:hover{background:rgba(169,217,209,.12)}.pin-error{min-height:15px;margin-top:15px!important;margin-bottom:0!important;color:#d46a50!important;font:400 9px/1.5 Roboto Mono,monospace!important;letter-spacing:.12em;text-transform:uppercase}.pin-panel.denied{animation:deny .28s linear}@keyframes deny{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
     body:before{content:"";position:fixed;inset:0;z-index:20;pointer-events:none;opacity:.22;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.022) 3px 4px)}
     #wind{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.65}.shell{position:relative;z-index:2}
     .topbar{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;justify-content:space-between;align-items:center;padding:24px clamp(20px,4vw,64px);font:500 11px/1 Roboto Mono,monospace;letter-spacing:.18em;text-transform:uppercase}
@@ -35,6 +37,19 @@
 </head>
 <body>
 <canvas id="wind" aria-hidden="true"></canvas>
+<div class="pin-gate" id="pin-gate" role="dialog" aria-modal="true" aria-labelledby="pin-title">
+  <div class="pin-panel" id="pin-panel">
+    <div class="pin-sigil">⌁</div>
+    <div class="pin-label">Черновой архив / доступ ограничен</div>
+    <h1 id="pin-title">Введите код</h1>
+    <p>Материалы BZ-54 находятся на редактуре.<br>Требуется четырёхзначный PIN.</p>
+    <form class="pin-form" id="pin-form">
+      <input class="pin-input" id="pin-input" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="one-time-code" aria-label="Четырёхзначный PIN" required autofocus>
+      <button class="pin-submit" type="submit">Открыть досье</button>
+    </form>
+    <p class="pin-error" id="pin-error" role="alert" aria-live="polite"></p>
+  </div>
+</div>
 <div class="shell">
   <header class="topbar"><a class="back" href="../../index.html">← Архив персонажей</a><div class="live"><span>Перехват открыт</span> // BZ-54</div></header>
   <main>
@@ -61,6 +76,11 @@
   <footer class="footer"><span>Архив Белой зоны // файл BZ-54-LS</span><span>Достоверность материалов: 41%</span></footer>
 </div>
 <script>
+  const gate=document.getElementById('pin-gate'),pinForm=document.getElementById('pin-form'),pinInput=document.getElementById('pin-input'),pinError=document.getElementById('pin-error'),pinPanel=document.getElementById('pin-panel');
+  const expectedPinHash='61aad04aa9341a27da25994e4e72be78828a848291b781d8c19a5192b860f033';
+  const unlock=()=>{sessionStorage.setItem('bz54-access','granted');document.documentElement.classList.remove('locked');gate.hidden=true};
+  if(sessionStorage.getItem('bz54-access')==='granted')unlock();else requestAnimationFrame(()=>pinInput.focus());
+  pinForm.addEventListener('submit',async e=>{e.preventDefault();const value=pinInput.value;if(!/^\d{4}$/.test(value)){pinError.textContent='Код должен содержать четыре цифры';return}const bytes=new TextEncoder().encode(value),hash=await crypto.subtle.digest('SHA-256',bytes),actual=[...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');if(actual===expectedPinHash){unlock()}else{pinError.textContent='Доступ отклонён';pinInput.value='';pinInput.focus();pinPanel.classList.remove('denied');void pinPanel.offsetWidth;pinPanel.classList.add('denied')}});
   const canvas=document.getElementById('wind'),ctx=canvas.getContext('2d');let w,h,dpr,lines=[];
   function size(){dpr=Math.min(devicePixelRatio||1,2);w=innerWidth;h=innerHeight;canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);lines=Array.from({length:Math.min(70,Math.floor(w/18))},()=>({x:Math.random()*w,y:Math.random()*h,l:18+Math.random()*72,s:.25+Math.random()*.7,a:.03+Math.random()*.13}))}
   function draw(){ctx.clearRect(0,0,w,h);for(const p of lines){p.x+=p.s;p.y+=Math.sin(p.x*.005)*.08;if(p.x>w+100)p.x=-p.l;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.bezierCurveTo(p.x+p.l*.3,p.y-4,p.x+p.l*.65,p.y+4,p.x+p.l,p.y);ctx.strokeStyle=`rgba(200,225,218,${p.a})`;ctx.lineWidth=.7;ctx.stroke()}requestAnimationFrame(draw)}
