@@ -316,9 +316,9 @@
 (function(){
 "use strict";
 
-// Территории фракций перерисовываются заново поверх новой географии.
-// Пока слой выключен — на карте только суша. Координаты в factions.js не тронуты.
-const SHOW_FACTIONS = false;
+// Территории фракций собраны из стран Natural Earth: границы совпадают
+// с настоящими странами и с береговой линией слоя суши.
+const SHOW_FACTIONS = true;
 
 const FACTIONS = window.FACTIONS_DATA;
 const LAND     = window.LAND_DATA;   // [ [внешнее кольцо, дыра...], ... ], кольцо = [[lat,lon],...]
