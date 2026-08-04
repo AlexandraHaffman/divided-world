@@ -33,6 +33,10 @@ a{color:inherit;}
 .img-wrap.broken::after{content:attr(data-label);font-family:'Share Tech Mono',monospace;font-size:9px;
   letter-spacing:.14em;color:rgba(var(--violet),.55);text-align:center;padding:16px;text-transform:uppercase;}
 
+/* карусель из нескольких фото в одном инфоблоке: автопереключение с кроссфейдом, см. initCarousels() */
+.photo-carousel img{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;}
+.photo-carousel img.active{opacity:1;}
+
 /* ══════════════════════════════════════════
    ГЛОБАЛЬНЫЙ UI: выход, глубина, звук
    ══════════════════════════════════════════ */
@@ -289,7 +293,10 @@ html[data-mode="title"] .mute-btn{display:none;}
 
   <div class="title-info-row">
     <div class="title-info-block title-info-block--left title-info-block--photo decay-erode">
-      <div class="img-wrap info-photo" data-label="нет сигнала · Бастион"><img src="ameli-bertrand-title-info-bastion.jpg" alt="Бастион, чертёж разреза"></div>
+      <div class="img-wrap info-photo photo-carousel" data-label="нет сигнала · Бастион">
+        <img src="ameli-bertrand-title-info-bastion-1.jpg" alt="Бастион, чертёж разреза" class="active">
+        <img src="ameli-bertrand-title-info-bastion-2.jpg" alt="Бастион, план яруса">
+      </div>
       <div class="info-eyebrow decay-text"><!-- TEXT: подпись инфоблока 1, о Бастионе --></div>
       <div class="info-body decay-text"><!-- TEXT: текст инфоблока 1 --></div>
     </div>
@@ -1080,11 +1087,27 @@ function crossfadeTo(key) {
    ОТСУТСТВУЮЩИЕ ИЗОБРАЖЕНИЯ → «НЕТ СИГНАЛА»
    ══════════════════════════════════════════ */
 document.querySelectorAll('.img-wrap').forEach(wrap => {
-  const img = wrap.querySelector('img');
-  if (!img) return;
-  const onFail = () => wrap.classList.add('broken');
-  img.addEventListener('error', onFail);
-  if (img.complete && img.naturalWidth === 0) onFail();
+  const imgs = Array.from(wrap.querySelectorAll('img'));
+  if (!imgs.length) return;
+  let failed = 0;
+  const onFail = () => { failed++; if (failed >= imgs.length) wrap.classList.add('broken'); };
+  imgs.forEach(img => {
+    img.addEventListener('error', onFail);
+    if (img.complete && img.naturalWidth === 0) onFail();
+  });
+});
+
+/* ── карусель: несколько фото в одном инфоблоке, автопереключение с кроссфейдом ── */
+document.querySelectorAll('.photo-carousel').forEach(wrap => {
+  const frames = Array.from(wrap.querySelectorAll('img'));
+  if (frames.length < 2) return;
+  let i = frames.findIndex(f => f.classList.contains('active'));
+  if (i < 0) { i = 0; frames[0].classList.add('active'); }
+  setInterval(() => {
+    frames[i].classList.remove('active');
+    i = (i + 1) % frames.length;
+    frames[i].classList.add('active');
+  }, 5000);
 });
 
 /* ══════════════════════════════════════════
