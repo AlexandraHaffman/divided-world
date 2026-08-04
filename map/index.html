@@ -35,7 +35,10 @@
   #stage { position: absolute; inset: 0; }
   /* Звёздное небо рисуется ОДИН раз в 2D-канвас, а не считается шейдером
      на каждый пиксель каждый кадр — это снимает основную нагрузку с GPU. */
-  #starfield, #glcanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #starfield, #glcanvas, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* Слой меток перерисовывается ровно тогда же, когда и глобус, — на
+     неподвижной карте он не стоит ничего. */
+  #overlay { pointer-events: none; }
   #input {
     position: absolute; inset: 0;
     touch-action: none;
@@ -190,6 +193,148 @@
   }
   .fcard-leader { font-size: 12px; color: var(--text); margin-bottom: 7px; line-height: 1.3; }
   .fcard-ideo { font-size: 11.5px; line-height: 1.45; color: var(--text); }
+
+  /* ── КАРТОЧКА ЛОКАЦИИ ── */
+  .loccard {
+    position: absolute;
+    right: 14px; top: 14px;
+    z-index: 30;
+    width: min(310px, calc(100vw - 28px));
+    max-height: calc(100% - 28px);
+    display: none;
+    flex-direction: column;
+    background: rgba(8,13,22,0.94);
+    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
+    border-top: 2px solid var(--fc);
+    border-radius: 3px;
+  }
+  .loccard.open { display: flex; }
+  .lc-close {
+    position: absolute;
+    right: 5px; top: 5px;
+    z-index: 2;
+    width: 22px; height: 22px;
+    background: rgba(4,8,14,0.7);
+    border: none;
+    border-radius: 3px;
+    color: var(--fc);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .8;
+  }
+  .lc-close:hover { opacity: 1; }
+  .lc-body { overflow-y: auto; padding: 10px 12px 12px; }
+  .lc-body::-webkit-scrollbar { width: 3px; }
+  .lc-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
+  .lc-photo {
+    width: calc(100% + 24px);
+    margin: -10px -12px 9px;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: rgba(2,4,9,0.8);
+  }
+  .lc-name {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 1.2px;
+    color: var(--fc);
+    text-transform: uppercase;
+    line-height: 1.25;
+    padding-right: 22px;
+    margin-bottom: 6px;
+  }
+  .lc-badges { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+  .lc-type, .lc-region {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 1.6px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(2,4,9,0.85);
+  }
+  .lc-type { color: var(--fc); border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent); }
+  .lc-type.war { color: #ff5544; border-color: rgba(255,85,68,0.5); }
+  .lc-region { color: var(--text-dim); }
+  .lc-sub {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.35;
+    background: rgba(2,4,9,0.7);
+    border-radius: 3px;
+    padding: 5px 8px;
+    margin-bottom: 8px;
+  }
+  .lc-desc { font-size: 12px; line-height: 1.5; margin-bottom: 9px; }
+  .lc-full { margin-bottom: 9px; }
+  .lc-full summary {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 1.8px;
+    color: var(--fc);
+    cursor: pointer;
+    padding: 5px 8px;
+    background: rgba(2,4,9,0.85);
+    border-left: 2px solid var(--fc);
+    border-radius: 3px;
+    list-style: none;
+  }
+  .lc-full summary::-webkit-details-marker { display: none; }
+  .lc-full summary::before { content: '\25b8  '; }
+  .lc-full[open] summary::before { content: '\25be  '; }
+  .lc-full p { font-size: 11.5px; line-height: 1.55; margin: 7px 2px 0; }
+  .lc-row { margin-bottom: 8px; }
+  .lc-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 1.6px;
+    color: var(--fc);
+    border-left: 2px solid var(--fc);
+    padding: 2px 7px;
+    background: rgba(2,4,9,0.85);
+    border-radius: 3px;
+    margin-bottom: 3px;
+  }
+  .lc-value { font-size: 12px; line-height: 1.4; padding-left: 3px; }
+  .lc-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .lc-chip {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid color-mix(in srgb, var(--fc) 50%, transparent);
+    color: var(--fc);
+    background: rgba(2,4,9,0.7);
+  }
+  .lc-child {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 8px;
+    margin-bottom: 4px;
+    background: rgba(2,4,9,0.8);
+    border-left: 2px solid var(--fc);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .lc-child:hover { background: color-mix(in srgb, var(--fc) 12%, rgba(2,4,9,0.8)); }
+  .lc-child-type { font-family: var(--font-mono); font-size: 7.5px; color: var(--fc); flex-shrink: 0; }
+  .lc-child-name { font-size: 11.5px; font-weight: 600; }
+  .lc-back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1.6px;
+    color: var(--fc);
+    background: rgba(2,4,9,0.85);
+    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 9px;
+  }
 
   /* ── МАСШТАБНАЯ ЛИНЕЙКА ── */
   .scalebar {
@@ -365,6 +510,7 @@
     .legend { width: 158px; }
     .l-name { font-size: 10.5px; }
     .fcard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; }
+    .loccard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: 58%; }
     .scalebar { bottom: 14px; }
   }
 </style>
@@ -374,6 +520,7 @@
 <div id="stage">
   <canvas id="starfield"></canvas>
   <canvas id="glcanvas"></canvas>
+  <canvas id="overlay"></canvas>
   <div id="input"></div>
 </div>
 
@@ -396,6 +543,11 @@
   <div class="fcard-lead" id="fcLead">ЛИДЕР</div>
   <div class="fcard-leader" id="fcLeader"></div>
   <div class="fcard-ideo" id="fcIdeo"></div>
+</div>
+
+<div class="loccard" id="loccard">
+  <button class="lc-close" id="lcClose" aria-label="Закрыть">×</button>
+  <div class="lc-body" id="lcBody"></div>
 </div>
 
 <div class="scalebar">
@@ -425,11 +577,16 @@
 
 <script src="data/land.js"></script>
 <script src="data/factions.js"></script>
+<script src="data/factions-geo.js"></script>
+<script src="data/locations.js"></script>
 <script>
 (function(){
 "use strict";
 
-const FACTIONS = window.FACTIONS_DATA;
+// Текст фракций правится руками в factions.js, очертания собираются скриптом
+// в factions-geo.js. Здесь они соединяются по ключу.
+const FAC_GEO  = window.FACTIONS_GEO || {};
+const FACTIONS = (window.FACTIONS_INFO || []).map(f => ({ ...f, polys: FAC_GEO[f.key] || [] }));
 const LAND     = window.LAND_DATA;   // [ [внешнее кольцо, дыра...], ... ], кольцо = [[lat,lon],...]
 const DEG = Math.PI / 180;
 const R_EARTH = 6371;                // км
@@ -493,16 +650,19 @@ function hexRgb(h){
   return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
 }
 
-function paintMap(c, W, H, rect, selectedKey){
+function paintMap(c, W, H, rect, selectedKey, lineK){
   const loMin  = rect ? rect.loMin  : -180;
   const loSpan = rect ? rect.loSpan : 360;
   const laMin  = rect ? rect.laMin  : -90;
   const laSpan = rect ? rect.laSpan : 180;
   const X = lon => (lon - loMin) / loSpan * W;
   const Y = lat => (laMin + laSpan - lat) / laSpan * H;
-  // штрихи задаём в градусах, а не в пикселях: тогда при переходе на детальную
-  // текстуру толщина границ на экране не прыгает
-  const k = (W / loSpan) / (4096 / 360);
+  // Толщина штрихов. По умолчанию она привязана к градусам — это верно для
+  // общей текстуры, которую видно издалека. Для детального окна вызывающий
+  // передаёт свой lineK: там ширина должна держаться постоянной НА ЭКРАНЕ,
+  // иначе при приближении граница растёт вместе с картой и превращается
+  // в ленту шириной в сотни километров (в ней целиком тонул Кипр).
+  const k = lineK != null ? lineK : (W / loSpan) / (4096 / 360);
   const WORLD_DX = 360 / loSpan * W;
 
   const og = c.createLinearGradient(0, Y(90), 0, Y(-90));
@@ -616,7 +776,12 @@ function paintMap(c, W, H, rect, selectedKey){
 const texCanvas = document.createElement('canvas');
 const detCanvas = document.createElement('canvas');
 let texSize = 4096;
-const DET_SIZE = 2048;
+let detMax = 4096;               // потолок стороны детального окна
+const DET_MAX_TEXELS = 8e6;      // и потолок по площади, чтобы не съесть память
+// Ширина самой толстой обводки границы на экране (в CSS-пикселях) и то,
+// какому коэффициенту в коде она соответствует.
+const BORDER_MAX_PX = 5;
+const BORDER_REF_UNITS = 6;
 
 function buildTexture(selectedKey){
   texCanvas.width = texSize; texCanvas.height = texSize / 2;
@@ -804,6 +969,7 @@ let dirty = true;
 function resize(){
   W = window.innerWidth; H = window.innerHeight;
   glCanvas.width = W * dpr; glCanvas.height = H * dpr;
+  overlay.width = W * dpr; overlay.height = H * dpr;
   gl.viewport(0, 0, glCanvas.width, glCanvas.height);
   drawStarfield(W, H, dpr);
   const nb = Math.min(W, H) * 0.40;
@@ -884,9 +1050,22 @@ function updateDetail(){
     laMin: Math.max(-90, Math.min(90 - laSpan, ll.lat - laSpan / 2)), laSpan,
     loC: ll.lon, laC: ll.lat,
   };
-  const h = Math.max(256, Math.round(DET_SIZE * laSpan / loSpan));
-  detCanvas.width = DET_SIZE; detCanvas.height = h;
-  paintMap(detCanvas.getContext('2d'), DET_SIZE, h, rect, selectedKey);
+
+  // Размер окна берём ровно под плотность экрана — примерно 1,25 текселя
+  // на пиксель устройства. Больше не нужно (не станет резче), меньше — мыло.
+  const aspect = laSpan / loSpan;
+  let w = Math.ceil(loSpan * R * dpr / 57.2958 * 1.25);
+  w = Math.max(512, Math.min(detMax, w));
+  if (w * w * aspect > DET_MAX_TEXELS) w = Math.floor(Math.sqrt(DET_MAX_TEXELS / aspect));
+  const h = Math.max(256, Math.round(w * aspect));
+
+  // текселей в одном экранном пикселе -> из этого считаем толщину границ
+  const texelPerPx = w * 57.2958 / (loSpan * R);
+  const kDeg = (w / loSpan) / (4096 / 360);
+  const lineK = Math.min(kDeg, BORDER_MAX_PX * texelPerPx / BORDER_REF_UNITS);
+
+  detCanvas.width = w; detCanvas.height = h;
+  paintMap(detCanvas.getContext('2d'), w, h, rect, selectedKey, lineK);
 
   gl.activeTexture(gl.TEXTURE1);
   gl.bindTexture(gl.TEXTURE_2D, detTex);
@@ -965,6 +1144,7 @@ function select(key, fly){
   legendBody.querySelectorAll('.l-item').forEach(el =>
     el.classList.toggle('active', el.dataset.key === selectedKey));
   if (f){
+    closeLoc();
     openCard(f);
     if (fly) flyToLL(f.clat, f.clon, baseR * 1.5);
   } else {
@@ -998,6 +1178,272 @@ function updateScale(){
   scaleRule.style.width = Math.round(best / kmPerPx) + 'px';
   scaleKm.textContent = fmtKm(best);
   altValue.textContent = fmtKm(alt);
+}
+
+// ═══════════════ ЛОКАЦИИ ═══════════════
+// Метки живут на отдельном 2D-слое поверх глобуса и перерисовываются ровно
+// тогда же, когда и сам глобус: на неподвижной карте слой не стоит ничего.
+const LOCATIONS = (window.LOCATIONS_DATA || []).map((l, i) => ({ ...l, id: 'loc' + i }));
+
+const TYPE_RU = {
+  capital: 'СТОЛИЦА', regional_capital: 'ЦЕНТР РЕГИОНА', city: 'ГОРОД',
+  base: 'БАЗА', settlement: 'ПОСЕЛЕНИЕ', landmark: 'ОБЪЕКТ',
+  anomaly: 'АНОМАЛИЯ', frontline: 'ЛИНИЯ ФРОНТА',
+};
+const TYPE_SIZE = {
+  capital: 5.2, regional_capital: 4.2, city: 3.4, base: 3.4,
+  settlement: 2.7, landmark: 4, anomaly: 4, frontline: 4,
+};
+// приоритет подписи при нехватке места: меньше — важнее
+const TYPE_PRIO = {
+  capital: 0, frontline: 1, landmark: 2, regional_capital: 3,
+  base: 4, city: 5, anomaly: 5, settlement: 6,
+};
+// строки досье: поле -> подпись. Показываются только заполненные.
+const LOC_FIELDS = [
+  ['region', 'Регион'], ['population', 'Население'], ['founded', 'Основание'],
+  ['management', 'Управление'], ['economy', 'Экономика'], ['defense', 'Оборона'],
+  ['access', 'Доступ'], ['capacity', 'Вместимость'], ['danger', 'Уровень опасности'],
+  ['status', 'Статус'], ['intensity', 'Интенсивность'], ['purpose', 'Назначение'],
+];
+const PHOTO_DIR = '../data/images/locations/';
+const NEUTRAL = { key: '', col: '#8fa8c0', name: '' };
+const facOf = key => FACTIONS.find(f => f.key === key) || NEUTRAL;
+
+const overlay = document.getElementById('overlay');
+const octx = overlay.getContext('2d');
+
+function projectLL(lat, lon, M, lift){
+  const la = lat * DEG, lo = lon * DEG, c = Math.cos(la);
+  const h = lift || 1;
+  const x = c * Math.sin(lo) * h, y = Math.sin(la) * h, z = c * Math.cos(lo) * h;
+  const vx = M.r1[0]*x + M.r1[1]*y + M.r1[2]*z;
+  const vy = M.r2[0]*x + M.r2[1]*y + M.r2[2]*z;
+  const vz = M.r3[0]*x + M.r3[1]*y + M.r3[2]*z;
+  return { x: W/2 + vx * R, y: H/2 - vy * R, vis: vz > 0.015 };
+}
+
+// Свечение — заранее просчитанным спрайтом, а не ctx.shadowBlur:
+// программный блюр на каждую метку каждый кадр съедал бы весь выигрыш.
+const glowCache = new Map();
+function glowSprite(col){
+  let s = glowCache.get(col);
+  if (s) return s;
+  const SZ = 64;
+  s = document.createElement('canvas');
+  s.width = s.height = SZ;
+  const g = s.getContext('2d');
+  const grad = g.createRadialGradient(SZ/2, SZ/2, 0, SZ/2, SZ/2, SZ/2);
+  grad.addColorStop(0, col + 'ff');
+  grad.addColorStop(0.32, col + '4d');
+  grad.addColorStop(1, col + '00');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, SZ, SZ);
+  glowCache.set(col, s);
+  return s;
+}
+function drawGlow(x, y, r, col, a){
+  if (a <= 0.02 || r <= 0) return;
+  octx.globalAlpha = a;
+  octx.drawImage(glowSprite(col), x - r, y - r, r * 2, r * 2);
+}
+
+function smooth01(x){ return x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x); }
+
+let labelRects = [];
+function labelFits(x, y, w, h){
+  for (const r of labelRects){
+    if (x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y) return false;
+  }
+  labelRects.push({ x, y, w, h });
+  return true;
+}
+
+function drawMarker(loc, x, y, col, hot, a){
+  const sz = (TYPE_SIZE[loc.type] || 3.4) * (hot ? 1.35 : 1);
+  const t = loc.type;
+  if (t === 'frontline'){
+    const fl = '#ff3322';
+    drawGlow(x, y, sz + (hot ? 13 : 8), '#ff5500', a * 0.85);
+    octx.globalAlpha = a;
+    octx.fillStyle = fl;
+    octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
+    octx.globalAlpha = a * 0.45;
+    octx.strokeStyle = fl; octx.lineWidth = 1;
+    octx.beginPath(); octx.arc(x, y, sz + 4, 0, Math.PI * 2); octx.stroke();
+    return sz;
+  }
+  drawGlow(x, y, sz + (hot ? 12 : 7), col, a * 0.8);
+  octx.globalAlpha = a;
+  octx.fillStyle = col;
+  if (t === 'base'){
+    const s = sz * 0.85;
+    octx.fillRect(x - s, y - s, s * 2, s * 2);
+  } else if (t === 'landmark' || t === 'anomaly'){
+    octx.beginPath();
+    octx.moveTo(x, y - sz); octx.lineTo(x + sz * 0.8, y);
+    octx.lineTo(x, y + sz);  octx.lineTo(x - sz * 0.8, y);
+    octx.closePath(); octx.fill();
+  } else {
+    octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
+  }
+  if (t === 'capital'){
+    octx.globalAlpha = a * 0.5;
+    octx.strokeStyle = col; octx.lineWidth = 1;
+    octx.beginPath(); octx.arc(x, y, sz + 4, 0, Math.PI * 2); octx.stroke();
+  }
+  return sz;
+}
+
+// шрифт подписей читаем из CSS один раз: getComputedStyle на каждую подпись
+// каждый кадр — это синхронный пересчёт стилей, и он дороже самой отрисовки
+const LABEL_FONT = (getComputedStyle(document.documentElement)
+  .getPropertyValue('--font-mono') || 'monospace').trim();
+
+function drawLabel(text, x, y, off, col, hot, a, big){
+  if (a <= 0.05) return;
+  const fs = big ? 11.5 : 10;
+  octx.save();
+  octx.font = (hot ? '700 ' : '500 ') + fs + 'px ' + LABEL_FONT;
+  octx.textAlign = 'center';
+  octx.textBaseline = 'top';
+  const tw = octx.measureText(text).width;
+  const py = y + off;
+  if (!hot && !labelFits(x - tw/2 - 4, py - 2, tw + 8, fs + 5)){ octx.restore(); return; }
+  octx.globalAlpha = 0.8 * a;
+  octx.fillStyle = 'rgba(4,7,14,0.9)';
+  octx.fillRect(x - tw/2 - 4, py - 2, tw + 8, fs + 5);
+  octx.globalAlpha = a;
+  octx.fillStyle = hot ? '#ffffff' : col;
+  octx.fillText(text, x, py);
+  octx.restore();
+}
+
+// порядок обхода: важные подписи занимают место первыми
+const LOC_ORDER = [...LOCATIONS].sort((a, b) => (TYPE_PRIO[a.type] ?? 9) - (TYPE_PRIO[b.type] ?? 9));
+
+function drawOverlay(M){
+  octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  octx.clearRect(0, 0, W, H);
+  labelRects = [];
+  for (const l of LOCATIONS) l._sx = null;
+
+  // Пока глобус виден целиком, меток нет вовсе — карта остаётся чистой.
+  // Дальше они проявляются по мере приближения: сначала крупные, потом все.
+  const z = R / baseR;
+  const aMain = smooth01((z - 1.15) / 0.35);
+  const aAll  = smooth01((z - 1.75) / 0.5);
+  const lMain = smooth01((z - 1.5) / 0.4);
+  const lAll  = smooth01((z - 2.2) / 0.5);
+  if (aMain <= 0.02) return;
+
+  for (const loc of LOC_ORDER){
+    const main = (TYPE_PRIO[loc.type] ?? 9) <= 3;
+    const a = main ? aMain : aAll;
+    if (a <= 0.02) continue;
+    const f = facOf(loc.faction);
+    const p = projectLL(loc.lat, loc.lon, M, loc.float ? 1.04 : 1);
+    if (!p.vis) continue;
+    loc._sx = p.x; loc._sy = p.y;
+
+    if (loc.float){
+      const g = projectLL(loc.lat, loc.lon, M, 1);
+      if (g.vis){
+        octx.save();
+        octx.globalAlpha = 0.35 * a;
+        octx.strokeStyle = f.col;
+        octx.setLineDash([2, 3]);
+        octx.lineWidth = 0.8;
+        octx.beginPath(); octx.moveTo(g.x, g.y); octx.lineTo(p.x, p.y); octx.stroke();
+        octx.restore();
+      }
+    }
+
+    const hot = selectedLocId === loc.id;
+    const sz = drawMarker(loc, p.x, p.y, f.col, hot, a);
+    const la = (main ? lMain : lAll) * (hot ? 1 : 0.9);
+    drawLabel(loc.name, p.x, p.y, sz + 5,
+      loc.type === 'frontline' ? '#ff6655' : f.col, hot, la, main);
+  }
+  octx.globalAlpha = 1;
+}
+
+// ═══════════════ КАРТОЧКА ЛОКАЦИИ ═══════════════
+const loccard = document.getElementById('loccard');
+const lcBody = document.getElementById('lcBody');
+let selectedLocId = null;
+document.getElementById('lcClose').addEventListener('click', () => closeLoc());
+
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function locCardHtml(loc, parent){
+  const f = facOf(loc.faction);
+  let h = '';
+  if (loc.photo) h += `<img class="lc-photo" src="${PHOTO_DIR}${encodeURIComponent(loc.photo)}" alt="" loading="lazy" onerror="this.remove()">`;
+  if (parent) h += `<div class="lc-back" data-back="1">◄ ${esc(parent.name)}</div>`;
+  h += `<div class="lc-name">${esc(loc.name)}</div>`;
+  h += `<div class="lc-badges"><span class="lc-type${loc.type === 'frontline' ? ' war' : ''}">${TYPE_RU[loc.type] || 'ОБЪЕКТ'}</span>`;
+  if (f.name) h += `<span class="lc-region">${esc(f.name)}</span>`;
+  h += `</div>`;
+  if (loc.subtitle) h += `<div class="lc-sub">${esc(loc.subtitle)}</div>`;
+  if (loc.desc) h += `<div class="lc-desc">${esc(loc.desc)}</div>`;
+  if (loc.full){
+    const paras = String(loc.full).split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join('');
+    h += `<details class="lc-full"><summary>ПОЛНОЕ ДОСЬЕ</summary>${paras}</details>`;
+  }
+  for (const [key, label] of LOC_FIELDS){
+    if (!loc[key]) continue;
+    h += `<div class="lc-row"><div class="lc-label">${label.toUpperCase()}</div><div class="lc-value">${esc(loc[key])}</div></div>`;
+  }
+  for (const [key, label] of [['involved','СТОРОНЫ'], ['chars','КЛЮЧЕВЫЕ ФИГУРЫ']]){
+    if (!loc[key] || !loc[key].length) continue;
+    h += `<div class="lc-row"><div class="lc-label">${label}</div><div class="lc-chips">${
+      loc[key].map(n => `<span class="lc-chip">${esc(n)}</span>`).join('')}</div></div>`;
+  }
+  if (loc.children && loc.children.length){
+    h += `<div class="lc-row"><div class="lc-label">ОБЪЕКТЫ ВНУТРИ</div>${
+      loc.children.map((c, i) => `<div class="lc-child" data-child="${i}">
+        <span class="lc-child-type">${TYPE_RU[c.type] || 'ОБЪЕКТ'}</span>
+        <span class="lc-child-name">${esc(c.name)}</span></div>`).join('')}</div>`;
+  }
+  return h;
+}
+
+function showLocCard(loc, parent){
+  const f = facOf(loc.faction);
+  loccard.style.setProperty('--fc', f.col);
+  lcBody.innerHTML = locCardHtml(loc, parent);
+  lcBody.scrollTop = 0;
+  lcBody.querySelectorAll('[data-child]').forEach(el =>
+    el.addEventListener('click', () => showLocCard(loc.children[+el.dataset.child], loc)));
+  const back = lcBody.querySelector('[data-back]');
+  if (back && parent) back.addEventListener('click', () => showLocCard(parent));
+  loccard.classList.add('open');
+}
+
+function selectLocation(loc){
+  selectedLocId = loc.id;
+  fcard.classList.remove('open');
+  showLocCard(loc, null);
+  dirty = true;
+}
+function closeLoc(){
+  selectedLocId = null;
+  loccard.classList.remove('open');
+  dirty = true;
+}
+
+// поиск метки под курсором по экранным позициям последнего кадра
+function locationAt(mx, my){
+  let best = null, bd = 18;
+  for (const loc of LOCATIONS){
+    if (loc._sx == null) continue;
+    const d = Math.hypot(mx - loc._sx, my - loc._sy);
+    if (d < bd){ bd = d; best = loc; }
+  }
+  return best;
 }
 
 // ═══════════════ ГЛАВНЫЙ ЦИКЛ ═══════════════
@@ -1034,6 +1480,7 @@ function frame(){
       M.r3[0], M.r3[1], M.r3[2],
     ]));
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    drawOverlay(M);
     updateScale();
     dirty = false;
   }
@@ -1091,8 +1538,9 @@ inputEl.addEventListener('pointermove', e => {
   }
   if (pointers.size === 0 && e.pointerType === 'mouse'){
     const rect = inputEl.getBoundingClientRect();
-    const ll = unproject(e.clientX - rect.left, e.clientY - rect.top, viewMatrix());
-    inputEl.classList.toggle('pointing', !!(ll && factionAt(ll.lat, ll.lon)));
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const ll = unproject(mx, my, viewMatrix());
+    inputEl.classList.toggle('pointing', !!(locationAt(mx, my) || (ll && factionAt(ll.lat, ll.lon))));
   }
 });
 
@@ -1104,9 +1552,16 @@ inputEl.addEventListener('pointerup', e => {
     if (performance.now() - lastMoveT < 60 && dragDist > 6){ vy = lastDX; vx = lastDY; }
     if (dragDist < 6){
       const rect = inputEl.getBoundingClientRect();
-      const ll = unproject(e.clientX - rect.left, e.clientY - rect.top, viewMatrix());
-      const f = ll ? factionAt(ll.lat, ll.lon) : null;
-      select(f ? f.key : null, false);
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      const loc = locationAt(mx, my);
+      if (loc){
+        selectLocation(loc);
+      } else {
+        closeLoc();
+        const ll = unproject(mx, my, viewMatrix());
+        const f = ll ? factionAt(ll.lat, ll.lon) : null;
+        select(f ? f.key : null, false);
+      }
     }
   }
   if (pointers.size < 2) pinch0 = 0;
@@ -1138,6 +1593,7 @@ function start(){
   const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
   const shortPx = Math.min(screen.width, screen.height) * (window.devicePixelRatio || 1);
   texSize = Math.min(shortPx < 700 ? 2048 : 4096, maxTex);
+  detMax = Math.min(4096, maxTex);
   buildTexture(null);
   uploadTexture();
   updateScale();
