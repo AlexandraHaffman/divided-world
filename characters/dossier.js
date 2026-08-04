@@ -65,6 +65,10 @@ function isLegendaryThreat(c) {
    впиши сюда одну строку, без правки логики отображения. */
 const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner", "Эмиль Грант": "emil/emil", "Дариан Сорель": "darian/darian", "Лилия Спасская": "liliya/liliya" };
 
+/* Тот же принцип, но для мифического тира (characters/mythical/<slug>.html) —
+   показывается вместо легендарной ссылки, когда персонаж числится mythical и есть в реестре. */
+const MYTHICAL_DOSSIER_SLUGS = { "Амели Бертран": "ameli-bertrand/ameli-bertrand" };
+
 /* ══════════════════════════════════════════
    ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров (counterapi.dev v1)
    ══════════════════════════════════════════ */
@@ -366,7 +370,8 @@ function openDossier(idx) {
   const sc = STATUS_COLORS[c.status] || STATUS_COLORS["Неизвестно"];
   const scRgb = sc === "#5dd98a" ? "93,217,138" : sc === "#f87171" ? "248,113,113" : "100,116,139";
   const artUrl = c.avatar_web_full || c.avatar_web || "";
-  const legendarySlug = isLegendaryThreat(c) ? LEGENDARY_DOSSIER_SLUGS[c.name] : null;
+  const mythicalSlug = tier === "mythical" ? MYTHICAL_DOSSIER_SLUGS[c.name] : null;
+  const legendarySlug = !mythicalSlug && isLegendaryThreat(c) ? LEGENDARY_DOSSIER_SLUGS[c.name] : null;
   const stats = c.stats || {};
   const statRows = [
     ["Интеллект",         stats.intelligence,     "intelligence"],
@@ -388,7 +393,7 @@ function openDossier(idx) {
     <div class="dossier-art" style="--dr:${col.rgb}">
       <div class="dossier-faction-bar" ${factionBarStyle}></div>
       <button class="dossier-close" onclick="closeDossier()">← АРХИВ</button>
-      ${legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ ЛЕГЕНДАРНОЕ ДОСЬЕ</a>` : ''}
+      ${mythicalSlug ? `<a class="legendary-link" href="mythical/${mythicalSlug}.html">▸ МИФИЧЕСКОЕ ДОСЬЕ</a>` : legendarySlug ? `<a class="legendary-link" href="legendary/${legendarySlug}.html">▸ ЛЕГЕНДАРНОЕ ДОСЬЕ</a>` : ''}
       <div class="dossier-art-bg">
         ${artUrl
           ? `<img src="${artUrl}" alt="${c.name}">`
