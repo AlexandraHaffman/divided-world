@@ -227,13 +227,24 @@
   .lc-body { overflow-y: auto; padding: 10px 12px 12px; }
   .lc-body::-webkit-scrollbar { width: 3px; }
   .lc-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
-  .lc-photo {
+  .lc-shots {
+    display: flex;
+    gap: 4px;
     width: calc(100% + 24px);
     margin: -10px -12px 9px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .lc-shots::-webkit-scrollbar { height: 3px; }
+  .lc-shots::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
+  .lc-photo {
+    flex: 0 0 100%;
     display: block;
+    width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
     background: rgba(2,4,9,0.8);
+    scroll-snap-align: start;
   }
   .lc-name {
     font-family: var(--font-display);
@@ -1188,22 +1199,22 @@ const LOCATIONS = (window.LOCATIONS_DATA || []).map((l, i) => ({ ...l, id: 'loc'
 const TYPE_RU = {
   capital: 'СТОЛИЦА', regional_capital: 'ЦЕНТР РЕГИОНА', city: 'ГОРОД',
   base: 'БАЗА', settlement: 'ПОСЕЛЕНИЕ', landmark: 'ОБЪЕКТ',
-  anomaly: 'АНОМАЛИЯ', frontline: 'ЛИНИЯ ФРОНТА',
+  anomaly: 'АНОМАЛИЯ', frontline: 'ЛИНИЯ ФРОНТА', zone: 'ЗОНА',
 };
 const TYPE_SIZE = {
   capital: 5.2, regional_capital: 4.2, city: 3.4, base: 3.4,
-  settlement: 2.7, landmark: 4, anomaly: 4, frontline: 4,
+  settlement: 2.7, landmark: 4, anomaly: 4, frontline: 4, zone: 4.2,
 };
 // приоритет подписи при нехватке места: меньше — важнее
 const TYPE_PRIO = {
   capital: 0, frontline: 1, landmark: 2, regional_capital: 3,
-  base: 4, city: 5, anomaly: 5, settlement: 6,
+  base: 4, city: 5, anomaly: 5, zone: 2, settlement: 6,
 };
 // строки досье: поле -> подпись. Показываются только заполненные.
 const LOC_FIELDS = [
   ['region', 'Регион'], ['population', 'Население'], ['founded', 'Основание'],
   ['management', 'Управление'], ['economy', 'Экономика'], ['defense', 'Оборона'],
-  ['access', 'Доступ'], ['capacity', 'Вместимость'], ['danger', 'Уровень опасности'],
+  ['capacity', 'Вместимость'], ['danger', 'Уровень опасности'],
   ['status', 'Статус'], ['intensity', 'Интенсивность'], ['purpose', 'Назначение'],
 ];
 const PHOTO_DIR = '../data/images/locations/';
@@ -1279,7 +1290,7 @@ function drawMarker(loc, x, y, col, hot, a){
   if (t === 'base'){
     const s = sz * 0.85;
     octx.fillRect(x - s, y - s, s * 2, s * 2);
-  } else if (t === 'landmark' || t === 'anomaly'){
+  } else if (t === 'landmark' || t === 'anomaly' || t === 'zone'){
     octx.beginPath();
     octx.moveTo(x, y - sz); octx.lineTo(x + sz * 0.8, y);
     octx.lineTo(x, y + sz);  octx.lineTo(x - sz * 0.8, y);
@@ -1381,7 +1392,14 @@ function esc(s){
 function locCardHtml(loc, parent){
   const f = facOf(loc.faction);
   let h = '';
-  if (loc.photo) h += `<img class="lc-photo" src="${PHOTO_DIR}${encodeURIComponent(loc.photo)}" alt="" loading="lazy" onerror="this.remove()">`;
+  // фотографий может быть несколько: photos: ["a.webp", "b.webp"].
+  // Одиночное photo тоже понимаем — так писались первые локации.
+  const shots = loc.photos && loc.photos.length ? loc.photos : (loc.photo ? [loc.photo] : []);
+  if (shots.length){
+    h += '<div class="lc-shots">' + shots.map(src =>
+      `<img class="lc-photo" src="${PHOTO_DIR}${encodeURIComponent(src)}" alt="" loading="lazy" onerror="this.remove()">`
+    ).join('') + '</div>';
+  }
   if (parent) h += `<div class="lc-back" data-back="1">◄ ${esc(parent.name)}</div>`;
   h += `<div class="lc-name">${esc(loc.name)}</div>`;
   h += `<div class="lc-badges"><span class="lc-type${loc.type === 'frontline' ? ' war' : ''}">${TYPE_RU[loc.type] || 'ОБЪЕКТ'}</span>`;
