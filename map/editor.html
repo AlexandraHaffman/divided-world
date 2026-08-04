@@ -451,6 +451,7 @@
     <div class="side-foot">
       <button class="primary" id="exportBtn">Выгрузить всё</button>
       <button class="ghost" id="importBtn">Загрузить черновик</button>
+      <button class="ghost" id="fromMapBtn">Взять локации с карты</button>
       <input type="file" id="importFile" accept=".json,application/json" hidden>
     </div>
   </aside>
@@ -495,6 +496,7 @@
 <script src="data/land.js"></script>
 <script src="data/factions.js"></script>
 <script src="data/factions-geo.js"></script>
+<script src="data/locations.js"></script>
 <script>
 (function(){
 "use strict";
@@ -545,6 +547,7 @@ const BY_TYPE = {
 const FACTIONS = window.FACTIONS_INFO || [];
 const LAND = window.LAND_DATA || [];
 const GEO = window.FACTIONS_GEO || {};
+const EXISTING = window.LOCATIONS_DATA || [];
 const STORE = 'dw_loc_draft';
 
 // ═══════════════ СОСТОЯНИЕ ═══════════════
@@ -970,6 +973,25 @@ importFile.addEventListener('change', () => {
     importFile.value = '';
   };
   r.readAsText(f);
+});
+
+const fromMapBtn = document.getElementById('fromMapBtn');
+if (!EXISTING.length) fromMapBtn.style.display = 'none';
+else fromMapBtn.textContent = 'Взять локации с карты (' + EXISTING.length + ')';
+fromMapBtn.addEventListener('click', () => {
+  if (!confirm('Добавить в черновик все ' + EXISTING.length + ' локаций с карты?\n\n' +
+               'Дальше их можно править, а выгрузка будет содержать И их тоже — ' +
+               'такой файл заменяет locations.js целиком.')) return;
+  const have = new Set(items.map(i => i.name.trim()).filter(Boolean));
+  let added = 0;
+  for (const l of EXISTING){
+    if (have.has(l.name)) continue;
+    items.push({ ...blank(), ...l, photos: l.photos || (l.photo ? [l.photo] : []), _thumbs: {} });
+    added++;
+  }
+  items = items.filter(i => i.name.trim() || items.length === 1);
+  cur = 0; save(); renderList(); renderForm();
+  toast('Добавлено: ' + added);
 });
 
 document.getElementById('addBtn').addEventListener('click', () => {
