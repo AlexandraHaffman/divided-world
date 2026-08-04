@@ -42,6 +42,10 @@
     cursor: grab;
   }
   #input.dragging { cursor: grabbing; }
+  #input.pointing { cursor: pointer; }
+
+  /* Панели намеренно без backdrop-filter: размытие заставляет браузер
+     перекомпоновывать область на каждом кадре вращения глобуса. */
 
   /* ── НАВИГАЦИЯ ── */
   .back-link {
@@ -56,8 +60,7 @@
     border: 1px solid rgba(79,195,247,0.3);
     padding: 5px 12px;
     border-radius: 3px;
-    background: rgba(8,12,18,0.6);
-    backdrop-filter: blur(6px);
+    background: rgba(8,12,18,0.82);
     transition: color .2s, border-color .2s;
   }
   .back-link:hover { color: var(--blue); border-color: var(--blue); }
@@ -72,8 +75,7 @@
     max-height: calc(100% - 90px);
     display: flex;
     flex-direction: column;
-    background: rgba(10,16,26,0.72);
-    backdrop-filter: blur(8px);
+    background: rgba(10,16,26,0.86);
     border: 1px solid var(--border);
     border-radius: 3px;
   }
@@ -130,6 +132,99 @@
   }
   .l-item.active .l-name { color: #fff; }
 
+  /* ── КРАТКАЯ СПРАВКА О ФРАКЦИИ ── */
+  .fcard {
+    position: absolute;
+    right: 14px; top: 14px;
+    z-index: 30;
+    width: min(266px, calc(100vw - 28px));
+    display: none;
+    background: rgba(8,13,22,0.92);
+    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
+    border-top: 2px solid var(--fc);
+    border-radius: 3px;
+    padding: 10px 12px 12px;
+  }
+  .fcard.open { display: block; }
+  .fcard-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-right: 18px;
+    margin-bottom: 7px;
+  }
+  .fcard-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--fc);
+    box-shadow: 0 0 6px var(--fc);
+    flex-shrink: 0;
+  }
+  .fcard-name {
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 1.2px;
+    color: var(--fc);
+    text-transform: uppercase;
+    line-height: 1.25;
+  }
+  .fcard-close {
+    position: absolute;
+    right: 6px; top: 6px;
+    width: 20px; height: 20px;
+    background: none;
+    border: none;
+    color: var(--fc);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: .75;
+  }
+  .fcard-close:hover { opacity: 1; }
+  .fcard-lead {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 1.6px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+  .fcard-leader { font-size: 12px; color: var(--text); margin-bottom: 7px; line-height: 1.3; }
+  .fcard-ideo { font-size: 11.5px; line-height: 1.45; color: var(--text); }
+
+  /* ── МАСШТАБНАЯ ЛИНЕЙКА ── */
+  .scalebar {
+    position: absolute;
+    right: 14px;
+    bottom: 18px;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+  }
+  .scale-rule {
+    position: relative;
+    height: 7px;
+    border: 1px solid rgba(79,195,247,0.55);
+    border-top: none;
+    transition: width .12s;
+  }
+  .scale-km {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    color: var(--blue);
+    opacity: .8;
+  }
+  .scale-alt {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 1.2px;
+    color: var(--text-dim);
+  }
+  .scale-alt b { color: var(--blue); font-weight: 400; }
+
   /* ── ЗАГРУЗКА ── */
   #loader {
     position: absolute;
@@ -185,8 +280,7 @@
     position: relative;
     width: min(400px, calc(100vw - 40px));
     padding: 34px 28px 28px;
-    background: rgba(10,16,26,0.9);
-    backdrop-filter: blur(10px);
+    background: rgba(10,16,26,0.92);
     border: 1px solid var(--border);
     border-top: 2px solid var(--blue);
     box-shadow: 0 0 40px rgba(79,195,247,0.14), inset 0 0 24px rgba(79,195,247,0.05);
@@ -270,6 +364,8 @@
   @media (max-width: 700px) {
     .legend { width: 158px; }
     .l-name { font-size: 10.5px; }
+    .fcard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; }
+    .scalebar { bottom: 14px; }
   }
 </style>
 </head>
@@ -289,6 +385,23 @@
     <div class="legend-toggle" id="legendToggle">–</div>
   </div>
   <div class="legend-body" id="legendBody"></div>
+</div>
+
+<div class="fcard" id="fcard">
+  <button class="fcard-close" id="fcClose" aria-label="Закрыть">×</button>
+  <div class="fcard-head">
+    <div class="fcard-dot"></div>
+    <div class="fcard-name" id="fcName"></div>
+  </div>
+  <div class="fcard-lead" id="fcLead">ЛИДЕР</div>
+  <div class="fcard-leader" id="fcLeader"></div>
+  <div class="fcard-ideo" id="fcIdeo"></div>
+</div>
+
+<div class="scalebar">
+  <div class="scale-km" id="scaleKm"></div>
+  <div class="scale-rule" id="scaleRule"></div>
+  <div class="scale-alt">ВЫСОТА НАД ОКЕАНОМ <b id="scaleAltValue">—</b></div>
 </div>
 
 <div id="loader">
@@ -316,47 +429,40 @@
 (function(){
 "use strict";
 
-// Территории фракций собраны из стран Natural Earth: границы совпадают
-// с настоящими странами и с береговой линией слоя суши.
-const SHOW_FACTIONS = true;
-
 const FACTIONS = window.FACTIONS_DATA;
 const LAND     = window.LAND_DATA;   // [ [внешнее кольцо, дыра...], ... ], кольцо = [[lat,lon],...]
 const DEG = Math.PI / 180;
+const R_EARTH = 6371;                // км
 
 // ═══════════════ ГЕОМЕТРИЯ ═══════════════
-// Сфера: x = cos(lat)·sin(lon), y = sin(lat), z = cos(lat)·cos(lon)
-function ll2xyz(lat, lon){
-  const la = lat * DEG, lo = lon * DEG, c = Math.cos(la);
-  return [c * Math.sin(lo), Math.sin(la), c * Math.cos(lo)];
-}
-
-// Долготы в land.js уже непрерывны: куски по антимеридиану сшиты на этапе
-// сборки данных (Евразия честно уходит за 180°), поэтому разворачивать нечего.
-function polyBounds(poly){
-  let lo = Infinity, hi = -Infinity;
+// Долготы в данных уже непрерывны: куски по антимеридиану сшиты при сборке
+// (Евразия честно уходит за 180°), поэтому разворачивать ничего не нужно.
+function bounds(poly){
+  let loMin = Infinity, loMax = -Infinity, laMin = Infinity, laMax = -Infinity;
   for (const ring of poly){
     for (let i = 0; i < ring.length; i++){
-      const v = ring[i][1];
-      if (v < lo) lo = v;
-      if (v > hi) hi = v;
+      const la = ring[i][0], lo = ring[i][1];
+      if (lo < loMin) loMin = lo;
+      if (lo > loMax) loMax = lo;
+      if (la < laMin) laMin = la;
+      if (la > laMax) laMax = la;
     }
   }
-  return [lo, hi];
+  return { loMin, loMax, laMin, laMax };
 }
-const LAND_BOUNDS = LAND.map(polyBounds);
+const LAND_BB = LAND.map(bounds);
+const FAC_BB = FACTIONS.map(f => (f.polys || []).map(bounds));
 
-// Точка в кольце (лучевой алгоритм)
 function pointInRing(lat, lon, ring){
   let inside = false;
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++){
-    const [yi, xi] = ring[i], [yj, xj] = ring[j];
+    const yi = ring[i][0], xi = ring[i][1], yj = ring[j][0], xj = ring[j][1];
     if ((yi > lat) !== (yj > lat) &&
         lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
 }
-// Точка в полигоне с дырами: внутри внешнего кольца и снаружи всех дыр
+// точка внутри внешнего кольца и снаружи всех дыр
 function pointInPoly(lat, lon, poly){
   if (!pointInRing(lat, lon, poly[0])) return false;
   for (let i = 1; i < poly.length; i++){
@@ -365,37 +471,41 @@ function pointInPoly(lat, lon, poly){
   return true;
 }
 function factionAt(lat, lon){
-  if (!SHOW_FACTIONS) return null;
-  for (const f of FACTIONS){
-    for (const poly of (f.polys || [])){
+  for (let fi = 0; fi < FACTIONS.length; fi++){
+    const polys = FACTIONS[fi].polys || [];
+    for (let pi = 0; pi < polys.length; pi++){
+      const bb = FAC_BB[fi][pi];
+      if (lat < bb.laMin || lat > bb.laMax) continue;
       for (const off of [-360, 0, 360]){
-        if (pointInPoly(lat, lon + off, poly)) return f;
+        const L = lon + off;
+        if (L < bb.loMin || L > bb.loMax) continue;
+        if (pointInPoly(lat, L, polys[pi])) return FACTIONS[fi];
       }
     }
   }
   return null;
 }
 
-// ═══════════════ ТЕКСТУРА (equirectangular) ═══════════════
-// Суша и территории запекаются в текстуру и натягиваются на сферу —
-// обрезки по горизонту нет вообще, значит нет и «кинжалов».
-const texCanvas = document.createElement('canvas');
-let texSize = 4096;
-
+// ═══════════════ ОТРИСОВКА КАРТЫ В ТЕКСТУРУ ═══════════════
+// Одна и та же функция рисует и общую текстуру всего мира, и «детальную»
+// текстуру только видимого окна — отличается лишь охват (rect).
 function hexRgb(h){
   return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
 }
 
-function buildTexture(selectedKey){
-  const W = texSize, H = W / 2;
-  texCanvas.width = W; texCanvas.height = H;
-  const c = texCanvas.getContext('2d');
-  const X = lon => (lon + 180) / 360 * W;
-  const Y = lat => (90 - lat) / 180 * H;
-  const k = W / 4096;
+function paintMap(c, W, H, rect, selectedKey){
+  const loMin  = rect ? rect.loMin  : -180;
+  const loSpan = rect ? rect.loSpan : 360;
+  const laMin  = rect ? rect.laMin  : -90;
+  const laSpan = rect ? rect.laSpan : 180;
+  const X = lon => (lon - loMin) / loSpan * W;
+  const Y = lat => (laMin + laSpan - lat) / laSpan * H;
+  // штрихи задаём в градусах, а не в пикселях: тогда при переходе на детальную
+  // текстуру толщина границ на экране не прыгает
+  const k = (W / loSpan) / (4096 / 360);
+  const WORLD_DX = 360 / loSpan * W;
 
-  // Океан
-  const og = c.createLinearGradient(0, 0, 0, H);
+  const og = c.createLinearGradient(0, Y(90), 0, Y(-90));
   og.addColorStop(0.00, '#040a12');
   og.addColorStop(0.42, '#0a1826');
   og.addColorStop(0.58, '#0a1826');
@@ -407,14 +517,32 @@ function buildTexture(selectedKey){
   c.strokeStyle = 'rgba(90,150,255,0.055)';
   c.lineWidth = Math.max(1, k);
   for (let lo = -180; lo < 180; lo += 15){
-    c.beginPath(); c.moveTo(X(lo), 0); c.lineTo(X(lo), H); c.stroke();
+    for (const dx of [-WORLD_DX, 0, WORLD_DX]){
+      const x = X(lo) + dx;
+      if (x < -2 || x > W + 2) continue;
+      c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke();
+    }
   }
   for (let la = -75; la <= 75; la += 15){
-    c.beginPath(); c.moveTo(0, Y(la)); c.lineTo(W, Y(la)); c.stroke();
+    const y = Y(la);
+    if (y < -2 || y > H + 2) continue;
+    c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke();
   }
   c.strokeStyle = 'rgba(90,170,255,0.10)';
-  c.beginPath(); c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); c.stroke(); // экватор
+  if (Y(0) >= -2 && Y(0) <= H + 2){
+    c.beginPath(); c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); c.stroke();
+  }
 
+  // Копии со сдвигом нужны только полигонам, реально попадающим в кадр.
+  // Здесь же происходит отсев: для детального окна почти весь мир отпадает.
+  function offsetsFor(bb){
+    if (bb.laMax < laMin || bb.laMin > laMin + laSpan) return null;
+    let out = null;
+    for (const dx of [-WORLD_DX, 0, WORLD_DX]){
+      if (X(bb.loMax) + dx >= 0 && X(bb.loMin) + dx <= W) (out = out || []).push(dx);
+    }
+    return out;
+  }
   // Полигон целиком (внешнее кольцо + дыры) одним путём —
   // заливка по evenodd честно прорезает Каспий и прочие внутренние моря.
   function tracePoly(poly, dx){
@@ -427,69 +555,72 @@ function buildTexture(selectedKey){
       c.closePath();
     }
   }
-  // Копии со сдвигом нужны только тем полигонам, что реально вылезают за края
-  // текстуры (Евразия, Антарктида) — остальным хватает одной отрисовки.
-  function offsetsFor(bounds){
-    const out = [];
-    for (const dx of [-W, 0, W]){
-      if (X(bounds[1]) + dx >= 0 && X(bounds[0]) + dx <= W) out.push(dx);
-    }
-    return out;
-  }
-  const LAND_OFFS = LAND_BOUNDS.map(offsetsFor);
 
-  function forEachLand(fn){
-    for (let i = 0; i < LAND.length; i++){
-      for (const dx of LAND_OFFS[i]) fn(LAND[i], dx);
-    }
+  const landDraw = [];
+  for (let i = 0; i < LAND.length; i++){
+    const offs = offsetsFor(LAND_BB[i]);
+    if (offs) landDraw.push([LAND[i], offs]);
   }
+  const eachLand = fn => { for (const [poly, offs] of landDraw) for (const dx of offs) fn(poly, dx); };
 
   // Суша
   c.fillStyle = '#152219';
-  forEachLand((poly, dx) => { tracePoly(poly, dx); c.fill('evenodd'); });
+  eachLand((poly, dx) => { tracePoly(poly, dx); c.fill('evenodd'); });
 
-  // Свечение береговой линии: вместо ctx.shadowBlur (дорогой программный блюр
-  // на текстуре в мегапиксели) — три обводки нарастающей толщины.
+  // Свечение берега: вместо ctx.shadowBlur (дорогой программный блюр) —
+  // три обводки нарастающей толщины.
   c.save();
   c.strokeStyle = 'rgba(90,190,230,0.55)';
   c.globalAlpha = 0.12; c.lineWidth = 6 * k;
-  forEachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
+  eachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
   c.globalAlpha = 0.22; c.lineWidth = 3 * k;
-  forEachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
+  eachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
   c.strokeStyle = 'rgba(120,205,180,0.30)';
   c.globalAlpha = 1; c.lineWidth = 1.6 * k;
-  forEachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
+  eachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
   c.restore();
-
-  if (!SHOW_FACTIONS) return texCanvas;
 
   // Территории фракций: сначала все заливки, потом все границы
   const hasSel = !!selectedKey;
-  for (const f of FACTIONS){
-    for (const poly of (f.polys || [])){
-      const [r, g, b] = hexRgb(f.col);
-      const sel = f.key === selectedKey;
-      c.fillStyle = `rgba(${r},${g},${b},${sel ? 0.38 : (hasSel ? 0.10 : 0.20)})`;
-      for (const dx of offsetsFor(polyBounds(poly))){ tracePoly(poly, dx); c.fill('evenodd'); }
+  const facDraw = [];
+  for (let fi = 0; fi < FACTIONS.length; fi++){
+    const polys = FACTIONS[fi].polys || [];
+    for (let pi = 0; pi < polys.length; pi++){
+      const offs = offsetsFor(FAC_BB[fi][pi]);
+      if (offs) facDraw.push([FACTIONS[fi], polys[pi], offs]);
     }
   }
-  for (const f of FACTIONS){
+  for (const [f, poly, offs] of facDraw){
+    const [r, g, b] = hexRgb(f.col);
+    const sel = f.key === selectedKey;
+    c.fillStyle = `rgba(${r},${g},${b},${sel ? 0.38 : (hasSel ? 0.10 : 0.20)})`;
+    for (const dx of offs){ tracePoly(poly, dx); c.fill('evenodd'); }
+  }
+  // Ширина свечения — в градусах. Раньше она была такой, что ореол шириной
+  // ~100 км съедал мелкие острова целиком (Кипр превращался в кинжал).
+  for (const [f, poly, offs] of facDraw){
     const sel = f.key === selectedKey;
     const baseA = sel ? 1 : (hasSel ? 0.55 : 0.9);
-    for (const poly of (f.polys || [])){
-      const offs = offsetsFor(polyBounds(poly));
-      c.save();
-      c.strokeStyle = f.col;
-      c.globalAlpha = baseA * 0.10; c.lineWidth = (sel ? 22 : 11) * k;
-      for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
-      c.globalAlpha = baseA * 0.22; c.lineWidth = (sel ? 11 : 6) * k;
-      for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
-      c.globalAlpha = baseA; c.lineWidth = (sel ? 6 : 3) * k;
-      for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
-      c.restore();
-    }
+    c.save();
+    c.strokeStyle = f.col;
+    c.globalAlpha = baseA * 0.10; c.lineWidth = (sel ? 12 : 6) * k;
+    for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
+    c.globalAlpha = baseA * 0.24; c.lineWidth = (sel ? 6 : 3.4) * k;
+    for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
+    c.globalAlpha = baseA; c.lineWidth = (sel ? 3.6 : 2) * k;
+    for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
+    c.restore();
   }
-  return texCanvas;
+}
+
+const texCanvas = document.createElement('canvas');
+const detCanvas = document.createElement('canvas');
+let texSize = 4096;
+const DET_SIZE = 2048;
+
+function buildTexture(selectedKey){
+  texCanvas.width = texSize; texCanvas.height = texSize / 2;
+  paintMap(texCanvas.getContext('2d'), texSize, texSize / 2, null, selectedKey);
 }
 
 // ═══════════════ ЗВЁЗДНОЕ НЕБО (статичное, рисуется один раз) ═══════════════
@@ -540,10 +671,14 @@ void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }
 // отбрасывается (звёзды лежат отдельным статичным слоем снизу).
 const FSH = `
 precision highp float;
-uniform vec2  uRes;
-uniform vec3  uView;   // cx, cy (GL-координаты), R в px
-uniform mat3  uMinv;   // view -> world
-uniform sampler2D uTex;
+uniform vec3  uView;      // cx, cy (GL-координаты), R в px
+uniform mat3  uMinv;      // view -> world
+uniform sampler2D uTex;   // текстура всего мира
+uniform sampler2D uDet;   // детальная текстура видимого окна
+uniform vec4  uDetRect;   // loMin, laMin, loSpan, laSpan (градусы)
+uniform float uDetOn;
+
+const float R2D = 57.29577951;
 
 void main(){
   vec2 q = (gl_FragCoord.xy - uView.xy) / uView.z;
@@ -558,8 +693,20 @@ void main(){
     vec3 n = vec3(q, z);
     vec3 w = uMinv * n;
     float lon = atan(w.x, w.z);
-    vec2 tuv = vec2(lon / 6.28318530718 + 0.5, acos(clamp(w.y, -1.0, 1.0)) / 3.14159265359);
-    vec3 tex = texture2D(uTex, tuv).rgb;
+    float pol = acos(clamp(w.y, -1.0, 1.0));
+    vec3 tex = texture2D(uTex, vec2(lon / 6.28318530718 + 0.5, pol / 3.14159265359)).rgb;
+
+    // Вблизи общая текстура не тянет по разрешению, поэтому поверх неё
+    // подмешивается окно, отрисованное только для видимого участка.
+    if (uDetOn > 0.5){
+      float loD = lon * R2D;
+      float laD = 90.0 - pol * R2D;
+      float dl = mod(loD - uDetRect.x + 540.0, 360.0) - 180.0;
+      vec2 duv = vec2(dl / uDetRect.z, (uDetRect.y + uDetRect.w - laD) / uDetRect.w);
+      vec2 e = min(duv, 1.0 - duv);
+      float m = step(0.0, e.x) * step(0.0, e.y) * smoothstep(0.0, 0.035, min(e.x, e.y));
+      tex = mix(tex, texture2D(uDet, duv).rgb, m);
+    }
 
     // мягкий свет + лимбовое затемнение
     vec3 L = normalize(vec3(-0.42, 0.34, 0.84));
@@ -567,8 +714,8 @@ void main(){
     float rim = pow(1.0 - z, 3.0);
     vec3 col = tex * diff + atm * rim * 0.38;
 
-    float m = smoothstep(1.0 + aa, 1.0 - aa, d);
-    gl_FragColor = vec4(mix(atm, col, m), max(m, halo));
+    float m2 = smoothstep(1.0 + aa, 1.0 - aa, d);
+    gl_FragColor = vec4(mix(atm, col, m2), max(m2, halo));
   } else {
     if (halo < 0.004) discard;
     gl_FragColor = vec4(atm, halo);
@@ -585,7 +732,7 @@ function compile(type, src){
   return s;
 }
 
-let prog, uni = {}, tex;
+let prog, uni = {}, tex, detTex;
 function initGL(){
   prog = gl.createProgram();
   gl.attachShader(prog, compile(gl.VERTEX_SHADER, VSH));
@@ -602,22 +749,37 @@ function initGL(){
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
-  for (const name of ['uRes','uView','uMinv','uTex'])
+  for (const name of ['uView','uMinv','uTex','uDet','uDetRect','uDetOn'])
     uni[name] = gl.getUniformLocation(prog, name);
 
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   tex = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
   gl.uniform1i(uni.uTex, 0);
+
+  // Детальная текстура работает только на приближении, там всегда растяжение,
+  // а не сжатие — мипмапы ей не нужны, и мы экономим на их построении.
+  detTex = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, detTex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.uniform1i(uni.uDet, 1);
+  gl.uniform1f(uni.uDetOn, 0);
+  gl.activeTexture(gl.TEXTURE0);
 }
 
 function uploadTexture(){
+  gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texCanvas);
   gl.generateMipmap(gl.TEXTURE_2D);
@@ -637,7 +799,7 @@ let R = 100, tR = 100;        // радиус глобуса, px
 let baseR = 100;
 let autoRot = true;
 let vy = 0, vx = 0;           // инерция
-let dirty = true;             // нужен перерисов
+let dirty = true;
 
 function resize(){
   W = window.innerWidth; H = window.innerHeight;
@@ -647,6 +809,7 @@ function resize(){
   const nb = Math.min(W, H) * 0.40;
   if (baseR === 100){ R = tR = nb; }
   baseR = nb;
+  detRect = null;
   dirty = true;
 }
 window.addEventListener('resize', resize);
@@ -673,9 +836,74 @@ function unproject(mx, my, M){
   return { lat: Math.asin(Math.max(-1, Math.min(1, wy))) / DEG, lon: Math.atan2(wx, wz) / DEG };
 }
 
-// ═══════════════ ЛЕГЕНДА ═══════════════
+// ═══════════════ ДЕТАЛЬНАЯ ТЕКСТУРА ═══════════════
+// Одна текстура на весь глобус не может быть резкой на сильном приближении:
+// 4096 px на 360° — это ~10 км в пикселе. Поэтому вблизи поверх неё кладётся
+// окно, отрисованное только для видимого участка, — то же качество, но
+// в десяток раз плотнее. Пересобирается только когда вид устоялся.
+let detRect = null;
+let detBusy = false;
+
+function detailWanted(){ return R > baseR * 1.6; }
+
+function detailSpan(){
+  const halfDiag = 0.5 * Math.hypot(W, H);
+  const halfAng = Math.asin(Math.min(1, halfDiag / R)) / DEG;
+  return Math.min(160, Math.max(3, halfAng * 2 * 1.25));
+}
+
+function detailStale(){
+  if (!detailWanted()) return !!detRect;
+  const ll = unproject(W/2, H/2, viewMatrix());
+  if (!ll) return false;
+  if (!detRect) return true;
+  const span = detailSpan();
+  if (Math.abs(span - detRect.laSpan) > detRect.laSpan * 0.3) return true;
+  let dlo = ll.lon - detRect.loC;
+  dlo = ((dlo + 540) % 360) - 180;
+  if (Math.abs(dlo) > detRect.loSpan * 0.18) return true;
+  if (Math.abs(ll.lat - detRect.laC) > detRect.laSpan * 0.18) return true;
+  return false;
+}
+
+function updateDetail(){
+  if (detBusy) return;
+  if (!detailWanted()){
+    if (detRect){ detRect = null; gl.uniform1f(uni.uDetOn, 0); dirty = true; }
+    return;
+  }
+  const ll = unproject(W/2, H/2, viewMatrix());
+  if (!ll) return;
+  detBusy = true;
+
+  const laSpan = detailSpan();
+  // у полюсов та же картинка занимает куда больше градусов долготы
+  const loSpan = Math.min(170, laSpan / Math.max(0.18, Math.cos(ll.lat * DEG)));
+  const rect = {
+    loMin: ll.lon - loSpan / 2, loSpan,
+    laMin: Math.max(-90, Math.min(90 - laSpan, ll.lat - laSpan / 2)), laSpan,
+    loC: ll.lon, laC: ll.lat,
+  };
+  const h = Math.max(256, Math.round(DET_SIZE * laSpan / loSpan));
+  detCanvas.width = DET_SIZE; detCanvas.height = h;
+  paintMap(detCanvas.getContext('2d'), DET_SIZE, h, rect, selectedKey);
+
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D, detTex);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, detCanvas);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.uniform4f(uni.uDetRect, rect.loMin, rect.laMin, rect.loSpan, rect.laSpan);
+  gl.uniform1f(uni.uDetOn, 1);
+
+  detRect = rect;
+  detBusy = false;
+  dirty = true;
+}
+
+// ═══════════════ ЛЕГЕНДА И СПРАВКА ═══════════════
 const legend = document.getElementById('legend');
 const legendBody = document.getElementById('legendBody');
+const fcard = document.getElementById('fcard');
 let selectedKey = null;
 
 for (const f of FACTIONS){
@@ -694,6 +922,18 @@ document.getElementById('legendHead').addEventListener('click', () => {
 if (window.innerWidth <= 700){
   legend.classList.add('collapsed');
   document.getElementById('legendToggle').textContent = '+';
+}
+document.getElementById('fcClose').addEventListener('click', () => select(null));
+
+function openCard(f){
+  fcard.style.setProperty('--fc', f.col);
+  document.getElementById('fcName').textContent = f.name;
+  const lead = document.getElementById('fcLead');
+  const leader = document.getElementById('fcLeader');
+  leader.textContent = f.leader || '';
+  lead.style.display = leader.style.display = f.leader ? '' : 'none';
+  document.getElementById('fcIdeo').textContent = f.ideo || '';
+  fcard.classList.add('open');
 }
 
 function shortestAngle(from, to){
@@ -715,18 +955,49 @@ function refreshTexture(key){
   refreshTexture._last = key;
   buildTexture(key);
   uploadTexture();
+  detRect = null;   // детальное окно тоже устарело
   dirty = true;
 }
 
 function select(key, fly){
-  selectedKey = key;
+  const f = key ? FACTIONS.find(x => x.key === key) : null;
+  selectedKey = f ? key : null;
   legendBody.querySelectorAll('.l-item').forEach(el =>
-    el.classList.toggle('active', el.dataset.key === key));
-  if (key && fly){
-    const f = FACTIONS.find(x => x.key === key);
-    if (f) flyToLL(f.clat, f.clon, baseR * 1.5);
+    el.classList.toggle('active', el.dataset.key === selectedKey));
+  if (f){
+    openCard(f);
+    if (fly) flyToLL(f.clat, f.clon, baseR * 1.5);
+  } else {
+    fcard.classList.remove('open');
   }
   refreshTexture(selectedKey);
+}
+
+// ═══════════════ МАСШТАБНАЯ ЛИНЕЙКА ═══════════════
+const scaleKm = document.getElementById('scaleKm');
+const scaleRule = document.getElementById('scaleRule');
+const altValue = document.getElementById('scaleAltValue');
+const FOV_HALF = 22.5 * DEG;   // условный полуугол обзора «камеры»
+
+function fmtKm(km){
+  return km >= 1000 ? (km / 1000).toFixed(km >= 10000 ? 0 : 1).replace('.', ',') + ' ТЫС КМ'
+                    : Math.round(km) + ' КМ';
+}
+function updateScale(){
+  // Проекция ортографическая, поэтому «высота» — это то удаление, с которого
+  // Земля видна под тем же углом при полуугле обзора FOV_HALF.
+  const ang = Math.atan2(R * Math.tan(FOV_HALF), H / 2);
+  const alt = Math.max(0, R_EARTH / Math.sin(ang) - R_EARTH);
+
+  const kmPerPx = R_EARTH / R;   // в центре диска
+  let best = 100;
+  for (const km of [10, 25, 50, 100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000]){
+    best = km;
+    if (km / kmPerPx >= 60) break;
+  }
+  scaleRule.style.width = Math.round(best / kmPerPx) + 'px';
+  scaleKm.textContent = fmtKm(best);
+  altValue.textContent = fmtKm(alt);
 }
 
 // ═══════════════ ГЛАВНЫЙ ЦИКЛ ═══════════════
@@ -750,11 +1021,11 @@ function frame(){
   rx += (tx - rx) * 0.09;
   R  += (tR - R) * 0.12;
 
-  if (dirty || animating()){
+  const moving = animating();
+  if (dirty || moving){
     const M = viewMatrix();
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.uniform2f(uni.uRes, glCanvas.width, glCanvas.height);
     gl.uniform3f(uni.uView, W/2 * dpr, glCanvas.height - H/2 * dpr, R * dpr);
     // uMinv = M^T, column-major => столбцы = строки M
     gl.uniformMatrix3fv(uni.uMinv, false, new Float32Array([
@@ -763,8 +1034,12 @@ function frame(){
       M.r3[0], M.r3[1], M.r3[2],
     ]));
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    updateScale();
     dirty = false;
   }
+  // детальное окно пересобираем только когда вид устоялся,
+  // иначе на каждом кадре перетаскивания шла бы полная перерисовка
+  if (!moving && !dragging && detailStale()) updateDetail();
   requestAnimationFrame(frame);
 }
 
@@ -812,6 +1087,12 @@ inputEl.addEventListener('pointermove', e => {
     lastDX = dx * sp; lastDY = dy * sp; lastMoveT = performance.now();
     lastX = e.clientX; lastY = e.clientY;
     dirty = true;
+    return;
+  }
+  if (pointers.size === 0 && e.pointerType === 'mouse'){
+    const rect = inputEl.getBoundingClientRect();
+    const ll = unproject(e.clientX - rect.left, e.clientY - rect.top, viewMatrix());
+    inputEl.classList.toggle('pointing', !!(ll && factionAt(ll.lat, ll.lon)));
   }
 });
 
@@ -821,7 +1102,7 @@ inputEl.addEventListener('pointerup', e => {
     dragging = false;
     inputEl.classList.remove('dragging');
     if (performance.now() - lastMoveT < 60 && dragDist > 6){ vy = lastDX; vx = lastDY; }
-    if (dragDist < 6 && SHOW_FACTIONS){
+    if (dragDist < 6){
       const rect = inputEl.getBoundingClientRect();
       const ll = unproject(e.clientX - rect.left, e.clientY - rect.top, viewMatrix());
       const f = ll ? factionAt(ll.lat, ll.lon) : null;
@@ -852,10 +1133,14 @@ function start(){
   initGL();
   resize();
   R = tR = baseR;
+  // Считаем в ФИЗИЧЕСКИХ пикселях: у телефона ширина в CSS-пикселях ~390,
+  // но плотность втрое выше, и текстура на 2048 давала заметное мыло.
   const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
-  texSize = Math.min(Math.min(screen.width, screen.height) < 500 ? 2048 : 4096, maxTex);
+  const shortPx = Math.min(screen.width, screen.height) * (window.devicePixelRatio || 1);
+  texSize = Math.min(shortPx < 700 ? 2048 : 4096, maxTex);
   buildTexture(null);
   uploadTexture();
+  updateScale();
   requestAnimationFrame(frame);
   const loader = document.getElementById('loader');
   loader.classList.add('gone');
