@@ -158,7 +158,7 @@ html[data-mode="title"] .mute-btn{display:none;}
 .info-block{border:2px solid rgba(var(--violet),0.4);border-radius:7px;overflow:hidden;background:rgba(var(--violet),0.03);}
 .info-photo{aspect-ratio:4/3;}
 .info-block-dual{display:flex;gap:1px;background:rgba(var(--violet),0.24);}
-.info-block-dual .info-photo{flex:1 1 50%;aspect-ratio:1/1;}
+.info-block-dual .info-photo{flex:1 1 0;min-width:0;aspect-ratio:1/1;}
 .info-block-body{padding:14px 15px 17px;}
 .info-title{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--paper);margin-bottom:8px;min-height:1.3em;}
 .info-text{font-size:12.5px;color:var(--paper-dim);line-height:1.6;min-height:1.6em;}
@@ -848,14 +848,18 @@ html[data-mode="title"] .mute-btn{display:none;}
             <div class="info-block-dual">
               <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info1a.jpg" alt=""></div>
               <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info1b.jpg" alt=""></div>
+              <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info1c.jpg" alt=""></div>
             </div>
             <div class="info-block-body">
               <div class="info-title decay-text"><!-- TEXT --></div>
               <div class="info-text decay-text"><!-- TEXT --></div>
             </div>
           </div>
-          <div class="info-block decay-erode">
-            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info2.jpg" alt=""></div>
+          <div class="info-block decay-erode info-block-dual-wrap">
+            <div class="info-block-dual">
+              <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info2a.jpg" alt=""></div>
+              <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info2b.jpg" alt=""></div>
+            </div>
             <div class="info-block-body">
               <div class="info-title decay-text"><!-- TEXT --></div>
               <div class="info-text decay-text"><!-- TEXT --></div>
