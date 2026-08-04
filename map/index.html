@@ -5,27 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Терминал: Глобус — Разделённый мир</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Russo+One&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700&family=Russo+One&display=swap');
 
-/* Кириллица: Orbitron/Rajdhani/Share Tech Mono её не содержат, поэтому
-   первыми идут Russo One / Exo 2 / JetBrains Mono — тот же техно-стиль,
-   но буквы и цифры в одной строке одной гарнитуры. */
-:root{
-  --font-display:'Russo One',var(--font-display);
-  --font-ui:'Exo 2',var(--font-ui);
-  --font-mono:'Share Tech Mono','JetBrains Mono',monospace;
-}
-
+  /* Кириллица: Share Tech Mono её не содержит, поэтому в моноспейс-стек
+     первым идёт Exo 2 — тот же техно-стиль, но буквы и цифры одной гарнитурой. */
   :root {
     --bg: #080c12;
     --blue: #4fc3f7;
     --text: #c8d8e8;
     --text-dim: #5a7a9a;
     --border: rgba(79,195,247,0.2);
+    --font-display: 'Russo One', 'Exo 2', sans-serif;
+    --font-ui: 'Exo 2', system-ui, sans-serif;
+    --font-mono: 'Share Tech Mono', 'Exo 2', monospace;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html, body { height: 100%; }
 
   body {
@@ -37,433 +32,103 @@
     inset: 0;
   }
 
-  /* Scanlines */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
-  }
-
   #stage { position: absolute; inset: 0; }
-  #glcanvas, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  #overlay { touch-action: none; cursor: grab; }
-  #overlay.dragging { cursor: grabbing; }
-  #overlay.pointing { cursor: pointer; }
+  /* Звёздное небо рисуется ОДИН раз в 2D-канвас, а не считается шейдером
+     на каждый пиксель каждый кадр — это снимает основную нагрузку с GPU. */
+  #starfield, #glcanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #input {
+    position: absolute; inset: 0;
+    touch-action: none;
+    cursor: grab;
+  }
+  #input.dragging { cursor: grabbing; }
 
-  /* ── HEADER ── */
-  .hud-header {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    padding: 14px 18px 26px;
-    z-index: 10;
-    pointer-events: none;
-    background: linear-gradient(180deg, rgba(8,12,18,0.92) 0%, rgba(8,12,18,0.55) 55%, transparent 100%);
-  }
-  .hud-header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--blue), transparent);
-  }
+  /* ── НАВИГАЦИЯ ── */
   .back-link {
-    pointer-events: auto;
-    display: inline-block;
+    position: absolute;
+    top: 14px; left: 14px;
+    z-index: 20;
     font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
     letter-spacing: 0.1em;
-    margin-bottom: 8px;
     border: 1px solid rgba(79,195,247,0.3);
     padding: 5px 12px;
     border-radius: 3px;
-    transition: all 0.2s;
+    background: rgba(8,12,18,0.6);
+    backdrop-filter: blur(6px);
+    transition: color .2s, border-color .2s;
   }
   .back-link:hover { color: var(--blue); border-color: var(--blue); }
-  .hud-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-dim);
-    letter-spacing: 3px;
-    margin-bottom: 5px;
-  }
-  .hud-title {
-    font-family: var(--font-display);
-    font-size: clamp(16px, 4.5vw, 24px);
-    font-weight: 900;
-    color: #fff;
-    letter-spacing: 2px;
-    text-shadow: 0 0 30px rgba(79,195,247,0.4);
-  }
-  .hud-title span { color: var(--blue); }
-  .hud-status {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 2px;
-    margin-top: 5px;
-    min-height: 14px;
-    color: var(--text-dim);
-    transition: color 0.25s;
-    text-transform: uppercase;
-  }
 
-  /* ── ЛЕГЕНДА ── */
+  /* ── МИНИ-ЛЕГЕНДА ── */
   .legend {
     position: absolute;
-    left: 12px;
-    top: 118px;
+    left: 14px;
+    bottom: 16px;
     z-index: 20;
-    width: 210px;
-    max-height: calc(100% - 220px);
+    width: 186px;
+    max-height: calc(100% - 90px);
     display: flex;
     flex-direction: column;
-    background: rgba(10,16,26,0.82);
-    backdrop-filter: blur(10px);
+    background: rgba(10,16,26,0.72);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border);
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    border-radius: 3px;
   }
   .legend-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 9px 12px;
+    padding: 7px 10px;
     cursor: pointer;
-    border-bottom: 1px solid var(--border);
     user-select: none;
+    border-bottom: 1px solid var(--border);
   }
+  .legend.collapsed .legend-head { border-bottom: none; }
   .legend-head:hover .legend-title { color: var(--blue); }
   .legend-title {
     font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 2.5px;
+    font-size: 8.5px;
+    letter-spacing: 2.2px;
     color: var(--text-dim);
     transition: color .2s;
   }
-  .legend-toggle {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--blue);
-  }
-  .legend-body { overflow-y: auto; padding: 6px 0; }
+  .legend-toggle { font-family: var(--font-mono); font-size: 11px; color: var(--blue); }
+  .legend-body { overflow-y: auto; padding: 4px 0; }
   .legend.collapsed .legend-body { display: none; }
   .legend-body::-webkit-scrollbar { width: 3px; }
   .legend-body::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.3); }
   .l-item {
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 7px 13px;
+    gap: 8px;
+    padding: 5px 11px;
     cursor: pointer;
-    transition: background .15s;
     border-left: 2px solid transparent;
+    transition: background .15s;
   }
   .l-item:hover { background: rgba(79,195,247,0.07); }
   .l-item.active {
-    background: color-mix(in srgb, var(--fc) 12%, transparent);
+    background: color-mix(in srgb, var(--fc) 14%, transparent);
     border-left-color: var(--fc);
   }
   .l-dot {
-    width: 8px; height: 8px;
+    width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--fc);
-    box-shadow: 0 0 8px var(--fc);
+    box-shadow: 0 0 6px var(--fc);
     flex-shrink: 0;
   }
   .l-name {
-    font-size: 12.5px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
     color: var(--text);
-    line-height: 1.15;
-  }
-  .l-item.active .l-name { color: #fff; }
-  .l-sub {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    color: var(--text-dim);
-    letter-spacing: 1px;
-    margin-top: 1px;
-  }
-
-  /* ── КАРТОЧКА ФРАКЦИИ ── */
-  .fcard {
-    position: absolute;
-    right: 12px;
-    top: 118px;
-    z-index: 30;
-    width: min(320px, calc(100vw - 24px));
-    max-height: calc(100% - 200px);
-    display: none;
-    flex-direction: column;
-    background: rgba(8,13,22,0.9);
-    backdrop-filter: blur(12px);
-    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
-    border-top: 2px solid var(--fc);
-    box-shadow: 0 0 26px color-mix(in srgb, var(--fc) 25%, transparent), inset 0 0 22px color-mix(in srgb, var(--fc) 8%, transparent);
-    clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
-    animation: cardIn .35s cubic-bezier(.2,.9,.3,1);
-  }
-  .fcard.open { display: flex; }
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: none; }
-  }
-  .fcard-head {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 11px 40px 11px 14px;
-    border-bottom: 1px solid color-mix(in srgb, var(--fc) 40%, transparent);
-    position: relative;
-    flex-shrink: 0;
-  }
-  .fcard-dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--fc);
-    box-shadow: 0 0 10px var(--fc);
-    flex-shrink: 0;
-    animation: pulse 2.2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100% { box-shadow: 0 0 6px var(--fc); }
-    50%     { box-shadow: 0 0 16px var(--fc); }
-  }
-  .fcard-name {
-    font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-    color: var(--fc);
-    text-shadow: 0 0 12px color-mix(in srgb, var(--fc) 60%, transparent);
-    text-transform: uppercase;
     line-height: 1.2;
   }
-  .fcard-close {
-    position: absolute;
-    right: 8px; top: 50%;
-    transform: translateY(-50%);
-    width: 26px; height: 26px;
-    background: none;
-    border: none;
-    color: var(--fc);
-    font-size: 18px;
-    cursor: pointer;
-    opacity: .8;
-    transition: opacity .2s;
-  }
-  .fcard-close:hover { opacity: 1; }
-  .fcard-body { overflow-y: auto; padding: 12px 14px 14px; }
-  .fcard-body::-webkit-scrollbar { width: 3px; }
-  .fcard-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
-  .f-badge {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 3px;
-    color: var(--fc);
-    text-align: center;
-    padding: 4px;
-    margin-bottom: 10px;
-    background: rgba(2,4,9,0.85);
-    border-radius: 3px;
-    box-shadow: 0 0 8px color-mix(in srgb, var(--fc) 25%, transparent);
-  }
-  .f-row { margin-bottom: 10px; }
-  .f-label {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--fc);
-    background: rgba(2,4,9,0.85);
-    border-left: 2px solid var(--fc);
-    padding: 3px 8px;
-    border-radius: 3px;
-    margin-bottom: 4px;
-  }
-  .f-value {
-    font-size: 13px;
-    line-height: 1.45;
-    color: var(--text);
-    padding-left: 4px;
-  }
-  .f-chips { display: flex; flex-wrap: wrap; gap: 5px; padding-left: 2px; }
-  .f-chip {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 1px;
-    padding: 3px 8px;
-    border-radius: 3px;
-    border: 1px solid var(--cc, var(--text-dim));
-    color: var(--cc, var(--text-dim));
-    background: rgba(2,4,9,0.7);
-  }
-  .f-chip.link { cursor: pointer; transition: all .15s; }
-  .f-chip.link:hover { background: color-mix(in srgb, var(--cc) 18%, transparent); box-shadow: 0 0 8px color-mix(in srgb, var(--cc) 40%, transparent); }
-  .f-chip.enemy { --cc: #ff5544; }
-
-  /* ── ДОСЬЕ ЛОКАЦИИ ── */
-  .lc-badges { display: flex; gap: 5px; margin-bottom: 9px; flex-wrap: wrap; }
-  .lc-type {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 2px;
-    font-weight: 700;
-    color: var(--fc);
-    background: rgba(2,4,9,0.85);
-    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
-    padding: 3px 9px;
-    border-radius: 3px;
-    text-shadow: 0 0 6px var(--fc);
-  }
-  .lc-type.war { color: #ff5544; border-color: rgba(255,85,68,0.5); text-shadow: 0 0 6px #ff5544; }
-  .lc-region {
-    font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    background: rgba(2,4,9,0.7);
-    padding: 3px 8px;
-    border-radius: 3px;
-  }
-  .lc-sub {
-    font-size: 12px;
-    font-weight: 700;
-    color: #fff;
-    text-align: center;
-    line-height: 1.35;
-    background: rgba(2,4,9,0.8);
-    border-radius: 3px;
-    padding: 6px 8px;
-    margin-bottom: 9px;
-  }
-  .lc-desc { font-size: 12.5px; line-height: 1.5; color: var(--text); margin-bottom: 10px; }
-  .lc-full { margin-bottom: 10px; }
-  .lc-full summary {
-    font-family: var(--font-mono);
-    font-size: 8.5px;
-    letter-spacing: 2px;
-    color: var(--fc);
-    cursor: pointer;
-    padding: 5px 8px;
-    background: rgba(2,4,9,0.85);
-    border-left: 2px solid var(--fc);
-    border-radius: 3px;
-    user-select: none;
-    list-style: none;
-  }
-  .lc-full summary::-webkit-details-marker { display: none; }
-  .lc-full summary::before { content: '▸ '; }
-  .lc-full[open] summary::before { content: '▾ '; }
-  .lc-full p { font-size: 12px; line-height: 1.55; color: var(--text); margin: 8px 2px 0; }
-  .lc-child {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 9px;
-    margin-bottom: 4px;
-    background: rgba(2,4,9,0.8);
-    border-left: 2px solid var(--fc);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background .15s;
-  }
-  .lc-child:hover { background: color-mix(in srgb, var(--fc) 12%, rgba(2,4,9,0.8)); }
-  .lc-child-type {
-    font-family: var(--font-mono);
-    font-size: 7.5px;
-    letter-spacing: 1px;
-    color: var(--fc);
-    flex-shrink: 0;
-  }
-  .lc-child-name { font-size: 12px; font-weight: 700; color: var(--text); }
-  .lc-back {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--fc);
-    background: rgba(2,4,9,0.85);
-    border: 1px solid color-mix(in srgb, var(--fc) 45%, transparent);
-    padding: 5px 11px;
-    border-radius: 3px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: all .15s;
-  }
-  .lc-back:hover { background: color-mix(in srgb, var(--fc) 15%, transparent); }
-
-  /* ── КНОПКИ УПРАВЛЕНИЯ ── */
-  .hud-controls {
-    position: absolute;
-    left: 12px;
-    bottom: 22px;
-    z-index: 20;
-    display: flex;
-    gap: 8px;
-  }
-  .hbtn {
-    width: 36px; height: 36px;
-    background: rgba(10,16,26,0.82);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    color: var(--blue);
-    font-family: var(--font-mono);
-    font-size: 15px;
-    cursor: pointer;
-    transition: all .15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .hbtn:hover { border-color: var(--blue); background: rgba(79,195,247,0.1); box-shadow: 0 0 10px rgba(79,195,247,0.25); }
-  .hbtn.off { color: var(--text-dim); }
-
-  /* ── МАСШТАБНАЯ ЛИНЕЙКА ── */
-  .scalebar {
-    position: absolute;
-    right: 14px;
-    bottom: 24px;
-    z-index: 15;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 3px;
-  }
-  .scale-line { height: 2px; background: var(--blue); opacity: .5; border-radius: 1px; transition: width .2s; }
-  .scale-text {
-    font-family: var(--font-mono);
-    font-size: 8.5px;
-    letter-spacing: 1.5px;
-    color: var(--blue);
-    opacity: .55;
-  }
-
-  /* ── ПОДСКАЗКА ── */
-  .hint {
-    position: absolute;
-    left: 50%;
-    bottom: 26px;
-    transform: translateX(-50%);
-    z-index: 15;
-    pointer-events: none;
-    font-family: var(--font-mono);
-    font-size: 8.5px;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    background: rgba(8,12,18,0.7);
-    padding: 5px 12px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    white-space: nowrap;
-    transition: opacity 1.2s;
-  }
-  .hint.gone { opacity: 0; }
+  .l-item.active .l-name { color: #fff; }
 
   /* ── ЗАГРУЗКА ── */
   #loader {
@@ -516,13 +181,6 @@
     transition: opacity .35s;
   }
   #gate.ok { opacity: 0; pointer-events: none; }
-  #gate::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
-  }
   .gate-box {
     position: relative;
     width: min(400px, calc(100vw - 40px));
@@ -545,7 +203,6 @@
   .gate-title {
     font-family: var(--font-display);
     font-size: 14px;
-    font-weight: 900;
     letter-spacing: 2px;
     color: #fff;
     text-shadow: 0 0 20px rgba(79,195,247,0.4);
@@ -610,38 +267,21 @@
   }
   .gate-back:hover { color: var(--blue); }
 
-  /* ── МОБИЛЬНАЯ АДАПТАЦИЯ ── */
   @media (max-width: 700px) {
-    .legend { width: 178px; }
-    .l-name { font-size: 11px; }
-    .fcard {
-      left: 10px; right: 10px;
-      top: auto !important; bottom: 0;
-      width: auto;
-      max-height: 55%;
-      border-bottom: none;
-    }
-    .hint { display: none; }
-    .hud-header { padding: 8px 12px 14px; }
-    .back-link { margin-bottom: 4px; }
-    .hud-label { font-size: 8px; letter-spacing: 2px; }
-    .hud-status { font-size: 9px; margin-top: 3px; }
+    .legend { width: 158px; }
+    .l-name { font-size: 10.5px; }
   }
 </style>
 </head>
 <body>
 
 <div id="stage">
+  <canvas id="starfield"></canvas>
   <canvas id="glcanvas"></canvas>
-  <canvas id="overlay"></canvas>
+  <div id="input"></div>
 </div>
 
-<div class="hud-header">
-  <a class="back-link" href="../index.html">← ТЕРМИНАЛ</a>
-  <div class="hud-label">ORBITAL MONITORING // FACTION GRID // 2061 CE</div>
-  <div class="hud-title">ГЛОБАЛЬНАЯ КАРТА — <span>РАЗДЕЛЁННЫЙ МИР</span></div>
-  <div class="hud-status" id="status">SIGNAL STABLE</div>
-</div>
+<a class="back-link" href="../index.html">← ТЕРМИНАЛ</a>
 
 <div class="legend" id="legend">
   <div class="legend-head" id="legendHead">
@@ -650,29 +290,6 @@
   </div>
   <div class="legend-body" id="legendBody"></div>
 </div>
-
-<div class="fcard" id="fcard">
-  <div class="fcard-head">
-    <div class="fcard-dot"></div>
-    <div class="fcard-name" id="fcName"></div>
-    <button class="fcard-close" id="fcClose">×</button>
-  </div>
-  <div class="fcard-body" id="fcBody"></div>
-</div>
-
-<div class="hud-controls">
-  <button class="hbtn" id="btnRotate" title="Автовращение">⏸</button>
-  <button class="hbtn" id="btnReset" title="Сброс вида">⟲</button>
-  <button class="hbtn" id="btnZoomIn" title="Приблизить">+</button>
-  <button class="hbtn" id="btnZoomOut" title="Отдалить">−</button>
-</div>
-
-<div class="scalebar">
-  <div class="scale-line" id="scaleLine"></div>
-  <div class="scale-text" id="scaleText"></div>
-</div>
-
-<div class="hint" id="hint">ПЕРЕТАСКИВАНИЕ — ВРАЩЕНИЕ &nbsp;·&nbsp; КОЛЕСО / ЩИПОК — МАСШТАБ &nbsp;·&nbsp; КЛИК ПО ТЕРРИТОРИИ — ДОСЬЕ</div>
 
 <div id="loader">
   <div class="load-ring"></div>
@@ -695,13 +312,16 @@
 
 <script src="data/land.js"></script>
 <script src="data/factions.js"></script>
-<script src="data/locations.js"></script>
 <script>
 (function(){
 "use strict";
 
+// Территории фракций перерисовываются заново поверх новой географии.
+// Пока слой выключен — на карте только суша. Координаты в factions.js не тронуты.
+const SHOW_FACTIONS = false;
+
 const FACTIONS = window.FACTIONS_DATA;
-const LAND     = window.LAND_DATA;
+const LAND     = window.LAND_DATA;   // [ [внешнее кольцо, дыра...], ... ], кольцо = [[lat,lon],...]
 const DEG = Math.PI / 180;
 
 // ═══════════════ ГЕОМЕТРИЯ ═══════════════
@@ -711,54 +331,22 @@ function ll2xyz(lat, lon){
   return [c * Math.sin(lo), Math.sin(la), c * Math.cos(lo)];
 }
 
-// «Разворачивание» долгот кольца, чтобы не рвать полигон на антимеридиане
-function unwrapRing(ring){
-  const out = [];
-  let prev = null;
-  for (const [la, lo] of ring){
-    let L = lo;
-    if (prev !== null){
-      while (L - prev >  180) L -= 360;
-      while (L - prev < -180) L += 360;
+// Долготы в land.js уже непрерывны: куски по антимеридиану сшиты на этапе
+// сборки данных (Евразия честно уходит за 180°), поэтому разворачивать нечего.
+function polyBounds(poly){
+  let lo = Infinity, hi = -Infinity;
+  for (const ring of poly){
+    for (let i = 0; i < ring.length; i++){
+      const v = ring[i][1];
+      if (v < lo) lo = v;
+      if (v > hi) hi = v;
     }
-    out.push([la, L]);
-    prev = L;
   }
-  return out;
+  return [lo, hi];
 }
+const LAND_BOUNDS = LAND.map(polyBounds);
 
-const LAND_UW = LAND.map(unwrapRing);
-for (const f of FACTIONS) f.polysUW = (f.polys || []).map(unwrapRing);
-
-// ── Локации ──
-const LOCATIONS = (window.LOCATIONS_DATA || []).map((l, i) => ({ ...l, id: "loc" + i }));
-const QH_HUB = LOCATIONS.find(l => l.name === "Дом лазури") || null;
-const QH_HOMES = LOCATIONS.filter(l => l.faction === "quiet_harbor" && l !== QH_HUB);
-
-const TYPE_RU = {
-  capital: "СТОЛИЦА", regional_capital: "ЦЕНТР РЕГИОНА", city: "ГОРОД",
-  base: "БАЗА", settlement: "ПОСЕЛЕНИЕ", landmark: "ОБЪЕКТ",
-  anomaly: "АНОМАЛИЯ", frontline: "ЛИНИЯ ФРОНТА",
-};
-const TYPE_SIZE = {
-  capital: 6.5, regional_capital: 5, city: 4, base: 4,
-  settlement: 3.2, landmark: 4.8, anomaly: 5, frontline: 4.8,
-};
-// приоритет подписей при коллизиях (меньше = важнее)
-const TYPE_PRIO = {
-  capital: 0, frontline: 1, landmark: 2, regional_capital: 3,
-  base: 4, city: 5, anomaly: 5, settlement: 6,
-};
-const LOC_FIELDS = [
-  ["region", "Регион", ""], ["population", "Население", "👥 "],
-  ["management", "Управление", ""], ["economy", "Экономика", ""],
-  ["founded", "Основание", "📅 "], ["defense", "Оборона", "🛡️ "],
-  ["access", "Доступ", ""], ["capacity", "Вместимость", ""],
-  ["danger", "Уровень опасности", "⚠️ "], ["status", "Статус", ""],
-  ["intensity", "Интенсивность", "⚔️ "], ["purpose", "Назначение", ""],
-];
-
-// Точка в полигоне (лучевой алгоритм) в координатах lat/«развёрнутая lon»
+// Точка в кольце (лучевой алгоритм)
 function pointInRing(lat, lon, ring){
   let inside = false;
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++){
@@ -768,11 +356,20 @@ function pointInRing(lat, lon, ring){
   }
   return inside;
 }
+// Точка в полигоне с дырами: внутри внешнего кольца и снаружи всех дыр
+function pointInPoly(lat, lon, poly){
+  if (!pointInRing(lat, lon, poly[0])) return false;
+  for (let i = 1; i < poly.length; i++){
+    if (pointInRing(lat, lon, poly[i])) return false;
+  }
+  return true;
+}
 function factionAt(lat, lon){
+  if (!SHOW_FACTIONS) return null;
   for (const f of FACTIONS){
-    for (const ring of f.polysUW){
+    for (const poly of (f.polys || [])){
       for (const off of [-360, 0, 360]){
-        if (pointInRing(lat, lon + off, ring)) return f;
+        if (pointInPoly(lat, lon + off, poly)) return f;
       }
     }
   }
@@ -780,22 +377,22 @@ function factionAt(lat, lon){
 }
 
 // ═══════════════ ТЕКСТУРА (equirectangular) ═══════════════
-// Территории запекаются в текстуру и натягиваются на сферу —
+// Суша и территории запекаются в текстуру и натягиваются на сферу —
 // обрезки по горизонту нет вообще, значит нет и «кинжалов».
 const texCanvas = document.createElement('canvas');
+let texSize = 4096;
 
 function hexRgb(h){
   return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
 }
 
-let texSize = 4096;
 function buildTexture(selectedKey){
   const W = texSize, H = W / 2;
   texCanvas.width = W; texCanvas.height = H;
   const c = texCanvas.getContext('2d');
   const X = lon => (lon + 180) / 360 * W;
   const Y = lat => (90 - lat) / 180 * H;
-  const k = W / 4096; // масштаб штрихов
+  const k = W / 4096;
 
   // Океан
   const og = c.createLinearGradient(0, 0, 0, H);
@@ -818,140 +415,143 @@ function buildTexture(selectedKey){
   c.strokeStyle = 'rgba(90,170,255,0.10)';
   c.beginPath(); c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); c.stroke(); // экватор
 
-  function tracePath(ringUW, dx){
+  // Полигон целиком (внешнее кольцо + дыры) одним путём —
+  // заливка по evenodd честно прорезает Каспий и прочие внутренние моря.
+  function tracePoly(poly, dx){
     c.beginPath();
-    for (let i = 0; i < ringUW.length; i++){
-      const [la, lo] = ringUW[i];
-      const x = X(lo) + dx, y = Y(la);
-      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    for (const ring of poly){
+      for (let i = 0; i < ring.length; i++){
+        const x = X(ring[i][1]) + dx, y = Y(ring[i][0]);
+        i ? c.lineTo(x, y) : c.moveTo(x, y);
+      }
+      c.closePath();
     }
-    c.closePath();
   }
-  const OFFS = [-W, 0, W];
+  // Копии со сдвигом нужны только тем полигонам, что реально вылезают за края
+  // текстуры (Евразия, Антарктида) — остальным хватает одной отрисовки.
+  function offsetsFor(bounds){
+    const out = [];
+    for (const dx of [-W, 0, W]){
+      if (X(bounds[1]) + dx >= 0 && X(bounds[0]) + dx <= W) out.push(dx);
+    }
+    return out;
+  }
+  const LAND_OFFS = LAND_BOUNDS.map(offsetsFor);
+
+  function forEachLand(fn){
+    for (let i = 0; i < LAND.length; i++){
+      for (const dx of LAND_OFFS[i]) fn(LAND[i], dx);
+    }
+  }
 
   // Суша
-  for (const ring of LAND_UW){
-    for (const dx of OFFS){ tracePath(ring, dx); c.fillStyle = '#152219'; c.fill(); }
-  }
-  // Свечение береговой линии — вместо ctx.shadowBlur (дорогой программный
-  // блюр, особенно на текстуре 8k) рисуем несколько обводок нарастающей
-  // толщины и убывающей прозрачности. Визуально почти неотличимо, но на
-  // порядок дешевле, и это ещё разовая (не покадровая) операция.
+  c.fillStyle = '#152219';
+  forEachLand((poly, dx) => { tracePoly(poly, dx); c.fill('evenodd'); });
+
+  // Свечение береговой линии: вместо ctx.shadowBlur (дорогой программный блюр
+  // на текстуре в мегапиксели) — три обводки нарастающей толщины.
   c.save();
   c.strokeStyle = 'rgba(90,190,230,0.55)';
-  c.globalAlpha = 0.12;
-  c.lineWidth = 6 * k;
-  for (const ring of LAND_UW){
-    for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
-  }
-  c.globalAlpha = 0.22;
-  c.lineWidth = 3 * k;
-  for (const ring of LAND_UW){
-    for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
-  }
+  c.globalAlpha = 0.12; c.lineWidth = 6 * k;
+  forEachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
+  c.globalAlpha = 0.22; c.lineWidth = 3 * k;
+  forEachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
   c.strokeStyle = 'rgba(120,205,180,0.30)';
-  c.globalAlpha = 1;
-  c.lineWidth = 1.6 * k;
-  for (const ring of LAND_UW){
-    for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
-  }
+  c.globalAlpha = 1; c.lineWidth = 1.6 * k;
+  forEachLand((poly, dx) => { tracePoly(poly, dx); c.stroke(); });
   c.restore();
+
+  if (!SHOW_FACTIONS) return texCanvas;
 
   // Территории фракций: сначала все заливки, потом все границы
   const hasSel = !!selectedKey;
   for (const f of FACTIONS){
-    if (!f.polysUW.length) continue;
-    const [r, g, b] = hexRgb(f.col);
-    const sel = f.key === selectedKey;
-    const alpha = sel ? 0.38 : (hasSel ? 0.10 : 0.20);
-    c.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-    for (const ring of f.polysUW){
-      for (const dx of OFFS){ tracePath(ring, dx); c.fill(); }
+    for (const poly of (f.polys || [])){
+      const [r, g, b] = hexRgb(f.col);
+      const sel = f.key === selectedKey;
+      c.fillStyle = `rgba(${r},${g},${b},${sel ? 0.38 : (hasSel ? 0.10 : 0.20)})`;
+      for (const dx of offsetsFor(polyBounds(poly))){ tracePoly(poly, dx); c.fill('evenodd'); }
     }
   }
   for (const f of FACTIONS){
-    if (!f.polysUW.length) continue;
     const sel = f.key === selectedKey;
     const baseA = sel ? 1 : (hasSel ? 0.55 : 0.9);
-    c.save();
-    c.strokeStyle = f.col;
-    // тот же слоёный глоу вместо shadowBlur — здесь раньше был самый большой
-    // радиус блюра (до 30*k), т.е. самая дорогая операция во всём приложении
-    c.globalAlpha = baseA * 0.10;
-    c.lineWidth = (sel ? 22 : 11) * k;
-    for (const ring of f.polysUW){
-      for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
+    for (const poly of (f.polys || [])){
+      const offs = offsetsFor(polyBounds(poly));
+      c.save();
+      c.strokeStyle = f.col;
+      c.globalAlpha = baseA * 0.10; c.lineWidth = (sel ? 22 : 11) * k;
+      for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
+      c.globalAlpha = baseA * 0.22; c.lineWidth = (sel ? 11 : 6) * k;
+      for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
+      c.globalAlpha = baseA; c.lineWidth = (sel ? 6 : 3) * k;
+      for (const dx of offs){ tracePoly(poly, dx); c.stroke(); }
+      c.restore();
     }
-    c.globalAlpha = baseA * 0.22;
-    c.lineWidth = (sel ? 11 : 6) * k;
-    for (const ring of f.polysUW){
-      for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
-    }
-    c.globalAlpha = baseA;
-    c.lineWidth = (sel ? 6 : 3) * k;
-    for (const ring of f.polysUW){
-      for (const dx of OFFS){ tracePath(ring, dx); c.stroke(); }
-    }
-    c.restore();
   }
   return texCanvas;
 }
 
+// ═══════════════ ЗВЁЗДНОЕ НЕБО (статичное, рисуется один раз) ═══════════════
+const starCanvas = document.getElementById('starfield');
+function drawStarfield(w, h, dpr){
+  starCanvas.width = w * dpr; starCanvas.height = h * dpr;
+  const c = starCanvas.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const neb = c.createRadialGradient(w * 0.5, h * 0.55, 0, w * 0.5, h * 0.55, Math.max(w, h) * 0.85);
+  neb.addColorStop(0, '#0a0d1a');
+  neb.addColorStop(1, '#03030c');
+  c.fillStyle = neb;
+  c.fillRect(0, 0, w, h);
+
+  // детерминированный ГПСЧ — звёзды не «перепрыгивают» при ресайзе
+  let seed = 20610412;
+  const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+
+  const count = Math.round(w * h / 2600);
+  for (let i = 0; i < count; i++){
+    const x = rnd() * w, y = rnd() * h;
+    const m = rnd();
+    const r = m > 0.985 ? 1.5 : m > 0.9 ? 1.0 : 0.65;
+    const a = 0.25 + rnd() * 0.6;
+    c.globalAlpha = a;
+    c.fillStyle = m > 0.96 ? '#dce8ff' : '#9fb6d8';
+    c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+    if (r > 1.2){
+      c.globalAlpha = a * 0.18;
+      c.beginPath(); c.arc(x, y, r * 3.2, 0, Math.PI * 2); c.fill();
+    }
+  }
+  c.globalAlpha = 1;
+}
+
 // ═══════════════ WEBGL ═══════════════
 const glCanvas = document.getElementById('glcanvas');
-const gl = glCanvas.getContext('webgl', { antialias: false, alpha: false })
-        || glCanvas.getContext('experimental-webgl');
+const gl = glCanvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: false })
+        || glCanvas.getContext('experimental-webgl', { alpha: true });
 
 const VSH = `
 attribute vec2 aPos;
 void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }
 `;
 
+// Шейдер считает только диск планеты и ореол вокруг него; всё остальное
+// отбрасывается (звёзды лежат отдельным статичным слоем снизу).
 const FSH = `
 precision highp float;
 uniform vec2  uRes;
 uniform vec3  uView;   // cx, cy (GL-координаты), R в px
 uniform mat3  uMinv;   // view -> world
 uniform sampler2D uTex;
-uniform float uTime;
-
-float hash21(vec2 p){
-  p = fract(p * vec2(123.34, 456.21));
-  p += dot(p, p + 45.32);
-  return fract(p.x * p.y);
-}
-
-float starLayer(vec2 fc, float cell, float thresh, float seedOff){
-  vec2 g = floor(fc / cell);
-  float h = hash21(g + seedOff);
-  if (h < thresh) return 0.0;
-  vec2 sp = (vec2(fract(h * 37.7), fract(h * 91.3)) * 0.6 + 0.2) * cell;
-  vec2 lp = fc - (g * cell + sp);
-  float d2 = dot(lp, lp);
-  float b = (h - thresh) / (1.0 - thresh);
-  float tw = 0.55 + 0.45 * sin(uTime * (0.6 + b * 2.2) + h * 87.0);
-  return (exp(-d2 * 1.5) + 0.22 * exp(-d2 * 0.12)) * b * tw;
-}
-
-vec3 spaceColor(vec2 fc){
-  // фоновая туманность
-  vec2 focus = vec2(uRes.x * 0.5, uRes.y * 0.55);
-  float rad = distance(fc, focus) / (max(uRes.x, uRes.y) * 0.85);
-  vec3 col = mix(vec3(0.030, 0.038, 0.092), vec3(0.010, 0.011, 0.038), clamp(rad, 0.0, 1.0));
-  // звёзды: два слоя гауссовых точек
-  col += vec3(0.62, 0.72, 0.95) * starLayer(fc, 26.0, 0.86, 0.0) * 0.9;
-  col += vec3(0.85, 0.90, 1.00) * starLayer(fc, 61.0, 0.90, 13.7);
-  return col;
-}
 
 void main(){
-  vec2 fc = gl_FragCoord.xy;
-  vec2 q = (fc - uView.xy) / uView.z;
+  vec2 q = (gl_FragCoord.xy - uView.xy) / uView.z;
   float d = length(q);
   float aa = 1.6 / uView.z;
 
-  vec3 atm = vec3(0.22, 0.52, 1.0);
-  vec3 outCol = spaceColor(fc) + atm * exp(-max(d - 1.0, 0.0) * 7.5) * 0.34;
+  vec3  atm  = vec3(0.22, 0.52, 1.0);
+  float halo = exp(-max(d - 1.0, 0.0) * 7.5) * 0.34;
 
   if (d < 1.0 + aa){
     float z = sqrt(max(1.0 - d * d, 0.0));
@@ -967,14 +567,11 @@ void main(){
     float rim = pow(1.0 - z, 3.0);
     vec3 col = tex * diff + atm * rim * 0.38;
 
-    // сканирующий луч по долготе
-    float s = sin((lon - uTime * 0.13) * 0.5);
-    col += vec3(0.25, 0.7, 1.0) * exp(-s * s * 240.0) * 0.10 * z;
-
     float m = smoothstep(1.0 + aa, 1.0 - aa, d);
-    gl_FragColor = vec4(mix(outCol, col, m), 1.0);
+    gl_FragColor = vec4(mix(atm, col, m), max(m, halo));
   } else {
-    gl_FragColor = vec4(outCol, 1.0);
+    if (halo < 0.004) discard;
+    gl_FragColor = vec4(atm, halo);
   }
 }
 `;
@@ -1005,8 +602,11 @@ function initGL(){
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
-  for (const name of ['uRes','uView','uMinv','uTex','uTime'])
+  for (const name of ['uRes','uView','uMinv','uTex'])
     uni[name] = gl.getUniformLocation(prog, name);
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
   tex = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -1027,8 +627,7 @@ function uploadTexture(){
 }
 
 // ═══════════════ СОСТОЯНИЕ КАМЕРЫ ═══════════════
-const overlay = document.getElementById('overlay');
-const octx = overlay.getContext('2d');
+const inputEl = document.getElementById('input');
 const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
 let W = 0, H = 0;             // CSS-пиксели
@@ -1038,16 +637,17 @@ let R = 100, tR = 100;        // радиус глобуса, px
 let baseR = 100;
 let autoRot = true;
 let vy = 0, vx = 0;           // инерция
-let time0 = performance.now();
+let dirty = true;             // нужен перерисов
 
 function resize(){
   W = window.innerWidth; H = window.innerHeight;
   glCanvas.width = W * dpr; glCanvas.height = H * dpr;
-  overlay.width = W * dpr; overlay.height = H * dpr;
   gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+  drawStarfield(W, H, dpr);
   const nb = Math.min(W, H) * 0.40;
   if (baseR === 100){ R = tR = nb; }
   baseR = nb;
+  dirty = true;
 }
 window.addEventListener('resize', resize);
 
@@ -1061,13 +661,6 @@ function viewMatrix(){
     r3: [-cb * sa, sb, cb * ca],
   };
 }
-function project(lat, lon, M){
-  const [x, y, z] = ll2xyz(lat, lon);
-  const vx3 = M.r1[0]*x + M.r1[1]*y + M.r1[2]*z;
-  const vy3 = M.r2[0]*x + M.r2[1]*y + M.r2[2]*z;
-  const vz3 = M.r3[0]*x + M.r3[1]*y + M.r3[2]*z;
-  return { x: W/2 + vx3 * R, y: H/2 - vy3 * R, z: vz3, vis: vz3 > 0.02 };
-}
 // обратная проекция: экран -> lat/lon (null вне сферы)
 function unproject(mx, my, M){
   const qx = (mx - W/2) / R, qy = -(my - H/2) / R;
@@ -1080,74 +673,20 @@ function unproject(mx, my, M){
   return { lat: Math.asin(Math.max(-1, Math.min(1, wy))) / DEG, lon: Math.atan2(wx, wz) / DEG };
 }
 
-// проекция произвольной 3D-точки мира (|P| может быть > 1 — приподнятые объекты).
-// Видимость: точка спрятана, только если она за сферой И внутри её силуэта
-function project3(P, M){
-  const vx3 = M.r1[0]*P[0] + M.r1[1]*P[1] + M.r1[2]*P[2];
-  const vy3 = M.r2[0]*P[0] + M.r2[1]*P[1] + M.r2[2]*P[2];
-  const vz3 = M.r3[0]*P[0] + M.r3[1]*P[1] + M.r3[2]*P[2];
-  return {
-    x: W/2 + vx3 * R, y: H/2 - vy3 * R, z: vz3,
-    vis: vz3 >= 0 || (vx3*vx3 + vy3*vy3) >= 1,
-  };
-}
-
-// сферическая интерполяция между двумя точками на сфере
-function slerp3(a, b, s){
-  let d = a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
-  d = Math.max(-1, Math.min(1, d));
-  const o = Math.acos(d);
-  if (o < 1e-4) return [a[0], a[1], a[2]];
-  const sn = Math.sin(o), w1 = Math.sin((1-s)*o)/sn, w2 = Math.sin(s*o)/sn;
-  return [a[0]*w1 + b[0]*w2, a[1]*w1 + b[1]*w2, a[2]*w1 + b[2]*w2];
-}
-function angDist(a, b){
-  return Math.acos(Math.max(-1, Math.min(1, a[0]*b[0] + a[1]*b[1] + a[2]*b[2])));
-}
-function smooth01(x){ return x <= 0 ? 0 : x >= 1 ? 1 : x*x*(3 - 2*x); }
-
-// ═══════════════ UI: СТАТУС / ЛЕГЕНДА / КАРТОЧКА ═══════════════
-const statusEl = document.getElementById('status');
-const byName = {};
-for (const f of FACTIONS) byName[f.name] = f;
-const FALLBACK_F = { key: '?', col: '#8fa8c0', name: '—' };
-function facOfKey(key){ return FACTIONS.find(f => f.key === key) || FALLBACK_F; }
-
-let selectedKey = null;    // выбранная фракция (подсветка территории)
-let selectedLocId = null;  // выбранная локация
-let hovId = null;          // id локации или key фракции под курсором
-let lastT = 0;
-
-// панели не должны наезжать на шапку: меряем её реальную высоту
-const hudHeaderEl = document.querySelector('.hud-header');
-const legendEl = document.getElementById('legend');
-const fcardEl = document.getElementById('fcard');
-function layoutPanels(){
-  const h = hudHeaderEl.offsetHeight;
-  legendEl.style.top = (h + 6) + 'px';
-  legendEl.style.maxHeight = 'calc(100% - ' + (h + 100) + 'px)';
-  if (window.innerWidth > 700) fcardEl.style.top = (h + 6) + 'px';
-  else fcardEl.style.top = '';
-}
-window.addEventListener('resize', layoutPanels);
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutPanels);
-
-function setStatus(text, color){
-  statusEl.textContent = text || 'SIGNAL STABLE';
-  statusEl.style.color = color || '';
-}
-
+// ═══════════════ ЛЕГЕНДА ═══════════════
+const legend = document.getElementById('legend');
 const legendBody = document.getElementById('legendBody');
+let selectedKey = null;
+
 for (const f of FACTIONS){
   const it = document.createElement('div');
   it.className = 'l-item';
   it.style.setProperty('--fc', f.col);
   it.dataset.key = f.key;
   it.innerHTML = `<div class="l-dot"></div><div class="l-name">${f.name}</div>`;
-  it.addEventListener('click', () => select(f.key, true));
+  it.addEventListener('click', () => select(selectedKey === f.key ? null : f.key, true));
   legendBody.appendChild(it);
 }
-const legend = document.getElementById('legend');
 document.getElementById('legendHead').addEventListener('click', () => {
   legend.classList.toggle('collapsed');
   document.getElementById('legendToggle').textContent = legend.classList.contains('collapsed') ? '+' : '–';
@@ -1157,58 +696,18 @@ if (window.innerWidth <= 700){
   document.getElementById('legendToggle').textContent = '+';
 }
 
-const fcard = document.getElementById('fcard');
-const fcName = document.getElementById('fcName');
-const fcBody = document.getElementById('fcBody');
-document.getElementById('fcClose').addEventListener('click', () => select(null));
-
-function chipHtml(name, enemy){
-  const f = byName[name];
-  const cls = 'f-chip' + (enemy ? ' enemy' : '') + (f ? ' link' : '');
-  const style = (!enemy && f) ? ` style="--cc:${f.col}"` : '';
-  const data = f ? ` data-goto="${f.key}"` : '';
-  return `<span class="${cls}"${style}${data}>${name}</span>`;
-}
-
-function openCard(f){
-  fcard.style.setProperty('--fc', f.col);
-  fcName.textContent = f.name;
-  let html = `<div class="f-badge">ДОСЬЕ ФРАКЦИИ // ДОСТУП РАЗРЕШЁН</div>`;
-  const rows = [['ЛИДЕР', f.leader], ['ИДЕОЛОГИЯ', f.ideo], ['ТЕРРИТОРИАЛЬНАЯ БАЗА', f.base]];
-  for (const [label, val] of rows){
-    if (!val) continue;
-    html += `<div class="f-row"><div class="f-label">${label}</div><div class="f-value">${val}</div></div>`;
-  }
-  if (f.allies && f.allies.length)
-    html += `<div class="f-row"><div class="f-label">СОЮЗНИКИ</div><div class="f-chips">${f.allies.map(n => chipHtml(n, false)).join('')}</div></div>`;
-  if (f.enemies && f.enemies.length)
-    html += `<div class="f-row"><div class="f-label">ПРОТИВНИКИ</div><div class="f-chips">${f.enemies.map(n => chipHtml(n, true)).join('')}</div></div>`;
-  fcBody.innerHTML = html;
-  fcBody.querySelectorAll('[data-goto]').forEach(el =>
-    el.addEventListener('click', () => select(el.dataset.goto, true)));
-  fcard.classList.add('open');
-}
-
 function shortestAngle(from, to){
   let d = (to - from) % (2 * Math.PI);
   if (d >  Math.PI) d -= 2 * Math.PI;
   if (d < -Math.PI) d += 2 * Math.PI;
   return from + d;
 }
-
 function flyToLL(lat, lon, minZoom){
   ty = shortestAngle(ry, -lon * DEG);
   tx = Math.max(-1.35, Math.min(1.35, lat * DEG));
   if (minZoom && tR < minZoom) tR = minZoom;
   autoRot = false;
-  updateRotateBtn();
-}
-
-function collapseLegendOnMobile(){
-  if (window.innerWidth <= 700 && !legend.classList.contains('collapsed')){
-    legend.classList.add('collapsed');
-    document.getElementById('legendToggle').textContent = '+';
-  }
+  dirty = true;
 }
 
 function refreshTexture(key){
@@ -1216,455 +715,32 @@ function refreshTexture(key){
   refreshTexture._last = key;
   buildTexture(key);
   uploadTexture();
+  dirty = true;
 }
 
 function select(key, fly){
   selectedKey = key;
-  selectedLocId = null;
   legendBody.querySelectorAll('.l-item').forEach(el =>
     el.classList.toggle('active', el.dataset.key === key));
-  if (key){
+  if (key && fly){
     const f = FACTIONS.find(x => x.key === key);
-    openCard(f);
-    if (fly) flyToLL(f.clat, f.clon, baseR * 1.5);
-    setStatus('ОБЪЕКТ: ' + f.name, f.col);
-    ping = { lat: f.clat, lon: f.clon, t0: lastT, col: f.col };
-    collapseLegendOnMobile();
-  } else {
-    fcard.classList.remove('open');
-    setStatus();
+    if (f) flyToLL(f.clat, f.clon, baseR * 1.5);
   }
   refreshTexture(selectedKey);
-}
-
-function selectLocation(loc, fly){
-  selectedLocId = loc.id;
-  selectedKey = loc.faction && facOfKey(loc.faction).key !== '?' ? loc.faction : null;
-  legendBody.querySelectorAll('.l-item').forEach(el =>
-    el.classList.toggle('active', el.dataset.key === selectedKey));
-  const f = facOfKey(loc.faction);
-  openLocCard(loc);
-  if (fly !== false) flyToLL(loc.lat, loc.lon, baseR * 1.7);
-  setStatus(TYPE_RU[loc.type] + ': ' + loc.name, f.col);
-  ping = { lat: loc.lat, lon: loc.lon, t0: lastT, col: f.col };
-  collapseLegendOnMobile();
-  refreshTexture(selectedKey);
-}
-
-// ── карточка-досье локации (с дочерними объектами и возвратом) ──
-function locFieldsHtml(loc){
-  let html = '';
-  for (const [key, label, icon] of LOC_FIELDS){
-    const v = loc[key];
-    if (!v) continue;
-    html += `<div class="f-row"><div class="f-label">${label}</div><div class="f-value">${icon}${v}</div></div>`;
-  }
-  return html;
-}
-
-function openLocCard(loc, parent){
-  const f = facOfKey(loc.faction);
-  fcard.style.setProperty('--fc', f.col);
-  fcName.textContent = loc.name;
-  let html = '';
-  if (parent) html += `<div class="lc-back" data-back="1">◄ ${parent.name}</div>`;
-  html += `<div class="lc-badges"><span class="lc-type${loc.type === 'frontline' ? ' war' : ''}">${TYPE_RU[loc.type] || String(loc.type).toUpperCase()}</span>`;
-  if (facOfKey(loc.faction).key !== '?') html += `<span class="lc-region">${f.name}</span>`;
-  html += `</div>`;
-  if (loc.subtitle) html += `<div class="lc-sub">${loc.subtitle}</div>`;
-  if (loc.desc) html += `<div class="lc-desc">${loc.desc}</div>`;
-  if (loc.full){
-    const paras = loc.full.split(/\n\n+/).map(p => `<p>${p}</p>`).join('');
-    html += `<details class="lc-full"><summary>ПОЛНОЕ ДОСЬЕ</summary>${paras}</details>`;
-  }
-  html += locFieldsHtml(loc);
-  if (loc.involved && loc.involved.length)
-    html += `<div class="f-row"><div class="f-label">СТОРОНЫ</div><div class="f-chips">${
-      loc.involved.map(n => {
-        const ff = byName[n];
-        return `<span class="f-chip"${ff ? ` style="--cc:${ff.col}"` : ''}>${n}</span>`;
-      }).join('')}</div></div>`;
-  if (loc.chars && loc.chars.length)
-    html += `<div class="f-row"><div class="f-label">КЛЮЧЕВЫЕ ФИГУРЫ</div><div class="f-chips">${
-      loc.chars.map(n => `<span class="f-chip" style="--cc:${f.col}">${n}</span>`).join('')}</div></div>`;
-  if (loc.children && loc.children.length){
-    html += `<div class="f-row"><div class="f-label">ОБЪЕКТЫ ВНУТРИ</div>${
-      loc.children.map((c, i) => `
-        <div class="lc-child" data-child="${i}">
-          <span class="lc-child-type">${TYPE_RU[c.type] || 'ОБЪЕКТ'}</span>
-          <span class="lc-child-name">${c.name}</span>
-        </div>`).join('')}</div>`;
-  }
-  fcBody.innerHTML = html;
-  fcBody.scrollTop = 0;
-  fcBody.querySelectorAll('[data-child]').forEach(el =>
-    el.addEventListener('click', () => openLocCard(loc.children[+el.dataset.child], loc)));
-  const back = fcBody.querySelector('[data-back]');
-  if (back && parent) back.addEventListener('click', () => openLocCard(parent));
-  fcard.classList.add('open');
-}
-
-// ═══════════════ МАРКЕРЫ / ПОДПИСИ / 3D-СЛОЙ ═══════════════
-let labelRects = [];
-function labelFits(x, y, w, h){
-  for (const r of labelRects){
-    if (x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y) return false;
-  }
-  labelRects.push({ x, y, w, h });
-  return true;
-}
-
-// ── дешёвая замена ctx.shadowBlur ──
-// Программный блюр Canvas2D — один из главных пожирателей кадров, особенно
-// на слабом/встроенном GPU: каждый shadowBlur — это отдельный проход растра
-// и свёртки, а тут он вызывался на КАЖДЫЙ маркер/подпись КАЖДЫЙ кадр.
-// Вместо блюра — заранее просчитанный (один раз на цвет) спрайт с радиальным
-// градиентом: дальше это просто дешёвый drawImage.
-const glowCache = new Map();
-function glowSprite(col){
-  let s = glowCache.get(col);
-  if (s) return s;
-  const SZ = 64;
-  s = document.createElement('canvas');
-  s.width = s.height = SZ;
-  const g = s.getContext('2d');
-  const grad = g.createRadialGradient(SZ/2, SZ/2, 0, SZ/2, SZ/2, SZ/2);
-  grad.addColorStop(0, col + 'ff');
-  grad.addColorStop(0.35, col + '55');
-  grad.addColorStop(1, col + '00');
-  g.fillStyle = grad;
-  g.fillRect(0, 0, SZ, SZ);
-  glowCache.set(col, s);
-  return s;
-}
-function drawGlow(x, y, r, col, alpha){
-  if (alpha <= 0.01 || r <= 0) return;
-  octx.globalAlpha = alpha;
-  octx.drawImage(glowSprite(col), x - r, y - r, r * 2, r * 2);
-}
-
-// подпись с подложкой и защитой от наездов; важные подписи рисуются первыми
-function drawLabel(name, x, y, offY, col, hot, alpha, big){
-  if (alpha <= 0.04) return;
-  const fs = Math.max(8, Math.min(big ? 12 : 10.5, R * (big ? 0.028 : 0.023)));
-  octx.save();
-  octx.font = `${hot ? 700 : 500} ${fs}px var(--font-mono)`;
-  octx.textAlign = 'center';
-  octx.textBaseline = 'top';
-  const tw = octx.measureText(name).width;
-  const py = y + offY;
-  if (!hot && !labelFits(x - tw/2 - 4, py - 2, tw + 8, fs + 5)){ octx.restore(); return; }
-  octx.globalAlpha = 0.84 * alpha;
-  octx.fillStyle = 'rgba(4,6,14,0.88)';
-  octx.fillRect(x - tw/2 - 4, py - 2, tw + 8, fs + 5);
-  octx.globalAlpha = alpha;
-  octx.fillStyle = hot ? '#ffffff' : col;
-  octx.fillText(name, x, py);
-  octx.restore();
-}
-
-// маркеры по типам — портировано из Obsidian-движка
-// (свечение — через glowSprite()/drawGlow(), не через ctx.shadowBlur: см. комментарий выше)
-function drawTypedMarker(type, x, y, sz, col, hot, t, seed, alpha){
-  octx.save();
-  octx.globalAlpha = alpha;
-  const ring = (r, a, lw) => {
-    octx.globalAlpha = a * alpha;
-    octx.strokeStyle = col;
-    octx.lineWidth = lw;
-    octx.beginPath(); octx.arc(x, y, r, 0, Math.PI * 2); octx.stroke();
-  };
-  const core = (a, glowR) => {
-    drawGlow(x, y, sz + glowR, col, a * alpha * 0.85);
-    octx.globalAlpha = a * alpha;
-    octx.fillStyle = col;
-    octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
-  };
-  if (type === 'capital'){
-    const p1 = .5 + .5 * Math.sin(t * .9 + seed);
-    ring(sz + 5 + p1 * 3, (hot ? .55 : .22) * (.4 + .6 * p1), hot ? 1.4 : .7);
-    const p2 = .5 + .5 * Math.sin(t * .9 + seed + Math.PI);
-    ring(sz + 2 + p2 * 2, (hot ? .35 : .14) * (.4 + .6 * p2), .6);
-    core(hot ? 1 : .9, hot ? 26 : 14);
-  } else if (type === 'regional_capital'){
-    const p1 = .5 + .5 * Math.sin(t * .9 + seed);
-    ring(sz + 3 + p1 * 2, (hot ? .4 : .16) * (.4 + .6 * p1), hot ? 1.2 : .6);
-    core(hot ? 1 : .85, hot ? 18 : 10);
-  } else if (type === 'frontline'){
-    const pulse = .5 + .5 * Math.sin(t * 2.2 + seed);
-    const fl = '#ff3322';
-    octx.strokeStyle = fl;
-    octx.lineWidth = hot ? 1.4 : .8;
-    octx.globalAlpha = (.15 + .25 * pulse) * (hot ? 1.4 : 1) * alpha;
-    octx.beginPath(); octx.arc(x, y, sz + 2 + pulse * 4, 0, Math.PI * 2); octx.stroke();
-    octx.globalAlpha = (.08 + .12 * pulse) * (hot ? 1.4 : 1) * alpha;
-    octx.beginPath(); octx.arc(x, y, sz + 5 + pulse * 6, 0, Math.PI * 2); octx.stroke();
-    drawGlow(x, y, sz + (hot ? 24 : 12), '#ff5500', (hot ? 1 : .88) * alpha * 0.85);
-    octx.globalAlpha = (hot ? 1 : .88) * alpha;
-    octx.fillStyle = fl;
-    octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
-  } else if (type === 'landmark'){
-    // ромб
-    const p1 = .5 + .5 * Math.sin(t * 1.1 + seed);
-    octx.globalAlpha = (.1 + .16 * p1) * (hot ? 1.6 : 1) * alpha;
-    octx.strokeStyle = col;
-    octx.lineWidth = .8;
-    octx.beginPath(); octx.arc(x, y, sz + 2.5 + p1 * 3, 0, Math.PI * 2); octx.stroke();
-    drawGlow(x, y, sz + (hot ? 20 : 9), col, (hot ? 1 : .88) * alpha * 0.85);
-    octx.globalAlpha = (hot ? 1 : .88) * alpha;
-    octx.fillStyle = col;
-    octx.beginPath();
-    octx.moveTo(x, y - sz); octx.lineTo(x + sz * .8, y); octx.lineTo(x, y + sz); octx.lineTo(x - sz * .8, y);
-    octx.closePath(); octx.fill();
-  } else if (type === 'base'){
-    // квадрат
-    const s = sz * .85;
-    drawGlow(x, y, s + (hot ? 16 : 7), col, (hot ? 1 : .8) * alpha * 0.85);
-    octx.globalAlpha = (hot ? 1 : .8) * alpha;
-    octx.fillStyle = col;
-    octx.fillRect(x - s, y - s, s * 2, s * 2);
-    octx.globalAlpha = .35 * alpha;
-    octx.strokeStyle = col;
-    octx.lineWidth = .8;
-    octx.strokeRect(x - s - 2.5, y - s - 2.5, s * 2 + 5, s * 2 + 5);
-  } else if (type === 'settlement'){
-    core(hot ? .95 : .55, hot ? 10 : 4);
-  } else {
-    const pulse = .5 + .5 * Math.sin(t * 1.4 + seed);
-    ring(sz + 1.8 + pulse * 2.2, (.06 + .1 * pulse) * (hot ? 1.6 : 1), .7);
-    core(hot ? 1 : .82, hot ? 16 : 7);
-  }
-  octx.restore();
-}
-
-// ── эффект: волна-пинг при выборе объекта ──
-let ping = null; // {lat, lon, t0, col}
-function drawPing(t, M){
-  if (!ping) return;
-  const age = t - ping.t0;
-  if (age > 1.4){ ping = null; return; }
-  const prog = age / 1.4;
-  const radius = prog * 16 * DEG; // угловой радиус
-  const alpha = (1 - prog) * 0.55;
-  const c = ll2xyz(ping.lat, ping.lon);
-  // ортонормальный базис вокруг центра
-  const up = Math.abs(c[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0];
-  let e1 = [up[1]*c[2] - up[2]*c[1], up[2]*c[0] - up[0]*c[2], up[0]*c[1] - up[1]*c[0]];
-  const n1 = Math.hypot(...e1); e1 = e1.map(v => v / n1);
-  const e2 = [c[1]*e1[2] - c[2]*e1[1], c[2]*e1[0] - c[0]*e1[2], c[0]*e1[1] - c[1]*e1[0]];
-  octx.save();
-  octx.strokeStyle = ping.col;
-  octx.globalAlpha = alpha;
-  octx.lineWidth = 1.5;
-  octx.beginPath();
-  let started = false;
-  for (let i = 0; i <= 40; i++){
-    const a = i / 40 * Math.PI * 2;
-    const cr = Math.cos(radius), sr = Math.sin(radius);
-    const P = [
-      c[0]*cr + (e1[0]*Math.cos(a) + e2[0]*Math.sin(a)) * sr,
-      c[1]*cr + (e1[1]*Math.cos(a) + e2[1]*Math.sin(a)) * sr,
-      c[2]*cr + (e1[2]*Math.cos(a) + e2[2]*Math.sin(a)) * sr,
-    ];
-    const p = project3(P, M);
-    if (!p.vis){ started = false; continue; }
-    started ? octx.lineTo(p.x, p.y) : (octx.moveTo(p.x, p.y), started = true);
-  }
-  octx.stroke();
-  octx.restore();
-}
-
-// ── эффект: 3D-дуги сети Тихой гавани ──
-function drawHarborArcs(t, M){
-  if (!QH_HUB) return;
-  const col = (FACTIONS.find(f => f.key === 'quiet_harbor') || {}).col || '#38bdf8';
-  const A = ll2xyz(QH_HUB.lat, QH_HUB.lon);
-  QH_HOMES.forEach((home, k) => {
-    const B = ll2xyz(home.lat, home.lon);
-    const ang = angDist(A, B);
-    const lift = 0.035 + ang * 0.09; // дальше дом — выше дуга
-    const N = 44;
-    octx.save();
-    octx.strokeStyle = col;
-    octx.lineWidth = 1.2;
-    octx.globalAlpha = 0.55;
-    octx.beginPath();
-    let started = false;
-    const pts = [];
-    for (let i = 0; i <= N; i++){
-      const s = i / N;
-      const P = slerp3(A, B, s);
-      const h = 1 + Math.sin(Math.PI * s) * lift;
-      const Q = [P[0]*h, P[1]*h, P[2]*h];
-      const p = project3(Q, M);
-      pts.push(p);
-      if (!p.vis){ started = false; continue; }
-      started ? octx.lineTo(p.x, p.y) : (octx.moveTo(p.x, p.y), started = true);
-    }
-    octx.stroke();
-    // бегущие «караваны» — светящиеся частицы вдоль дуги
-    for (let j = 0; j < 2; j++){
-      const s = ((t * 0.09 + k * 0.31 + j * 0.5) % 1);
-      const idx = Math.min(N, Math.round(s * N));
-      const p = pts[idx];
-      if (p && p.vis){
-        drawGlow(p.x, p.y, 5, '#eaf8ff', 0.9);
-        octx.globalAlpha = 0.95;
-        octx.fillStyle = '#eaf8ff';
-        octx.beginPath(); octx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); octx.fill();
-      }
-    }
-    octx.restore();
-  });
-}
-
-// ── эффект: спутники орбитального мониторинга ──
-const SATS = [
-  { r: 1.30, incl: 62 * DEG, speed: 0.16, phase: 0.0, col: '#4fc3f7' },
-  { r: 1.47, incl: -37 * DEG, speed: 0.105, phase: 2.2, col: '#ffb340' },
-];
-function satPos(s, t){
-  const a = t * s.speed + s.phase;
-  const x = Math.cos(a) * s.r;
-  const yz = Math.sin(a) * s.r;
-  return [x, yz * Math.sin(s.incl), yz * Math.cos(s.incl)];
-}
-function drawSats(t, M){
-  for (const s of SATS){
-    octx.save();
-    // хвост
-    octx.strokeStyle = s.col;
-    for (let j = 12; j >= 1; j--){
-      const p1 = project3(satPos(s, t - j * 0.22), M);
-      const p2 = project3(satPos(s, t - (j - 1) * 0.22), M);
-      if (!p1.vis || !p2.vis) continue;
-      octx.globalAlpha = 0.05 + (1 - j / 12) * 0.22;
-      octx.lineWidth = 1;
-      octx.beginPath(); octx.moveTo(p1.x, p1.y); octx.lineTo(p2.x, p2.y); octx.stroke();
-    }
-    const p = project3(satPos(s, t), M);
-    if (p.vis){
-      drawGlow(p.x, p.y, 5, s.col, 0.9);
-      octx.globalAlpha = 0.95;
-      octx.fillStyle = s.col;
-      octx.beginPath(); octx.arc(p.x, p.y, 1.6, 0, Math.PI * 2); octx.fill();
-    }
-    octx.restore();
-  }
-}
-
-function drawOverlay(t, M){
-  octx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  octx.clearRect(0, 0, W, H);
-  labelRects = [];
-
-  // LOD по фактическому размеру глобуса в пикселях: на маленьком экране
-  // локации появляются позже, чтобы маркеры не сливались в кашу
-  const zoomK = R / 300;
-  // близко — фракционные подписи уступают место локациям
-  const facA = 1 - smooth01((zoomK - 1.5) / 0.55);
-  const locMainA = smooth01((zoomK - 0.6) / 0.3);   // столицы, фронты, объекты, центры регионов
-  const locAllA = smooth01((zoomK - 1.05) / 0.4);   // города, базы, поселения
-  const locLblMainA = smooth01((zoomK - 0.85) / 0.3);
-  const locLblAllA = smooth01((zoomK - 1.35) / 0.4);
-
-  drawSats(t, M);
-  const harborActive = selectedKey === 'quiet_harbor';
-  if (harborActive) drawHarborArcs(t, M);
-  drawPing(t, M);
-
-  // ── локации (сортировка по приоритету, чтобы важные подписи выигрывали) ──
-  const order = [...LOCATIONS].sort((a, b) => (TYPE_PRIO[a.type] ?? 9) - (TYPE_PRIO[b.type] ?? 9));
-  for (const loc of order){
-    const main = (TYPE_PRIO[loc.type] ?? 9) <= 3;
-    const mA = main ? locMainA : locAllA;
-    if (mA <= 0.03){ loc._sx = null; continue; }
-    const f = facOfKey(loc.faction);
-    const surf = ll2xyz(loc.lat, loc.lon);
-    let p;
-    if (loc.float){
-      // парящая резиденция: приподнята над сферой и слегка покачивается
-      const h = 1.05 + 0.007 * Math.sin(t * 1.3);
-      p = project3([surf[0]*h, surf[1]*h, surf[2]*h], M);
-      const g = project3(surf, M);
-      if (p.vis && g.vis){
-        octx.save();
-        octx.strokeStyle = f.col;
-        octx.globalAlpha = 0.4 * mA;
-        octx.setLineDash([2, 3]);
-        octx.lineWidth = 0.8;
-        octx.beginPath(); octx.moveTo(g.x, g.y); octx.lineTo(p.x, p.y); octx.stroke();
-        octx.restore();
-      }
-    } else {
-      p = project3(surf, M);
-    }
-    if (!p.vis){ loc._sx = null; continue; }
-    loc._sx = p.x; loc._sy = p.y;
-
-    const hot = hovId === loc.id || selectedLocId === loc.id;
-    const sz = (TYPE_SIZE[loc.type] || 4) * (hot ? 1.35 : 1);
-
-    // световой столб для столиц
-    if (loc.type === 'capital' && p.z > 0.15){
-      const top = project3([surf[0]*1.045, surf[1]*1.045, surf[2]*1.045], M);
-      const grad = octx.createLinearGradient(p.x, p.y, top.x, top.y);
-      grad.addColorStop(0, f.col + 'aa');
-      grad.addColorStop(1, f.col + '00');
-      octx.save();
-      octx.strokeStyle = grad;
-      octx.globalAlpha = 0.75 * mA;
-      octx.lineWidth = 1.6;
-      octx.beginPath(); octx.moveTo(p.x, p.y); octx.lineTo(top.x, top.y); octx.stroke();
-      octx.restore();
-    }
-
-    drawTypedMarker(loc.type, p.x, p.y, sz, f.col, hot, t, loc.lon * 0.1, mA);
-
-    const lblA = (main ? locLblMainA : locLblAllA) * (hot ? 1 : 0.85);
-    drawLabel(loc.name, p.x, p.y, sz + 5, loc.type === 'frontline' ? '#ff6655' : f.col, hot, lblA, main);
-  }
-
-  // ── центры фракций (уходят при приближении) ──
-  if (facA > 0.03){
-    for (const f of FACTIONS){
-      const p = project(f.clat, f.clon, M);
-      if (!p.vis){ f._sx = null; continue; }
-      f._sx = p.x; f._sy = p.y;
-      const hot = hovId === f.key || selectedKey === f.key;
-      const sz = (hot ? 5.6 : 4) * (f.polysUW.length ? 1 : 0.85);
-      drawTypedMarker('capital', p.x, p.y, sz, f.col, hot, t, f.clon * 0.1, facA);
-      drawLabel(f.name, p.x, p.y, sz + 6, f.col, hot, (hot ? 1 : 0.8) * facA, true);
-    }
-  } else {
-    for (const f of FACTIONS) f._sx = null;
-  }
-}
-
-// ═══════════════ МАСШТАБНАЯ ЛИНЕЙКА ═══════════════
-const scaleLine = document.getElementById('scaleLine');
-const scaleText = document.getElementById('scaleText');
-function updateScale(){
-  const kmPerPx = 6371 / R;
-  const targets = [100, 150, 200, 300, 500, 750, 1000, 1500, 2000, 3000, 5000, 7500, 10000];
-  let best = targets[0];
-  for (const km of targets){
-    const px = km / kmPerPx;
-    if (px >= 40 && px <= 95){ best = km; break; }
-    if (px < 40) best = km;
-  }
-  scaleLine.style.width = Math.round(best / kmPerPx) + 'px';
-  const alt = Math.max(0, Math.round(6371 * (baseR * 2.4 / R)));
-  scaleText.textContent = (best >= 1000 ? (best/1000) + ' ТЫС КМ' : best + ' КМ') +
-    '  ·  ОРБИТА ' + (alt >= 1000 ? (alt/1000).toFixed(1) + ' ТЫС КМ' : alt + ' КМ');
 }
 
 // ═══════════════ ГЛАВНЫЙ ЦИКЛ ═══════════════
-function frame(now){
-  const t = (now - time0) / 1000;
-  lastT = t;
+// Кадр рисуется, только когда что-то реально меняется: на статичном глобусе
+// GPU простаивает вместо того, чтобы бесконечно перерисовывать одно и то же.
+function animating(){
+  return autoRot
+      || Math.abs(vy) > 1e-5 || Math.abs(vx) > 1e-5
+      || Math.abs(ty - ry) > 1e-4 || Math.abs(tx - rx) > 1e-4
+      || Math.abs(tR - R)  > 0.05;
+}
+
+function frame(){
   if (autoRot) ty += 0.0032;
-  // инерция
   if (Math.abs(vy) > 1e-5 || Math.abs(vx) > 1e-5){
     ty += vy; tx += vx;
     vy *= 0.94; vx *= 0.94;
@@ -1674,21 +750,21 @@ function frame(now){
   rx += (tx - rx) * 0.09;
   R  += (tR - R) * 0.12;
 
-  const M = viewMatrix();
-
-  gl.uniform2f(uni.uRes, glCanvas.width, glCanvas.height);
-  gl.uniform3f(uni.uView, W/2 * dpr, glCanvas.height - H/2 * dpr, R * dpr);
-  // uMinv = M^T, column-major => столбцы = строки M
-  gl.uniformMatrix3fv(uni.uMinv, false, new Float32Array([
-    M.r1[0], M.r1[1], M.r1[2],
-    M.r2[0], M.r2[1], M.r2[2],
-    M.r3[0], M.r3[1], M.r3[2],
-  ]));
-  gl.uniform1f(uni.uTime, t);
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-  drawOverlay(t, M);
-  updateScale();
+  if (dirty || animating()){
+    const M = viewMatrix();
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(uni.uRes, glCanvas.width, glCanvas.height);
+    gl.uniform3f(uni.uView, W/2 * dpr, glCanvas.height - H/2 * dpr, R * dpr);
+    // uMinv = M^T, column-major => столбцы = строки M
+    gl.uniformMatrix3fv(uni.uMinv, false, new Float32Array([
+      M.r1[0], M.r1[1], M.r1[2],
+      M.r2[0], M.r2[1], M.r2[2],
+      M.r3[0], M.r3[1], M.r3[2],
+    ]));
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    dirty = false;
+  }
   requestAnimationFrame(frame);
 }
 
@@ -1698,32 +774,33 @@ let dragging = false, dragDist = 0, lastX = 0, lastY = 0, pinch0 = 0, pinchR0 = 
 let lastMoveT = 0, lastDX = 0, lastDY = 0;
 
 function speed(){ return 0.0048 * Math.min(W, H) / R; }
+function clampR(r){ return Math.max(baseR * 0.45, Math.min(baseR * 9, r)); }
 
-overlay.addEventListener('pointerdown', e => {
-  overlay.setPointerCapture(e.pointerId);
+inputEl.addEventListener('pointerdown', e => {
+  inputEl.setPointerCapture(e.pointerId);
   pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (pointers.size === 1){
     dragging = true; dragDist = 0;
     lastX = e.clientX; lastY = e.clientY;
     vy = vx = 0;
-    autoRot = false; updateRotateBtn();
-    overlay.classList.add('dragging');
+    autoRot = false;
+    inputEl.classList.add('dragging');
   } else if (pointers.size === 2){
     const pts = [...pointers.values()];
     pinch0 = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
     pinchR0 = tR;
     dragging = false;
   }
+  dirty = true;
 });
 
-overlay.addEventListener('pointermove', e => {
-  if (pointers.has(e.pointerId)){
-    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-  }
+inputEl.addEventListener('pointermove', e => {
+  if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (pointers.size === 2){
     const pts = [...pointers.values()];
     const d = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
     if (pinch0 > 0) tR = clampR(pinchR0 * d / pinch0);
+    dirty = true;
     return;
   }
   if (dragging){
@@ -1734,97 +811,37 @@ overlay.addEventListener('pointermove', e => {
     dragDist += Math.abs(dx) + Math.abs(dy);
     lastDX = dx * sp; lastDY = dy * sp; lastMoveT = performance.now();
     lastX = e.clientX; lastY = e.clientY;
-    return;
+    dirty = true;
   }
-  // hover
-  const M = viewMatrix();
-  const hit = hitTest(e.clientX, e.clientY, M);
-  hovId = hit ? (hit.kind === 'loc' ? hit.loc.id : hit.f.key) : null;
-  overlay.classList.toggle('pointing', !!hit);
-  if (hit && hit.kind === 'loc'){
-    const f = facOfKey(hit.loc.faction);
-    setStatus((TYPE_RU[hit.loc.type] || 'ОБЪЕКТ') + ': ' + hit.loc.name, f.col);
-  } else if (hit){
-    setStatus('ОБЪЕКТ: ' + hit.f.name, hit.f.col);
-  } else if (selectedLocId){
-    const loc = LOCATIONS.find(l => l.id === selectedLocId);
-    if (loc) setStatus((TYPE_RU[loc.type] || 'ОБЪЕКТ') + ': ' + loc.name, facOfKey(loc.faction).col);
-  } else if (selectedKey){
-    const f = FACTIONS.find(x => x.key === selectedKey);
-    setStatus('ОБЪЕКТ: ' + f.name, f.col);
-  } else setStatus();
 });
 
-overlay.addEventListener('pointerup', e => {
+inputEl.addEventListener('pointerup', e => {
   pointers.delete(e.pointerId);
   if (dragging && pointers.size === 0){
     dragging = false;
-    overlay.classList.remove('dragging');
-    // инерция, если отпустили в движении
-    if (performance.now() - lastMoveT < 60 && dragDist > 6){
-      vy = lastDX; vx = lastDY;
-    }
-    if (dragDist < 6){
-      const M = viewMatrix();
-      const hit = hitTest(e.clientX, e.clientY, M);
-      if (hit && hit.kind === 'loc') selectLocation(hit.loc, false);
-      else select(hit ? hit.f.key : null, false);
+    inputEl.classList.remove('dragging');
+    if (performance.now() - lastMoveT < 60 && dragDist > 6){ vy = lastDX; vx = lastDY; }
+    if (dragDist < 6 && SHOW_FACTIONS){
+      const rect = inputEl.getBoundingClientRect();
+      const ll = unproject(e.clientX - rect.left, e.clientY - rect.top, viewMatrix());
+      const f = ll ? factionAt(ll.lat, ll.lon) : null;
+      select(f ? f.key : null, false);
     }
   }
   if (pointers.size < 2) pinch0 = 0;
+  dirty = true;
 });
-overlay.addEventListener('pointercancel', e => {
+inputEl.addEventListener('pointercancel', e => {
   pointers.delete(e.pointerId);
   dragging = false;
-  overlay.classList.remove('dragging');
+  inputEl.classList.remove('dragging');
 });
 
-function clampR(r){
-  return Math.max(baseR * 0.45, Math.min(baseR * 9, r));
-}
-
-overlay.addEventListener('wheel', e => {
+inputEl.addEventListener('wheel', e => {
   e.preventDefault();
   tR = clampR(tR * (e.deltaY > 0 ? 0.9 : 1.11));
+  dirty = true;
 }, { passive: false });
-
-// поиск объекта под курсором: локации -> центры фракций -> территории.
-// Экранные позиции берём из кеша последнего кадра (loc._sx / f._sx)
-function hitTest(cx, cy, M){
-  const rect = overlay.getBoundingClientRect();
-  const mx = cx - rect.left, my = cy - rect.top;
-  let best = null, bd = Infinity;
-  for (const loc of LOCATIONS){
-    if (loc._sx == null) continue;
-    const d = Math.hypot(mx - loc._sx, my - loc._sy);
-    if (d < 16 && d < bd){ bd = d; best = { kind: 'loc', loc }; }
-  }
-  if (best) return best;
-  for (const f of FACTIONS){
-    if (f._sx == null) continue;
-    const d = Math.hypot(mx - f._sx, my - f._sy);
-    if (d < 20 && d < bd){ bd = d; best = { kind: 'fac', f }; }
-  }
-  if (best) return best;
-  const ll = unproject(mx, my, M);
-  if (!ll) return null;
-  const f = factionAt(ll.lat, ll.lon);
-  return f ? { kind: 'fac', f } : null;
-}
-
-// ═══════════════ КНОПКИ ═══════════════
-const btnRotate = document.getElementById('btnRotate');
-function updateRotateBtn(){
-  btnRotate.textContent = autoRot ? '⏸' : '▶';
-  btnRotate.classList.toggle('off', !autoRot);
-}
-btnRotate.addEventListener('click', () => { autoRot = !autoRot; updateRotateBtn(); });
-document.getElementById('btnReset').addEventListener('click', () => {
-  ty = shortestAngle(ry, 0.55); tx = 0.42; tR = baseR;
-  select(null);
-});
-document.getElementById('btnZoomIn').addEventListener('click', () => tR = clampR(tR * 1.35));
-document.getElementById('btnZoomOut').addEventListener('click', () => tR = clampR(tR / 1.35));
 
 // ═══════════════ СТАРТ ═══════════════
 function start(){
@@ -1832,31 +849,17 @@ function start(){
     document.querySelector('.load-text').textContent = 'ERROR: WEBGL UNAVAILABLE';
     return;
   }
-  resize();
-  layoutPanels();
-  R = tR = baseR;
   initGL();
-  // Выбор разрешения текстуры под устройство
+  resize();
+  R = tR = baseR;
   const maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
-  const small = Math.min(screen.width, screen.height) < 500;
-  const touch = 'ontouchstart' in window;
-  texSize = small ? 2048 : (!touch && maxTex >= 8192 ? 8192 : Math.min(4096, maxTex));
-  try {
-    buildTexture(null);
-    // проверка, что браузер реально выделил холст такого размера
-    const px = texCanvas.getContext('2d').getImageData(texSize - 1, texSize / 2 - 1, 1, 1);
-    if (px.data[3] === 0) throw new Error('canvas alloc failed');
-  } catch (e) {
-    texSize = 4096;
-    buildTexture(null);
-  }
+  texSize = Math.min(Math.min(screen.width, screen.height) < 500 ? 2048 : 4096, maxTex);
+  buildTexture(null);
   uploadTexture();
   requestAnimationFrame(frame);
   const loader = document.getElementById('loader');
   loader.classList.add('gone');
   setTimeout(() => loader.remove(), 900);
-  setTimeout(() => document.getElementById('hint').classList.add('gone'), 7000);
-  updateRotateBtn();
 }
 
 // ═══════════════ ВОРОТА ДОСТУПА ═══════════════
@@ -1882,7 +885,6 @@ function unlockAndStart(){
 
 (function gate(){
   const gateEl = document.getElementById('gate');
-  // уже разблокировано на этом устройстве
   if (localStorage.getItem(GATE_KEY) === ACCESS_HASH){
     unlockAndStart();
     return;
