@@ -140,6 +140,14 @@ html[data-mode="title"] .mute-btn{display:none;}
   font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(var(--violet),.75);}
 .transition-readout b{color:var(--paper);font-weight:400;}
 
+/* ── диегетическая табличка «участок в разработке» — для фонов, которые буквально недостроены ── */
+.construction-flag{position:absolute;top:16px;left:50%;transform:translateX(-50%) rotate(-1.5deg);z-index:3;
+  display:flex;align-items:center;gap:0;padding:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg, rgba(18,14,4,0.95) 0 9px, rgba(255,193,7,0.95) 9px 18px);
+  border:2px solid rgba(10,8,2,0.6);border-radius:2px;box-shadow:0 6px 20px rgba(0,0,0,0.55);}
+.construction-flag span{margin:3px;padding:5px 12px;background:rgba(10,8,2,0.9);color:#ffd35a;
+  font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;border-radius:1px;white-space:nowrap;}
+
 .tier{position:relative;min-height:100svh;overflow:hidden;}
 .tier-track{display:flex;height:100%;transition:transform .68s cubic-bezier(.22,.61,.36,1);will-change:transform;}
 .tier-room{flex:0 0 100%;width:100%;min-height:100svh;position:relative;overflow-y:auto;overflow-x:hidden;
@@ -328,6 +336,7 @@ html[data-mode="title"] .mute-btn{display:none;}
     <img src="ameli-bertrand-transition-0.jpg" alt="">
   </div>
   <div class="transition-gradient"></div>
+  <div class="construction-flag"><span>участок в разработке</span></div>
   <div class="transition-readout">
     <span>ПЕРЕКРЫТИЕ: <b>ПОВЕРХНОСТЬ → ЯРУС 01</b></span>
     <span>ГЛУБИНА: <b>-40 М</b></span>
@@ -404,6 +413,7 @@ html[data-mode="title"] .mute-btn{display:none;}
     <img src="ameli-bertrand-transition-1.jpg" alt="">
   </div>
   <div class="transition-gradient"></div>
+  <div class="construction-flag"><span>участок в разработке</span></div>
   <div class="transition-readout">
     <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 01 → ЯРУС 02</b></span>
     <span>ГЛУБИНА: <b>-85 М</b></span>
@@ -539,6 +549,7 @@ html[data-mode="title"] .mute-btn{display:none;}
         <div class="room-tabs" id="tabs-tier-3-rooms">
           <button class="room-tab" data-active="1" data-track="track-tier-3-rooms" data-open="canteen">СТОЛОВАЯ</button>
           <button class="room-tab" data-track="track-tier-3-rooms" data-open="lounge">ЗОНА ОТДЫХА</button>
+          <button class="room-tab" data-track="track-tier-3-rooms" data-open="canteen-unfinished">СТОЛОВАЯ (СТРОИТСЯ)</button>
           <!-- расширяемо: сюда добавляются новые вкладки помещений (напр. недостроенные версии) -->
         </div>
       </div>
@@ -579,6 +590,29 @@ html[data-mode="title"] .mute-btn{display:none;}
             <div class="info-blocks info-blocks--1">
               <div class="info-block decay-erode">
                 <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-lounge-info1.jpg" alt=""></div>
+                <div class="info-block-body">
+                  <div class="info-title decay-text"><!-- TEXT --></div>
+                  <div class="info-text decay-text"><!-- TEXT --></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tier-room" data-room="canteen-unfinished">
+          <div class="img-wrap tier-bg" data-label="нет сигнала · столовая (строится)">
+            <picture>
+              <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-canteen-unfinished-bg-v.webp">
+              <img src="ameli-bertrand-tier3-canteen-unfinished-bg-h.webp" alt="">
+            </picture>
+          </div>
+          <div class="tier-gradient"></div>
+          <div class="construction-flag"><span>участок в разработке</span></div>
+          <div class="tier-content">
+            <div class="tier-header"><div class="tier-name decay-text"><!-- TEXT: столовая, недостроенная версия --></div></div>
+            <div class="info-blocks info-blocks--1">
+              <div class="info-block decay-erode">
+                <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-canteen-unfinished-info1.jpg" alt=""></div>
                 <div class="info-block-body">
                   <div class="info-title decay-text"><!-- TEXT --></div>
                   <div class="info-text decay-text"><!-- TEXT --></div>
