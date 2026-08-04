@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Женский",
   "role": "Хозяйка Бастиона, теневой рычаг Квартета",
-  "birthdate": "13.10.2001",
+  "birthdate": "13.10",
   "faction": "Ракшасы",
   "subfaction": "Прах",
   "location": "Бастион",
@@ -18,7 +18,7 @@
     "Формирование локальных участков распада",
     "Заражение территорий спорами и ржавчиной"
   ],
-  "threat_level": 52,
+  "threat_level": 55,
   "stats": {
     "intelligence": 7,
     "combat": 10,
@@ -26,8 +26,8 @@
     "meta_power": 10,
     "cruelty": 10,
     "will": 9,
-    "stealth": 5,
-    "unpredictability": 4
+    "stealth": 6,
+    "unpredictability": 6
   },
   "card_quote": "В мире слишком много мусора. Приходится убирать.",
   "card_bio": "Амели Бертран — одна из предводительниц Ракшасов, бледная хрупкая женщина в винтажном костюме и тонких перчатках, чьё прикосновение обращает материю в труху. Молва зовёт её Богиней смерти и видит хладнокровную жрицу энтропии, что возводит в Гималаях чёрную цитадель Бастион и утилизирует непокорных в промышленных биореакторах.",
@@ -37,6 +37,14 @@
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/AA6E2D00-481B-4679-9241-2087D50BD1CA.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A87996A1-179B-4EB7-97C7-7D66DA155C03.jpeg",
-  "tier": "legendary",
-  "exported_at": "2026-07-12T11:18:55.946Z"
+  "tier": "mythical",
+  "appearance": {
+    "height": null,
+    "weight": null,
+    "eye_color": "",
+    "hair_color": "",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-04T20:17:33.944Z"
 }
