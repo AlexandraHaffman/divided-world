@@ -176,14 +176,17 @@ html[data-mode="title"] .mute-btn{display:none;}
 .door-btn:hover .door-btn-arrow{transform:translateX(3px);}
 .back-btn{position:sticky;top:14px;z-index:5;width:auto;display:inline-flex;margin-bottom:16px;}
 
+/* кнопка явного перехода на следующий ярус — гарантированно переключает саундтрек,
+   независимо от скролл-детектора (см. goToStop в script) */
+.next-tier-btn{margin-top:14px;width:100%;justify-content:center;color:rgba(var(--violet),.9);}
+.next-tier-btn .door-btn-arrow{animation:bob 1.8s ease-in-out infinite;}
+.tier[data-tier="7"] .next-tier-btn{color:rgb(var(--amber));border-color:rgba(var(--amber),.65);}
+.tier[data-tier="7"] .next-tier-btn::before,.tier[data-tier="7"] .next-tier-btn::after{border-color:rgba(var(--amber),.95);}
+
 .room-tabs{position:sticky;top:60px;z-index:5;display:flex;gap:8px;padding:0 0 16px;flex-wrap:wrap;}
 .room-tab{background:rgba(9,6,13,0.6);border:2px solid rgba(var(--violet),0.5);color:var(--paper-dim);
   font-size:9.5px;letter-spacing:.1em;padding:8px 12px;border-radius:2px;text-transform:uppercase;backdrop-filter:blur(3px);}
 .room-tab[data-active="1"]{color:var(--paper);border-color:rgba(var(--violet),0.85);}
-
-.continue-cue{margin-top:34px;text-align:center;font-size:10px;letter-spacing:.18em;color:rgba(var(--amber),.7);
-  text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;}
-.continue-cue-arrow{font-size:16px;animation:bob 1.8s ease-in-out infinite;}
 
 /* бункер — тёплый контраст */
 .tier[data-tier="7"] .tier-gradient{background:linear-gradient(180deg,rgba(20,10,4,0.15) 0%,transparent 26%,rgba(20,10,4,0.6) 70%,rgba(20,10,4,0.95) 100%);}
@@ -379,6 +382,9 @@ html[data-mode="title"] .mute-btn{display:none;}
         <button class="btn-outline door-btn" data-track="track-tier-1" data-open="door-1">
           <span>БОКОВАЯ ДВЕРЬ</span><span class="door-btn-arrow">→</span>
         </button>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('tier-2')">
+          <span>ЯРУС 02</span><span class="door-btn-arrow">↓</span>
+        </button>
       </div>
     </div>
 
@@ -455,6 +461,9 @@ html[data-mode="title"] .mute-btn{display:none;}
         </div>
         <button class="btn-outline door-btn" data-track="track-tier-2" data-open="door-1">
           <span>БОКОВАЯ ДВЕРЬ</span><span class="door-btn-arrow">→</span>
+        </button>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('tier-3')">
+          <span>ЯРУС 03</span><span class="door-btn-arrow">↓</span>
         </button>
       </div>
     </div>
@@ -538,6 +547,9 @@ html[data-mode="title"] .mute-btn{display:none;}
         </div>
         <button class="btn-outline door-btn" data-track="track-tier-3" data-open="door-1">
           <span>БОКОВАЯ ДВЕРЬ</span><span class="door-btn-arrow">→</span>
+        </button>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('tier-4')">
+          <span>ЯРУС 04</span><span class="door-btn-arrow">↓</span>
         </button>
       </div>
     </div>
@@ -683,6 +695,9 @@ html[data-mode="title"] .mute-btn{display:none;}
         <button class="btn-outline door-btn" data-track="track-tier-4" data-open="door-1">
           <span>БОКОВАЯ ДВЕРЬ</span><span class="door-btn-arrow">→</span>
         </button>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('tier-5')">
+          <span>ЯРУС 05</span><span class="door-btn-arrow">↓</span>
+        </button>
       </div>
     </div>
 
@@ -766,6 +781,9 @@ html[data-mode="title"] .mute-btn{display:none;}
         <button class="btn-outline door-btn" data-track="track-tier-5" data-open="door-1">
           <span>БОКОВАЯ ДВЕРЬ</span><span class="door-btn-arrow">→</span>
         </button>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('tier-6')">
+          <span>ЯРУС 06</span><span class="door-btn-arrow">↓</span>
+        </button>
       </div>
     </div>
 
@@ -845,6 +863,9 @@ html[data-mode="title"] .mute-btn{display:none;}
             </div>
           </div>
         </div>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('tier-7')">
+          <span>ЯРУС 07</span><span class="door-btn-arrow">↓</span>
+        </button>
       </div>
     </div>
   </div>
@@ -907,10 +928,9 @@ html[data-mode="title"] .mute-btn{display:none;}
             </div>
           </div>
         </div>
-        <div class="continue-cue">
-          <span>СПУСК ПРОДОЛЖАЕТСЯ</span>
-          <span class="continue-cue-arrow">↓</span>
-        </div>
+        <button class="btn-outline next-tier-btn" onclick="goToStop('depths-final')">
+          <span>СПУСК ПРОДОЛЖАЕТСЯ</span><span class="door-btn-arrow">↓</span>
+        </button>
       </div>
     </div>
   </div>
@@ -1049,6 +1069,15 @@ function onStopActive(id) {
   document.getElementById('depthTier').textContent = stop.name;
   crossfadeTo(stop.track);
 }
+
+/* явный переход по кнопке (низ каждого яруса) — скроллит к следующему ярусу
+   и сразу переключает саундтрек, не дожидаясь скролл-детектора */
+function goToStop(targetId) {
+  const el = document.getElementById(targetId);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  activeStopId = targetId;
+  onStopActive(targetId);
+}
 if ('IntersectionObserver' in window) {
   const stopObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -1099,13 +1128,15 @@ function toggleMute() {
   document.getElementById('muteBtn').classList.toggle('muted', isMuted);
 }
 function fadeAudio(el, from, to, dur, done) {
+  if (el._fadeRaf) cancelAnimationFrame(el._fadeRaf);
   const t0 = performance.now();
   function step(t) {
     const p = Math.min(1, (t - t0) / dur);
-    el.volume = from + (to - from) * p;
-    if (p < 1) requestAnimationFrame(step); else if (done) done();
+    el.volume = Math.max(0, Math.min(1, from + (to - from) * p));
+    if (p < 1) { el._fadeRaf = requestAnimationFrame(step); }
+    else { el._fadeRaf = null; if (done) done(); }
   }
-  requestAnimationFrame(step);
+  el._fadeRaf = requestAnimationFrame(step);
 }
 function crossfadeTo(key) {
   if (!soundEnabled || currentTrackKey === key) return;
