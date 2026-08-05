@@ -24,11 +24,11 @@
       "Создание постоянных штормовых барьеров"
     ]
   ],
-  "threat_level": 57,
+  "threat_level": 56,
   "stats": {
     "intelligence": 7,
     "combat": 20,
-    "influence": 7,
+    "influence": 6,
     "meta_power": 20,
     "cruelty": 4,
     "will": 9,
@@ -52,5 +52,5 @@
     "bust_size": null,
     "marks": ""
   },
-  "exported_at": "2026-08-04T20:15:21.133Z"
+  "exported_at": "2026-08-05T11:22:58.775Z"
 }
