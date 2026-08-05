@@ -18,7 +18,7 @@
     "Идеологическая обработка",
     "Иммунитет к мета-силам"
   ],
-  "threat_level": 56,
+  "threat_level": 55,
   "stats": {
     "intelligence": 10,
     "combat": 4,
@@ -26,7 +26,7 @@
     "meta_power": 5,
     "cruelty": 7,
     "will": 9,
-    "stealth": 9,
+    "stealth": 8,
     "unpredictability": 6
   },
   "card_quote": "Ложь становится правдой, если в неё верят миллионы",
@@ -46,5 +46,5 @@
     "bust_size": null,
     "marks": ""
   },
-  "exported_at": "2026-08-04T20:16:34.260Z"
+  "exported_at": "2026-08-05T11:22:10.666Z"
 }
