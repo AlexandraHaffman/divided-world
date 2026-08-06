@@ -63,11 +63,11 @@ function isLegendaryThreat(c) {
    ссылки показывается только тем, кто и легендарен по угрозе, и есть
    в этом реестре — так что при добавлении новой страницы просто
    впиши сюда одну строку, без правки логики отображения. */
-const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner", "Эмиль Грант": "emil/emil", "Дариан Сорель": "darian/darian", "Лилия Спасская": "liliya/liliya" };
+const LEGENDARY_DOSSIER_SLUGS = { "Элиас Дорн": "dorn/dorn", "Курт Вистнер": "wistner/wistner", "Эмиль Грант": "emil/emil", "Дариан Сорель": "darian/darian", "Лилия Спасская": "liliya/liliya", "Амели Бертран": "ameli-bertrand/ameli-bertrand" };
 
 /* Тот же принцип, но для мифического тира (characters/mythical/<slug>.html) —
    показывается вместо легендарной ссылки, когда персонаж числится mythical и есть в реестре. */
-const MYTHICAL_DOSSIER_SLUGS = { "Амели Бертран": "ameli-bertrand/ameli-bertrand" };
+const MYTHICAL_DOSSIER_SLUGS = { };
 
 /* ══════════════════════════════════════════
    ОБРАТНАЯ СВЯЗЬ: анонимный счётчик просмотров (counterapi.dev v1)
