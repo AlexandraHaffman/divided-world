@@ -33,9 +33,10 @@ a{color:inherit;}
 .img-wrap.broken::after{content:attr(data-label);font-family:'Share Tech Mono',monospace;font-size:9px;
   letter-spacing:.14em;color:rgba(var(--violet),.55);text-align:center;padding:16px;text-transform:uppercase;}
 
-/* карусель из нескольких фото в одном инфоблоке: автопереключение с кроссфейдом, см. initCarousels() */
-.photo-carousel img{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;}
+/* карусель из нескольких фото в одном инфоблоке: переключение по тапу/свайпу, см. ниже в script */
+.photo-carousel img{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;}
 .photo-carousel img.active{opacity:1;}
+.photo-carousel.is-tappable{cursor:pointer;}
 
 /* ══════════════════════════════════════════
    ГЛОБАЛЬНЫЙ UI: выход, глубина, звук
@@ -140,17 +141,29 @@ html[data-mode="title"] .mute-btn{display:none;}
 @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
 
 /* ══════════════════════════════════════════
-   2. РЕЖИМ СПУСКА — общие блоки яруса
+   2. РЕЖИМ СПУСКА — вертикальный трек по ярусам
+   Спуск управляется ИСКЛЮЧИТЕЛЬНО кнопками (goToStop/goToSurface) —
+   свободного скролла между ярусами нет: #descentMode заполняет экран
+   целиком, .descent-track сдвигается по вертикали ровно как боковые
+   двери сдвигаются по горизонтали. Каждый ярус — фиксированный кадр
+   100% высоты; длинный текст внутри читается через overflow-y:auto
+   самой комнаты (.tier-room), а не через прокрутку страницы.
    ══════════════════════════════════════════ */
-#descentMode{position:relative;z-index:1;}
+html[data-mode="descent"] body{overflow:hidden;height:100vh;}
+#descentMode{position:fixed;inset:0;z-index:5;overflow:hidden;visibility:hidden;}
+html[data-mode="descent"] #descentMode{visibility:visible;}
+.descent-track{display:flex;flex-direction:column;height:100%;
+  transition:transform .6s cubic-bezier(.22,.61,.36,1);will-change:transform;}
+.descent-track > .tier,.descent-track > .depths{flex:0 0 100%;height:100%;}
 
-.transition{position:relative;min-height:46vh;overflow:hidden;display:flex;align-items:flex-end;}
-.transition-bg{position:absolute;inset:0;z-index:0;filter:saturate(.55) brightness(.55);}
-.transition-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(7,6,11,0.65) 0%,rgba(7,6,11,0.35) 45%,rgba(7,6,11,0.88) 100%);}
-.transition-readout{position:relative;z-index:2;padding:18px 16px 22px;display:flex;flex-direction:column;gap:4px;
-  font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(var(--violet),.75);}
-.transition-readout b{color:var(--paper);font-weight:400;}
+/* краткая вспышка при переходе между ярусами — читаемый технический «щелчок
+   перекрытия» вместо буквальной прокрутки через разрез */
+.transition-flash{position:fixed;inset:0;z-index:70;background:#050308;opacity:0;pointer-events:none;
+  transition:opacity .3s ease;display:flex;align-items:center;justify-content:center;}
+.transition-flash.show{opacity:1;}
+.transition-flash-readout{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;
+  color:rgba(var(--violet),.85);text-align:center;display:flex;flex-direction:column;gap:8px;text-transform:uppercase;}
+.transition-flash-readout span:last-child{color:var(--paper-dim);font-size:10px;}
 
 /* ── диегетическая табличка «участок в разработке» — для фонов, которые буквально недостроены ── */
 .construction-flag{position:absolute;top:16px;left:50%;transform:translateX(-50%) rotate(-1.5deg);z-index:3;
@@ -160,19 +173,17 @@ html[data-mode="title"] .mute-btn{display:none;}
 .construction-flag span{margin:3px;padding:5px 12px;background:rgba(10,8,2,0.9);color:#ffd35a;
   font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;border-radius:1px;white-space:nowrap;}
 
-.tier{position:relative;min-height:100svh;overflow:hidden;}
-.tier-track{display:flex;height:100%;transition:transform .68s cubic-bezier(.22,.61,.36,1);will-change:transform;}
-.tier-room{flex:0 0 100%;width:100%;min-height:100svh;position:relative;overflow-y:auto;overflow-x:hidden;
+.tier{position:relative;overflow:hidden;}
+.tier-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.61,.36,1);will-change:transform;}
+.tier-room{flex:0 0 100%;width:100%;height:100%;position:relative;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;}
-/* фон и градиент — sticky на весь экран: пока скроллится контент этой комнаты,
-   фон остаётся заполнять весь видимый кадр, а не растягивается на высоту
-   контента. margin-bottom гасит собственную sticky-высоту, чтобы следующий
-   элемент не проваливался вниз — тот же приём применён и для дока кнопок. */
-.tier-bg{position:sticky;top:0;height:100svh;margin-bottom:calc(-1 * 100svh);z-index:0;
-  transform:translateY(calc(var(--sy,0) * -0.12px));}
-.tier-gradient{position:sticky;top:0;height:100svh;margin-bottom:calc(-1 * 100svh);z-index:1;pointer-events:none;
+/* комната теперь жёстко = высоте экрана (не растёт по контенту), поэтому
+   простой position:absolute уже не растягивается вместе с длинным текстом —
+   фон всегда ровно во весь кадр, в любой ориентации */
+.tier-bg{position:absolute;inset:0;z-index:0;}
+.tier-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,rgba(7,6,11,0.15) 0%,transparent 26%,rgba(7,6,11,0.55) 70%,rgba(7,6,11,0.95) 100%);}
-.tier-content{position:relative;z-index:2;padding:60px 16px 110px;}
+.tier-content{position:relative;z-index:2;padding:60px 16px 110px;min-height:100%;box-sizing:border-box;}
 
 .tier-header{margin-bottom:22px;}
 .tier-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(var(--violet),.7);letter-spacing:.1em;
@@ -182,13 +193,16 @@ html[data-mode="title"] .mute-btn{display:none;}
 .tier-room--branch .tier-name{font-size:19px;}
 
 .info-blocks{display:flex;flex-direction:column;gap:18px;}
-.info-block{border:2px solid rgba(var(--violet),0.4);border-radius:7px;overflow:hidden;background:rgba(var(--violet),0.03);}
+/* display:flex + .info-block-body{flex:1} — когда grid растягивает карточки
+   в ряду до одной высоты (align-items:stretch на ≥601px), подпись тянется
+   вместе с рамкой, а не остаётся своей высоты с пустым зазором снизу */
+.info-block{display:flex;flex-direction:column;border:2px solid rgba(var(--violet),0.4);border-radius:7px;overflow:hidden;background:rgba(var(--violet),0.03);}
 /* фото всегда в родном соотношении 4:3 — как сняты/сгенерированы, без обрезки в квадрат;
    несколько фото в блоке показываются по одному через карусель (.photo-carousel), не сеткой */
 .info-photo{aspect-ratio:4/3;position:relative;}
 /* сплошная тёмная подложка под текстом — иначе фон яруса просвечивает
    сквозь почти прозрачную карточку и текст сливается с картинкой */
-.info-block-body{padding:14px 15px 17px;position:relative;background:rgba(7,6,11,0.86);backdrop-filter:blur(6px);}
+.info-block-body{padding:14px 15px 17px;position:relative;background:rgba(7,6,11,0.86);backdrop-filter:blur(6px);flex:1;}
 .info-title{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--paper);margin-bottom:8px;min-height:1.3em;}
 .info-text{font-size:12.5px;color:var(--paper-dim);line-height:1.6;min-height:1.6em;}
 
@@ -198,20 +212,21 @@ html[data-mode="title"] .mute-btn{display:none;}
 @keyframes captionIn{from{opacity:0;}to{opacity:1;}}
 
 /* точки-индикатор поверх карусельного фото — сколько кадров и какой активен */
-.carousel-dots{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);z-index:2;display:flex;gap:5px;}
-.carousel-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4);
+.carousel-dots{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);z-index:2;display:flex;gap:10px;}
+.carousel-dots span{width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.carousel-dots span::before{content:'';width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4);
   box-shadow:0 0 3px rgba(0,0,0,0.6);transition:background .3s ease, transform .3s ease;}
-.carousel-dots span.active{background:rgb(var(--violet));transform:scale(1.35);}
-.tier[data-tier="7"] .carousel-dots span.active{background:rgb(var(--amber));}
+.carousel-dots span.active::before{background:rgb(var(--violet));transform:scale(1.35);}
+.tier[data-tier="7"] .carousel-dots span.active::before{background:rgb(var(--amber));}
 
 /* ══════════════════════════════════════════
    ДОК УПРАВЛЕНИЯ ПО КРАЯМ ЭКРАНА
    Боковые двери — слева/справа (горизонтальное перемещение между комнатами).
    Переход между ярусами — сверху/снизу (вертикальное перемещение по стволу).
-   Сам док — тот же sticky-приём, что у фона: кнопки приколоты к краю
-   видимого кадра, а не к началу/концу длинного контента комнаты.
+   Комната = ровно высота экрана, поэтому простого position:absolute
+   достаточно — док всегда на краю видимого кадра.
    ══════════════════════════════════════════ */
-.room-dock{position:sticky;top:0;height:100svh;margin-bottom:calc(-1 * 100svh);z-index:15;pointer-events:none;}
+.room-dock{position:absolute;inset:0;z-index:15;pointer-events:none;}
 .dock-edge{position:absolute;display:flex;pointer-events:none;}
 .dock-edge > *{pointer-events:auto;}
 .dock-top{top:16px;left:16px;right:16px;justify-content:center;}
@@ -254,18 +269,20 @@ html[data-mode="title"] .mute-btn{display:none;}
 /* ══════════════════════════════════════════
    ФИНАЛ: НЕДОСТРОЕННЫЕ ГЛУБИНЫ
    ══════════════════════════════════════════ */
-/* тот же sticky-приём, что у ярусов: фон/градиент/пылинки остаются во весь экран,
-   пока прокручивается (теперь довольно длинный) текст поверх них */
-.depths{position:relative;min-height:100svh;overflow:hidden;background:#040308;}
-.depths-bg{position:sticky;top:0;height:100svh;margin-bottom:calc(-1 * 100svh);z-index:0;filter:brightness(.5) saturate(.5);}
-.depths-gradient{position:sticky;top:0;height:100svh;margin-bottom:calc(-1 * 100svh);z-index:1;pointer-events:none;
+/* комната = ровно высота экрана (как у ярусов), фон/градиент/пылинки —
+   простой position:absolute, длинный текст читается через overflow-y:auto
+   самой секции */
+.depths{position:relative;height:100%;overflow-y:auto;overflow-x:hidden;background:#040308;
+  -webkit-overflow-scrolling:touch;}
+.depths-bg{position:absolute;inset:0;z-index:0;filter:brightness(.5) saturate(.5);}
+.depths-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse at 50% 60%, transparent 20%, rgba(4,3,8,0.92) 78%),
              linear-gradient(180deg,rgba(4,3,8,0.5),rgba(4,3,8,0.85));}
-.depths-motes{position:sticky;top:0;height:100svh;margin-bottom:calc(-1 * 100svh);z-index:1;pointer-events:none;overflow:hidden;}
+.depths-motes{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
 .mote{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(var(--violet),.5);
   filter:blur(1px);animation:drift 14s linear infinite;}
 @keyframes drift{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.7;}90%{opacity:.4;}100%{transform:translateY(-120px) translateX(20px);opacity:0;}}
-.depths-content{position:relative;z-index:2;text-align:center;padding:22vh 20px 80px;max-width:520px;margin:0 auto;}
+.depths-content{position:relative;z-index:2;text-align:center;padding:22vh 20px 80px;max-width:520px;margin:0 auto;min-height:100%;box-sizing:border-box;}
 .depths-eyebrow{font-size:9px;letter-spacing:.24em;color:rgba(var(--violet),.6);margin-bottom:16px;text-transform:uppercase;}
 .depths-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.6;
   color:var(--paper-dim);min-height:1.6em;}
@@ -285,7 +302,7 @@ html[data-mode="title"] .mute-btn{display:none;}
 @media (min-width:601px) and (max-width:900px){
   .tier-content{max-width:640px;margin:0 auto;padding-left:24px;padding-right:24px;}
   .transition-readout{padding-left:24px;}
-  .info-blocks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:start;}
+  .info-blocks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:stretch;}
   .title-quote{font-size:24px;}
   .title-name{font-size:36px;}
 }
@@ -305,7 +322,7 @@ html[data-mode="title"] .mute-btn{display:none;}
   .tier-name{font-size:38px;}
   .tier-num{font-size:14px;}
 
-  .info-blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start;}
+  .info-blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;}
   .info-blocks--2{grid-template-columns:repeat(2,1fr);max-width:760px;}
   .info-blocks--1{grid-template-columns:1fr;max-width:420px;}
 
@@ -431,21 +448,12 @@ html[data-mode="title"] .mute-btn{display:none;}
   </div>
 </section>
 
-<!-- ══ 2. РЕЖИМ СПУСКА ══ -->
+<!-- ══ 2. РЕЖИМ СПУСКА ══
+     Вертикальный трек по тому же принципу, что и горизонтальные (двери):
+     фиксированный экран на каждый ярус, переключение только по кнопкам
+     goToStop()/goToSurface(), без свободного скролла между ярусами. ── -->
 <main id="descentMode">
-
-<!-- вход -->
-<div class="transition" data-depth="40">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, вход">
-    <img src="ameli-bertrand-transition-0.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="construction-flag"><span>участок в разработке</span></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ПОВЕРХНОСТЬ → ЯРУС 01</b></span>
-    <span>ГЛУБИНА: <b>-40 М</b></span>
-  </div>
-</div>
+<div class="descent-track" id="descentTrack">
 
 <!-- ЯРУС 1 · ВЪЕЗД / ПРИЁМНАЯ -->
 <section class="tier" id="tier-1" data-tier="1" data-name="Въезд · Приёмная">
@@ -532,18 +540,6 @@ html[data-mode="title"] .mute-btn{display:none;}
   </div>
 </section>
 
-<div class="transition" data-depth="85">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, ярус 1→2">
-    <img src="ameli-bertrand-transition-1.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="construction-flag"><span>участок в разработке</span></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 01 → ЯРУС 02</b></span>
-    <span>ГЛУБИНА: <b>-85 М</b></span>
-  </div>
-</div>
-
 <!-- ЯРУС 2 · ЗАЛ СОВЕЩАНИЙ -->
 <section class="tier" id="tier-2" data-tier="2" data-name="Зал совещаний">
   <div class="tier-track" id="track-tier-2" data-active="main">
@@ -628,17 +624,6 @@ html[data-mode="title"] .mute-btn{display:none;}
 
   </div>
 </section>
-
-<div class="transition" data-depth="130">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, ярус 2→3">
-    <img src="ameli-bertrand-transition-2.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 02 → ЯРУС 03</b></span>
-    <span>ГЛУБИНА: <b>-130 М</b></span>
-  </div>
-</div>
 
 <!-- ЯРУС 3 · ЖИЛОЙ БЛОК (ответвление с несколькими помещениями) -->
 <section class="tier" id="tier-3" data-tier="3" data-name="Жилой блок">
@@ -793,17 +778,6 @@ html[data-mode="title"] .mute-btn{display:none;}
   </div>
 </section>
 
-<div class="transition" data-depth="190">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, ярус 3→4">
-    <img src="ameli-bertrand-transition-3.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 03 → ЯРУС 04</b></span>
-    <span>ГЛУБИНА: <b>-190 М</b></span>
-  </div>
-</div>
-
 <!-- ЯРУС 4 · СКЛАД -->
 <section class="tier" id="tier-4" data-tier="4" data-name="Склад">
   <div class="tier-track" id="track-tier-4" data-active="main">
@@ -895,17 +869,6 @@ html[data-mode="title"] .mute-btn{display:none;}
 
   </div>
 </section>
-
-<div class="transition" data-depth="260">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, ярус 4→5">
-    <img src="ameli-bertrand-transition-4.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 04 → ЯРУС 05</b></span>
-    <span>ГЛУБИНА: <b>-260 М</b></span>
-  </div>
-</div>
 
 <!-- ЯРУС 5 · ТЮРЬМА -->
 <section class="tier" id="tier-5" data-tier="5" data-name="Тюрьма">
@@ -999,17 +962,6 @@ html[data-mode="title"] .mute-btn{display:none;}
   </div>
 </section>
 
-<div class="transition" data-depth="340">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, ярус 5→6">
-    <img src="ameli-bertrand-transition-5.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 05 → ЯРУС 06</b></span>
-    <span>ГЛУБИНА: <b>-340 М</b></span>
-  </div>
-</div>
-
 <!-- ЯРУС 6 · БИОРЕАКТОР (без ответвлений) -->
 <section class="tier" id="tier-6" data-tier="6" data-name="Биореактор">
   <div class="tier-track" id="track-tier-6" data-active="main">
@@ -1065,17 +1017,6 @@ html[data-mode="title"] .mute-btn{display:none;}
     </div>
   </div>
 </section>
-
-<div class="transition" data-depth="430">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, ярус 6→7">
-    <img src="ameli-bertrand-transition-6.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 06 → ЯРУС 07</b></span>
-    <span>ГЛУБИНА: <b>-430 М</b></span>
-  </div>
-</div>
 
 <!-- ЯРУС 7 · БУНКЕР (без ответвлений; вместо двери — спуск ниже) -->
 <section class="tier" id="tier-7" data-tier="7" data-name="Бункер">
@@ -1152,17 +1093,6 @@ html[data-mode="title"] .mute-btn{display:none;}
   </div>
 </section>
 
-<div class="transition" data-depth="430">
-  <div class="img-wrap transition-bg" data-label="нет сигнала · разрез, за бункером">
-    <img src="ameli-bertrand-transition-7.jpg" alt="">
-  </div>
-  <div class="transition-gradient"></div>
-  <div class="transition-readout">
-    <span>ПЕРЕКРЫТИЕ: <b>ЯРУС 07 → НЕДОСТРОЕНО</b></span>
-    <span>ГЛУБИНА: <b>ДАЛЕЕ НЕ ЗАФИКСИРОВАНА</b></span>
-  </div>
-</div>
-
 <!-- ══ 3. ФИНАЛЬНЫЙ ПЕРЕХОД ВНИЗ ══ -->
 <section class="depths" id="depths-final">
   <div class="img-wrap depths-bg" data-label="нет сигнала · недостроенные глубины">
@@ -1187,7 +1117,15 @@ html[data-mode="title"] .mute-btn{display:none;}
   </div>
 </section>
 
+</div>
 </main>
+
+<div class="transition-flash" id="transitionFlash">
+  <div class="transition-flash-readout">
+    <span id="flashFrom"></span>
+    <span id="flashDepth"></span>
+  </div>
+</div>
 
 <audio id="audioA" preload="none"></audio>
 <audio id="audioB" preload="none"></audio>
@@ -1201,11 +1139,17 @@ function startDescent(){
   const ts = document.getElementById('titleScreen');
   ts.classList.add('exiting');
   setTimeout(() => { ts.style.display = 'none'; }, 650);
-  window.scrollTo(0, 0);
+  currentSlideIndex = 0;
+  document.getElementById('descentTrack').style.transform = 'translateY(0)';
+  activeStopId = 'tier-1';
+  onStopActive('tier-1');
 }
+/* блокируем скролл/свайп на титульном экране, ЧТОБЫ ОН НЕ ЗАПУСКАЛ спуск —
+   но не внутри карточек: там это единственный способ дочитать длинный текст,
+   не помещающийся в фиксированный кадр (см. .info-body/max-height). */
 ['wheel', 'touchmove'].forEach(evt => {
   document.getElementById('titleScreen').addEventListener(evt, e => {
-    if (document.documentElement.dataset.mode === 'title') e.preventDefault();
+    if (document.documentElement.dataset.mode === 'title' && !e.target.closest('.info-body')) e.preventDefault();
   }, { passive: false });
 });
 
@@ -1285,6 +1229,7 @@ const STOPS = [
   { id: 'depths-final', name: 'Недостроенные глубины', depth: null, track: 'depths' }
 ];
 let activeStopId = null;
+let currentSlideIndex = 0;
 function onStopActive(id) {
   const stop = STOPS.find(s => s.id === id);
   if (!stop) return;
@@ -1293,47 +1238,51 @@ function onStopActive(id) {
   crossfadeTo(stop.track);
 }
 
-/* явный переход по кнопке (низ каждого яруса) — скроллит к следующему ярусу
-   и сразу переключает саундтрек, не дожидаясь скролл-детектора */
+/* переход между ярусами — ТОЛЬКО по кнопке (goToStop из дока сверху/снизу).
+   Свободного скролла по стволу нет: .descent-track сдвигается по вертикали
+   так же, как боковые двери — по горизонтали. Краткая вспышка с техническим
+   номером перекрытия читается на месте буквального «разреза», который
+   раньше приходилось перематывать. */
+function flashAndRun(label, depthLabel, run) {
+  const flash = document.getElementById('transitionFlash');
+  document.getElementById('flashFrom').textContent = label;
+  document.getElementById('flashDepth').textContent = depthLabel;
+  flash.classList.add('show');
+  setTimeout(() => {
+    run();
+    setTimeout(() => flash.classList.remove('show'), 350);
+  }, 280);
+}
+
 function goToStop(targetId) {
-  const el = document.getElementById(targetId);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  activeStopId = targetId;
-  onStopActive(targetId);
+  const idx = STOPS.findIndex(s => s.id === targetId);
+  if (idx < 0 || targetId === activeStopId) return;
+  const from = STOPS.find(s => s.id === activeStopId);
+  const to = STOPS[idx];
+  const label = `ПЕРЕКРЫТИЕ: ${from ? from.name.toUpperCase() : 'ПОВЕРХНОСТЬ'} → ${to.name.toUpperCase()}`;
+  const depthLabel = to.depth === null ? 'ГЛУБИНА НЕ ЗАФИКСИРОВАНА' : `ГЛУБИНА: -${to.depth} М`;
+  flashAndRun(label, depthLabel, () => {
+    currentSlideIndex = idx;
+    document.getElementById('descentTrack').style.transform = `translateY(-${idx * 100}%)`;
+    activeStopId = targetId;
+    onStopActive(targetId);
+  });
 }
 
 /* верхний док яруса 1 ведёт не к предыдущему ярусу (его нет), а на поверхность —
-   к самому началу режима спуска, с возвратом эмбиента титульного экрана */
+   назад к титульному экрану, с возвратом эмбиента заглавной темы */
 function goToSurface() {
-  const el = document.getElementById('descentMode');
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  activeStopId = null;
-  document.getElementById('depthVal').textContent = 'ПОВЕРХНОСТЬ';
-  document.getElementById('depthTier').textContent = '';
-  crossfadeTo('title');
+  flashAndRun('ПОДЪЁМ НА ПОВЕРХНОСТЬ', '', () => {
+    document.documentElement.dataset.mode = 'title';
+    const ts = document.getElementById('titleScreen');
+    ts.style.display = '';
+    requestAnimationFrame(() => ts.classList.remove('exiting'));
+    activeStopId = null;
+    document.getElementById('depthVal').textContent = 'ПОВЕРХНОСТЬ';
+    document.getElementById('depthTier').textContent = '';
+    crossfadeTo('title');
+  });
 }
-if ('IntersectionObserver' in window) {
-  /* rootMargin схлопывает область наблюдения в линию по центру экрана — «активный»
-     ярус тот, что сейчас пересекает середину видимой области. Порог по проценту
-     высоты САМОЙ секции (как было раньше) ломался на длинном тексте: секция в
-     2-3 экрана высотой физически не может показать 50% себя одновременно. */
-  const stopObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        if (entry.target.id !== activeStopId) { activeStopId = entry.target.id; onStopActive(entry.target.id); }
-      }
-    });
-  }, { rootMargin: '-50% 0px -50% 0px', threshold: 0 });
-  STOPS.forEach(s => { const el = document.getElementById(s.id); if (el) stopObserver.observe(el); });
-}
-
-/* ── лёгкий параллакс фона внутри высоких «комнат» ── */
-document.querySelectorAll('.tier-room').forEach(room => {
-  room.addEventListener('scroll', () => {
-    const bg = room.querySelector(':scope > .tier-bg, :scope > .img-wrap.tier-bg');
-    if (bg) bg.style.setProperty('--sy', room.scrollTop);
-  }, { passive: true });
-});
 
 /* ══════════════════════════════════════════
    САУНДТРЕКИ: кроссфейд, без автовоспроизведения
@@ -1404,9 +1353,10 @@ document.querySelectorAll('.img-wrap').forEach(wrap => {
   });
 });
 
-/* ── карусель: несколько фото в одном инфоблоке, автопереключение с кроссфейдом.
-   Если рядом есть .info-caption (несколько подписей — своя на каждое фото),
-   они переключаются синхронно с фото по тому же индексу. ── */
+/* ── карусель: несколько фото в одном инфоблоке — переключение по тапу/клику
+   на фото или по свайпу (НЕ автоматически: на автопереключении не успеваешь
+   дочитать подпись). Если рядом есть .info-caption — она переключается
+   синхронно с фото по тому же индексу. Точки тоже кликабельны. ── */
 document.querySelectorAll('.photo-carousel').forEach(wrap => {
   const frames = Array.from(wrap.querySelectorAll('img'));
   if (frames.length < 2) return;
@@ -1421,17 +1371,36 @@ document.querySelectorAll('.photo-carousel').forEach(wrap => {
   });
   wrap.appendChild(dotsWrap);
   const dots = Array.from(dotsWrap.children);
+  wrap.classList.add('is-tappable');
   let i = frames.findIndex(f => f.classList.contains('active'));
   if (i < 0) { i = 0; frames[0].classList.add('active'); }
-  setInterval(() => {
+
+  function goTo(next) {
+    next = ((next % frames.length) + frames.length) % frames.length;
+    if (next === i) return;
     frames[i].classList.remove('active');
     if (captions[i]) captions[i].classList.remove('active');
     dots[i].classList.remove('active');
-    i = (i + 1) % frames.length;
+    i = next;
     frames[i].classList.add('active');
     if (captions[i]) captions[i].classList.add('active');
     dots[i].classList.add('active');
-  }, 5000);
+  }
+
+  wrap.addEventListener('click', e => {
+    if (e.target.closest('.carousel-dots')) return;
+    goTo(i + 1);
+  });
+  dots.forEach((d, idx) => d.addEventListener('click', e => { e.stopPropagation(); goTo(idx); }));
+
+  let touchX = null;
+  wrap.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  wrap.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 30) goTo(i + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
 });
 
 /* ══════════════════════════════════════════
