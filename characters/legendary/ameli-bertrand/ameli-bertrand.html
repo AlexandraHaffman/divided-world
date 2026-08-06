@@ -186,9 +186,16 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
   background:linear-gradient(180deg,rgba(7,6,11,0.15) 0%,transparent 26%,rgba(7,6,11,0.55) 70%,rgba(7,6,11,0.95) 100%);}
 .tier-content{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;padding:60px 16px 110px;box-sizing:border-box;}
-/* вариант-обёртка для вкладок ответвления яруса 3 — сама не скроллится и не
-   растягивается на всю высоту, под ней в потоке идёт вложенный трек комнат */
-.tier-content--tabs{height:auto;overflow:visible;padding:26px 16px 0;z-index:3;}
+
+/* тонкий фирменный скролл вместо системной полосы — везде, где есть внутренний overflow-y */
+.tier-content,.depths-content,.title-info-block--photo .info-body{
+  scrollbar-width:thin;scrollbar-color:rgba(var(--violet),.5) transparent;}
+.tier-content::-webkit-scrollbar,.depths-content::-webkit-scrollbar,.title-info-block--photo .info-body::-webkit-scrollbar{width:4px;}
+.tier-content::-webkit-scrollbar-track,.depths-content::-webkit-scrollbar-track,.title-info-block--photo .info-body::-webkit-scrollbar-track{background:transparent;}
+.tier-content::-webkit-scrollbar-thumb,.depths-content::-webkit-scrollbar-thumb,.title-info-block--photo .info-body::-webkit-scrollbar-thumb{
+  background:rgba(var(--violet),.35);border-radius:2px;}
+.tier-content::-webkit-scrollbar-thumb:hover,.depths-content::-webkit-scrollbar-thumb:hover,.title-info-block--photo .info-body::-webkit-scrollbar-thumb:hover{
+  background:rgba(var(--violet),.6);}
 
 .tier-header{margin-bottom:22px;}
 .tier-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(var(--violet),.7);letter-spacing:.1em;
@@ -260,12 +267,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
 .edge-btn:hover .edge-arrow{border-color:rgba(var(--violet),1);}
 .tier[data-tier="7"] .edge-arrow{border-color:rgba(var(--amber),0.85);}
 
-.room-tabs{position:sticky;top:16px;z-index:16;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;pointer-events:none;}
-.room-tabs > *{pointer-events:auto;}
-.room-tab{background:rgba(9,6,13,0.6);border:2px solid rgba(var(--violet),0.5);color:var(--paper-dim);
-  font-size:9.5px;letter-spacing:.1em;padding:8px 12px;border-radius:2px;text-transform:uppercase;backdrop-filter:blur(3px);}
-.room-tab[data-active="1"]{color:var(--paper);border-color:rgba(var(--violet),0.85);}
-
 /* бункер — тёплый контраст */
 .tier[data-tier="7"] .tier-gradient{background:linear-gradient(180deg,rgba(20,10,4,0.15) 0%,transparent 26%,rgba(20,10,4,0.6) 70%,rgba(20,10,4,0.95) 100%);}
 .tier[data-tier="7"] .info-block{border-color:rgba(var(--amber),0.45);background:rgba(var(--amber),0.035);}
@@ -288,7 +289,7 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
 .depths-content{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;
   -webkit-overflow-scrolling:touch;text-align:center;padding:22vh 20px 80px;max-width:520px;margin:0 auto;box-sizing:border-box;}
 .depths-eyebrow{font-size:9px;letter-spacing:.24em;color:rgba(var(--violet),.6);margin-bottom:16px;text-transform:uppercase;}
-.depths-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.6;
+.depths-quote{font-family:'Share Tech Mono',monospace;font-size:14.5px;line-height:1.75;letter-spacing:.01em;
   color:var(--paper-dim);min-height:1.6em;}
 .depths-end{margin-top:34px;font-size:9px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;}
 
@@ -341,16 +342,18 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
   .title-name{font-size:46px;}
   /* десктоп: достаточно места, чтобы развести блоки по углам, а не в общий ряд */
   .title-info-row{display:contents;}
-  .title-info-block{position:absolute;z-index:2;width:280px;padding:12px 14px;flex:none;}
+  .title-info-block{position:absolute;z-index:2;width:420px;padding:16px 20px;flex:none;}
   .title-info-block--photo{padding:0;}
-  .title-info-block--photo .info-eyebrow{padding:0 14px;}
-  .title-info-block--photo .info-body{padding:0 14px 12px;max-height:19vh;}
-  .title-info-block--left{left:6%;bottom:24%;}
-  .title-info-block--right{right:6%;bottom:16%;}
+  .title-info-block--photo .info-eyebrow{padding:0 20px;}
+  .title-info-block--photo .info-body{padding:0 20px 16px;max-height:27vh;}
+  .title-info-block .info-eyebrow{font-size:12px;}
+  .title-info-block .info-body{font-size:16px;line-height:1.6;}
+  .title-info-block--left{left:6%;bottom:22%;}
+  .title-info-block--right{right:6%;bottom:14%;}
   .title-bottom{padding:26px 40px 40px;flex-direction:row;align-items:flex-end;justify-content:space-between;}
   .descend-btn{width:auto;}
 
-  .depths-quote{font-size:23px;}
+  .depths-quote{font-size:17px;}
 }
 </style>
 </head>
@@ -627,9 +630,37 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
   </div>
 </section>
 
-<!-- ЯРУС 3 · ЖИЛОЙ БЛОК (ответвление с несколькими помещениями) -->
+<!-- ЯРУС 3 · ЖИЛОЙ БЛОК (ответвления по бокам — зона отдыха слева, столовая справа) -->
 <section class="tier" id="tier-3" data-tier="3" data-name="Жилой блок">
-  <div class="tier-track" id="track-tier-3" data-active="main">
+  <div class="tier-track" id="track-tier-3" data-active="main" style="transform:translateX(-100%);">
+
+    <div class="tier-room" data-room="lounge">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · зона отдыха">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-lounge-bg-v.webp">
+          <img src="ameli-bertrand-tier3-lounge-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-3" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Зона отдыха</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Зона отдыха</div>
+              <div class="info-text decay-text">Доступ предоставляется по графику и только в пределах назначенного сектора. Помещения оборудованы местами для чтения, настольных игр и кратковременного отдыха между сменами.<br><br>Продолжительность посещения фиксируется автоматически. Уединение не предусмотрено: за порядком наблюдают дежурные Координаторы.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="tier-room" data-room="main">
       <div class="img-wrap tier-bg" data-label="нет сигнала · фон, жилой блок">
@@ -645,8 +676,13 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
             <span class="edge-arrow"></span>
           </button>
         </div>
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-3" data-open="lounge">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
         <div class="dock-edge dock-right">
-          <button class="edge-btn" data-track="track-tier-3" data-open="door-1">
+          <button class="edge-btn" data-track="track-tier-3" data-open="canteen">
             <span class="edge-arrow"></span>
           </button>
         </div>
@@ -687,8 +723,14 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
       </div>
     </div>
 
-    <!-- ответвление яруса 3: несколько помещений, вложенный трек -->
-    <div class="tier-room" data-room="door-1">
+    <div class="tier-room" data-room="canteen">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · столовая">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-canteen-bg-v.webp">
+          <img src="ameli-bertrand-tier3-canteen-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
       <div class="room-dock">
         <div class="dock-edge dock-left">
           <button class="edge-btn" data-track="track-tier-3" data-open="main">
@@ -696,81 +738,16 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
           </button>
         </div>
       </div>
-      <div class="tier-content tier-content--tabs">
-        <div class="room-tabs" id="tabs-tier-3-rooms">
-          <button class="room-tab" data-active="1" data-track="track-tier-3-rooms" data-open="canteen">СТОЛОВАЯ</button>
-          <button class="room-tab" data-track="track-tier-3-rooms" data-open="lounge">ЗОНА ОТДЫХА</button>
-          <button class="room-tab" data-track="track-tier-3-rooms" data-open="canteen-unfinished">СТОЛОВАЯ (СТРОИТСЯ)</button>
-          <!-- расширяемо: сюда добавляются новые вкладки помещений (напр. недостроенные версии) -->
-        </div>
-      </div>
-      <div class="tier-track" id="track-tier-3-rooms" data-active="canteen" style="position:relative;z-index:2;min-height:calc(100svh - 92px);">
-
-        <div class="tier-room" data-room="canteen">
-          <div class="img-wrap tier-bg" data-label="нет сигнала · столовая (достроена)">
-            <picture>
-              <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-canteen-bg-v.webp">
-              <img src="ameli-bertrand-tier3-canteen-bg-h.webp" alt="">
-            </picture>
-          </div>
-          <div class="tier-gradient"></div>
-          <div class="tier-content">
-            <div class="tier-header"><div class="tier-name decay-text">Столовая</div></div>
-            <div class="info-blocks info-blocks--1">
-              <div class="info-block decay-erode">
-                <div class="info-block-body">
-                  <div class="info-title decay-text">Столовая</div>
-                  <div class="info-text decay-text">Питание проходит по сменам и строго закреплённым маршрутам. Места, время приёма пищи и объём пайка определяются номером, должностью и сектором допуска.<br><br>Разговоры разрешены только в установленные часы. Любое отклонение фиксируется как нарушение внутреннего режима.</div>
-                </div>
-              </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Столовая</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Столовая</div>
+              <div class="info-text decay-text">Питание проходит по сменам и строго закреплённым маршрутам. Места, время приёма пищи и объём пайка определяются номером, должностью и сектором допуска.<br><br>Разговоры разрешены только в установленные часы. Любое отклонение фиксируется как нарушение внутреннего режима.</div>
             </div>
           </div>
         </div>
-
-        <div class="tier-room" data-room="lounge">
-          <div class="img-wrap tier-bg" data-label="нет сигнала · зона отдыха (достроена)">
-            <picture>
-              <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-lounge-bg-v.webp">
-              <img src="ameli-bertrand-tier3-lounge-bg-h.webp" alt="">
-            </picture>
-          </div>
-          <div class="tier-gradient"></div>
-          <div class="tier-content">
-            <div class="tier-header"><div class="tier-name decay-text">Зона отдыха</div></div>
-            <div class="info-blocks info-blocks--1">
-              <div class="info-block decay-erode">
-                <div class="info-block-body">
-                  <div class="info-title decay-text">Зона отдыха</div>
-                  <div class="info-text decay-text">Доступ предоставляется по графику и только в пределах назначенного сектора. Помещения оборудованы местами для чтения, настольных игр и кратковременного отдыха между сменами.<br><br>Продолжительность посещения фиксируется автоматически. Уединение не предусмотрено: за порядком наблюдают дежурные Координаторы.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="tier-room" data-room="canteen-unfinished">
-          <div class="img-wrap tier-bg" data-label="нет сигнала · столовая (строится)">
-            <picture>
-              <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-canteen-unfinished-bg-v.webp">
-              <img src="ameli-bertrand-tier3-canteen-unfinished-bg-h.webp" alt="">
-            </picture>
-          </div>
-          <div class="tier-gradient"></div>
-          <div class="construction-flag"><span>участок в разработке</span></div>
-          <div class="tier-content">
-            <div class="tier-header"><div class="tier-name decay-text">Столовая (строится)</div></div>
-            <div class="info-blocks info-blocks--1">
-              <div class="info-block decay-erode">
-                <div class="info-block-body">
-                  <div class="info-title decay-text"><!-- TEXT --></div>
-                  <div class="info-text decay-text"><!-- TEXT --></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- расширяемо: недостроенные версии тех же помещений добавляются сюда как ещё .tier-room + вкладка выше -->
       </div>
     </div>
 
@@ -1343,10 +1320,22 @@ document.querySelectorAll('.img-wrap').forEach(wrap => {
   const imgs = Array.from(wrap.querySelectorAll('img'));
   if (!imgs.length) return;
   let failed = 0;
-  const onFail = () => { failed++; if (failed >= imgs.length) wrap.classList.add('broken'); };
+  // одна попытка перезагрузить кадр (со сбросом кэша) до того, как признать «нет сигнала» —
+  // часть отказов на реальной сети/у CDN оказываются одноразовым сбоем, а не 404
+  const onFail = img => {
+    if (!img.dataset.retried) {
+      img.dataset.retried = '1';
+      const base = img.dataset.src || img.src;
+      setTimeout(() => { img.src = base + (base.includes('?') ? '&' : '?') + 'retry=' + Date.now(); }, 700);
+      return;
+    }
+    failed++;
+    if (failed >= imgs.length) wrap.classList.add('broken');
+  };
   imgs.forEach(img => {
-    img.addEventListener('error', onFail);
-    if (img.complete && img.naturalWidth === 0) onFail();
+    if (!img.dataset.src) img.dataset.src = img.src;
+    img.addEventListener('error', () => onFail(img));
+    if (img.complete && img.naturalWidth === 0) onFail(img);
   });
 });
 
