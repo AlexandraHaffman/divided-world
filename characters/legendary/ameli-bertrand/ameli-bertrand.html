@@ -95,7 +95,8 @@ html[data-mode="title"] .mute-btn{display:none;}
 
 .title-quote{position:absolute;top:14%;left:50%;transform:translateX(-50%);z-index:2;width:min(88%,560px);
   text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;line-height:1.5;
-  color:var(--paper);text-shadow:0 2px 18px rgba(0,0,0,0.8);min-height:1.5em;}
+  color:var(--paper);text-shadow:0 2px 20px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,0.98), 0 0 2px rgba(0,0,0,0.9);
+  min-height:1.5em;}
 
 /* мобильный/планшет: общий ряд, блоки делят ширину и не перекрываются;
    десктоп переключает .title-info-row в display:contents — тогда блоки
@@ -175,15 +176,19 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
 
 .tier{position:relative;overflow:hidden;}
 .tier-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.61,.36,1);will-change:transform;}
-.tier-room{flex:0 0 100%;width:100%;height:100%;position:relative;overflow-y:auto;overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;}
-/* комната теперь жёстко = высоте экрана (не растёт по контенту), поэтому
-   простой position:absolute уже не растягивается вместе с длинным текстом —
-   фон всегда ровно во весь кадр, в любой ориентации */
+/* .tier-room больше НЕ скроллится сама — это неподвижная рамка фиксированного
+   размера. Фон/градиент/док кнопок — её прямые дети на position:absolute,
+   поэтому остаются на месте (не уезжают вместе с текстом). Скроллится
+   только .tier-content — единственный скролл-контейнер внутри рамки. */
+.tier-room{flex:0 0 100%;width:100%;height:100%;position:relative;overflow:hidden;}
 .tier-bg{position:absolute;inset:0;z-index:0;}
 .tier-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,rgba(7,6,11,0.15) 0%,transparent 26%,rgba(7,6,11,0.55) 70%,rgba(7,6,11,0.95) 100%);}
-.tier-content{position:relative;z-index:2;padding:60px 16px 110px;min-height:100%;box-sizing:border-box;}
+.tier-content{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;padding:60px 16px 110px;box-sizing:border-box;}
+/* вариант-обёртка для вкладок ответвления яруса 3 — сама не скроллится и не
+   растягивается на всю высоту, под ней в потоке идёт вложенный трек комнат */
+.tier-content--tabs{height:auto;overflow:visible;padding:26px 16px 0;z-index:3;}
 
 .tier-header{margin-bottom:22px;}
 .tier-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(var(--violet),.7);letter-spacing:.1em;
@@ -269,11 +274,9 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
 /* ══════════════════════════════════════════
    ФИНАЛ: НЕДОСТРОЕННЫЕ ГЛУБИНЫ
    ══════════════════════════════════════════ */
-/* комната = ровно высота экрана (как у ярусов), фон/градиент/пылинки —
-   простой position:absolute, длинный текст читается через overflow-y:auto
-   самой секции */
-.depths{position:relative;height:100%;overflow-y:auto;overflow-x:hidden;background:#040308;
-  -webkit-overflow-scrolling:touch;}
+/* та же рамка/скролл-контейнер раздельно, что и у ярусов: .depths не скроллится
+   сама (неподвижная рамка для фона/дока), скроллится только .depths-content */
+.depths{position:relative;height:100%;overflow:hidden;background:#040308;}
 .depths-bg{position:absolute;inset:0;z-index:0;filter:brightness(.5) saturate(.5);}
 .depths-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(ellipse at 50% 60%, transparent 20%, rgba(4,3,8,0.92) 78%),
@@ -282,7 +285,8 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
 .mote{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(var(--violet),.5);
   filter:blur(1px);animation:drift 14s linear infinite;}
 @keyframes drift{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.7;}90%{opacity:.4;}100%{transform:translateY(-120px) translateX(20px);opacity:0;}}
-.depths-content{position:relative;z-index:2;text-align:center;padding:22vh 20px 80px;max-width:520px;margin:0 auto;min-height:100%;box-sizing:border-box;}
+.depths-content{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;text-align:center;padding:22vh 20px 80px;max-width:520px;margin:0 auto;box-sizing:border-box;}
 .depths-eyebrow{font-size:9px;letter-spacing:.24em;color:rgba(var(--violet),.6);margin-bottom:16px;text-transform:uppercase;}
 .depths-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;line-height:1.6;
   color:var(--paper-dim);min-height:1.6em;}
@@ -527,7 +531,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
         <div class="tier-header"><div class="tier-name decay-text">Доковый отсек</div></div>
         <div class="info-blocks info-blocks--1">
           <div class="info-block decay-erode">
-            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier1-door1-info1.jpg" alt=""></div>
             <div class="info-block-body">
               <div class="info-title decay-text">Доковый отсек</div>
               <div class="info-text decay-text">За действующими терминалами продолжается строительство новых приёмных линий. Проходческие машины расширяют полость, монтажные бригады прокладывают рельсы, вентиляцию и грузовые подъёмники, пока соседние доки уже принимают очередные колонны.<br><br>Бастион растёт без остановки: новые мощности вводятся по частям, иногда ещё до завершения отделки и испытаний.</div>
@@ -612,7 +615,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
         <div class="tier-header"><div class="tier-name decay-text">Командное крыло</div></div>
         <div class="info-blocks info-blocks--1">
           <div class="info-block decay-erode">
-            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier2-door1-info1.jpg" alt=""></div>
             <div class="info-block-body">
               <div class="info-title decay-text">Командное крыло</div>
               <div class="info-text decay-text">За действующим залом совещаний строится новый комплекс защищённых кабинетов, архивов и узлов связи. Часть помещений уже используется, пока соседние секции остаются открытыми шахтами, сырыми тоннелями и монтажными площадками.<br><br>Расширение продолжается вокруг работающего центра Квартета, поэтому граница между командованием и стройкой здесь почти отсутствует.</div>
@@ -694,7 +696,7 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
           </button>
         </div>
       </div>
-      <div class="tier-content" style="padding-top:26px;position:relative;z-index:3;">
+      <div class="tier-content tier-content--tabs">
         <div class="room-tabs" id="tabs-tier-3-rooms">
           <button class="room-tab" data-active="1" data-track="track-tier-3-rooms" data-open="canteen">СТОЛОВАЯ</button>
           <button class="room-tab" data-track="track-tier-3-rooms" data-open="lounge">ЗОНА ОТДЫХА</button>
@@ -716,7 +718,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
             <div class="tier-header"><div class="tier-name decay-text">Столовая</div></div>
             <div class="info-blocks info-blocks--1">
               <div class="info-block decay-erode">
-                <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-canteen-info1.jpg" alt=""></div>
                 <div class="info-block-body">
                   <div class="info-title decay-text">Столовая</div>
                   <div class="info-text decay-text">Питание проходит по сменам и строго закреплённым маршрутам. Места, время приёма пищи и объём пайка определяются номером, должностью и сектором допуска.<br><br>Разговоры разрешены только в установленные часы. Любое отклонение фиксируется как нарушение внутреннего режима.</div>
@@ -738,7 +739,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
             <div class="tier-header"><div class="tier-name decay-text">Зона отдыха</div></div>
             <div class="info-blocks info-blocks--1">
               <div class="info-block decay-erode">
-                <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-lounge-info1.jpg" alt=""></div>
                 <div class="info-block-body">
                   <div class="info-title decay-text">Зона отдыха</div>
                   <div class="info-text decay-text">Доступ предоставляется по графику и только в пределах назначенного сектора. Помещения оборудованы местами для чтения, настольных игр и кратковременного отдыха между сменами.<br><br>Продолжительность посещения фиксируется автоматически. Уединение не предусмотрено: за порядком наблюдают дежурные Координаторы.</div>
@@ -761,7 +761,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
             <div class="tier-header"><div class="tier-name decay-text">Столовая (строится)</div></div>
             <div class="info-blocks info-blocks--1">
               <div class="info-block decay-erode">
-                <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-canteen-unfinished-info1.jpg" alt=""></div>
                 <div class="info-block-body">
                   <div class="info-title decay-text"><!-- TEXT --></div>
                   <div class="info-text decay-text"><!-- TEXT --></div>
@@ -857,7 +856,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
         <div class="tier-header"><div class="tier-name decay-text">Фабрика</div></div>
         <div class="info-blocks info-blocks--1">
           <div class="info-block decay-erode">
-            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier4-door1-info1.jpg" alt=""></div>
             <div class="info-block-body">
               <div class="info-title decay-text">Фабрика</div>
               <div class="info-text decay-text">Производственные линии Бастиона перерабатывают металлы, строительный лом, трофейное оборудование и органическое сырьё, поступающее из внутренних секторов. Комплекс выпускает стандартные элементы укреплений, трубы, крепёж, кабельные оболочки, детали вентиляции и расходные компоненты для дальнейшего расширения крепости.<br><br>Работа ведётся непрерывными сменами. Большинство операций выполняет принудительная рабочая сила; травмы, истощение и смертность учитываются как производственные потери. Неспособные продолжать работу переводятся в категорию биологического сырья и направляются на нижние ярусы.<br><br>Фабрика проектировалась как замкнутый цикл: Бастион использует привезённые ресурсы, изношенное оборудование и собственное население, сокращая объём отходов до минимума.</div>
@@ -949,7 +947,6 @@ html[data-mode="descent"] #descentMode{visibility:visible;}
         <div class="tier-header"><div class="tier-name decay-text">Строящийся блок</div></div>
         <div class="info-blocks info-blocks--1">
           <div class="info-block decay-erode">
-            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier5-door1-info1.jpg" alt=""></div>
             <div class="info-block-body">
               <div class="info-title decay-text">Строящийся блок</div>
               <div class="info-text decay-text">Расширение тюрьмы ведётся непрерывно. Новые камеры вводят в эксплуатацию по секциям: часть коридоров уже заполняется заключёнными, пока в соседних ещё продолжаются монтаж вентиляции, освещения и запорных систем.<br><br>Номера наносятся заранее. Проектная вместимость всегда рассчитывается с резервом под следующий поток, однако этот резерв обычно заканчивается раньше завершения очередного блока.</div>
