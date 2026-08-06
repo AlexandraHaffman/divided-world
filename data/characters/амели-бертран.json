@@ -18,15 +18,15 @@
     "Формирование локальных участков распада",
     "Заражение территорий спорами и ржавчиной"
   ],
-  "threat_level": 55,
+  "threat_level": 52,
   "stats": {
     "intelligence": 7,
     "combat": 10,
     "influence": 7,
     "meta_power": 10,
     "cruelty": 10,
-    "will": 9,
-    "stealth": 6,
+    "will": 8,
+    "stealth": 4,
     "unpredictability": 6
   },
   "card_quote": "В мире слишком много мусора. Приходится убирать.",
@@ -39,12 +39,12 @@
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A87996A1-179B-4EB7-97C7-7D66DA155C03.jpeg",
   "tier": "legendary",
   "appearance": {
-    "height": null,
-    "weight": null,
-    "eye_color": "",
-    "hair_color": "",
-    "bust_size": null,
-    "marks": ""
+    "height": 167,
+    "weight": 49,
+    "eye_color": "Тёмно-карие",
+    "hair_color": "Чёрные",
+    "bust_size": 1,
+    "marks": "Короткие волосы, круглые очки"
   },
-  "exported_at": "2026-08-04T20:17:33.944Z"
+  "exported_at": "2026-08-05T12:55:41.103Z"
 }

@@ -24,11 +24,11 @@
       "Создание постоянных штормовых барьеров"
     ]
   ],
-  "threat_level": 57,
+  "threat_level": 56,
   "stats": {
     "intelligence": 7,
     "combat": 20,
-    "influence": 7,
+    "influence": 6,
     "meta_power": 20,
     "cruelty": 4,
     "will": 9,
@@ -42,7 +42,7 @@
   "avatar": "marcus_cross_avatar",
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FEABC295-6625-4FCF-B3AF-D775986BFB4E.jpeg",
-  "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8A8A671B-6CF0-47FB-893C-2A3974AE8029.png",
+  "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8A8A671B-6CF0-47FB-893C-2A3974AE8029.webp",
   "tier": "mythical",
   "appearance": {
     "height": 182,
@@ -52,5 +52,5 @@
     "bust_size": null,
     "marks": ""
   },
-  "exported_at": "2026-08-04T20:15:21.133Z"
+  "exported_at": "2026-08-05T11:22:58.775Z"
 }
