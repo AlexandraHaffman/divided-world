@@ -4179,5 +4179,28 @@
     ],
     "flash": false,
     "restricted": false
+  },
+  {
+    "id": "ABA-001",
+    "file": "characters/mythical/elenis/collections/abandon/085DFD3C-8230-4B75-85E3-FB23E0C868B8.webp",
+    "collection": "ABANDON",
+    "title": "CAUGHT LAUGHING",
+    "model": "Nymphaea Elenis",
+    "photographer": "V. Okonkwo",
+    "date": "2051-11-04",
+    "location": "On location",
+    "styling": "Personal wardrobe",
+    "light": "Available light",
+    "publication": "Unpublished, house archive",
+    "edition": "08/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#573821",
+    "layers": [
+      3
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]

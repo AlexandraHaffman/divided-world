@@ -36,6 +36,9 @@ const COLLECTIONS = {
   // Period/historical costume concept shoots — a themed editorial like PERSONA, just historical
   // rather than modern-day roles. Not a literal claim about her age.
   history: { code: 'HISTORY', prefix: 'HIS', layers: [1], flash: false, restricted: false },
+  // Candid, unguarded moments — genuine emotion from someone who otherwise always performs.
+  // Core-layer, not a top-note campaign: the mask actually slipping is the rare thing.
+  abandon: { code: 'ABANDON', prefix: 'ABA', layers: [3], flash: false, restricted: false },
 };
 
 const CRISIS_START = new Date('2020-07-04T00:00:00Z').getTime();
