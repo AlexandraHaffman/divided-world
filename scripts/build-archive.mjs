@@ -33,6 +33,9 @@ const COLLECTIONS = {
     dateRange: [new Date('2017-01-01T00:00:00Z').getTime(), new Date('2020-06-30T00:00:00Z').getTime()],
     photographer: 'P. Kalantzis',
   },
+  // Period/historical costume concept shoots — the first hint that "hasn't aged in decades"
+  // undersells it; core-layer reveal, not a top-note campaign.
+  history: { code: 'HISTORY', prefix: 'HIS', layers: [3], flash: false, restricted: false },
 };
 
 const CRISIS_START = new Date('2020-07-04T00:00:00Z').getTime();

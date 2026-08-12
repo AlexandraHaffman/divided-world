@@ -4041,5 +4041,28 @@
     ],
     "flash": false,
     "restricted": false
+  },
+  {
+    "id": "HIS-001",
+    "file": "characters/mythical/elenis/collections/history/5EC03DAA-6F12-4831-8DC6-C9748D75F962.webp",
+    "collection": "HISTORY",
+    "title": "LOOKING BACK",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2054-07-12",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "02/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#412A1A",
+    "layers": [
+      3
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]
