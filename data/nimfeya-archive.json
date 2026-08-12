@@ -4060,7 +4060,30 @@
     "height": 1402,
     "accent": "#412A1A",
     "layers": [
-      3
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-002",
+    "file": "characters/mythical/elenis/collections/history/C0192D58-48C8-46F7-B8BE-B62B96BA716A.webp",
+    "collection": "HISTORY",
+    "title": "THE COLONNADE",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2033-01-15",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "03/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#D3A874",
+    "layers": [
+      1
     ],
     "flash": false,
     "restricted": false
