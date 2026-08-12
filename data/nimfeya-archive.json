@@ -4202,5 +4202,97 @@
     ],
     "flash": false,
     "restricted": false
+  },
+  {
+    "id": "HIS-007",
+    "file": "characters/mythical/elenis/collections/history/5C6E9006-3555-42BF-AC59-CB248B8FF7E1.webp",
+    "collection": "HISTORY",
+    "title": "FRONTIER SPIN",
+    "model": "Nymphaea Elenis",
+    "photographer": "V. Okonkwo",
+    "date": "2045-04-20",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "17/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#533C2A",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-008",
+    "file": "characters/mythical/elenis/collections/history/9048BCEC-9EE3-4D84-A167-91FA628D8B59.webp",
+    "collection": "HISTORY",
+    "title": "EDO WAVES",
+    "model": "Nymphaea Elenis",
+    "photographer": "V. Okonkwo",
+    "date": "2047-04-10",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Mixed, colour gel",
+    "publication": "Commissioned by the owner",
+    "edition": "08/16",
+    "orientation": "portrait",
+    "width": 1003,
+    "height": 1568,
+    "accent": "#172130",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-009",
+    "file": "characters/mythical/elenis/collections/history/A656CA90-7E93-4D87-98B2-71B693667906.webp",
+    "collection": "HISTORY",
+    "title": "THE GRAND STAIRCASE",
+    "model": "Nymphaea Elenis",
+    "photographer": "R. Sato",
+    "date": "2051-09-17",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Mixed, colour gel",
+    "publication": "Commissioned by the owner",
+    "edition": "16/16",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#5D3C20",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-010",
+    "file": "characters/mythical/elenis/collections/history/D9ACFCD7-8CA9-4ACA-8EC2-9C56F16A7B41.webp",
+    "collection": "HISTORY",
+    "title": "MARBLE STEP",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2017-08-16",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "19/24",
+    "orientation": "portrait",
+    "width": 1003,
+    "height": 1568,
+    "accent": "#A78773",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]
