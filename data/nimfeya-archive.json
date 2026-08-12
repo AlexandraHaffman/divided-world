@@ -4087,5 +4087,97 @@
     ],
     "flash": false,
     "restricted": false
+  },
+  {
+    "id": "HIS-003",
+    "file": "characters/mythical/elenis/collections/history/018EA6CD-C073-4FB0-92D9-0D5C9365C8AD.webp",
+    "collection": "HISTORY",
+    "title": "GILDED SILENCE",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2036-03-10",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "06/8",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#472D1B",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-004",
+    "file": "characters/mythical/elenis/collections/history/0806A652-BA78-4B2E-99D1-BCA9B62A78DC.webp",
+    "collection": "HISTORY",
+    "title": "THE SALOON",
+    "model": "Nymphaea Elenis",
+    "photographer": "L. Arenas",
+    "date": "2044-01-10",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Mixed, colour gel",
+    "publication": "Commissioned by the owner",
+    "edition": "01/8",
+    "orientation": "portrait",
+    "width": 1003,
+    "height": 1568,
+    "accent": "#462516",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-005",
+    "file": "characters/mythical/elenis/collections/history/8E55B707-A7A4-412D-98F9-EACC3E9B37BB.webp",
+    "collection": "HISTORY",
+    "title": "THE CAMEO",
+    "model": "Nymphaea Elenis",
+    "photographer": "R. Sato",
+    "date": "2033-01-07",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "06/16",
+    "orientation": "portrait",
+    "width": 960,
+    "height": 1600,
+    "accent": "#513425",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
+  },
+  {
+    "id": "HIS-006",
+    "file": "characters/mythical/elenis/collections/history/BC237F64-F3BE-46B6-AF71-7D609541578C.webp",
+    "collection": "HISTORY",
+    "title": "THE GOLDEN COLLAR",
+    "model": "Nymphaea Elenis",
+    "photographer": "R. Sato",
+    "date": "2040-02-25",
+    "location": "On location",
+    "styling": "Atelier Elenis",
+    "light": "Available light",
+    "publication": "Commissioned by the owner",
+    "edition": "08/24",
+    "orientation": "portrait",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#543A25",
+    "layers": [
+      1
+    ],
+    "flash": false,
+    "restricted": false
   }
 ]
