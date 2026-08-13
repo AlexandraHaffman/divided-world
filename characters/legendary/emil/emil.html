@@ -204,21 +204,27 @@
      ДЕСКТОП (≥901px)
      ══════════════════════════════════════════ */
   @media (min-width:901px){
-    /* секция шире, чтобы фото и карточки не тонули в пустом поле по бокам —
-       но прозу (.mirror, свободный bio-text) держим у́же для читаемости */
-    section{max-width:1140px;margin-left:auto;margin-right:auto;padding-left:32px;padding-right:32px;}
-    .hero{max-width:none;}
+    /* секция шире, чтобы фото и карточки не тонули в пустом поле по бокам;
+       прозе задаётся отдельная мера — иначе строки уезжают за читаемую длину */
+    section{max-width:1140px;margin-left:auto;margin-right:auto;
+      padding:56px 32px;}
+    .hero{max-width:none;padding:0;}
 
     .hero-img-wrap img{object-position:center 18%;}
     .hero-content{padding:26px 32px 34px;}
     .hero-name{font-size:46px;}
     .hero-role{font-size:15px;}
 
-    .mirror{display:flex;gap:44px;align-items:flex-start;margin:22px 0 30px;max-width:840px;}
-    .mirror-pathos{flex:1 1 58%;font-size:17px;}
-    .mirror-fact{flex:0 0 250px;margin-top:40px;max-width:none;text-align:left;font-size:12px;}
+    /* ЗЕРКАЛО: два голоса разведены по разным краям полосы, между ними — разрыв.
+       Пафос держим на читаемой мере, досье прижато к правому краю контента. */
+    .mirror{display:flex;gap:56px;align-items:flex-start;margin:26px 0 36px;max-width:none;}
+    .mirror-pathos{flex:0 1 620px;font-size:17px;}
+    .mirror-fact{flex:0 0 260px;margin-left:auto;margin-top:44px;max-width:none;
+      text-align:left;font-size:12px;}
     .mirror-fact::before{text-align:left;}
-    p.bio-text{max-width:840px;}
+
+    /* единая мера для остальной прозы — чтобы строки не растягивались на всю полосу */
+    p.bio-text, .harem-text, .amelie-root, .philosophy-fact, .asur-caption{max-width:700px;}
 
     /* align-items:start — иначе короткая карточка растягивается до высоты соседней и внутри остаётся пустота */
     .bio-list{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;align-items:start;}
@@ -229,12 +235,29 @@
     /* последняя карточка ("настоящее время") — не одна-в-ряду с пустой клеткой рядом, а полноширинный финал */
     .bio-item:last-child{grid-column:1/-1;}
     .bio-item:last-child .mirror{display:flex;gap:40px;align-items:flex-start;padding:0 20px 20px;}
-    .bio-item:last-child .mirror-pathos{flex:1 1 60%;}
+    .bio-item:last-child .mirror-pathos{flex:0 1 620px;}
     .bio-item:last-child .mirror-fact{flex:0 0 260px;margin-top:0;max-width:none;text-align:left;}
     .bio-item:last-child .mirror-fact::before{text-align:left;}
 
     .asur-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;}
-    .asur-strip{max-width:none;}
+    /* «спор над картой» — иллюстрация к карточкам Асуров, а не главный кадр секции:
+       на всю полосу в 4:3 она была выше hero-кадра самой секции */
+    .asur-strip{max-width:760px;}
+
+    /* портретные вставки: на широкой полосе 340px читались потерянными марками */
+    .front-photo.tall{max-width:460px;}
+
+    /* парные кадры — рядом, а не двумя одинаковыми слэбами друг под другом */
+    .photo-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .photo-pair .bastion-photo{margin:16px 0;}
+    .harem-block{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .harem-block .harem-text{grid-column:1/-1;}
+
+    /* ФИЛОСОФИЯ: портрет и заученные формулировки рядом — центрированная марка
+       под текстом выглядела случайной */
+    .philosophy-body{display:grid;grid-template-columns:380px 1fr;gap:44px;align-items:center;}
+    .philosophy-photo{max-width:none;margin:0;}
+    .philosophy-quote:first-of-type{margin-top:0;}
 
     .harem-text, .philosophy-quote{font-size:16px;}
   }
@@ -473,12 +496,13 @@
     <div class="mirror-fact">Цикл: поездка в Бастион с трофеями → эйфория несколько дней → раздражительность, вспышки, показательная жестокость на фронте. Периодичность — несколько раз в год.</div>
   </div>
 
-  <div class="bastion-photo img-wrap" data-label="нет сигнала · дорога в Бастион">
-    <img src="emil-convoy-bastion.jpg" alt="Конвой по горной дороге к Бастиону">
-  </div>
-
-  <div class="bastion-photo img-wrap" data-label="нет сигнала · трофеи">
-    <img src="emil-bastion-gifts.jpg" alt="Трофеи, поездка в Бастион">
+  <div class="photo-pair">
+    <div class="bastion-photo img-wrap" data-label="нет сигнала · дорога в Бастион">
+      <img src="emil-convoy-bastion.jpg" alt="Конвой по горной дороге к Бастиону">
+    </div>
+    <div class="bastion-photo img-wrap" data-label="нет сигнала · трофеи">
+      <img src="emil-bastion-gifts.jpg" alt="Трофеи, поездка в Бастион">
+    </div>
   </div>
 
   <div class="amelie-root">Корень тянется в Войну в Тени: единственная похвала, что-либо значившая для него ребёнком, — сухие отметки Амели Бертран за чисто сделанную работу. С тех пор он не нашёл, чем её заменить.</div>
@@ -487,12 +511,16 @@
 <!-- 7. ФИЛОСОФИЯ -->
 <section>
   <div class="sec-eyebrow">ФИЛОСОФИЯ</div>
-  <div class="philosophy-photo img-wrap" data-label="нет сигнала · философия">
-    <img src="emil-philosophy.jpg" alt="Эмиль произносит заученную формулировку">
+  <div class="philosophy-body">
+    <div class="philosophy-photo img-wrap" data-label="нет сигнала · философия">
+      <img src="emil-philosophy.jpg" alt="Эмиль произносит заученную формулировку">
+    </div>
+    <div class="philosophy-text-col">
+      <div class="philosophy-quote">«Композиция катастроф — высшая форма искусства, доступная человеку»</div>
+      <div class="philosophy-quote">«Разрушение, лишённое смысла, — просто вандализм. Моё разрушение имеет форму»</div>
+      <div class="philosophy-fact">Формулировки заучены и повторяются годами почти без изменений. Заменить их ему нечем.</div>
+    </div>
   </div>
-  <div class="philosophy-quote">«Композиция катастроф — высшая форма искусства, доступная человеку»</div>
-  <div class="philosophy-quote">«Разрушение, лишённое смысла, — просто вандализм. Моё разрушение имеет форму»</div>
-  <div class="philosophy-fact">Формулировки заучены и повторяются годами почти без изменений. Заменить их ему нечем.</div>
 </section>
 
 <script>
