@@ -456,9 +456,13 @@ body[data-mode="heat"] #envAtmo{opacity:1;
       case 'quote': return '<div class="block-quote">'+b.text+'</div>';
       case 'image': return '<div class="block-image'+(b.orient==='portrait'?' block-image--portrait':'')+'">'+imgWrap(b.src,b.alt,b.label,null,b.pos)+'</div>';
       case 'timeline':
+        /* карточки без фото раньше просто не рисовали .img-wrap — при выравнивании
+           flex-строки по высоте (stretch) под текстом оставалась голая чёрная дыра
+           на месте не пришедшей картинки. Показываем ту же плашку «нет сигнала»,
+           что и для битых изображений — это уже её словарь, а не новый приём. */
         return '<div class="timeline">' + b.items.map(it=>
           '<div class="tl-item">'
-          + (it.img ? imgWrap(it.img.src, it.img.alt, it.img.label, null, it.img.pos) : '')
+          + (it.img ? imgWrap(it.img.src, it.img.alt, it.img.label, null, it.img.pos) : '<div class="img-wrap broken" data-label="нет фото · архив"></div>')
           + '<div class="tl-body tx-paper"><div class="tl-date">'+it.date+'</div><div class="tl-title">'+it.title+'</div><div class="tl-text">'+it.text+'</div></div>'
           + '</div>'
         ).join('') + '</div>';
