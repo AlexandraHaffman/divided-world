@@ -1278,52 +1278,7 @@ function renderMobile() {
   });
 }
 
-/* ═══ ВОРОТА ДОСТУПА (механизм глобальной карты, один в один) ═══
-   В исходнике хранится только SHA-256-хэш кода, не сам код.
-   Сменить код: printf '%s' 'новый-код' | sha256sum                */
-const ACCESS_HASH = "c5bb4ef4cf1c3e749f1bc451c824755fa16f0d7b9ca636f38c1284009076e3b4";
-const GATE_KEY = "dw_tree_access";
-
-async function sha256hex(str) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-}
-function unlockAndStart() {
-  const g = $("gate");
-  if (g) g.remove();
-  start();
-}
-(function gate() {
-  const gateEl = $("gate");
-  if (localStorage.getItem(GATE_KEY) === ACCESS_HASH) { unlockAndStart(); return; }
-  gateEl.style.display = "flex";
-  const form = $("gateForm"), input = $("gateInput"), err = $("gateErr");
-  setTimeout(() => input.focus(), 60);
-  if (!(window.crypto && crypto.subtle)) {
-    err.textContent = "ОТКРОЙТЕ СТРАНИЦУ ПО HTTPS";
-    input.disabled = true;
-    return;
-  }
-  form.addEventListener("submit", async e => {
-    e.preventDefault();
-    err.textContent = "";
-    const val = input.value.trim();
-    if (!val) return;
-    let h;
-    try { h = await sha256hex(val); } catch (_) { return; }
-    if (h === ACCESS_HASH) {
-      localStorage.setItem(GATE_KEY, ACCESS_HASH);
-      gateEl.classList.add("ok");
-      setTimeout(unlockAndStart, 380);
-    } else {
-      err.textContent = "НЕВЕРНЫЙ КОД ДОСТУПА";
-      gateEl.classList.add("shake");
-      setTimeout(() => gateEl.classList.remove("shake"), 420);
-      input.value = "";
-      input.focus();
-    }
-  });
-})();
+start();
 
 /* ═══ СТАРТ ═══ */
 function start() {

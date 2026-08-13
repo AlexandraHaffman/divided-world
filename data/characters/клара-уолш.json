@@ -15,16 +15,16 @@
     "Проницательность",
     "Социальное взаимодействие"
   ],
-  "threat_level": 26,
+  "threat_level": 29,
   "stats": {
     "intelligence": 5,
     "combat": 1,
     "influence": 3,
     "meta_power": 0,
-    "cruelty": 4,
+    "cruelty": 6,
     "will": 7,
     "stealth": 4,
-    "unpredictability": 2
+    "unpredictability": 3
   },
   "card_quote": "Справедливость, добытая лично, оставляет на душе след, который не смыть верой",
   "card_bio": "",
@@ -43,5 +43,5 @@
     "bust_size": 2,
     "marks": ""
   },
-  "exported_at": "2026-07-23T19:28:43.040Z"
+  "exported_at": "2026-08-03T13:24:14.885Z"
 }

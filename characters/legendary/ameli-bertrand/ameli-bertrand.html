@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="ru" data-mode="title">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Амели Бертран | Разделённый мир</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07060b; --violet:165,94,234; --violet-deep:108,58,168; --paper:#cdc7d6; --paper-dim:#867e93;
+  --dim:#4c465a; --dust:150,120,95; --amber:255,178,92; --decay:0; --decay-intensity:1;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--paper);font-family:'Share Tech Mono',monospace;position:relative;overflow-x:hidden;}
+html[data-mode="title"] body{overflow:hidden;height:100vh;}
+img{display:block;width:100%;height:100%;object-fit:cover;}
+button{font-family:inherit;cursor:pointer;}
+a{color:inherit;}
+
+/* ══════════════════════════════════════════
+   ФОЛБЭК ДЛЯ ОТСУТСТВУЮЩИХ ИЗОБРАЖЕНИЙ
+   ══════════════════════════════════════════ */
+.img-wrap{position:relative;overflow:hidden;background:#0d0a13;}
+.img-wrap .decay-hover{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;
+  background-image:repeating-linear-gradient(115deg, rgba(var(--dust),0.16) 0 1px, transparent 1px 9px),
+                    repeating-linear-gradient(25deg, rgba(var(--dust),0.10) 0 1px, transparent 1px 13px);
+  mix-blend-mode:overlay;}
+.img-wrap:hover .decay-hover{opacity:.6;}
+.img-wrap.broken img{display:none;}
+.img-wrap.broken{display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(135deg, rgba(var(--violet),0.08) 0 2px, transparent 2px 14px), #0d0a13;}
+.img-wrap.broken::after{content:attr(data-label);font-family:'Share Tech Mono',monospace;font-size:9px;
+  letter-spacing:.14em;color:rgba(var(--violet),.55);text-align:center;padding:16px;text-transform:uppercase;}
+
+/* карусель из нескольких фото в одном инфоблоке: переключение по тапу/свайпу, см. ниже в script */
+.photo-carousel img{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;}
+.photo-carousel img.active{opacity:1;}
+.photo-carousel.is-tappable{cursor:pointer;}
+
+/* ══════════════════════════════════════════
+   ГЛОБАЛЬНЫЙ UI: выход, глубина, звук
+   ══════════════════════════════════════════ */
+.exit-btn{position:fixed;top:14px;left:14px;z-index:100;font-family:'Share Tech Mono',monospace;font-size:10px;
+  color:rgba(255,255,255,0.6);background:rgba(9,6,13,0.6);border:2px solid rgba(255,255,255,0.24);
+  padding:6px 12px;border-radius:3px;text-decoration:none;letter-spacing:0.08em;backdrop-filter:blur(4px);}
+
+.depth-hud{position:fixed;top:14px;right:14px;z-index:100;text-align:right;font-family:'Share Tech Mono',monospace;
+  background:rgba(9,6,13,0.55);border:2px solid rgba(var(--violet),0.42);border-radius:3px;padding:8px 13px;
+  backdrop-filter:blur(4px);pointer-events:none;transition:border-color .5s;}
+html[data-mode="title"] .depth-hud{display:none;}
+.depth-hud-label{font-size:8px;letter-spacing:.22em;color:rgba(var(--violet),.6);}
+.depth-hud-val{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--paper);letter-spacing:.03em;margin-top:2px;}
+.depth-hud-tier{font-size:8px;letter-spacing:.1em;color:var(--paper-dim);margin-top:3px;text-transform:uppercase;max-width:150px;}
+
+.mute-btn{position:fixed;bottom:16px;right:16px;z-index:100;width:36px;height:36px;border-radius:50%;
+  background:rgba(9,6,13,0.6);border:2px solid rgba(var(--violet),0.55);color:rgb(var(--violet));
+  display:none;align-items:center;justify-content:center;font-size:14px;backdrop-filter:blur(4px);}
+.mute-btn[data-enabled="1"]{display:flex;}
+.mute-btn.muted{color:var(--dim);border-color:rgba(255,255,255,0.22);}
+html[data-mode="title"] .mute-btn{display:none;}
+
+/* ══════════════════════════════════════════
+   ЭФФЕКТ РАСПАДА ПРИ ПРОСТОЕ
+   ══════════════════════════════════════════ */
+#decayOverlay{position:fixed;inset:0;z-index:60;pointer-events:none;
+  opacity:calc(var(--decay) * var(--decay-intensity) * 0.55);transition:opacity 1.6s ease;
+  background:
+    repeating-radial-gradient(circle at 12% 18%, rgba(var(--dust),0.5) 0 1px, transparent 1px 5px),
+    repeating-radial-gradient(circle at 78% 62%, rgba(var(--dust),0.4) 0 1px, transparent 1px 6px),
+    repeating-radial-gradient(circle at 45% 90%, rgba(var(--dust),0.35) 0 1px, transparent 1px 7px),
+    linear-gradient(180deg, rgba(var(--dust),0.05), rgba(var(--dust),0.16));
+  mix-blend-mode:overlay;}
+.decay-text{transition:opacity 1.6s ease, filter 1.6s ease;
+  opacity:calc(1 - var(--decay) * var(--decay-intensity) * 0.42);
+  filter:sepia(calc(var(--decay) * var(--decay-intensity) * 0.55)) contrast(calc(1 - var(--decay) * 0.1));}
+.decay-erode{transition:box-shadow 1.6s ease, filter 1.6s ease;
+  box-shadow:inset 0 0 calc(var(--decay) * var(--decay-intensity) * 46px) calc(var(--decay) * 12px) rgba(var(--dust),calc(var(--decay) * 0.55));
+  filter:saturate(calc(1 - var(--decay) * 0.3));}
+
+/* ══════════════════════════════════════════
+   1. ТИТУЛЬНЫЙ ЭКРАН
+   ══════════════════════════════════════════ */
+#titleScreen{position:fixed;inset:0;z-index:80;overflow:hidden;transition:opacity .65s ease;}
+#titleScreen.exiting{opacity:0;pointer-events:none;}
+.title-bg{position:absolute;inset:0;z-index:0;}
+.title-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(7,6,11,0.25) 0%,rgba(7,6,11,0.15) 30%,rgba(7,6,11,0.55) 68%,rgba(7,6,11,0.94) 100%),
+             linear-gradient(90deg,rgba(7,6,11,0.5) 0%,transparent 22%,transparent 78%,rgba(7,6,11,0.5) 100%);}
+
+.title-sound-btn{position:absolute;top:16px;right:16px;z-index:3;width:38px;height:38px;border-radius:50%;
+  background:rgba(9,6,13,0.55);border:2px solid rgba(var(--violet),0.65);color:rgb(var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:16px;backdrop-filter:blur(4px);}
+.title-sound-btn.on{border-color:rgba(var(--violet),0.9);box-shadow:0 0 16px -4px rgba(var(--violet),0.6);}
+
+.title-quote{position:absolute;top:14%;left:50%;transform:translateX(-50%);z-index:2;width:min(88%,560px);
+  text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;line-height:1.5;
+  color:var(--paper);text-shadow:0 2px 20px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,0.98), 0 0 2px rgba(0,0,0,0.9);
+  min-height:1.5em;}
+
+/* мобильный/планшет: общий ряд, блоки делят ширину и не перекрываются;
+   десктоп переключает .title-info-row в display:contents — тогда блоки
+   снова позиционируются каждый в свой угол (см. брейкпоинт ≥901px) */
+.title-info-row{position:absolute;z-index:2;left:5%;right:5%;bottom:23%;display:flex;gap:10px;align-items:flex-end;}
+.title-info-block{position:static;z-index:2;flex:1 1 0;min-width:0;padding:10px 12px;
+  background:rgba(9,6,13,0.5);border:2px solid rgba(var(--violet),0.45);border-radius:4px;backdrop-filter:blur(3px);}
+.title-info-block--photo{padding:0;overflow:hidden;}
+.title-info-block--photo .info-photo{margin:0 0 8px;}
+.title-info-block--photo .info-eyebrow{padding:0 12px;}
+.title-info-block--photo .info-body{padding:0 12px 12px;}
+.info-eyebrow{font-size:8.5px;letter-spacing:.18em;color:rgba(var(--violet),.85);margin-bottom:6px;text-transform:uppercase;min-height:1.2em;}
+.info-body{font-size:11.5px;color:var(--paper-dim);line-height:1.55;min-height:1.6em;}
+
+/* титульный экран заблокирован от скролла страницы — длинный текст в карточке
+   скроллится ВНУТРИ себя; нижний край текста плавно тает, намекая, что там ещё есть */
+.title-info-block--photo .info-body{max-height:15vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  mask-image:linear-gradient(to bottom, black calc(100% - 16px), transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, black calc(100% - 16px), transparent 100%);}
+
+.tech-stats{font-family:'Share Tech Mono',monospace;}
+.tech-row{display:flex;justify-content:space-between;gap:10px;padding:2.5px 0;
+  border-bottom:1px dashed rgba(var(--violet),0.18);font-size:9.5px;}
+.tech-row span{color:var(--paper-dim);}
+.tech-row b{color:var(--paper);font-weight:400;white-space:nowrap;}
+
+.title-bottom{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:20px 16px 26px;
+  display:flex;flex-direction:column;gap:18px;align-items:flex-start;}
+.title-alias{font-size:9.5px;letter-spacing:.22em;color:rgba(var(--violet),.9);text-shadow:0 0 10px rgba(var(--violet),.5);min-height:1.2em;}
+.title-name{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;letter-spacing:.01em;
+  text-shadow:0 2px 14px rgba(0,0,0,0.85);margin-top:6px;}
+.title-role{font-size:11.5px;color:var(--paper-dim);letter-spacing:.02em;margin-top:6px;line-height:1.5;min-height:1.5em;}
+
+.btn-outline{position:relative;background:rgba(9,6,13,0.55);border:2px solid rgba(var(--violet),0.65);
+  color:var(--paper);letter-spacing:.14em;font-size:10.5px;padding:12px 20px;border-radius:2px;
+  backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:10px;text-transform:uppercase;}
+.btn-outline::before,.btn-outline::after{content:'';position:absolute;width:8px;height:8px;
+  border:2px solid rgba(var(--violet),0.95);pointer-events:none;}
+.btn-outline::before{top:-2px;left:-2px;border-right:none;border-bottom:none;}
+.btn-outline::after{bottom:-2px;right:-2px;border-left:none;border-top:none;}
+.descend-btn{width:100%;justify-content:center;}
+.descend-arrow{animation:bob 1.8s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* ══════════════════════════════════════════
+   2. РЕЖИМ СПУСКА — вертикальный трек по ярусам
+   Спуск управляется ИСКЛЮЧИТЕЛЬНО кнопками (goToStop/goToSurface) —
+   свободного скролла между ярусами нет: #descentMode заполняет экран
+   целиком, .descent-track сдвигается по вертикали ровно как боковые
+   двери сдвигаются по горизонтали. Каждый ярус — фиксированный кадр
+   100% высоты; длинный текст внутри читается через overflow-y:auto
+   самой комнаты (.tier-room), а не через прокрутку страницы.
+   ══════════════════════════════════════════ */
+html[data-mode="descent"] body{overflow:hidden;height:100vh;}
+#descentMode{position:fixed;inset:0;z-index:5;overflow:hidden;visibility:hidden;}
+html[data-mode="descent"] #descentMode{visibility:visible;}
+.descent-track{display:flex;flex-direction:column;height:100%;
+  transition:transform .6s cubic-bezier(.22,.61,.36,1);will-change:transform;}
+.descent-track > .tier,.descent-track > .depths{flex:0 0 100%;height:100%;}
+
+/* краткая вспышка при переходе между ярусами — читаемый технический «щелчок
+   перекрытия» вместо буквальной прокрутки через разрез */
+.transition-flash{position:fixed;inset:0;z-index:70;background:#050308;opacity:0;pointer-events:none;
+  transition:opacity .3s ease;display:flex;align-items:center;justify-content:center;}
+.transition-flash.show{opacity:1;}
+.transition-flash-readout{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;
+  color:rgba(var(--violet),.85);text-align:center;display:flex;flex-direction:column;gap:8px;text-transform:uppercase;}
+.transition-flash-readout span:last-child{color:var(--paper-dim);font-size:10px;}
+
+/* ── диегетическая табличка «участок в разработке» — для фонов, которые буквально недостроены ── */
+.construction-flag{position:absolute;top:16px;left:50%;transform:translateX(-50%) rotate(-1.5deg);z-index:3;
+  display:flex;align-items:center;gap:0;padding:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg, rgba(18,14,4,0.95) 0 9px, rgba(255,193,7,0.95) 9px 18px);
+  border:2px solid rgba(10,8,2,0.6);border-radius:2px;box-shadow:0 6px 20px rgba(0,0,0,0.55);}
+.construction-flag span{margin:3px;padding:5px 12px;background:rgba(10,8,2,0.9);color:#ffd35a;
+  font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;border-radius:1px;white-space:nowrap;}
+
+.tier{position:relative;overflow:hidden;}
+.tier-track{display:flex;height:100%;transition:transform .5s cubic-bezier(.22,.61,.36,1);will-change:transform;}
+/* .tier-room больше НЕ скроллится сама — это неподвижная рамка фиксированного
+   размера. Фон/градиент/док кнопок — её прямые дети на position:absolute,
+   поэтому остаются на месте (не уезжают вместе с текстом). Скроллится
+   только .tier-content — единственный скролл-контейнер внутри рамки. */
+.tier-room{flex:0 0 100%;width:100%;height:100%;position:relative;overflow:hidden;}
+.tier-bg{position:absolute;inset:0;z-index:0;}
+.tier-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(7,6,11,0.15) 0%,transparent 26%,rgba(7,6,11,0.55) 70%,rgba(7,6,11,0.95) 100%);}
+.tier-content{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;padding:60px 16px 110px;box-sizing:border-box;}
+
+/* тонкий фирменный скролл вместо системной полосы — везде, где есть внутренний overflow-y */
+.tier-content,.depths-content,.title-info-block--photo .info-body{
+  scrollbar-width:thin;scrollbar-color:rgba(var(--violet),.5) transparent;}
+.tier-content::-webkit-scrollbar,.depths-content::-webkit-scrollbar,.title-info-block--photo .info-body::-webkit-scrollbar{width:4px;}
+.tier-content::-webkit-scrollbar-track,.depths-content::-webkit-scrollbar-track,.title-info-block--photo .info-body::-webkit-scrollbar-track{background:transparent;}
+.tier-content::-webkit-scrollbar-thumb,.depths-content::-webkit-scrollbar-thumb,.title-info-block--photo .info-body::-webkit-scrollbar-thumb{
+  background:rgba(var(--violet),.35);border-radius:2px;}
+.tier-content::-webkit-scrollbar-thumb:hover,.depths-content::-webkit-scrollbar-thumb:hover,.title-info-block--photo .info-body::-webkit-scrollbar-thumb:hover{
+  background:rgba(var(--violet),.6);}
+
+.tier-header{margin-bottom:22px;}
+.tier-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(var(--violet),.7);letter-spacing:.1em;
+  text-shadow:0 1px 6px rgba(0,0,0,0.9);}
+.tier-name{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--paper);margin-top:4px;
+  text-shadow:0 2px 14px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.95);}
+.tier-room--branch .tier-name{font-size:19px;}
+
+.info-blocks{display:flex;flex-direction:column;gap:18px;}
+/* display:flex + .info-block-body{flex:1} — когда grid растягивает карточки
+   в ряду до одной высоты (align-items:stretch на ≥601px), подпись тянется
+   вместе с рамкой, а не остаётся своей высоты с пустым зазором снизу */
+.info-block{display:flex;flex-direction:column;border:2px solid rgba(var(--violet),0.4);border-radius:7px;overflow:hidden;background:rgba(var(--violet),0.03);}
+/* фото всегда в родном соотношении 4:3 — как сняты/сгенерированы, без обрезки в квадрат;
+   несколько фото в блоке показываются по одному через карусель (.photo-carousel), не сеткой */
+.info-photo{aspect-ratio:4/3;position:relative;}
+/* сплошная тёмная подложка под текстом — иначе фон яруса просвечивает
+   сквозь почти прозрачную карточку и текст сливается с картинкой */
+.info-block-body{padding:14px 15px 17px;position:relative;background:rgba(7,6,11,0.86);backdrop-filter:blur(6px);flex:1;}
+.info-title{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--paper);margin-bottom:8px;min-height:1.3em;}
+.info-text{font-size:12.5px;color:var(--paper-dim);line-height:1.6;min-height:1.6em;}
+
+/* несколько подписей на один инфоблок — активная (синхронно с фото) видна, остальные скрыты */
+.info-caption{display:none;}
+.info-caption.active{display:block;animation:captionIn .5s ease;}
+@keyframes captionIn{from{opacity:0;}to{opacity:1;}}
+
+/* точки-индикатор поверх карусельного фото — сколько кадров и какой активен */
+.carousel-dots{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);z-index:2;display:flex;gap:10px;}
+.carousel-dots span{width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.carousel-dots span::before{content:'';width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4);
+  box-shadow:0 0 3px rgba(0,0,0,0.6);transition:background .3s ease, transform .3s ease;}
+.carousel-dots span.active::before{background:rgb(var(--violet));transform:scale(1.35);}
+.tier[data-tier="7"] .carousel-dots span.active::before{background:rgb(var(--amber));}
+
+/* ══════════════════════════════════════════
+   ДОК УПРАВЛЕНИЯ ПО КРАЯМ ЭКРАНА
+   Боковые двери — слева/справа (горизонтальное перемещение между комнатами).
+   Переход между ярусами — сверху/снизу (вертикальное перемещение по стволу).
+   Комната = ровно высота экрана, поэтому простого position:absolute
+   достаточно — док всегда на краю видимого кадра.
+   ══════════════════════════════════════════ */
+.room-dock{position:absolute;inset:0;z-index:15;pointer-events:none;}
+.dock-edge{position:absolute;display:flex;pointer-events:none;}
+.dock-edge > *{pointer-events:auto;}
+.dock-top{top:16px;left:16px;right:16px;justify-content:center;}
+.dock-bottom{bottom:16px;left:16px;right:16px;justify-content:center;}
+.dock-left{left:14px;top:0;bottom:0;align-items:center;}
+.dock-right{right:14px;top:0;bottom:0;align-items:center;}
+
+/* тонкая органичная стрелка — уголок из двух линий (border), без кружка и подписи;
+   базовая ориентация — вправо, остальные направления даёт rotate() по контексту дока */
+.edge-btn{display:flex;align-items:center;justify-content:center;background:none;border:none;
+  padding:16px;color:inherit;cursor:pointer;position:relative;}
+.edge-btn::before{content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle, rgba(5,3,9,0.5), transparent 72%);opacity:.6;transition:opacity .3s ease;}
+.edge-btn:hover::before{opacity:1;}
+.edge-btn,.dock-top .edge-btn,.dock-bottom .edge-btn{transition:transform .25s ease;}
+.dock-top .edge-btn:hover{transform:translateY(-4px);}
+.dock-bottom .edge-btn:hover{transform:translateY(4px);}
+.dock-left .edge-btn:hover{transform:translateX(-4px);}
+.dock-right .edge-btn:hover{transform:translateX(4px);}
+.edge-arrow{position:relative;z-index:1;display:block;width:11px;height:11px;
+  border-style:solid;border-width:0 1.5px 1.5px 0;border-color:rgba(var(--violet),0.85);
+  transform:rotate(-45deg);transition:border-color .25s ease;}
+.dock-bottom .edge-arrow{transform:rotate(45deg);}
+.dock-left .edge-arrow{transform:rotate(135deg);}
+.dock-top .edge-arrow{transform:rotate(-135deg);}
+.edge-btn:hover .edge-arrow{border-color:rgba(var(--violet),1);}
+.tier[data-tier="7"] .edge-arrow{border-color:rgba(var(--amber),0.85);}
+
+/* бункер — тёплый контраст */
+.tier[data-tier="7"] .tier-gradient{background:linear-gradient(180deg,rgba(20,10,4,0.15) 0%,transparent 26%,rgba(20,10,4,0.6) 70%,rgba(20,10,4,0.95) 100%);}
+.tier[data-tier="7"] .info-block{border-color:rgba(var(--amber),0.45);background:rgba(var(--amber),0.035);}
+.tier[data-tier="7"] .tier-num{color:rgb(var(--amber));}
+
+/* ══════════════════════════════════════════
+   ФИНАЛ: НЕДОСТРОЕННЫЕ ГЛУБИНЫ
+   ══════════════════════════════════════════ */
+/* та же рамка/скролл-контейнер раздельно, что и у ярусов: .depths не скроллится
+   сама (неподвижная рамка для фона/дока), скроллится только .depths-content */
+.depths{position:relative;height:100%;overflow:hidden;background:#040308;}
+.depths-bg{position:absolute;inset:0;z-index:0;filter:brightness(.5) saturate(.5);}
+.depths-gradient{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 60%, transparent 20%, rgba(4,3,8,0.92) 78%),
+             linear-gradient(180deg,rgba(4,3,8,0.5),rgba(4,3,8,0.85));}
+.depths-motes{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;}
+.mote{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(var(--violet),.5);
+  filter:blur(1px);animation:drift 14s linear infinite;}
+@keyframes drift{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.7;}90%{opacity:.4;}100%{transform:translateY(-120px) translateX(20px);opacity:0;}}
+.depths-content{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;text-align:center;padding:22vh 20px 80px;max-width:520px;margin:0 auto;box-sizing:border-box;}
+.depths-eyebrow{font-size:9px;letter-spacing:.24em;color:rgba(var(--violet),.6);margin-bottom:16px;text-transform:uppercase;}
+.depths-quote{font-family:'Share Tech Mono',monospace;font-size:14.5px;line-height:1.75;letter-spacing:.01em;
+  color:var(--paper-dim);min-height:1.6em;}
+.depths-end{margin-top:34px;font-size:9px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase;}
+
+/* ══════════════════════════════════════════
+   МОБИЛЬНЫЙ ПОРТРЕТ (≤600px) — базовый рендер
+   ══════════════════════════════════════════ */
+@media (max-width:600px){
+  .title-quote{font-size:19px;top:12%;}
+  .title-info-block--left{bottom:24%;}
+}
+
+/* ══════════════════════════════════════════
+   МОБИЛЬНЫЙ ЛАНДШАФТ / ПЛАНШЕТ (601–900px)
+   ══════════════════════════════════════════ */
+@media (min-width:601px) and (max-width:900px){
+  .tier-content{max-width:640px;margin:0 auto;padding-left:24px;padding-right:24px;}
+  .transition-readout{padding-left:24px;}
+  .info-blocks{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;align-items:stretch;}
+  .title-quote{font-size:24px;}
+  .title-name{font-size:36px;}
+}
+@media (max-width:900px) and (orientation:landscape){
+  .title-bottom{padding-bottom:16px;}
+  .title-quote{top:8%;}
+}
+
+/* ══════════════════════════════════════════
+   ДЕСКТОП (≥901px)
+   ══════════════════════════════════════════ */
+@media (min-width:901px){
+  .tier-content{max-width:1140px;margin:0 auto;padding-left:40px;padding-right:40px;padding-top:64px;}
+  .transition-readout{padding-left:40px;padding-bottom:34px;font-size:11px;}
+  .transition{min-height:38vh;}
+
+  .tier-name{font-size:38px;}
+  .tier-num{font-size:14px;}
+
+  .info-blocks{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;}
+  .info-blocks--2{grid-template-columns:repeat(2,1fr);max-width:760px;}
+  .info-blocks--1{grid-template-columns:1fr;max-width:420px;}
+
+  .dock-left{left:26px;}
+  .dock-right{right:26px;}
+  .dock-top{top:26px;}
+  .dock-bottom{bottom:26px;}
+  .edge-arrow{width:13px;height:13px;border-width:0 1.8px 1.8px 0;}
+  .edge-btn{padding:20px;}
+
+  .title-quote{font-size:30px;top:16%;width:min(70%,700px);}
+  .title-name{font-size:46px;}
+  /* десктоп: достаточно места, чтобы развести блоки по углам, а не в общий ряд */
+  .title-info-row{display:contents;}
+  .title-info-block{position:absolute;z-index:2;width:420px;padding:16px 20px;flex:none;}
+  .title-info-block--photo{padding:0;}
+  .title-info-block--photo .info-eyebrow{padding:0 20px;}
+  .title-info-block--photo .info-body{padding:0 20px 16px;max-height:27vh;}
+  .title-info-block .info-eyebrow{font-size:12px;}
+  .title-info-block .info-body{font-size:16px;line-height:1.6;}
+  .title-info-block--left{left:6%;bottom:22%;}
+  .title-info-block--right{right:6%;bottom:14%;}
+  .title-bottom{padding:26px 40px 40px;flex-direction:row;align-items:flex-end;justify-content:space-between;}
+  .descend-btn{width:auto;}
+
+  .depths-quote{font-size:17px;}
+}
+</style>
+</head>
+<body>
+
+<a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
+
+<div class="depth-hud">
+  <div class="depth-hud-label">ГЛУБИНА</div>
+  <div class="depth-hud-val" id="depthVal">ПОВЕРХНОСТЬ</div>
+  <div class="depth-hud-tier" id="depthTier"></div>
+</div>
+
+<button class="mute-btn" id="muteBtn" data-enabled="0" onclick="toggleMute()" aria-label="Выключить звук">♪</button>
+
+<div id="decayOverlay" aria-hidden="true"></div>
+
+<!-- ══ 1. ТИТУЛЬНЫЙ ЭКРАН ══ -->
+<section id="titleScreen">
+  <div class="img-wrap title-bg" data-label="нет сигнала · панорама Бастиона">
+    <picture>
+      <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-title-bg-v.webp">
+      <img src="ameli-bertrand-title-bg-h.webp" alt="Бастион, панорама с высоты">
+    </picture>
+    <div class="decay-hover"></div>
+  </div>
+  <div class="title-gradient"></div>
+
+  <button class="title-sound-btn" id="soundEnableBtn" onclick="enableSound()" aria-label="Включить звук">
+    <span id="soundEnableIcon">♪</span>
+  </button>
+
+  <div class="title-quote decay-text">«Власть — слишком громкое слово для того, что я делаю каждое утро.»</div>
+
+  <div class="title-info-row">
+    <div class="title-info-block title-info-block--left title-info-block--photo decay-erode">
+      <div class="img-wrap info-photo photo-carousel" data-label="нет сигнала · Бастион">
+        <img src="ameli-bertrand-title-info-bastion-1.jpg" alt="Бастион, чертёж разреза" class="active">
+        <img src="ameli-bertrand-title-info-bastion-2.jpg" alt="Бастион, план яруса">
+      </div>
+      <div class="info-caption active">
+        <div class="info-eyebrow decay-text">Бастион</div>
+        <div class="info-body decay-text">Бастион — узловой центр домена «Прах», расположенный в горных массивах Тибета. Четырёхлучевая цитадель стоит над обширным подземным комплексом, большая часть которого вырублена непосредственно в гранитной породе.<br><br>Внутренние ярусы включают жилые секции, командные помещения, склады, производственные линии, тюремные блоки и автономные убежища для членов Квартета.<br><br>Строительство Бастиона продолжается непрерывно. Новые уровни прокладываются всё глубже под горным массивом, а материалы, техника и рабочая сила доставляются сюда со всех территорий Ракшасов. Точные размеры комплекса неизвестны даже большей части его персонала.</div>
+      </div>
+      <div class="info-caption">
+        <div class="info-eyebrow decay-text">Технические данные</div>
+        <div class="info-body decay-text tech-stats">
+          <div class="tech-row"><span>Начало строительства</span><b>2030</b></div>
+          <div class="tech-row"><span>Ядро введено в эксплуатацию</span><b>2046</b></div>
+          <div class="tech-row"><span>Наземный контур</span><b>6,4 км²</b></div>
+          <div class="tech-row"><span>Одно крыло</span><b>1,3 км</b></div>
+          <div class="tech-row"><span>Площадь помещений</span><b>14,8 млн м²</b></div>
+          <div class="tech-row"><span>Основные ярусы</span><b>17</b></div>
+          <div class="tech-row"><span>Технические уровни</span><b>46</b></div>
+          <div class="tech-row"><span>Макс. глубина эксплуатации</span><b>870 м</b></div>
+          <div class="tech-row"><span>Глубина проходческих работ</span><b>1 140 м</b></div>
+          <div class="tech-row"><span>Длина тоннелей и галерей</span><b>310 км</b></div>
+          <div class="tech-row"><span>Извлечено породы</span><b>&gt;80 млн м³</b></div>
+          <div class="tech-row"><span>Учтённая численность</span><b>~510 000</b></div>
+          <div class="tech-row"><span>Свободный персонал</span><b>~76 000</b></div>
+          <div class="tech-row"><span>Принудительно удерживаемые</span><b>~434 000</b></div>
+          <div class="tech-row"><span>Охрана и контроль</span><b>~15 000</b></div>
+          <div class="tech-row"><span>Координаторы</span><b>312</b></div>
+          <div class="tech-row"><span>Автономность в изоляции</span><b>18 мес.</b></div>
+          <div class="tech-row"><span>Резерв воды</span><b>420 млн л</b></div>
+          <div class="tech-row"><span>Мощность энергосистемы</span><b>1,6 ГВт</b></div>
+          <div class="tech-row"><span>Транспортные входы</span><b>4</b></div>
+          <div class="tech-row"><span>Вертикальные шахты</span><b>23</b></div>
+          <div class="tech-row"><span>Грузовые подъёмники</span><b>64</b></div>
+          <div class="tech-row"><span>Убежища высш. класса</span><b>11</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="title-info-block title-info-block--right title-info-block--photo decay-erode">
+      <div class="img-wrap info-photo photo-carousel" data-label="нет сигнала · Амели">
+        <img src="ameli-bertrand-title-info-amelie.jpg" alt="Амели Бертран" class="active">
+        <img src="ameli-bertrand-title-info-amelie-power.jpg" alt="Амели у ржавых врат">
+      </div>
+      <div class="info-caption active">
+        <div class="info-eyebrow decay-text">Хозяйка</div>
+        <div class="info-body decay-text">Амели Бертран — владелица Бастиона, глава домена «Прах» и одна из четырёх предводителей Ракшасов. Внутри Квартета она занимает положение теневого рычага: контролирует крупнейшее укрепление фракции, его промышленную систему и убежища, предназначенные для остальных лидеров.<br><br>Её мета-сила связана с управлением энтропией и ускоренным распадом материи. За способность обращать материю в труху и создавать обширные зоны гниения, коррозии и разрушения Амели получила прозвище «Богиня смерти». В публичном образе она предстаёт хладнокровной хозяйкой чёрной цитадели — фигурой, с которой связывают порядок Бастиона, бесконечное расширение комплекса и промышленную утилизацию его заключённых.</div>
+      </div>
+      <div class="info-caption">
+        <div class="info-eyebrow decay-text">Мета-сила</div>
+        <div class="info-body decay-text">Мета-сила Амели Бертран позволяет управлять скоростью естественного распада материи. Она способна ускорять разрушение органических и неорганических объектов, вызывая гниение, коррозию, потерю прочности и окончательное обращение вещества в прах.<br><br>При масштабном применении Амели формирует энтропийные зоны — территории, внутри которых одновременно стареют материалы, ржавеет металл, разрушается техника и разлагается органическая материя. Такие области могут сохранять активность даже после её ухода.<br><br>Тот же принцип она применяет к собственному организму, многократно замедлив его естественную энтропию. Процессы старения протекают у Амели значительно медленнее нормы, поэтому её внешность почти не меняется с течением десятилетий.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="title-bottom">
+    <div class="title-name-block">
+      <div class="title-alias decay-text">Богиня смерти</div>
+      <div class="title-name">АМЕЛИ БЕРТРАН</div>
+      <div class="title-role decay-text">Хозяйка Бастиона · теневой рычаг Квартета</div>
+    </div>
+    <button class="btn-outline descend-btn" id="descendBtn" onclick="startDescent()">
+      <span>НАЧАТЬ СПУСК</span><span class="descend-arrow">↓</span>
+    </button>
+  </div>
+</section>
+
+<!-- ══ 2. РЕЖИМ СПУСКА ══
+     Вертикальный трек по тому же принципу, что и горизонтальные (двери):
+     фиксированный экран на каждый ярус, переключение только по кнопкам
+     goToStop()/goToSurface(), без свободного скролла между ярусами. ── -->
+<main id="descentMode">
+<div class="descent-track" id="descentTrack">
+
+<!-- ЯРУС 1 · ВЪЕЗД / ПРИЁМНАЯ -->
+<section class="tier" id="tier-1" data-tier="1" data-name="Въезд · Приёмная">
+  <div class="tier-track" id="track-tier-1" data-active="main">
+
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, приёмная">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier1-bg-v.webp">
+          <img src="ameli-bertrand-tier1-bg-h.webp" alt="Въезд, приёмная Бастиона">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToSurface()">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-1" data-open="door-1">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('tier-2')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 01</div>
+          <div class="tier-name decay-text">ВЪЕЗД · ПРИЁМНАЯ</div>
+        </div>
+        <div class="info-blocks info-blocks--2">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier1-info1.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Транзит</div>
+              <div class="info-text decay-text">Через верхние въездные ярусы Бастиона проходит основной поток ресурсов, техники и живой силы, поступающих в домен «Прах». Сюда свозятся металлы, трофейное вооружение, промышленные узлы и принудительно изъятые люди, после чего всё распределяется по внутренним секторам комплекса.<br><br>Снабжение Ракшасов превращено в централизованный механизм учёта и жёсткого перераспределения. Для Бастиона этот уровень служит главным приёмным узлом, через который крепость поглощает ресурсы всей Азии.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier1-info2.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Приёмная процедура</div>
+              <div class="info-text decay-text">Прибывающие проходят досмотр, санитарную обработку и первичную сортировку. Документы и личные вещи изымаются, сведения заносятся в реестр, после чего человеку присваивают номер, категорию допуска и сектор назначения.<br><br>Свободный персонал направляют в служебные блоки, принудительную рабочую силу — в жилые и производственные ярусы. Решение считается окончательным с момента регистрации; прежний статус, происхождение и семейные связи внутри Бастиона значения не имеют.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-room" data-room="door-1">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · ответвление, ярус 1">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier1-door1-bg-v.webp">
+          <img src="ameli-bertrand-tier1-door1-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-1" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Доковый отсек</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Доковый отсек</div>
+              <div class="info-text decay-text">За действующими терминалами продолжается строительство новых приёмных линий. Проходческие машины расширяют полость, монтажные бригады прокладывают рельсы, вентиляцию и грузовые подъёмники, пока соседние доки уже принимают очередные колонны.<br><br>Бастион растёт без остановки: новые мощности вводятся по частям, иногда ещё до завершения отделки и испытаний.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ЯРУС 2 · ЗАЛ СОВЕЩАНИЙ -->
+<section class="tier" id="tier-2" data-tier="2" data-name="Зал совещаний">
+  <div class="tier-track" id="track-tier-2" data-active="main">
+
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, зал совещаний">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier2-bg-v.webp">
+          <img src="ameli-bertrand-tier2-bg-h.webp" alt="Зал совещаний Квартета">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToStop('tier-1')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-2" data-open="door-1">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('tier-3')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 02</div>
+          <div class="tier-name decay-text">ЗАЛ СОВЕЩАНИЙ</div>
+        </div>
+        <div class="info-blocks info-blocks--2">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier2-info1.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Квартет</div>
+              <div class="info-text decay-text">Квартет Ракшасов возник в 2024 году как союз Амели Бертран, Валентины Блажек, Дариана Сореля и Эмиля Гранта. Объединение, созданное ради выживания во время зачистки Европы, позднее стало высшим уровнем управления захваченными территориями Азии.<br><br>Каждый из четырёх сохраняет собственный домен, силы и внутренний порядок. Амели Бертран редко выступает публичным лидером Квартета, однако контролирует его важнейшую опору: Бастион, защищённые убежища, часть общей логистики и инфраструктуру, от которой зависят остальные участники. Её влияние строится на доступе, ресурсах и способности обеспечить Квартету выживание — либо лишить его этой гарантии.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier2-info2.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Домен «Прах»</div>
+              <div class="info-text decay-text">Владения Амели охватывают Тибет, Непал, Бутан и прилегающие горные районы. Узловой столицей служит Бастион — центр управления, снабжения и перераспределения ресурсов, стянутых сюда со всей Азии.<br><br>«Прах» — самый малонаселённый из доменов Ракшасов и единственный, где поддерживается строгий централизованный порядок. Пронумерованные Координаторы управляют логистикой, рабочей силой и зачисткой территорий по единым протоколам Амели. Даже удалённые поселения и руины здесь постепенно превращаются в части одной системы, замкнутой на Бастион.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-room" data-room="door-1">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · ответвление, ярус 2">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier2-door1-bg-v.webp">
+          <img src="ameli-bertrand-tier2-door1-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-2" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Командное крыло</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Командное крыло</div>
+              <div class="info-text decay-text">За действующим залом совещаний строится новый комплекс защищённых кабинетов, архивов и узлов связи. Часть помещений уже используется, пока соседние секции остаются открытыми шахтами, сырыми тоннелями и монтажными площадками.<br><br>Расширение продолжается вокруг работающего центра Квартета, поэтому граница между командованием и стройкой здесь почти отсутствует.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ЯРУС 3 · ЖИЛОЙ БЛОК (ответвления по бокам — зона отдыха слева, столовая справа) -->
+<section class="tier" id="tier-3" data-tier="3" data-name="Жилой блок">
+  <div class="tier-track" id="track-tier-3" data-active="main" style="transform:translateX(-100%);">
+
+    <div class="tier-room" data-room="lounge">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · зона отдыха">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-lounge-bg-v.webp">
+          <img src="ameli-bertrand-tier3-lounge-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-3" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Зона отдыха</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Зона отдыха</div>
+              <div class="info-text decay-text">Доступ предоставляется по графику и только в пределах назначенного сектора. Помещения оборудованы местами для чтения, настольных игр и кратковременного отдыха между сменами.<br><br>Продолжительность посещения фиксируется автоматически. Уединение не предусмотрено: за порядком наблюдают дежурные Координаторы.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, жилой блок">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-bg-v.webp">
+          <img src="ameli-bertrand-tier3-bg-h.webp" alt="Жилой блок, коридор">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToStop('tier-2')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-3" data-open="lounge">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-3" data-open="canteen">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('tier-4')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 03</div>
+          <div class="tier-name decay-text">ЖИЛОЙ БЛОК</div>
+        </div>
+        <div class="info-blocks">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-info1.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Координаторы</div>
+              <div class="info-text decay-text">Координаторы — пронумерованный административный и обслуживающий корпус Бастиона. Они ведут учёт, распределяют ресурсы и рабочую силу, контролируют маршруты, жилые секции и исполнение внутренних протоколов. Личных имён в системе нет: каждый обозначается номером, должностью и зоной ответственности.<br><br>Для Амели Координаторы служат продолжением её собственной потребности в порядке. Через них единые правила распространяются за пределы Бастиона — на логистические узлы, поселения и очищаемые территории домена. Их система устраняет случайность настолько, насколько это вообще возможно.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-info2.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Предел допуска</div>
+              <div class="info-text decay-text">В Бастионе ошибка редко остаётся техническим нарушением. Неровный шов, смещённая плитка или предмет, оставленный не на своём месте, способны вызвать у Амели приступ ярости, несоразмерный любым последствиям проступка.<br><br>В такие моменты протоколы перестают защищать персонал. Наказание определяется её состоянием: от немедленного исчезновения виновного до зачистки всей смены, сектора или цепочки ответственных. Поэтому в Бастионе боятся не самой ошибки, а того, что именно она увидит в ней сегодня.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier3-info3.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Инцидент 3-1147</div>
+              <div class="info-text decay-text">Во время осмотра жилого сектора Амели обнаружила напольную плиту, смещённую относительно оси коридора на четыре миллиметра. Ответственный Координатор попытался объяснить отклонение деформацией основания, после чего Амели потребовала вскрыть весь участок покрытия.<br><br>Работы остановили на девять часов. Плиты демонтировали на протяжении сорока двух метров; строительную смену и двух инспекторов передали в тюремный сектор. Запись была внесена в журнал как инцидент 3-1147: нарушение геометрии поверхности.<br><br>Сходных инцидентов на жилых ярусах за отчётный год: 68.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-room" data-room="canteen">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · столовая">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier3-canteen-bg-v.webp">
+          <img src="ameli-bertrand-tier3-canteen-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-3" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Столовая</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Столовая</div>
+              <div class="info-text decay-text">Питание проходит по сменам и строго закреплённым маршрутам. Места, время приёма пищи и объём пайка определяются номером, должностью и сектором допуска.<br><br>Разговоры разрешены только в установленные часы. Любое отклонение фиксируется как нарушение внутреннего режима.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ЯРУС 4 · СКЛАД -->
+<section class="tier" id="tier-4" data-tier="4" data-name="Склад">
+  <div class="tier-track" id="track-tier-4" data-active="main">
+
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, склад">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier4-bg-v.webp">
+          <img src="ameli-bertrand-tier4-bg-h.webp" alt="Склад Бастиона">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToStop('tier-3')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-4" data-open="door-1">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('tier-5')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 04</div>
+          <div class="tier-name decay-text">СКЛАД</div>
+        </div>
+        <div class="info-blocks">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier4-info1.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Каталог</div>
+              <div class="info-text decay-text">Каждый предмет, поступающий на склады Бастиона, получает номер, категорию, источник и назначение. Партии разделяются по состоянию, ценности и допустимому сроку хранения; любое перемещение фиксируется Координаторами.<br><br>Неучтённых объектов в системе быть не должно. Повреждённое, бесполезное или утратившее маркировку имущество изымается до выяснения происхождения — вместе с ответственным за сектор.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier4-info2.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Механизм</div>
+              <div class="info-text decay-text">Домен «Прах» работает как единый механизм выкачивания ресурсов. Металлы, оборудование, кабели, медицинские запасы и рабочая сила стягиваются к Бастиону через сеть Координаторов и промежуточных узлов.<br><br>Склады служат буфером этой системы: поступившее сортируют, учитывают и немедленно направляют на строительство, производство или обслуживание комплекса.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier4-info3.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Заполнение</div>
+              <div class="info-text decay-text">Основу запасов составляют металлы, строительные материалы, промышленное оборудование, медицинские ресурсы и трофейная техника Forge. Отдельные секции отведены под оружие, архивы, редкие компоненты и имущество, изъятое с захваченных территорий.<br><br>Большая часть поступившего не хранится долго: после сортировки грузы направляют на стройку, в производственные ярусы или на обслуживание Бастиона.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-room" data-room="door-1">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · ответвление, ярус 4">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier4-door1-bg-v.webp">
+          <img src="ameli-bertrand-tier4-door1-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-4" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Фабрика</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Фабрика</div>
+              <div class="info-text decay-text">Производственные линии Бастиона перерабатывают металлы, строительный лом, трофейное оборудование и органическое сырьё, поступающее из внутренних секторов. Комплекс выпускает стандартные элементы укреплений, трубы, крепёж, кабельные оболочки, детали вентиляции и расходные компоненты для дальнейшего расширения крепости.<br><br>Работа ведётся непрерывными сменами. Большинство операций выполняет принудительная рабочая сила; травмы, истощение и смертность учитываются как производственные потери. Неспособные продолжать работу переводятся в категорию биологического сырья и направляются на нижние ярусы.<br><br>Фабрика проектировалась как замкнутый цикл: Бастион использует привезённые ресурсы, изношенное оборудование и собственное население, сокращая объём отходов до минимума.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ЯРУС 5 · ТЮРЬМА -->
+<section class="tier" id="tier-5" data-tier="5" data-name="Тюрьма">
+  <div class="tier-track" id="track-tier-5" data-active="main">
+
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, тюрьма">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier5-bg-v.webp">
+          <img src="ameli-bertrand-tier5-bg-h.webp" alt="Тюремный блок Бастиона">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToStop('tier-4')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-right">
+          <button class="edge-btn" data-track="track-tier-5" data-open="door-1">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('tier-6')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 05</div>
+          <div class="tier-name decay-text">ТЮРЬМА</div>
+        </div>
+        <div class="info-blocks">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier5-info1.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Категории</div>
+              <div class="info-text decay-text">Заключённые Бастиона распределяются по пяти категориям в зависимости от текущей пригодности и дальнейшего назначения.<br><br>Категория I — временно задержанные, ожидающие проверки.<br>Категория II — пригодные к труду.<br>Категория III — ограниченно пригодные.<br>Категория IV — непригодные к дальнейшему использованию.<br>Категория V — подлежащие немедленной утилизации.<br><br>Перевод между категориями производится после осмотра, дисциплинарного нарушения, травмы или снижения производительности. Личное дело сохраняет только номер, категорию и предписанный маршрут.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier5-info2.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Последний маршрут</div>
+              <div class="info-text decay-text">Заключённые IV и V категорий не содержатся в тюрьме постоянно. После подтверждения статуса их переводят ниже — в производственные сектора, на тяжёлые работы или непосредственно в биореакторный комплекс.<br><br>Маршрут проходит через изолированные транспортные коридоры и не пересекается с жилыми ярусами. Возврат из нижних секторов протоколами не предусмотрен.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier5-info3.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Сняты с учёта</div>
+              <div class="info-text decay-text">После отправки по нижнему маршруту личное дело закрывается, а номер переводится в архив. Причина выбытия в общих реестрах не указывается: достаточно отметки о завершении процедуры.<br><br>Освободившееся место в камере, рабочей смене и учётной системе передаётся следующему заключённому. Через несколько дней от человека остаётся только архивная запись, недоступная большинству персонала.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-room" data-room="door-1">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · ответвление, ярус 5">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier5-door1-bg-v.webp">
+          <img src="ameli-bertrand-tier5-door1-bg-h.webp" alt="">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-left">
+          <button class="edge-btn" data-track="track-tier-5" data-open="main">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header"><div class="tier-name decay-text">Строящийся блок</div></div>
+        <div class="info-blocks info-blocks--1">
+          <div class="info-block decay-erode">
+            <div class="info-block-body">
+              <div class="info-title decay-text">Строящийся блок</div>
+              <div class="info-text decay-text">Расширение тюрьмы ведётся непрерывно. Новые камеры вводят в эксплуатацию по секциям: часть коридоров уже заполняется заключёнными, пока в соседних ещё продолжаются монтаж вентиляции, освещения и запорных систем.<br><br>Номера наносятся заранее. Проектная вместимость всегда рассчитывается с резервом под следующий поток, однако этот резерв обычно заканчивается раньше завершения очередного блока.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ЯРУС 6 · БИОРЕАКТОР (без ответвлений) -->
+<section class="tier" id="tier-6" data-tier="6" data-name="Биореактор">
+  <div class="tier-track" id="track-tier-6" data-active="main">
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, биореактор">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier6-bg-v.webp">
+          <img src="ameli-bertrand-tier6-bg-h.webp" alt="Биореактор Бастиона">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToStop('tier-5')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('tier-7')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 06</div>
+          <div class="tier-name decay-text">БИОРЕАКТОР</div>
+        </div>
+        <div class="info-blocks">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier6-info1.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Биореакторный комплекс</div>
+              <div class="info-text decay-text">Биореакторный комплекс Бастиона предназначен для промышленной переработки органического сырья. В герметичных установках биомасса разлагается с получением горючего газа, технических жидкостей, удобрений и тепловой энергии, используемой внутренними системами.<br><br>Основной поток составляют отходы производства, пищевые остатки, погибший скот и тела заключённых, снятых с учёта. При максимальной загрузке комплекс работает непрерывно и принимает новые партии по нижнему транспортному маршруту.<br><br>В системе Амели биореакторы выполняют две функции: уменьшают зависимость Бастиона от внешних поставок и обеспечивают окончательную утилизацию людей, признанных непригодными. Для неё это часть жизненного цикла.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier6-info2.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Выход</div>
+              <div class="info-text decay-text">Продукты переработки не маркируются по происхождению. Газ поступает в энергетическую систему, тепло — в отопительный контур, жидкие фракции — в техническое производство, твёрдый остаток — в удобрения и строительные смеси.<br><br>Через несколько часов после загрузки человек окончательно перестаёт существовать. Полученные из него вещества распределяются по десяткам систем Бастиона и продолжают циркулировать внутри крепости.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier6-info3.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Тишина</div>
+              <div class="info-text decay-text">Иногда Координаторы выбирают заключённых для однодневной службы в личных помещениях Амели. Им выдают чистую одежду и обещают освобождение, если хозяйка останется довольна.<br><br>Избранные стараются выполнять каждое поручение безупречно. К вечеру многие уже уверены, что заслужили свободу: Амели может холодно поблагодарить их и даже распорядиться вернуть личные вещи.<br><br>После этого человека сопровождают на биореакторный ярус. Он понимает назначение последней двери только тогда, когда за спиной закрывается шлюз. Амели предпочитает такой порядок: довольная прислуга работает тише, не портит день страхом и до последней минуты сохраняет хорошее настроение.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ЯРУС 7 · БУНКЕР (без ответвлений; вместо двери — спуск ниже) -->
+<section class="tier" id="tier-7" data-tier="7" data-name="Бункер">
+  <div class="tier-track" id="track-tier-7" data-active="main">
+    <div class="tier-room" data-room="main">
+      <div class="img-wrap tier-bg" data-label="нет сигнала · фон, бункер">
+        <picture>
+          <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-tier7-bg-v.webp">
+          <img src="ameli-bertrand-tier7-bg-h.webp" alt="Личный бункер Амели Бертран">
+        </picture>
+      </div>
+      <div class="tier-gradient"></div>
+      <div class="room-dock">
+        <div class="dock-edge dock-top">
+          <button class="edge-btn" onclick="goToStop('tier-6')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+        <div class="dock-edge dock-bottom">
+          <button class="edge-btn" onclick="goToStop('depths-final')">
+            <span class="edge-arrow"></span>
+          </button>
+        </div>
+      </div>
+      <div class="tier-content">
+        <div class="tier-header">
+          <div class="tier-num">ЯРУС 07</div>
+          <div class="tier-name decay-text">БУНКЕР</div>
+        </div>
+        <div class="info-blocks">
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo photo-carousel" data-label="нет сигнала">
+              <img src="ameli-bertrand-tier7-info1a.jpg" alt="" class="active">
+              <img src="ameli-bertrand-tier7-info2b.jpg" alt="">
+              <img src="ameli-bertrand-tier7-info1b.jpg" alt="">
+              <img src="ameli-bertrand-tier7-info1c.jpg" alt="">
+            </div>
+            <div class="info-block-body">
+              <div class="info-caption active">
+                <div class="info-title decay-text">Дом без имени</div>
+                <div class="info-text decay-text">Амели родилась 13 октября 2001 года в бедной сельскохозяйственной провинции Румынии. Её семья жила крестьянским трудом, вдали от крупных городов.<br><br>Способность проявилась рано: предметы, растения и животные начинали разрушаться после её прикосновения. Родные старались скрывать происходящее, однако слухи распространялись вместе с чередой необъяснимых смертей и разрушений. Девочку воспринимали одновременно как больную и проклятую. Травля приводила её в ярость, вызывая вспышки гнева.<br><br>Позднее Амели полностью вычеркнула этот период из собственной биографии. Подлинное имя, семью и место рождения она скрывает особенно тщательно.</div>
+              </div>
+              <div class="info-caption">
+                <div class="info-title decay-text">Пациентка 2247</div>
+                <div class="info-text decay-text">После нескольких смертельных инцидентов с окружающими Амели признали невменяемой и поместили в психиатрическую лечебницу. Её существование сводилось к осмотрам, ограничениям и наблюдению.<br><br>Изоляция не научила её контролировать силу, а препараты только подавили её. Эта жизнь закрепила отвращение к прикосновениям и чужому шуму. Чистота, строгий распорядок и одинаково расположенные предметы постепенно стали для неё единственным способом сохранять спокойствие.</div>
+              </div>
+              <div class="info-caption">
+                <div class="info-title decay-text">Открытые двери</div>
+                <div class="info-text decay-text">Во время глобальных катаклизмов после «Дня стеклянных стен» системы лечебницы отказали, а часть комплекса была разрушена. Амели покинула учреждение и впервые оказалась в мире, где прежние законы, надзор и государственные структуры стремительно исчезали.<br><br>Свобода не сделала её беспомощной. В разрушенных городах её сила оказалась эффективнее любых запасов и оружия: двери, стены, техника и люди переставали быть препятствиями.<br><br>Вскоре она встретила Дариана Сореля, Валентину Блажек и Эмиля Гранта, сбежавших из лаборатории Вистнера. Союз четырёх беглых мета-людей позднее превратился в Квартет — ядро будущих Ракшасов.</div>
+              </div>
+              <div class="info-caption">
+                <div class="info-title decay-text">Амели Бертран</div>
+                <div class="info-text decay-text">Имя «Амели Бертран» появилось уже после освобождения. Оно не принадлежало её семье и не было связано с прошлым: звучный французский псевдоним она выбрала как основу новой личности.<br><br>Деревенскую девчонку сменила утончённая женщина с выверенной речью, винтажными костюмами, перчатками и подчёркнуто холодными манерами. Этот образ собирался сознательно и поддерживается до сих пор с болезненной тщательностью.<br><br>Любая трещина в нём вызывает ярость. В моменты паники у Амели прорываются грубые выражения и интонации прошлого, после чего она особенно жестоко расправляется со свидетелями. Новая личность стала для неё защитной оболочкой, которую приходится непрерывно подтверждать.</div>
+              </div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info2a.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Хозяйка Бастиона</div>
+              <div class="info-text decay-text">К 2061 году Амели правит доменом «Прах» из Бастиона. Она редко покидает крепость и не стремится к публичному лидерству, однако контролирует важнейшее убежище Квартета, его запасы и внутреннюю инфраструктуру.<br><br>Строительство Бастиона не имеет конечного проекта. Каждый завершённый ярус обнаруживает новую предполагаемую уязвимость, поэтому Амели требует укреплять стены, углублять шахты и создавать дополнительные автономные контуры.<br><br>Её влияние строится на зависимости. У каждого члена Квартета есть личный эвакуационный бункер, но все они находятся внутри владений Амели. В случае катастрофы именно она решит, какие двери откроются.</div>
+            </div>
+          </div>
+          <div class="info-block decay-erode">
+            <div class="img-wrap info-photo" data-label="нет сигнала"><img src="ameli-bertrand-tier7-info3.jpg" alt=""></div>
+            <div class="info-block-body">
+              <div class="info-title decay-text">Ритуалы порядка</div>
+              <div class="info-text decay-text">Амели часами выравнивает предметы, проверяет расстояния между ними и требует немедленно исправлять любые нарушения симметрии. Косая плитка, неправильная нумерация или треснувшая чашка способны вызвать у неё более бурную реакцию, чем сообщение о массовой гибели людей на работах.<br><br>Основным средством успокоения служат травяные сигареты. Под их действием Амели становится медлительной, задумчивой и склонной произносить многозначительные рассуждения; после окончания эффекта — раздражительной и придирчивой.<br><br>Она не любит прикосновений, громких голосов и любых неожиданностей. Чай должен подаваться строго определённой температуры, одежда — не иметь ни одной складки, а прислуга — двигаться бесшумно. Исполнение этих требований не гарантирует безопасности, но нарушение почти всегда замечается.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3. ФИНАЛЬНЫЙ ПЕРЕХОД ВНИЗ ══ -->
+<section class="depths" id="depths-final">
+  <div class="img-wrap depths-bg" data-label="нет сигнала · недостроенные глубины">
+    <picture>
+      <source media="(orientation:portrait) and (max-width:900px)" srcset="ameli-bertrand-depths-bg-v.webp">
+      <img src="ameli-bertrand-depths-bg-h.webp" alt="Недостроенные глубины Бастиона">
+    </picture>
+  </div>
+  <div class="depths-gradient"></div>
+  <div class="room-dock">
+    <div class="dock-edge dock-top">
+      <button class="edge-btn" onclick="goToStop('tier-7')">
+        <span class="edge-arrow"></span>
+      </button>
+    </div>
+  </div>
+  <div class="depths-motes" id="depthsMotes"></div>
+  <div class="depths-content">
+    <div class="depths-eyebrow">НЕДОСТРОЕННЫЕ ГЛУБИНЫ</div>
+    <div class="depths-quote decay-text">Строительство Бастиона не имеет конечного проекта. Каждый завершённый ярус обнаруживает новую предполагаемую уязвимость, поэтому Амели требует укреплять стены, углублять шахты и создавать дополнительные автономные контуры.<br><br>Она ожидает нападения сразу со всех направлений. Forge, по её убеждению, готовит средство проникновения сквозь горную породу; Единая Америка способна нанести удар неизвестным оружием; Тенебриа однажды вернётся за Квартетом лично. К этому списку регулярно добавляются новые мета-люди и угрозы, существование которых никто, кроме Амели, не считает доказанным.<br><br>Каждый новый уровень должен стать последним убежищем, недоступным для очередного врага. Однако ещё до завершения работ Амели приходит к выводу, что глубины недостаточно. Проект пересматривают, проходческие машины опускают ниже, а Бастион продолжает зарываться в горный массив.<br><br>Полной схемы будущих ярусов не существует. Есть только текущее направление строительства — вниз.</div>
+    <div class="depths-end">— конец зафиксированного участка —</div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<div class="transition-flash" id="transitionFlash">
+  <div class="transition-flash-readout">
+    <span id="flashFrom"></span>
+    <span id="flashDepth"></span>
+  </div>
+</div>
+
+<audio id="audioA" preload="none"></audio>
+<audio id="audioB" preload="none"></audio>
+
+<script>
+/* ══════════════════════════════════════════
+   РЕЖИМ: ТИТУЛ ↔ СПУСК
+   ══════════════════════════════════════════ */
+function startDescent(){
+  document.documentElement.dataset.mode = 'descent';
+  const ts = document.getElementById('titleScreen');
+  ts.classList.add('exiting');
+  setTimeout(() => { ts.style.display = 'none'; }, 650);
+  currentSlideIndex = 0;
+  document.getElementById('descentTrack').style.transform = 'translateY(0)';
+  activeStopId = 'tier-1';
+  onStopActive('tier-1');
+}
+/* блокируем скролл/свайп на титульном экране, ЧТОБЫ ОН НЕ ЗАПУСКАЛ спуск —
+   но не внутри карточек: там это единственный способ дочитать длинный текст,
+   не помещающийся в фиксированный кадр (см. .info-body/max-height). */
+['wheel', 'touchmove'].forEach(evt => {
+  document.getElementById('titleScreen').addEventListener(evt, e => {
+    if (document.documentElement.dataset.mode === 'title' && !e.target.closest('.info-body')) e.preventDefault();
+  }, { passive: false });
+});
+
+/* ══════════════════════════════════════════
+   ГОРИЗОНТАЛЬНЫЕ ОТВЕТВЛЕНИЯ (двери, вложенные комнаты)
+   ══════════════════════════════════════════ */
+function openRoom(trackId, roomKey) {
+  const track = document.getElementById(trackId);
+  if (!track) return;
+  const rooms = Array.from(track.children).filter(el => el.classList.contains('tier-room'));
+  const idx = rooms.findIndex(r => r.dataset.room === roomKey);
+  if (idx < 0) return;
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  track.dataset.active = roomKey;
+  document.querySelectorAll(`.room-tab[data-track="${trackId}"]`).forEach(tab => {
+    tab.dataset.active = tab.dataset.open === roomKey ? '1' : '0';
+  });
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-open]');
+  if (!btn) return;
+  openRoom(btn.dataset.track, btn.dataset.open);
+});
+
+let stepCooldown = false;
+function stepTrack(track, dir) {
+  if (stepCooldown) return;
+  const rooms = Array.from(track.children).filter(el => el.classList.contains('tier-room'));
+  const currentKey = track.dataset.active || rooms[0].dataset.room;
+  let idx = rooms.findIndex(r => r.dataset.room === currentKey);
+  idx = Math.min(rooms.length - 1, Math.max(0, idx + dir));
+  openRoom(track.id, rooms[idx].dataset.room);
+  stepCooldown = true;
+  setTimeout(() => { stepCooldown = false; }, 550);
+}
+function enableHorizontalGesture(viewport, track) {
+  let touchX = null, touchY = null, locked = false;
+  viewport.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
+      e.preventDefault(); e.stopPropagation();
+      stepTrack(track, e.deltaX > 0 ? 1 : -1);
+    }
+  }, { passive: false });
+  viewport.addEventListener('touchstart', e => {
+    touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; locked = false;
+  }, { passive: true });
+  viewport.addEventListener('touchmove', e => {
+    if (touchX === null) return;
+    const dx = e.touches[0].clientX - touchX, dy = e.touches[0].clientY - touchY;
+    if (!locked && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.3) locked = true;
+    if (locked) { e.preventDefault(); e.stopPropagation(); }
+  }, { passive: false });
+  viewport.addEventListener('touchend', e => {
+    if (locked && touchX !== null) {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) stepTrack(track, dx < 0 ? 1 : -1);
+    }
+    touchX = null; locked = false;
+  });
+}
+document.querySelectorAll('.tier, .tier-room').forEach(viewport => {
+  const track = Array.from(viewport.children).find(el => el.classList && el.classList.contains('tier-track'));
+  if (track) enableHorizontalGesture(viewport, track);
+});
+
+/* ══════════════════════════════════════════
+   ГЛУБИНА + САУНДТРЕК ПО ЯРУСАМ
+   ══════════════════════════════════════════ */
+const STOPS = [
+  { id: 'tier-1', name: 'Въезд · Приёмная', depth: 40, track: 'tier1' },
+  { id: 'tier-2', name: 'Зал совещаний', depth: 85, track: 'tier2' },
+  { id: 'tier-3', name: 'Жилой блок', depth: 130, track: 'tier3' },
+  { id: 'tier-4', name: 'Склад', depth: 190, track: 'tier4' },
+  { id: 'tier-5', name: 'Тюрьма', depth: 260, track: 'tier5' },
+  { id: 'tier-6', name: 'Биореактор', depth: 340, track: 'tier6' },
+  { id: 'tier-7', name: 'Бункер', depth: 430, track: 'bunker' },
+  { id: 'depths-final', name: 'Недостроенные глубины', depth: null, track: 'depths' }
+];
+let activeStopId = null;
+let currentSlideIndex = 0;
+function onStopActive(id) {
+  const stop = STOPS.find(s => s.id === id);
+  if (!stop) return;
+  document.getElementById('depthVal').textContent = stop.depth === null ? 'НЕ ОПРЕДЕЛЕНА' : `-${stop.depth} М`;
+  document.getElementById('depthTier').textContent = stop.name;
+  crossfadeTo(stop.track);
+}
+
+/* переход между ярусами — ТОЛЬКО по кнопке (goToStop из дока сверху/снизу).
+   Свободного скролла по стволу нет: .descent-track сдвигается по вертикали
+   так же, как боковые двери — по горизонтали. Краткая вспышка с техническим
+   номером перекрытия читается на месте буквального «разреза», который
+   раньше приходилось перематывать. */
+function flashAndRun(label, depthLabel, run) {
+  const flash = document.getElementById('transitionFlash');
+  document.getElementById('flashFrom').textContent = label;
+  document.getElementById('flashDepth').textContent = depthLabel;
+  flash.classList.add('show');
+  setTimeout(() => {
+    run();
+    setTimeout(() => flash.classList.remove('show'), 350);
+  }, 280);
+}
+
+function goToStop(targetId) {
+  const idx = STOPS.findIndex(s => s.id === targetId);
+  if (idx < 0 || targetId === activeStopId) return;
+  const from = STOPS.find(s => s.id === activeStopId);
+  const to = STOPS[idx];
+  const label = `ПЕРЕКРЫТИЕ: ${from ? from.name.toUpperCase() : 'ПОВЕРХНОСТЬ'} → ${to.name.toUpperCase()}`;
+  const depthLabel = to.depth === null ? 'ГЛУБИНА НЕ ЗАФИКСИРОВАНА' : `ГЛУБИНА: -${to.depth} М`;
+  flashAndRun(label, depthLabel, () => {
+    currentSlideIndex = idx;
+    document.getElementById('descentTrack').style.transform = `translateY(-${idx * 100}%)`;
+    activeStopId = targetId;
+    onStopActive(targetId);
+  });
+}
+
+/* верхний док яруса 1 ведёт не к предыдущему ярусу (его нет), а на поверхность —
+   назад к титульному экрану, с возвратом эмбиента заглавной темы */
+function goToSurface() {
+  flashAndRun('ПОДЪЁМ НА ПОВЕРХНОСТЬ', '', () => {
+    document.documentElement.dataset.mode = 'title';
+    const ts = document.getElementById('titleScreen');
+    ts.style.display = '';
+    requestAnimationFrame(() => ts.classList.remove('exiting'));
+    activeStopId = null;
+    document.getElementById('depthVal').textContent = 'ПОВЕРХНОСТЬ';
+    document.getElementById('depthTier').textContent = '';
+    crossfadeTo('title');
+  });
+}
+
+/* ══════════════════════════════════════════
+   САУНДТРЕКИ: кроссфейд, без автовоспроизведения
+   ══════════════════════════════════════════ */
+const AUDIO_SRC = {
+  title: 'ameli-bertrand-audio-title.mp3',
+  tier1: 'ameli-bertrand-audio-tier1.mp3',
+  tier2: 'ameli-bertrand-audio-tier2.mp3',
+  tier3: 'ameli-bertrand-audio-tier3.mp3',
+  tier4: 'ameli-bertrand-audio-tier4.mp3',
+  tier5: 'ameli-bertrand-audio-tier5.mp3',
+  tier6: 'ameli-bertrand-audio-tier6.mp3',
+  bunker: 'ameli-bertrand-audio-bunker.mp3',
+  depths: 'ameli-bertrand-audio-depths.mp3'
+};
+const audioEls = [document.getElementById('audioA'), document.getElementById('audioB')];
+let activeAudioIdx = 0, soundEnabled = false, isMuted = false, currentTrackKey = null;
+
+function enableSound() {
+  soundEnabled = true;
+  document.getElementById('soundEnableBtn').classList.add('on');
+  document.getElementById('soundEnableIcon').textContent = '♫';
+  document.getElementById('muteBtn').dataset.enabled = '1';
+  crossfadeTo('title');
+}
+function toggleMute() {
+  if (!soundEnabled) return;
+  isMuted = !isMuted;
+  audioEls.forEach(a => { a.muted = isMuted; });
+  document.getElementById('muteBtn').classList.toggle('muted', isMuted);
+}
+function fadeAudio(el, from, to, dur, done) {
+  if (el._fadeRaf) cancelAnimationFrame(el._fadeRaf);
+  const t0 = performance.now();
+  function step(t) {
+    const p = Math.min(1, (t - t0) / dur);
+    el.volume = Math.max(0, Math.min(1, from + (to - from) * p));
+    if (p < 1) { el._fadeRaf = requestAnimationFrame(step); }
+    else { el._fadeRaf = null; if (done) done(); }
+  }
+  el._fadeRaf = requestAnimationFrame(step);
+}
+function crossfadeTo(key) {
+  if (!soundEnabled || currentTrackKey === key) return;
+  const src = AUDIO_SRC[key];
+  if (!src) return;
+  currentTrackKey = key;
+  const nextIdx = 1 - activeAudioIdx;
+  const curr = audioEls[activeAudioIdx], next = audioEls[nextIdx];
+  next.src = src; next.loop = true; next.muted = isMuted; next.volume = 0;
+  next.play().catch(() => {});
+  fadeAudio(next, 0, 1, 1300);
+  fadeAudio(curr, curr.volume || 0, 0, 1300, () => curr.pause());
+  activeAudioIdx = nextIdx;
+}
+
+/* ══════════════════════════════════════════
+   ОТСУТСТВУЮЩИЕ ИЗОБРАЖЕНИЯ → «НЕТ СИГНАЛА»
+   ══════════════════════════════════════════ */
+document.querySelectorAll('.img-wrap').forEach(wrap => {
+  const imgs = Array.from(wrap.querySelectorAll('img'));
+  if (!imgs.length) return;
+  let failed = 0;
+  // одна попытка перезагрузить кадр (со сбросом кэша) до того, как признать «нет сигнала» —
+  // часть отказов на реальной сети/у CDN оказываются одноразовым сбоем, а не 404
+  const onFail = img => {
+    if (!img.dataset.retried) {
+      img.dataset.retried = '1';
+      const base = img.dataset.src || img.src;
+      setTimeout(() => { img.src = base + (base.includes('?') ? '&' : '?') + 'retry=' + Date.now(); }, 700);
+      return;
+    }
+    failed++;
+    if (failed >= imgs.length) wrap.classList.add('broken');
+  };
+  imgs.forEach(img => {
+    if (!img.dataset.src) img.dataset.src = img.src;
+    img.addEventListener('error', () => onFail(img));
+    if (img.complete && img.naturalWidth === 0) onFail(img);
+  });
+});
+
+/* ── карусель: несколько фото в одном инфоблоке — переключение по тапу/клику
+   на фото или по свайпу (НЕ автоматически: на автопереключении не успеваешь
+   дочитать подпись). Если рядом есть .info-caption — она переключается
+   синхронно с фото по тому же индексу. Точки тоже кликабельны. ── */
+document.querySelectorAll('.photo-carousel').forEach(wrap => {
+  const frames = Array.from(wrap.querySelectorAll('img'));
+  if (frames.length < 2) return;
+  const block = wrap.closest('.info-block, .title-info-block');
+  const captions = block ? Array.from(block.querySelectorAll('.info-caption')) : [];
+  const dotsWrap = document.createElement('div');
+  dotsWrap.className = 'carousel-dots';
+  frames.forEach((_, idx) => {
+    const d = document.createElement('span');
+    if (idx === 0) d.className = 'active';
+    dotsWrap.appendChild(d);
+  });
+  wrap.appendChild(dotsWrap);
+  const dots = Array.from(dotsWrap.children);
+  wrap.classList.add('is-tappable');
+  let i = frames.findIndex(f => f.classList.contains('active'));
+  if (i < 0) { i = 0; frames[0].classList.add('active'); }
+
+  function goTo(next) {
+    next = ((next % frames.length) + frames.length) % frames.length;
+    if (next === i) return;
+    frames[i].classList.remove('active');
+    if (captions[i]) captions[i].classList.remove('active');
+    dots[i].classList.remove('active');
+    i = next;
+    frames[i].classList.add('active');
+    if (captions[i]) captions[i].classList.add('active');
+    dots[i].classList.add('active');
+  }
+
+  wrap.addEventListener('click', e => {
+    if (e.target.closest('.carousel-dots')) return;
+    goTo(i + 1);
+  });
+  dots.forEach((d, idx) => d.addEventListener('click', e => { e.stopPropagation(); goTo(idx); }));
+
+  let touchX = null;
+  wrap.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  wrap.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 30) goTo(i + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
+});
+
+/* ══════════════════════════════════════════
+   ЭФФЕКТ РАСПАДА ПРИ ПРОСТОЕ
+   Порог/интенсивность настраиваются через AMELI_DECAY_CONFIG
+   ══════════════════════════════════════════ */
+window.AMELI_DECAY_CONFIG = { idleThresholdMs: 9000, rampMs: 42000, tickMs: 400 };
+let lastInteraction = Date.now();
+['scroll', 'wheel', 'mousemove', 'touchstart', 'touchmove', 'keydown', 'click'].forEach(evt => {
+  window.addEventListener(evt, () => { lastInteraction = Date.now(); }, { passive: true });
+});
+function decayTick() {
+  const cfg = window.AMELI_DECAY_CONFIG;
+  const idle = Date.now() - lastInteraction;
+  let p = 0;
+  if (idle > cfg.idleThresholdMs) p = Math.min(1, (idle - cfg.idleThresholdMs) / cfg.rampMs);
+  document.documentElement.style.setProperty('--decay', p.toFixed(3));
+  setTimeout(decayTick, cfg.tickMs);
+}
+decayTick();
+
+/* ── пылинки в финальной секции ── */
+(function seedMotes() {
+  const wrap = document.getElementById('depthsMotes');
+  if (!wrap) return;
+  for (let i = 0; i < 14; i++) {
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.left = (Math.random() * 100) + '%';
+    m.style.bottom = (Math.random() * 60) + '%';
+    m.style.animationDelay = (Math.random() * 14) + 's';
+    m.style.animationDuration = (10 + Math.random() * 10) + 's';
+    wrap.appendChild(m);
+  }
+})();
+</script>
+</body>
+</html>

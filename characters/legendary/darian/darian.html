@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Дариан Сорель | Разделённый мир</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   ДАРИАН СОРЕЛЬ — оптический прибор резиденции
+   Хаб + полноэкранные главы поверх постоянного фона Куньмина,
+   меняющего спектральное состояние. Не лента, не галерея.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#07050a;
+  --violet:124,58,190;   --violet-br:170,110,230;
+  --cold:120,178,232;    --cold-br:180,220,250;
+  --white:238,236,240;
+  --amber:181,138,84;    --amber-br:214,176,110;
+  --red:139,42,42;       --red-br:190,80,60;
+  --brass:180,138,84;
+  --gold:198,164,92;
+  --glass:5,5,8;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --mode-c:var(--amber);
+  --tbar:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:#e9e4de;font-family:var(--sans);font-weight:300;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden;
+  min-height:100svh}
+img{display:block;width:100%;height:100%;object-fit:cover}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+::selection{background:rgba(var(--mode-c),.35)}
+
+/* ── ФОН: четыре состояния Куньмина + спектральный слой ── */
+#env{position:fixed;inset:0;z-index:0;overflow:hidden;background:#050308}
+#env img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;
+  transition:opacity 1200ms ease}
+#envBase{opacity:1}
+body[data-mode="dark"] #envDark,
+body[data-mode="cold"] #envCold,
+body[data-mode="heat"] #envHeat{opacity:1}
+body[data-mode="dark"] #envBase,
+body[data-mode="cold"] #envBase,
+body[data-mode="heat"] #envBase{opacity:0}
+
+#envShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,3,8,.35) 0%,rgba(5,3,8,.55) 55%,rgba(5,3,8,.88) 100%)}
+
+#envSpectral{position:fixed;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+  transition:background 1200ms ease,opacity 1200ms ease;
+  background:radial-gradient(120% 80% at 50% 100%,rgba(var(--amber),.10),transparent 60%)}
+body[data-mode="dark"] #envSpectral{opacity:.65;
+  background:radial-gradient(110% 75% at 50% 20%,rgba(var(--violet),.22),transparent 65%)}
+body[data-mode="cold"] #envSpectral{opacity:.55;
+  background:radial-gradient(110% 75% at 50% 10%,rgba(var(--cold),.20),transparent 60%)}
+body[data-mode="heat"] #envSpectral{opacity:.6;
+  background:radial-gradient(110% 80% at 50% 100%,rgba(var(--red),.24),transparent 62%)}
+
+/* ── атмосферные эффекты: холод / жара ── */
+#envAtmo{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity 1200ms ease}
+body[data-mode="cold"] #envAtmo{opacity:1;
+  background:radial-gradient(120% 60% at 50% 0%,rgba(220,235,255,.10),transparent 55%),
+             radial-gradient(90% 50% at 0% 100%,rgba(180,210,255,.06),transparent 50%),
+             radial-gradient(90% 50% at 100% 100%,rgba(180,210,255,.06),transparent 50%)}
+body[data-mode="heat"] #envAtmo{opacity:1;
+  background:radial-gradient(100% 60% at 50% 100%,rgba(190,70,30,.10),transparent 55%);
+  animation:heat-shimmer 6s ease-in-out infinite}
+@keyframes heat-shimmer{0%,100%{filter:blur(0)}50%{filter:blur(.4px)}}
+
+/* ── вспышка при смене режима: свет, которым Дариан управляет, а не просто кроссфейд ── */
+#envFlash{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:0;mix-blend-mode:screen;
+  background:radial-gradient(120% 90% at 50% 30%,var(--flash-c,rgba(255,255,255,.5)),transparent 68%)}
+#envFlash.flash{animation:mode-flash 900ms cubic-bezier(.15,.7,.3,1)}
+@keyframes mode-flash{0%{opacity:0}10%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){#envFlash.flash{animation:none}}
+#grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+
+/* ── подложки-текстуры (только background-image: молча отсутствуют, без битых иконок) ── */
+.tx-paper{background-image:linear-gradient(rgba(20,15,10,.72),rgba(20,15,10,.72)),url('darian-texture-archive-paper.jpg');
+  background-size:cover;background-position:center}
+
+/* ── выход ── */
+.exit-btn{position:fixed;top:14px;left:14px;z-index:80;font-family:var(--mono);
+  font-size:10px;color:rgba(255,255,255,.65);background:rgba(7,5,10,.55);border:1px solid rgba(var(--brass),.3);
+  padding:7px 12px;border-radius:3px;text-decoration:none;letter-spacing:.1em;backdrop-filter:blur(6px)}
+
+/* ── дымчатое стекло: подложка панелей (главы, узнаваемая непрозрачная основа даже без текстуры) ── */
+.glass-panel{background-image:linear-gradient(rgba(5,5,8,.9),rgba(5,5,8,.9)),url('darian-texture-smoked-glass.jpg');
+  background-size:cover;background-position:center;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(var(--brass),.16)}
+
+/* ── спектральная линия: остаётся только как тонкий разделитель внутри открытой главы ── */
+.spectral-line{height:3px;border-radius:2px;background-size:220% 100%;background-position-x:0%;background-repeat:repeat-x;
+  background-image:linear-gradient(90deg,rgba(var(--violet),.8),rgba(var(--cold),.8),rgba(var(--amber),.8),rgba(var(--red),.8),rgba(var(--violet),.8));
+  animation:spectrum-drift 18s linear infinite;opacity:.85}
+.spectral-line[data-line-mode]{background-size:220% auto;background-position:center center}
+.spectral-line[data-line-mode="normal"]{background-image:url('darian-spectrum-line-base.png')}
+.spectral-line[data-line-mode="dark"]{background-image:url('darian-spectrum-line-dark.png')}
+.spectral-line[data-line-mode="cold"]{background-image:url('darian-spectrum-line-cold.png')}
+.spectral-line[data-line-mode="heat"]{background-image:url('darian-spectrum-line-heat.png')}
+@keyframes spectrum-drift{from{background-position-x:0%}to{background-position-x:100%}}
+
+/* ══════════════════════════════════════════
+   ХАБ — главный экран
+   ══════════════════════════════════════════ */
+#hub{position:relative;z-index:2;min-height:100svh;padding:64px 16px 40px}
+
+/* ── герой ── */
+.hero{position:relative;display:flex;flex-direction:column;gap:18px}
+/* верхний и левый край держим прямыми (без диагонального среза) — асимметрия только
+   в нижнем правом углу, так лицо в кадре никогда не окажется рядом со срезом маски.
+   Ширина почти во весь экран: на 74% слева оставалась пустая чёрная полоса во всю
+   высоту портрета — не асимметрия, а дыра в композиции. */
+.hero-visual{position:relative;width:92%;max-width:380px;aspect-ratio:3/4;align-self:flex-end;
+  clip-path:polygon(0 0,100% 0,100% 84%,82% 100%,0 100%);
+  border:1px solid rgba(var(--brass),.45);
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.85),inset 0 0 0 5px rgba(7,5,10,.35)}
+.hero-visual .img-wrap{position:absolute;inset:0}
+/* фото горизонтальное (16:9), рамка вертикальная — cover показывает лишь ~40% ширины
+   кадра. Дариан стоит у правого края фотографии, поэтому окно показа обязано быть
+   прижато вправо: с дефолтным center его лицо срезается правой кромкой рамки. */
+.hero-visual .img-wrap img{object-position:right center}
+.hero-visual::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(200deg,rgba(7,5,10,.05) 0%,transparent 40%,rgba(7,5,10,.55) 78%,rgba(7,5,10,.85) 100%)}
+.hero-alias{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:rgba(var(--amber-br),1);
+  text-shadow:0 0 14px rgba(var(--amber),.5)}
+.hero-name{font-family:var(--serif);font-weight:500;font-size:clamp(38px,11vw,52px);letter-spacing:.01em;
+  line-height:.98;color:#f3efe8;text-shadow:0 2px 24px rgba(0,0,0,.6)}
+.hero-meta{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:rgba(233,228,222,.6);
+  line-height:1.8;margin-top:6px}
+.hero-meta b{color:rgba(var(--amber-br),1);font-weight:600}
+.hero-lede{font-family:var(--serif);font-size:18px;font-style:italic;color:#d8d2c8;line-height:1.6;
+  max-width:52ch;margin-top:4px}
+.hero-actions{display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap}
+
+/* ── звук ── */
+.sound-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(var(--brass),.4);
+  background:rgba(7,5,10,.55);color:rgba(var(--amber-br),1);font-size:14px;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);flex:none}
+
+/* ══════════════════════════════════════════
+   ПРЕВЬЮ ГЛАВ — журнальная сетка
+   ══════════════════════════════════════════ */
+.journal{display:flex;flex-direction:column;gap:14px;margin-top:36px}
+.tile{position:relative;border-radius:8px;overflow:hidden;border:1px solid rgba(var(--brass),.16);
+  background:#0b0910;text-align:left;transition:transform .25s ease,border-color .25s ease;width:100%}
+.tile:hover,.tile:focus-visible{border-color:rgba(var(--brass),.4);transform:translate(-2px,-2px)}
+.tile .img-wrap{position:absolute;inset:0}
+.tile .img-wrap img{transition:filter .3s ease,transform .3s ease;filter:brightness(.78) saturate(.9)}
+.tile:hover .img-wrap img{filter:brightness(.94) saturate(1.05)}
+.tile .lens-hover{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .4s ease;
+  background-image:url('darian-texture-damaged-lens.jpg');background-size:cover;background-position:center;
+  mix-blend-mode:overlay}
+.tile:hover .lens-hover{opacity:.4}
+.tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,4,9,.1) 0%,transparent 40%,rgba(6,4,9,.86) 100%)}
+.tile-num{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:rgba(var(--amber-br),1);z-index:2}
+.tile-body{position:relative;z-index:2;padding:14px 14px 16px;margin-top:auto}
+.tile-title{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:.02em;color:#f2ede6}
+.tile-caption{font-family:var(--sans);font-size:11.5px;color:rgba(233,228,222,.62);margin-top:3px;line-height:1.4}
+
+.tile.k-a{min-height:300px;display:flex;flex-direction:column;justify-content:flex-end}
+/* 150px raньше давал aspect~2.6 против фото ~1.5 — на мобильном приходилось резать
+   ~42% высоты, а у героев в кадре и так нет запаса над головой (см. object-position
+   ниже). 190px снижает необходимую обрезку до ~26%. */
+.tile.k-b{min-height:190px;display:flex;flex-direction:column;justify-content:flex-end}
+.tile.k-d{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
+.tile.k-e{min-height:220px;display:flex;flex-direction:column;justify-content:flex-end}
+.tile.k-e::before{content:'';position:absolute;inset:0;z-index:1;opacity:.5;
+  background:linear-gradient(rgba(20,15,10,.7),rgba(20,15,10,.7)),url('darian-texture-archive-paper.jpg');
+  background-size:cover;mix-blend-mode:multiply}
+
+/* ══════════════════════════════════════════
+   ГЛАВЫ — полноэкранные развороты
+   ══════════════════════════════════════════ */
+#chapterLayer{position:fixed;inset:0;z-index:50;pointer-events:none}
+.chapter-panel{position:absolute;inset:0;transform:translateY(4%);opacity:0;pointer-events:none;
+  transition:transform 480ms cubic-bezier(.2,.8,.2,1),opacity 380ms ease;overflow-y:auto;
+  -webkit-overflow-scrolling:touch}
+.chapter-panel.open{transform:translateY(0);opacity:1;pointer-events:auto}
+.chapter-frame{position:relative;min-height:100%;padding:0 0 100px}
+.chapter-frame::before{content:'';position:fixed;inset:10px;z-index:1;pointer-events:none;border:1px solid rgba(var(--brass),.22);
+  border-radius:2px}
+.chapter-frame::after{content:'';position:fixed;inset:10px;z-index:1;pointer-events:none;
+  background-image:url('darian-frame-wide.png');background-size:100% 100%;opacity:.4}
+.chapter-panel[data-id="kavita"] .chapter-hero::before{content:'';position:absolute;inset:0;z-index:1;
+  width:34%;background-image:url('darian-frame-vertical.png');background-size:cover;background-position:left center;
+  opacity:.5;mix-blend-mode:luminosity;pointer-events:none}
+.chapter-close{position:fixed;top:16px;right:16px;z-index:5;width:38px;height:38px;border-radius:50%;
+  border:1px solid rgba(var(--brass),.5);background:rgba(7,5,10,.7);color:rgba(var(--amber-br),1);
+  font-size:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.chapter-hero{position:relative;min-height:44vh}
+.chapter-hero .img-wrap{position:absolute;inset:0;z-index:0}
+.chapter-hero::after{content:'';position:absolute;inset:0;z-index:3;background:linear-gradient(180deg,rgba(5,3,8,.15) 0%,transparent 40%,rgba(5,3,8,.92) 100%)}
+.chapter-hero.no-img{min-height:26vh;background:radial-gradient(120% 100% at 50% 100%,rgba(var(--mode-c),.14),transparent 65%)}
+.chapter-head{position:relative;z-index:2;padding:26px 20px 0}
+.chapter-num{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:rgba(var(--amber-br),1)}
+.chapter-title{font-family:var(--serif);font-weight:600;font-size:clamp(30px,8vw,46px);color:#f4efe8;
+  margin-top:6px;letter-spacing:.01em}
+.chapter-caption{font-family:var(--serif);font-style:italic;font-size:16px;color:#d8d2c8;margin-top:6px}
+
+.chapter-body{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:22px 20px 0}
+.block-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(var(--amber-br),.85);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(var(--brass),.18)}
+.block-lede{font-family:var(--serif);font-size:19px;color:#efe9e0;line-height:1.6;margin-bottom:16px}
+.block-p{font-size:15px;color:#c9c2b8;line-height:1.78;margin-bottom:14px;font-weight:300}
+.block-quote{font-family:var(--serif);font-style:italic;font-size:21px;color:rgba(var(--amber-br),1);
+  line-height:1.5;border-left:2px solid rgba(var(--amber),.6);padding-left:16px;margin:20px 0}
+.block-image{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;margin:18px 0;
+  border:1px solid rgba(var(--brass),.2)}
+.block-image--portrait{aspect-ratio:600/1402;max-width:340px;margin-left:auto;margin-right:auto}
+
+/* ── биография: временная лента ── */
+.timeline{display:flex;flex-direction:column;gap:18px;margin:6px 0 4px}
+.tl-item{border:1px solid rgba(var(--brass),.2);border-radius:8px;overflow:hidden;background:rgba(var(--brass),.03)}
+.tl-item .img-wrap{aspect-ratio:16/10;position:relative}
+.tl-body{padding:14px 16px 16px}
+.tl-date{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:rgba(var(--amber-br),1)}
+.tl-title{font-family:var(--serif);font-weight:600;font-size:19px;color:#f0ece4;margin:4px 0 8px}
+.tl-text{font-size:13.5px;color:#bcb4a8;line-height:1.65}
+
+/* ── обёртка изображений: fallback «нет сигнала» ── */
+.img-wrap{position:relative;overflow:hidden;background:#0c0a10}
+.img-wrap.broken img{display:none}
+.img-wrap.broken{display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(135deg,rgba(var(--brass),.08) 0 2px,transparent 2px 14px),#0c0a10}
+.img-wrap.broken::after{content:attr(data-label);font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+  color:rgba(var(--brass),.6);text-align:center;padding:14px;text-transform:uppercase}
+
+/* ── нижняя навигация (мобильный) ── */
+/* на десктопе плашка сдвинута от края (bottom:24px), поэтому translateY(100%) сдвигает её
+   лишь на собственную высоту — эти 24px оставались торчать в углу экрана даже «скрытой».
+   Добавляем visibility с задержкой: анимация слайда всё ещё видна, но по её завершении
+   элемент правда пропадает из раскладки, а не просто уезжает частично за край. */
+#navBar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;align-items:center;gap:10px;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,rgba(5,3,8,.92),rgba(5,3,8,.5) 80%,transparent);
+  transform:translateY(100%);visibility:hidden;
+  transition:transform .3s ease,visibility 0s linear .3s}
+#navBar.show{transform:translateY(0);visibility:visible;transition:transform .3s ease}
+#navBar .nav-chapter{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(233,228,222,.75);flex:1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#navBar button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(var(--brass),.4);
+  background:rgba(255,255,255,.04);color:rgba(var(--amber-br),1);font-size:13px;flex:none;
+  display:flex;align-items:center;justify-content:center}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.15s!important}
+}
+
+/* ══════════════════════════════════════════
+   МОБИЛЬНЫЙ ЛАНДШАФТ / ПЛАНШЕТ (601–900px)
+   ══════════════════════════════════════════ */
+@media(min-width:601px) and (max-width:900px){
+  #hub{max-width:680px;margin:0 auto;padding-top:72px}
+  .hero-visual{width:78%;max-width:420px}
+  .journal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .tile.k-a,.tile.k-d,.tile.k-e{grid-column:span 2}
+  .chapter-body{padding:26px 30px 0}
+  .timeline{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;margin:6px -30px 4px;padding-left:30px;padding-right:30px}
+  .tl-item{flex:0 0 320px;scroll-snap-align:start}
+}
+@media(max-width:900px) and (orientation:landscape){
+  #hub{padding-top:56px}
+  .hero{flex-direction:row;align-items:flex-end;gap:26px}
+  .hero-visual{width:34%;align-self:flex-start}
+}
+
+/* ══════════════════════════════════════════
+   ДЕСКТОП (≥901px) — асимметричная журнальная сетка
+   ══════════════════════════════════════════ */
+@media(min-width:901px){
+  #hub{max-width:1280px;margin:0 auto;padding:88px 40px 60px;position:relative}
+  .exit-btn{top:20px;left:28px}
+
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start;position:relative}
+  .hero-visual{width:100%;max-width:none;align-self:auto;justify-self:end;aspect-ratio:4/5}
+  .hero-text{grid-column:1;grid-row:1}
+  .hero-lede{font-size:19px}
+  .hero-name{font-size:clamp(52px,6vw,76px)}
+
+  .journal{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:54px;gap:18px;
+    margin-top:56px}
+  .tile.k-a{grid-column:span 4;grid-row:span 6;min-height:0}
+  .tile.k-b{grid-column:span 4;grid-row:span 3;min-height:0}
+  .tile.k-d{grid-column:span 8;grid-row:span 4;min-height:0}
+  .tile.k-e{grid-column:span 4;grid-row:span 4;min-height:0}
+  .tile-title{font-size:22px}
+
+  .chapter-frame{max-width:1100px;margin:0 auto}
+  .chapter-hero{min-height:56vh}
+  /* портретный кадр (Кавита): полноширинный герой, но не растянутый до панорамного
+     кадра — иначе от вертикального фото остаётся только тонкая полоса по центру */
+  .chapter-panel[data-id="kavita"] .chapter-hero{min-height:0;aspect-ratio:4/3}
+  .chapter-body{padding:34px 20px 0}
+  .block-lede{font-size:22px}
+  .block-p{font-size:16px}
+
+  .timeline{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:14px}
+  .tl-item{flex:0 0 380px;scroll-snap-align:start}
+
+  #navBar{left:auto;right:24px;bottom:24px;width:auto;border-radius:30px;border:1px solid rgba(var(--brass),.25);
+    padding:8px 14px;background:rgba(7,5,10,.7);backdrop-filter:blur(10px)}
+  #navBar .nav-chapter{max-width:200px}
+}
+</style>
+</head>
+<body data-mode="normal">
+
+<div id="env">
+  <img id="envBase" src="darian-kunming-base.jpg" alt="">
+  <img id="envDark" src="darian-kunming-dark.jpg" alt="">
+  <img id="envCold" src="darian-kunming-cold.jpg" alt="">
+  <img id="envHeat" src="darian-kunming-heat.jpg" alt="">
+  <div id="envShade"></div>
+</div>
+<div id="envAtmo"></div>
+<div id="envSpectral"></div>
+<div id="envFlash"></div>
+<div id="grain"></div>
+
+<a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
+
+<main id="hub">
+  <section class="hero">
+    <div class="hero-visual">
+      <div class="img-wrap" data-label="нет сигнала · портрет">
+        <img src="darian-hero.jpg" alt="Дариан Сорель" loading="eager">
+      </div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-alias">МАСТЕР СПЕКТРА · БОГ ТЬМЫ И СВЕТА</div>
+      <h1 class="hero-name">ДАРИАН<br>СОРЕЛЬ</h1>
+      <div class="hero-meta">Ракшасы · Марево · Куньмин&nbsp;&nbsp;·&nbsp;&nbsp;Угроза&nbsp;<b>52</b></div>
+      <p class="hero-lede">66-летний «решающий голос» Ракшасов и номинальный правитель Куньмина, подчиняющий себе солнечный свет — не расчётливый тиран, а заурядный, порочный человек, получивший абсолютную безнаказанность.</p>
+      <div class="hero-actions">
+        <button class="sound-btn" id="soundBtn" aria-label="Звук" title="Звук">🔇</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="journal" id="journal"></section>
+</main>
+
+<div id="chapterLayer"></div>
+
+<nav id="navBar">
+  <span class="nav-chapter" id="navChapterLabel">Хаб · Дариан Сорель</span>
+  <button id="navClose" aria-label="Закрыть главу" title="Закрыть" hidden>✕</button>
+</nav>
+
+<audio id="theme" loop preload="none"></audio>
+
+<script src="darian-content.js"></script>
+<script>
+(function(){
+  const body = document.body;
+
+  /* ── обёртка изображений с fallback ── */
+  function imgWrap(src, alt, label, extraClass, pos, eager){
+    return '<div class="img-wrap'+(extraClass?' '+extraClass:'')+'" data-label="'+(label||'нет сигнала')+'">'
+      +'<img src="'+src+'" alt="'+(alt||'')+'" loading="'+(eager?'eager':'lazy')+'"'+(pos?' style="object-position:'+pos+'"':'')+'></div>';
+  }
+  function bindImgFallback(root){
+    (root||document).querySelectorAll('.img-wrap').forEach(wrap=>{
+      const img = wrap.querySelector('img'); if(!img || wrap.dataset.bound) return;
+      wrap.dataset.bound = '1';
+      const onFail = ()=>wrap.classList.add('broken');
+      img.addEventListener('error', onFail);
+      if(img.complete && img.naturalWidth===0) onFail();
+    });
+  }
+
+  /* ── фоновые панорамы: тихо прячем битую иконку, сплошной фон #env уже держит подложку ── */
+  document.querySelectorAll('#env img').forEach(img=>{
+    const hide = ()=>{ img.style.display='none'; };
+    img.addEventListener('error', hide);
+    if(img.complete && img.naturalWidth===0) hide();
+  });
+
+  /* ── СПЕКТРАЛЬНЫЙ РЕЖИМ: без ручного управления — фон сам переключается между
+     четырьмя состояниями Куньмина. Открытая глава может задать свой режим (например,
+     «Куньмин» — тьму), это не «кнопка», а часть содержания главы. ── */
+  let mode = 'normal';
+  const envFlash = document.getElementById('envFlash');
+  const FLASH_COLOR = {normal:'rgba(255,238,214,.55)', dark:'rgba(170,110,230,.5)',
+    cold:'rgba(205,234,255,.55)', heat:'rgba(255,142,90,.55)'};
+  function setMode(m, opts){
+    opts = opts || {};
+    mode = m;
+    body.dataset.mode = m;
+    document.documentElement.style.setProperty('--mode-c',
+      m==='dark' ? '124,58,190' : m==='cold' ? '120,178,232' : m==='heat' ? '190,80,60' : '181,138,84');
+    if(!opts.silent){
+      /* режимы Дариана переключаются вспышкой света, а не тихим кроссфейдом —
+         это его сила, а не просто смена подложки. Реflow между remove/add
+         позволяет анимации перезапускаться, даже если смена идёт чаще, чем
+         вспышка успевает угаснуть. */
+      document.documentElement.style.setProperty('--flash-c', FLASH_COLOR[m] || FLASH_COLOR.normal);
+      envFlash.classList.remove('flash');
+      void envFlash.offsetWidth;
+      envFlash.classList.add('flash');
+    }
+    if(!opts.silent && window.switchAudioForMode) window.switchAudioForMode(m);
+  }
+  setMode('normal', {silent:true});
+
+  /* ── автопереключение фона: каждые 5с случайный режим, пока не открыта глава ── */
+  const AUTO_MODES = ['normal','dark','cold','heat'];
+  let autoTimer = null;
+  function pickNextMode(){
+    const pool = AUTO_MODES.filter(m=>m!==mode);
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  function scheduleAuto(){
+    clearTimeout(autoTimer);
+    /* смена фона — не декоративная анимация, а часть содержания (см. ТЗ), поэтому
+       reduced-motion её не отключает; под этим флагом гасятся только вращение/дрожание/
+       параллакс (см. общее CSS-правило @media prefers-reduced-motion) */
+    autoTimer = setTimeout(()=>{
+      if(!activeChapter && !document.hidden) setMode(pickNextMode());
+      scheduleAuto();
+    }, 5000);
+  }
+  scheduleAuto();
+
+  /* ── ЖУРНАЛЬНЫЕ ПРЕВЬЮ ГЛАВ ── */
+  const journal = document.getElementById('journal');
+  const tilesHTML = CHAPTERS.map(ch=>{
+    /* превью глав — часть хаба, а не глубокого контента; грузим сразу (не lazy), чтобы
+       не оставались пустыми на медленной сети или в инструментах полноэкранного скрина */
+    const media = ch.hero ? imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label, null, ch.hero.pos, true) : '';
+    return '<button class="tile k-'+ch.kind+'" data-id="'+ch.id+'" aria-label="Глава '+ch.num+'. '+ch.title+'">'
+      + media
+      + (ch.hero ? '<div class="lens-hover"></div><div class="tile-scrim"></div>' : '')
+      + '<div class="tile-num">'+ch.num+'</div>'
+      + '<div class="tile-body"><div class="tile-title">'+ch.title+'</div><div class="tile-caption">'+ch.caption+'</div></div>'
+      + '</button>';
+  }).join('');
+  journal.innerHTML = tilesHTML;
+  bindImgFallback(journal);
+  bindImgFallback(document.querySelector('.hero-visual'));
+  journal.querySelectorAll('.tile').forEach(t=> t.addEventListener('click', ()=>openChapter(t.dataset.id)));
+
+  /* ── ГЛАВЫ: рендер блоков ── */
+  function renderBlock(b){
+    switch(b.t){
+      case 'meta': return '<div class="block-meta">'+b.text+'</div>';
+      case 'lede': return '<p class="block-lede">'+b.text+'</p>';
+      case 'p': return '<p class="block-p">'+b.text+'</p>';
+      case 'quote': return '<div class="block-quote">'+b.text+'</div>';
+      case 'image': return '<div class="block-image'+(b.orient==='portrait'?' block-image--portrait':'')+'">'+imgWrap(b.src,b.alt,b.label,null,b.pos)+'</div>';
+      case 'timeline':
+        return '<div class="timeline">' + b.items.map(it=>
+          '<div class="tl-item">'
+          + (it.img ? imgWrap(it.img.src, it.img.alt, it.img.label, null, it.img.pos) : '')
+          + '<div class="tl-body tx-paper"><div class="tl-date">'+it.date+'</div><div class="tl-title">'+it.title+'</div><div class="tl-text">'+it.text+'</div></div>'
+          + '</div>'
+        ).join('') + '</div>';
+      default: return '';
+    }
+  }
+
+  const chapterLayer = document.getElementById('chapterLayer');
+  const navChapterLabel = document.getElementById('navChapterLabel');
+  const navClose = document.getElementById('navClose');
+  const navBar = document.getElementById('navBar');
+  let activeChapter = null, prevMode = 'normal', prevScroll = 0;
+
+  function buildChapterPanel(ch){
+    const heroHTML = ch.hero
+      ? '<div class="chapter-hero">'+imgWrap(ch.hero.src, ch.hero.alt, ch.hero.label, null, ch.hero.pos)+'</div>'
+      : '<div class="chapter-hero no-img"></div>';
+    const panel = document.createElement('div');
+    panel.className = 'chapter-panel glass-panel';
+    panel.dataset.id = ch.id;
+    panel.innerHTML =
+      '<div class="chapter-frame">'
+      + heroHTML
+      + '<button class="chapter-close" aria-label="Закрыть">✕</button>'
+      + '<div class="chapter-head"><div class="chapter-num">ГЛАВА '+ch.num+'</div>'
+      + '<h2 class="chapter-title">'+ch.title+'</h2>'
+      + '<div class="chapter-caption">'+ch.caption+'</div>'
+      + '<div class="spectral-line chapter-progress" data-line-mode="'+ch.mode+'" style="margin-top:16px"></div></div>'
+      + '<div class="chapter-body">' + ch.blocks.map(renderBlock).join('') + '</div>'
+      + '</div>';
+    panel.querySelector('.chapter-close').addEventListener('click', closeChapter);
+    return panel;
+  }
+
+  function openChapter(id){
+    const ch = CHAPTERS.find(c=>c.id===id); if(!ch) return;
+    if(activeChapter === id) return;
+    prevMode = mode;
+    prevScroll = window.scrollY;
+    chapterLayer.innerHTML = '';
+    const panel = buildChapterPanel(ch);
+    chapterLayer.appendChild(panel);
+    bindImgFallback(panel);
+    requestAnimationFrame(()=>panel.classList.add('open'));
+    activeChapter = id;
+    body.style.overflow = 'hidden';
+    setMode(ch.mode);
+    navChapterLabel.textContent = 'Гл. '+ch.num+' · '+ch.title;
+    navClose.hidden = false;
+    navBar.classList.add('show');
+  }
+  function closeChapter(){
+    if(!activeChapter) return;
+    const panel = chapterLayer.querySelector('.chapter-panel');
+    if(panel) panel.classList.remove('open');
+    activeChapter = null;
+    body.style.overflow = '';
+    window.scrollTo(0, prevScroll);
+    setMode(prevMode);
+    navClose.hidden = true;
+    navBar.classList.remove('show');
+    setTimeout(()=>{ if(!activeChapter) chapterLayer.innerHTML=''; }, 500);
+    scheduleAuto();
+  }
+  navClose.addEventListener('click', closeChapter);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeChapter(); });
+  /* нижняя навигация теперь видна только пока открыта глава (класс show
+     добавляется/убирается в openChapter/closeChapter) — на хабе ей нечего показывать */
+
+  /* ── звук: общий трек, глушится по умолчанию ── */
+  const theme = document.getElementById('theme'), soundBtn = document.getElementById('soundBtn');
+  const TRACKS = {normal:['darian-theme.mp3'], dark:['darian-theme-dark.mp3','darian-theme.mp3'],
+    cold:['darian-theme-cold.mp3','darian-theme.mp3'], heat:['darian-theme-heat.mp3','darian-theme.mp3'],
+    spectrum:['darian-theme.mp3']};
+  let soundOn = false, tryIdx = 0, audMode = 'normal';
+  function setSrc(){
+    const list = TRACKS[audMode] || [];
+    if(tryIdx >= list.length) return;
+    theme.src = list[tryIdx];
+    if(soundOn) theme.play().catch(()=>{});
+  }
+  theme.addEventListener('error', ()=>{ tryIdx++; setSrc(); });
+  window.switchAudioForMode = (m)=>{ audMode = m; tryIdx = 0; if(soundOn) setSrc(); };
+  soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    if(soundOn){ soundBtn.textContent='🔊'; audMode=mode; tryIdx=0; setSrc(); }
+    else { soundBtn.textContent='🔇'; theme.pause(); }
+  });
+})();
+</script>
+</body>
+</html>

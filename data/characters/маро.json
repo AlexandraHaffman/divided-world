@@ -22,7 +22,7 @@
     "Владение холодным оружием",
     "Рукопашный бой"
   ],
-  "threat_level": 56,
+  "threat_level": 57,
   "stats": {
     "intelligence": 7,
     "combat": 10,
@@ -30,7 +30,7 @@
     "meta_power": 10,
     "cruelty": 10,
     "will": 8,
-    "stealth": 7,
+    "stealth": 8,
     "unpredictability": 10
   },
   "card_quote": "Вам нужно ровно пять секунд, чтобы закрыть глаза. А открыть потом сможете?",
@@ -50,5 +50,5 @@
     "bust_size": null,
     "marks": ""
   },
-  "exported_at": "2026-07-24T22:31:10.855Z"
+  "exported_at": "2026-08-04T20:16:03.406Z"
 }

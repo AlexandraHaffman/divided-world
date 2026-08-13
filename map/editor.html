@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конструктор локаций — Разделённый мир</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;500;600;700&family=Russo+One&display=swap');
+
+  :root {
+    --bg: #080c12;
+    --panel: #0d141f;
+    --panel-2: #111a27;
+    --blue: #4fc3f7;
+    --text: #c8d8e8;
+    --text-dim: #5a7a9a;
+    --border: rgba(79,195,247,0.2);
+    --ok: #2ecc71;
+    --warn: #ffb340;
+    --font-display: 'Russo One', 'Exo 2', sans-serif;
+    --font-ui: 'Exo 2', system-ui, sans-serif;
+    --font-mono: 'Share Tech Mono', 'Exo 2', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.25); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(79,195,247,0.45); }
+
+  /* ── ШАПКА ── */
+  header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 11px 18px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 47px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    opacity: .5;
+    pointer-events: none;
+  }
+  .back {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-decoration: none;
+    border: 1px solid rgba(79,195,247,0.3);
+    padding: 5px 11px;
+    border-radius: 3px;
+  }
+  .back:hover { color: var(--blue); border-color: var(--blue); }
+  h1 {
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 1.6px;
+    color: #fff;
+    font-weight: 400;
+  }
+  h1 span { color: var(--blue); }
+  .count {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  /* ── СЕТКА ── */
+  .wrap { flex: 1; display: flex; min-height: 0; }
+  .side {
+    width: 274px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    min-height: 0;
+  }
+  .main { flex: 1; overflow-y: auto; padding: 18px 22px 40px; min-width: 0; }
+
+  /* ── СПИСОК ── */
+  .side-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .side-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+  }
+  #list { flex: 1; overflow-y: auto; padding: 6px; min-height: 0; }
+  .empty {
+    padding: 22px 14px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 30px 9px 10px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    border-left: 2px solid var(--fc, var(--text-dim));
+    background: var(--panel-2);
+    cursor: pointer;
+  }
+  .card:hover { background: #16212f; }
+  .card.on { border-color: var(--blue); background: rgba(79,195,247,0.09); }
+  .card-body { min-width: 0; }
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-meta {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+  .card-del {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    border: none;
+    border-radius: 3px;
+    background: none;
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .card-del:hover { color: #ff5544; background: rgba(255,85,68,0.12); }
+  .card.bad .card-name::after {
+    content: ' ●';
+    color: var(--warn);
+  }
+
+  .side-foot { flex-shrink: 0; padding: 10px; border-top: 1px solid var(--border); display: grid; gap: 6px; }
+
+  /* ── КНОПКИ ── */
+  button, .btn {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: rgba(79,195,247,0.07);
+    color: var(--blue);
+    cursor: pointer;
+    text-align: center;
+    transition: background .15s, border-color .15s;
+  }
+  button:hover, .btn:hover { background: rgba(79,195,247,0.16); border-color: var(--blue); }
+  button.primary { background: rgba(46,204,113,0.12); border-color: rgba(46,204,113,0.5); color: var(--ok); }
+  button.primary:hover { background: rgba(46,204,113,0.22); }
+  button.ghost { background: none; color: var(--text-dim); }
+  button.ghost:hover { color: var(--blue); }
+
+  /* ── ФОРМА ── */
+  .sec { margin-bottom: 22px; }
+  .sec-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2.2px;
+    color: var(--text-dim);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field.wide { grid-column: 1 / -1; }
+  label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    color: var(--text-dim);
+  }
+  label b { color: var(--blue); font-weight: 400; }
+  input[type=text], input[type=number], textarea, select {
+    width: 100%;
+    background: #060a10;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 13.5px;
+    padding: 8px 10px;
+    outline: none;
+    resize: vertical;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--blue); }
+  input::placeholder, textarea::placeholder { color: #3a4d63; }
+  textarea { line-height: 1.5; min-height: 76px; }
+  textarea.tall { min-height: 150px; }
+  .hint { font-size: 11px; color: var(--text-dim); line-height: 1.45; }
+  .bad-input { border-color: rgba(255,179,64,0.6) !important; }
+
+  /* ── ЧИПЫ ── */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 6px 11px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: #060a10;
+    color: var(--text-dim);
+    cursor: pointer;
+    user-select: none;
+  }
+  .chip:hover { color: var(--text); border-color: rgba(79,195,247,0.45); }
+  .chip.on {
+    color: #fff;
+    border-color: var(--cc, var(--blue));
+    background: color-mix(in srgb, var(--cc, var(--blue)) 22%, transparent);
+  }
+  .chip .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--cc, var(--blue));
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* ── КАРТА-ВЫБОР КООРДИНАТ ── */
+  .pick { display: grid; grid-template-columns: 1fr 190px; gap: 14px; align-items: start; }
+  #pickWrap {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #060a10;
+    cursor: crosshair;
+  }
+  #pickMap { display: block; width: 100%; }
+  #pickPin {
+    position: absolute;
+    width: 13px; height: 13px;
+    margin: -7px 0 0 -7px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: rgba(79,195,247,0.6);
+    box-shadow: 0 0 8px rgba(79,195,247,0.9);
+    pointer-events: none;
+    display: none;
+  }
+  .pick-info {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .pick-info b { color: var(--blue); font-weight: 400; }
+  .land-ok { color: var(--ok); }
+  .land-no { color: var(--warn); }
+
+  /* ── ФОТО ── */
+  .drop {
+    border: 1px dashed rgba(79,195,247,0.35);
+    border-radius: 3px;
+    padding: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    background: #060a10;
+  }
+  .drop.over { border-color: var(--blue); background: rgba(79,195,247,0.08); color: var(--blue); }
+  .shots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .shot {
+    position: relative;
+    width: 116px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--panel-2);
+  }
+  .shot img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; background: #060a10; }
+  .shot .nm {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    padding: 4px 5px;
+    color: var(--text-dim);
+    word-break: break-all;
+    line-height: 1.35;
+  }
+  .shot .rm {
+    position: absolute;
+    right: 3px; top: 3px;
+    width: 18px; height: 18px;
+    border: none;
+    border-radius: 3px;
+    background: rgba(4,8,14,0.85);
+    color: #ff5544;
+    font-size: 13px;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+  }
+  .no-photo { aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; color: #33475c; font-size: 22px; }
+
+  /* ── ЭКСПОРТ ── */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(4,7,12,0.82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal.on { display: flex; }
+  .modal-box {
+    width: min(860px, 100%);
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--blue);
+    border-radius: 3px;
+  }
+  .modal-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-title { font-family: var(--font-display); font-size: 13px; letter-spacing: 1.4px; color: #fff; font-weight: 400; }
+  .modal-body { padding: 14px 16px; overflow-y: auto; }
+  .modal-foot { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  #out {
+    width: 100%;
+    min-height: 300px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+  }
+  .files {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 3px;
+    background: rgba(255,179,64,0.08);
+    border: 1px solid rgba(255,179,64,0.3);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .files b { color: var(--warn); font-weight: 600; }
+  .files ul { margin: 6px 0 0 18px; font-family: var(--font-mono); font-size: 11px; }
+  .toast {
+    position: fixed;
+    left: 50%; bottom: 26px;
+    transform: translateX(-50%);
+    z-index: 60;
+    background: rgba(46,204,113,0.16);
+    border: 1px solid rgba(46,204,113,0.5);
+    color: var(--ok);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 9px 16px;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+  .toast.on { opacity: 1; }
+
+  @media (max-width: 860px) {
+    .wrap { flex-direction: column; }
+    .side { width: 100%; max-height: 40vh; border-right: none; border-bottom: 1px solid var(--border); }
+    .pick { grid-template-columns: 1fr; }
+  }
+
+  /* ── ВОРОТА ── */
+  #gate {
+    position: fixed; inset: 0; z-index: 200;
+    display: none; align-items: center; justify-content: center;
+    background: var(--bg);
+  }
+  .gate-box {
+    width: min(380px, calc(100vw - 40px));
+    padding: 30px 26px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--blue);
+    border-radius: 3px;
+    text-align: center;
+  }
+  .gate-title { font-family: var(--font-display); font-size: 13px; letter-spacing: 1.5px; color: #fff; margin-bottom: 18px; font-weight: 400; }
+  #gateInput { text-align: center; letter-spacing: 4px; font-family: var(--font-mono); margin-bottom: 10px; }
+  .gate-err { font-family: var(--font-mono); font-size: 10px; color: #ff5544; min-height: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="index.html">← КАРТА</a>
+  <h1>КОНСТРУКТОР <span>ЛОКАЦИЙ</span></h1>
+  <div class="count" id="count"></div>
+</header>
+
+<div class="wrap">
+  <aside class="side">
+    <div class="side-head">
+      <div class="side-title">ЧЕРНОВИК</div>
+      <button id="addBtn">+ ЛОКАЦИЯ</button>
+    </div>
+    <div id="list"></div>
+    <div class="side-foot">
+      <button class="primary" id="exportBtn">Выгрузить всё</button>
+      <button class="ghost" id="importBtn">Загрузить черновик</button>
+      <button class="ghost" id="fromMapBtn">Взять локации с карты</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+  </aside>
+
+  <main class="main" id="main"></main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">ВЫГРУЗКА</div>
+      <button class="ghost" style="margin-left:auto" id="modalClose">Закрыть</button>
+    </div>
+    <div class="modal-body">
+      <div class="chips" style="margin-bottom:10px">
+        <div class="chip on" data-fmt="json">JSON</div>
+        <div class="chip" data-fmt="js">Готовый блок для locations.js</div>
+      </div>
+      <textarea id="out" spellcheck="false"></textarea>
+      <div id="fileList"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="primary" id="copyBtn">Скопировать</button>
+      <button id="downloadBtn">Скачать файлом</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-title">КОД ДОСТУПА</div>
+    <form id="gateForm" autocomplete="off">
+      <input type="password" id="gateInput" placeholder="• • • • • • •" autocomplete="off">
+      <button type="submit" style="width:100%">Подтвердить</button>
+    </form>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+
+<script src="data/land.js"></script>
+<script src="data/factions.js"></script>
+<script src="data/factions-geo.js"></script>
+<script src="data/locations.js"></script>
+<script>
+(function(){
+"use strict";
+
+// ═══════════════ СПРАВОЧНИКИ ═══════════════
+const TYPES = [
+  { key: 'city',             label: 'Город' },
+  { key: 'capital',          label: 'Столица' },
+  { key: 'regional_capital', label: 'Центр региона' },
+  { key: 'settlement',       label: 'Поселение' },
+  { key: 'base',             label: 'База' },
+  { key: 'frontline',        label: 'Фронт' },
+  { key: 'zone',             label: 'Зона' },
+  { key: 'landmark',         label: 'Ключевое место' },
+  { key: 'anomaly',          label: 'Аномалия' },
+];
+
+const FIELDS = {
+  region:     { label: 'Регион',            kind: 'line', ph: 'Венский экзархат' },
+  population: { label: 'Население',         kind: 'line', ph: 'около 1,2 млн' },
+  founded:    { label: 'Основание',         kind: 'line', ph: '2029 · после Кризиса' },
+  management: { label: 'Управление',        kind: 'line', ph: 'кто распоряжается' },
+  economy:    { label: 'Экономика',         kind: 'line', ph: 'на чём держится' },
+  defense:    { label: 'Оборона',           kind: 'area' },
+  capacity:   { label: 'Вместимость',       kind: 'line', ph: 'до 4 тыс человек' },
+  danger:     { label: 'Уровень опасности', kind: 'line', ph: 'высокий' },
+  status:     { label: 'Статус',            kind: 'line', ph: 'действует · заброшено' },
+  intensity:  { label: 'Интенсивность',     kind: 'line', ph: 'активные бои' },
+  purpose:    { label: 'Назначение',        kind: 'area' },
+  chars:      { label: 'Ключевые фигуры',   kind: 'list', ph: 'имена через запятую' },
+  involved:   { label: 'Стороны',           kind: 'list', ph: 'фракции через запятую' },
+};
+
+// Какие поля показывать под какой тип. Общие (название, координаты,
+// описание, фото) есть всегда и живут отдельно.
+const BY_TYPE = {
+  city:             ['region','population','founded','management','economy','defense','chars'],
+  capital:          ['region','population','founded','management','economy','defense','chars'],
+  regional_capital: ['region','population','founded','management','economy','defense','chars'],
+  settlement:       ['region','population','founded','economy','chars'],
+  base:             ['region','purpose','capacity','defense','management','chars'],
+  frontline:        ['region','intensity','status','involved','defense','chars'],
+  zone:             ['region','status','danger','purpose','population','chars'],
+  landmark:         ['region','status','danger','purpose','chars'],
+  anomaly:          ['region','danger','status','purpose','chars'],
+};
+
+const FACTIONS = window.FACTIONS_INFO || [];
+const LAND = window.LAND_DATA || [];
+const GEO = window.FACTIONS_GEO || {};
+const EXISTING = window.LOCATIONS_DATA || [];
+const STORE = 'dw_loc_draft';
+
+// ═══════════════ СОСТОЯНИЕ ═══════════════
+let items = [];
+let cur = 0;
+
+function blank(){
+  return { name: '', type: 'city', faction: '', lat: '', lon: '',
+           subtitle: '', desc: '', full: '', photos: [], _thumbs: {} };
+}
+function save(){
+  // превью держим только в памяти: в localStorage от них нет пользы
+  const plain = items.map(it => { const c = { ...it }; delete c._thumbs; return c; });
+  try { localStorage.setItem(STORE, JSON.stringify(plain)); } catch(e){}
+}
+function load(){
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORE) || '[]');
+    if (Array.isArray(raw) && raw.length)
+      items = raw.map(r => ({ ...blank(), ...r, _thumbs: {} }));
+  } catch(e){}
+  if (!items.length) items = [blank()];
+}
+
+// ═══════════════ ГЕОМЕТРИЯ ДЛЯ КАРТЫ-ВЫБОРА ═══════════════
+function inRing(lat, lon, r){
+  let o = false;
+  for (let i = 0, j = r.length - 1; i < r.length; j = i++){
+    const yi = r[i][0], xi = r[i][1], yj = r[j][0], xj = r[j][1];
+    if ((yi > lat) !== (yj > lat) && lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) o = !o;
+  }
+  return o;
+}
+function inPoly(lat, lon, p){
+  if (!inRing(lat, lon, p[0])) return false;
+  for (let i = 1; i < p.length; i++) if (inRing(lat, lon, p[i])) return false;
+  return true;
+}
+function isLand(lat, lon){
+  for (const p of LAND) for (const off of [0, 360, -360]) if (inPoly(lat, lon + off, p)) return true;
+  return false;
+}
+function factionAt(lat, lon){
+  for (const f of FACTIONS){
+    for (const p of (GEO[f.key] || [])) for (const off of [0, 360, -360])
+      if (inPoly(lat, lon + off, p)) return f;
+  }
+  return null;
+}
+
+// ═══════════════ МИНИ-КАРТА ═══════════════
+const MAP_W = 1200, MAP_H = 600;
+let mapBitmap = null;
+function buildMapBitmap(){
+  const cv = document.createElement('canvas');
+  cv.width = MAP_W; cv.height = MAP_H;
+  const c = cv.getContext('2d');
+  c.fillStyle = '#081420'; c.fillRect(0, 0, MAP_W, MAP_H);
+  const X = lo => (lo + 180) / 360 * MAP_W, Y = la => (90 - la) / 180 * MAP_H;
+  const trace = poly => {
+    c.beginPath();
+    for (const ring of poly){
+      for (let i = 0; i < ring.length; i++){
+        const x = X(ring[i][1]), y = Y(ring[i][0]);
+        i ? c.lineTo(x, y) : c.moveTo(x, y);
+      }
+      c.closePath();
+    }
+  };
+  for (const poly of LAND){ trace(poly); c.fillStyle = '#172a20'; c.fill('evenodd'); }
+  for (const f of FACTIONS) for (const poly of (GEO[f.key] || [])){
+    trace(poly); c.fillStyle = f.col + '66'; c.fill('evenodd');
+  }
+  c.lineWidth = 1;
+  for (const f of FACTIONS) for (const poly of (GEO[f.key] || [])){
+    trace(poly); c.strokeStyle = f.col; c.stroke();
+  }
+  c.strokeStyle = 'rgba(140,210,190,0.45)';
+  for (const poly of LAND){ trace(poly); c.stroke(); }
+  c.strokeStyle = 'rgba(120,180,255,0.13)';
+  for (let lo = -150; lo <= 150; lo += 30){ c.beginPath(); c.moveTo(X(lo), 0); c.lineTo(X(lo), MAP_H); c.stroke(); }
+  for (let la = -60; la <= 60; la += 30){ c.beginPath(); c.moveTo(0, Y(la)); c.lineTo(MAP_W, Y(la)); c.stroke(); }
+  mapBitmap = cv;
+}
+
+// ═══════════════ РЕНДЕР ═══════════════
+const listEl = document.getElementById('list');
+const mainEl = document.getElementById('main');
+const countEl = document.getElementById('count');
+
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function problems(it){
+  const p = [];
+  if (!it.name.trim()) p.push('нет названия');
+  if (it.lat === '' || it.lon === '') p.push('нет координат');
+  return p;
+}
+
+function renderList(){
+  const ready = items.filter(i => !problems(i).length).length;
+  countEl.textContent = 'ГОТОВО ' + ready + ' ИЗ ' + items.length;
+  if (!items.length){
+    listEl.innerHTML = '<div class="empty">Пока пусто.<br>Нажмите «+ ЛОКАЦИЯ».</div>';
+    return;
+  }
+  listEl.innerHTML = items.map((it, i) => {
+    const f = FACTIONS.find(x => x.key === it.faction);
+    const t = TYPES.find(x => x.key === it.type);
+    const bad = problems(it).length ? ' bad' : '';
+    return `<div class="card${i === cur ? ' on' : ''}${bad}" data-i="${i}" style="--fc:${f ? f.col : '#5a7a9a'}">
+      <div class="card-body">
+        <div class="card-name">${esc(it.name) || '<span style="color:#3a4d63">без названия</span>'}</div>
+        <div class="card-meta">${(t ? t.label : it.type).toUpperCase()}${f ? ' · ' + esc(f.name) : ''}</div>
+      </div>
+      <button class="card-del" data-del="${i}" title="Удалить">×</button>
+    </div>`;
+  }).join('');
+  listEl.querySelectorAll('.card').forEach(el => el.addEventListener('click', e => {
+    if (e.target.dataset.del !== undefined) return;
+    cur = +el.dataset.i; renderList(); renderForm();
+  }));
+  listEl.querySelectorAll('[data-del]').forEach(el => el.addEventListener('click', e => {
+    e.stopPropagation();
+    const i = +el.dataset.del;
+    items.splice(i, 1);
+    if (!items.length) items = [blank()];
+    if (cur >= items.length) cur = items.length - 1;
+    save(); renderList(); renderForm();
+  }));
+}
+
+function fieldHtml(key, it){
+  const f = FIELDS[key];
+  const v = it[key];
+  const val = Array.isArray(v) ? v.join(', ') : (v || '');
+  const wide = f.kind === 'area' ? ' wide' : '';
+  const inner = f.kind === 'area'
+    ? `<textarea data-k="${key}" placeholder="${esc(f.ph || '')}">${esc(val)}</textarea>`
+    : `<input type="text" data-k="${key}" value="${esc(val)}" placeholder="${esc(f.ph || '')}">`;
+  return `<div class="field${wide}"><label>${f.label}${f.kind === 'list' ? ' <b>через запятую</b>' : ''}</label>${inner}</div>`;
+}
+
+function renderForm(){
+  const it = items[cur];
+  if (!it){ mainEl.innerHTML = ''; return; }
+  const extra = BY_TYPE[it.type] || [];
+
+  mainEl.innerHTML = `
+    <div class="sec">
+      <div class="sec-title">ЧТО ЭТО</div>
+      <div class="chips" id="typeChips">
+        ${TYPES.map(t => `<div class="chip${t.key === it.type ? ' on' : ''}" data-type="${t.key}">${t.label}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">ЧЬЁ</div>
+      <div class="chips" id="facChips">
+        <div class="chip${!it.faction ? ' on' : ''}" data-fac="" style="--cc:#8fa8c0"><span class="dot"></span>Ничьё</div>
+        ${FACTIONS.map(f => `<div class="chip${f.key === it.faction ? ' on' : ''}" data-fac="${f.key}" style="--cc:${f.col}"><span class="dot"></span>${esc(f.name)}</div>`).join('')}
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">ГЛАВНОЕ</div>
+      <div class="grid">
+        <div class="field wide">
+          <label>Название <b>обязательно</b></label>
+          <input type="text" data-k="name" value="${esc(it.name)}" placeholder="Вена">
+        </div>
+        <div class="field wide">
+          <label>Подзаголовок — одна строка под названием</label>
+          <input type="text" data-k="subtitle" value="${esc(it.subtitle)}" placeholder="Политический и религиозный центр Тенебриона">
+        </div>
+        <div class="field wide">
+          <label>Краткое описание — 2–4 предложения, видно сразу</label>
+          <textarea data-k="desc" placeholder="Сердце теократической державы...">${esc(it.desc)}</textarea>
+        </div>
+        <div class="field wide">
+          <label>Полное досье — прячется под раскрывающийся заголовок, абзацы разделяйте пустой строкой</label>
+          <textarea class="tall" data-k="full" placeholder="Вена была полностью перестроена...">${esc(it.full)}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">ГДЕ — КЛИКНИТЕ ПО КАРТЕ</div>
+      <div class="pick">
+        <div id="pickWrap">
+          <canvas id="pickMap" width="${MAP_W}" height="${MAP_H}"></canvas>
+          <div id="pickPin"></div>
+        </div>
+        <div>
+          <div class="grid" style="grid-template-columns:1fr;gap:10px">
+            <div class="field">
+              <label>Широта <b>−90…90</b></label>
+              <input type="text" data-k="lat" value="${esc(it.lat)}" placeholder="48.21">
+            </div>
+            <div class="field">
+              <label>Долгота <b>−180…180</b></label>
+              <input type="text" data-k="lon" value="${esc(it.lon)}" placeholder="16.37">
+            </div>
+          </div>
+          <div class="pick-info" id="pickInfo" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    ${extra.length ? `<div class="sec">
+      <div class="sec-title">ПОДРОБНОСТИ — ЗАПОЛНЯЙТЕ ТОЛЬКО НУЖНОЕ</div>
+      <div class="grid">${extra.map(k => fieldHtml(k, it)).join('')}</div>
+    </div>` : ''}
+
+    <div class="sec">
+      <div class="sec-title">ФОТОГРАФИИ</div>
+      <div class="drop" id="drop">
+        Перетащите снимки сюда или нажмите, чтобы выбрать.<br>
+        Запоминаются только имена файлов — сами файлы пришлите вместе с выгрузкой.
+      </div>
+      <input type="file" id="photoInput" accept="image/*" multiple hidden>
+      <div class="shots" id="shots"></div>
+    </div>
+  `;
+
+  mainEl.querySelectorAll('[data-k]').forEach(el => {
+    el.addEventListener('input', () => {
+      const k = el.dataset.k;
+      const f = FIELDS[k];
+      items[cur][k] = f && f.kind === 'list'
+        ? el.value.split(',').map(s => s.trim()).filter(Boolean)
+        : el.value;
+      if (k === 'lat' || k === 'lon') syncPin();
+      if (k === 'name' || k === 'faction') renderList();
+      renderList();
+      save();
+    });
+  });
+  mainEl.querySelectorAll('[data-type]').forEach(el => el.addEventListener('click', () => {
+    items[cur].type = el.dataset.type; save(); renderList(); renderForm();
+  }));
+  mainEl.querySelectorAll('[data-fac]').forEach(el => el.addEventListener('click', () => {
+    items[cur].faction = el.dataset.fac; save(); renderList(); renderForm();
+  }));
+
+  drawPickMap();
+  renderShots();
+  bindPhotos();
+}
+
+// ── карта-выбор ──
+function drawPickMap(){
+  const cv = document.getElementById('pickMap');
+  if (!cv) return;
+  if (!mapBitmap) buildMapBitmap();
+  cv.getContext('2d').drawImage(mapBitmap, 0, 0);
+  const wrap = document.getElementById('pickWrap');
+  wrap.onclick = e => {
+    const r = wrap.getBoundingClientRect();
+    const lon = ((e.clientX - r.left) / r.width) * 360 - 180;
+    const lat = 90 - ((e.clientY - r.top) / r.height) * 180;
+    items[cur].lat = +lat.toFixed(3);
+    items[cur].lon = +lon.toFixed(3);
+    const la = mainEl.querySelector('[data-k="lat"]'), lo = mainEl.querySelector('[data-k="lon"]');
+    if (la) la.value = items[cur].lat;
+    if (lo) lo.value = items[cur].lon;
+    syncPin(); save();
+  };
+  syncPin();
+}
+function syncPin(){
+  const it = items[cur];
+  const pin = document.getElementById('pickPin');
+  const info = document.getElementById('pickInfo');
+  if (!pin || !info) return;
+  const lat = parseFloat(it.lat), lon = parseFloat(it.lon);
+  const ok = isFinite(lat) && isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180;
+  pin.style.display = ok ? 'block' : 'none';
+  if (!ok){ info.innerHTML = 'Кликните по карте или впишите числа.'; return; }
+  pin.style.left = ((lon + 180) / 360 * 100) + '%';
+  pin.style.top  = ((90 - lat) / 180 * 100) + '%';
+  const land = isLand(lat, lon);
+  const f = factionAt(lat, lon);
+  info.innerHTML =
+    '<b>' + lat.toFixed(3) + '</b>, <b>' + lon.toFixed(3) + '</b><br>' +
+    (land ? '<span class="land-ok">на суше</span>' : '<span class="land-no">в море — метка повиснет в воде</span>') + '<br>' +
+    'территория: ' + (f ? '<b style="color:' + f.col + '">' + esc(f.name) + '</b>' : 'ничья');
+}
+
+// ── фотографии ──
+function renderShots(){
+  const box = document.getElementById('shots');
+  if (!box) return;
+  const it = items[cur];
+  box.innerHTML = it.photos.map((nm, i) => {
+    const src = it._thumbs && it._thumbs[nm];
+    return `<div class="shot">
+      <button class="rm" data-rm="${i}" title="Убрать">×</button>
+      ${src ? `<img src="${src}" alt="">` : '<div class="no-photo">▤</div>'}
+      <div class="nm">${esc(nm)}</div>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('[data-rm]').forEach(el => el.addEventListener('click', () => {
+    it.photos.splice(+el.dataset.rm, 1); save(); renderShots();
+  }));
+}
+function addFiles(files){
+  const it = items[cur];
+  for (const f of files){
+    if (!f.type.startsWith('image/')) continue;
+    if (!it.photos.includes(f.name)) it.photos.push(f.name);
+    it._thumbs[f.name] = URL.createObjectURL(f);
+  }
+  save(); renderShots();
+}
+function bindPhotos(){
+  const drop = document.getElementById('drop');
+  const input = document.getElementById('photoInput');
+  if (!drop || !input) return;
+  drop.addEventListener('click', () => input.click());
+  input.addEventListener('change', () => { addFiles(input.files); input.value = ''; });
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.classList.add('over');
+  }));
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.classList.remove('over');
+  }));
+  drop.addEventListener('drop', e => { if (e.dataTransfer) addFiles(e.dataTransfer.files); });
+}
+
+// ═══════════════ ВЫГРУЗКА ═══════════════
+function clean(it){
+  const o = {};
+  o.name = it.name.trim();
+  o.type = it.type;
+  o.faction = it.faction || '';
+  const la = parseFloat(it.lat), lo = parseFloat(it.lon);
+  if (isFinite(la)) o.lat = +la.toFixed(3);
+  if (isFinite(lo)) o.lon = +lo.toFixed(3);
+  if (it.photos && it.photos.length) o.photos = it.photos.slice();
+  for (const k of ['subtitle','desc','full']) if (it[k] && it[k].trim()) o[k] = it[k].trim();
+  for (const k of (BY_TYPE[it.type] || [])){
+    const v = it[k];
+    if (Array.isArray(v)) { if (v.length) o[k] = v.slice(); }
+    else if (v && String(v).trim()) o[k] = String(v).trim();
+  }
+  return o;
+}
+function payload(){ return items.filter(i => i.name.trim()).map(clean); }
+
+// тот же вид, что в locations.js — можно вставить прямо в файл
+function toJsBlock(list){
+  const ORDER = ['name','type','faction','lat','lon','photos','region','subtitle','desc','full',
+    'population','founded','management','economy','defense','capacity','danger','status',
+    'intensity','purpose','chars','involved'];
+  const q = s => '"' + String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n') + '"';
+  return list.map(o => {
+    let s = '  {\n';
+    for (const k of ORDER){
+      if (o[k] === undefined) continue;
+      const v = o[k];
+      s += '    ' + k + ': ' + (Array.isArray(v) ? JSON.stringify(v) : (typeof v === 'number' ? v : q(v))) + ',\n';
+    }
+    return s + '  },';
+  }).join('\n');
+}
+
+const modal = document.getElementById('modal');
+const out = document.getElementById('out');
+let fmt = 'json';
+
+function fillOut(){
+  const list = payload();
+  out.value = fmt === 'json' ? JSON.stringify(list, null, 2) : toJsBlock(list);
+  const files = [...new Set(list.flatMap(l => l.photos || []))];
+  document.getElementById('fileList').innerHTML = files.length
+    ? `<div class="files"><b>Не забудьте приложить ${files.length} файл(ов):</b><ul>${files.map(f => '<li>' + esc(f) + '</li>').join('')}</ul></div>`
+    : '';
+}
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const bad = items.filter(i => i.name.trim() && problems(i).length);
+  if (bad.length) toast('У ' + bad.length + ' локаций нет координат — они всё равно выгрузятся');
+  fillOut();
+  modal.classList.add('on');
+});
+document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('on'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('on'); });
+document.querySelectorAll('[data-fmt]').forEach(el => el.addEventListener('click', () => {
+  document.querySelectorAll('[data-fmt]').forEach(x => x.classList.remove('on'));
+  el.classList.add('on');
+  fmt = el.dataset.fmt;
+  fillOut();
+}));
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(out.value); toast('Скопировано'); }
+  catch(e){ out.select(); document.execCommand('copy'); toast('Скопировано'); }
+});
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const blob = new Blob([out.value], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'locations-' + new Date().toISOString().slice(0,10) + (fmt === 'json' ? '.json' : '.txt');
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+// ── импорт черновика ──
+const importFile = document.getElementById('importFile');
+document.getElementById('importBtn').addEventListener('click', () => importFile.click());
+importFile.addEventListener('change', () => {
+  const f = importFile.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const raw = JSON.parse(r.result);
+      if (!Array.isArray(raw)) throw 0;
+      items = raw.map(o => ({ ...blank(), ...o, photos: o.photos || (o.photo ? [o.photo] : []), _thumbs: {} }));
+      cur = 0; save(); renderList(); renderForm();
+      toast('Загружено: ' + items.length);
+    } catch(e){ toast('Не похоже на выгрузку конструктора'); }
+    importFile.value = '';
+  };
+  r.readAsText(f);
+});
+
+const fromMapBtn = document.getElementById('fromMapBtn');
+if (!EXISTING.length) fromMapBtn.style.display = 'none';
+else fromMapBtn.textContent = 'Взять локации с карты (' + EXISTING.length + ')';
+fromMapBtn.addEventListener('click', () => {
+  if (!confirm('Добавить в черновик все ' + EXISTING.length + ' локаций с карты?\n\n' +
+               'Дальше их можно править, а выгрузка будет содержать И их тоже — ' +
+               'такой файл заменяет locations.js целиком.')) return;
+  const have = new Set(items.map(i => i.name.trim()).filter(Boolean));
+  let added = 0;
+  for (const l of EXISTING){
+    if (have.has(l.name)) continue;
+    items.push({ ...blank(), ...l, photos: l.photos || (l.photo ? [l.photo] : []), _thumbs: {} });
+    added++;
+  }
+  items = items.filter(i => i.name.trim() || items.length === 1);
+  cur = 0; save(); renderList(); renderForm();
+  toast('Добавлено: ' + added);
+});
+
+document.getElementById('addBtn').addEventListener('click', () => {
+  items.push(blank());
+  cur = items.length - 1;
+  save(); renderList(); renderForm();
+  mainEl.scrollTop = 0;
+});
+
+const toastEl = document.getElementById('toast');
+let toastT = 0;
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('on');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => toastEl.classList.remove('on'), 2200);
+}
+
+function start(){
+  load();
+  renderList();
+  renderForm();
+}
+
+// ═══════════════ ВОРОТА ДОСТУПА ═══════════════
+// Тот же код и тот же ключ, что у карты: если карта уже открыта
+// в этом браузере, конструктор пустит сразу.
+const ACCESS_HASH = 'c5bb4ef4cf1c3e749f1bc451c824755fa16f0d7b9ca636f38c1284009076e3b4';
+const GATE_KEY = 'dw_globe_access';
+async function sha256hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+(function gate(){
+  const g = document.getElementById('gate');
+  if (localStorage.getItem(GATE_KEY) === ACCESS_HASH){ g.remove(); start(); return; }
+  g.style.display = 'flex';
+  const inp = document.getElementById('gateInput');
+  const err = document.getElementById('gateErr');
+  setTimeout(() => inp.focus(), 60);
+  if (!(window.crypto && crypto.subtle)){
+    err.textContent = 'ОТКРОЙТЕ СТРАНИЦУ ПО HTTPS';
+    inp.disabled = true;
+    return;
+  }
+  document.getElementById('gateForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const h = await sha256hex(inp.value.trim());
+    if (h === ACCESS_HASH){
+      localStorage.setItem(GATE_KEY, ACCESS_HASH);
+      g.remove(); start();
+    } else {
+      err.textContent = 'НЕВЕРНЫЙ КОД';
+      inp.value = ''; inp.focus();
+    }
+  });
+})();
+
+})();
+</script>
+</body>
+</html>
