@@ -5872,16 +5872,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#7F5942",
+    "accent": "#5D0E03",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Loose waves",
-    "makeup": "Bronze glam",
-    "set_design": "Diagonal beam of warm light through darkness, sheer draped fabric"
+    "hair": "Loose windswept",
+    "makeup": "Bold glam",
+    "set_design": "Swirling ring of fire and embers, flame-licked crimson latex gown"
   },
   {
     "id": "ALC-003",
@@ -5953,16 +5953,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#4E3522",
+    "accent": "#9E8072",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Wind-caught loose waves",
+    "hair": "Elaborate spiral curls",
     "makeup": "Soft glam",
-    "set_design": "Sheer grey wrap kneeling in drifting mist, dark cave"
+    "set_design": "Weightless amid pale silk streamers, soft pastel cloud haze"
   },
   {
     "id": "ALC-006",
@@ -5980,16 +5980,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#9E8072",
+    "accent": "#573928",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Loose waves, wind-caught",
-    "makeup": "Soft glam",
-    "set_design": "Weightless in pale silk streamers, soft cloud haze"
+    "hair": "Wet, windswept",
+    "makeup": "Clean glam",
+    "set_design": "Standing in shallow water among tall vertical glass panels, refracted light"
   },
   {
     "id": "ALC-007",
@@ -6007,16 +6007,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#514232",
+    "accent": "#4E3522",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Sleek center part",
-    "makeup": "Bold glam",
-    "set_design": "Vertical light beam splitting black and gold sheer gown, floating gemstones"
+    "hair": "Loose waves, damp",
+    "makeup": "Bronze glam",
+    "set_design": "Kneeling in drifting mist, dark reflective cave tunnel, hand pressed to the wall"
   },
   {
     "id": "ALC-008",
@@ -6140,18 +6140,18 @@
     "publication": "Alchimia campaign, summer line",
     "edition": "03/8",
     "orientation": "portrait",
-    "width": 1068,
-    "height": 1473,
-    "accent": "#7A4C0D",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#5A341B",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Top knot",
+    "hair": "Gold-leafed loose waves",
     "makeup": "Bold glam",
-    "set_design": "Black and gold lace bodysuit, gold dust exploding from an open hand"
+    "set_design": "Gold leaf drifting through the air, black gown laced in gold filigree, draped gold fabric"
   },
   {
     "id": "ALC-013",
@@ -6169,16 +6169,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#5D0E03",
+    "accent": "#4E3527",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Wet-look waves",
+    "hair": "Messy top knot, windswept",
     "makeup": "Clean glam",
-    "set_design": "Liquid silver gown against a mirrored wall, doubled reflection"
+    "set_design": "Vertical shafts of light through mist, dynamic dancer's arch, dark reflective platform"
   },
   {
     "id": "ALC-014",
@@ -6221,18 +6221,18 @@
     "publication": "Alchimia campaign, autumn line",
     "edition": "21/24",
     "orientation": "portrait",
-    "width": 1122,
-    "height": 1402,
-    "accent": "#5A3720",
+    "width": 1068,
+    "height": 1473,
+    "accent": "#7A4C0D",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Wet-look waves",
-    "makeup": "Bronze glam",
-    "set_design": "Amber wrap dress, apothecary bar of bottles, fingertip to lips"
+    "hair": "Top knot",
+    "makeup": "Bold glam",
+    "set_design": "Golden smoke billowing, jewelled black bodysuit, dust pouring from an open hand"
   },
   {
     "id": "ALC-016",
@@ -6250,16 +6250,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#3A4D6A",
+    "accent": "#092E6C",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Loose windswept",
-    "makeup": "Bold glam",
-    "set_design": "Spinning liquid-glass gown, blue flame trailing the motion"
+    "hair": "Wet slicked back",
+    "makeup": "Clean glam",
+    "set_design": "Glowing blue crystal cluster, jewelled bra and skirt, glass panel reflection"
   },
   {
     "id": "ALC-017",
@@ -6277,16 +6277,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#4E3527",
+    "accent": "#3A4D6A",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Loose waves, damp",
-    "makeup": "Bronze glam",
-    "set_design": "Amber-lit ruin, curtains of falling mist, mid-motion dancer pose"
+    "hair": "Loose, windswept mid-spin",
+    "makeup": "Clean glam",
+    "set_design": "Spinning ring of liquid glass and blue flame, dynamic dance pose"
   },
   {
     "id": "ALC-018",
@@ -6304,16 +6304,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#68402D",
+    "accent": "#6E4A38",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Loose waves",
-    "makeup": "Clean glam",
-    "set_design": "Kneeling by a prismatic glass shard, jewelled net bodysuit, rainbow refraction"
+    "hair": "Fanned loose, ritual pearl net",
+    "makeup": "Bare, luminous",
+    "set_design": "Kneeling within a drawn sigil circle, pearl-netted white bodysuit, hair fanned in white sand"
   },
   {
     "id": "ALC-019",
@@ -6331,16 +6331,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#092E6C",
+    "accent": "#68402D",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Wet-look waves",
+    "hair": "Sleek center part",
     "makeup": "Clean glam",
-    "set_design": "Glowing blue crystal cluster, jewelled bra and skirt, glass panel reflection"
+    "set_design": "Kneeling by a prismatic glass shard, jewelled net bodysuit, rainbow refraction"
   },
   {
     "id": "ALC-020",
@@ -6356,18 +6356,18 @@
     "publication": "Alchimia campaign, autumn line",
     "edition": "08/12",
     "orientation": "portrait",
-    "width": 1003,
-    "height": 1568,
-    "accent": "#5D3724",
+    "width": 1122,
+    "height": 1402,
+    "accent": "#5B3725",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Sleek low bun",
+    "hair": "Slicked back",
     "makeup": "Bold glam",
-    "set_design": "Stark black reflective studio, angular cutout monokini"
+    "set_design": "Narrow glossy black doorway, laced vinyl bodysuit, long gloves"
   },
   {
     "id": "ALC-021",
@@ -6385,16 +6385,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#785745",
+    "accent": "#7F5942",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Windswept, wet ends",
-    "makeup": "Clean glam",
-    "set_design": "White bodysuit against a falling water wall, mirrored reflection"
+    "hair": "Updo",
+    "makeup": "Clean glam, luminous",
+    "set_design": "Diagonal beam of white light through darkness, sheer draped fabric, prismatic sparkle"
   },
   {
     "id": "ALC-022",
@@ -6439,16 +6439,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#573928",
+    "accent": "#785745",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Sleek center part",
+    "hair": "Windswept, ice-crusted ends",
     "makeup": "Clean glam",
-    "set_design": "Standing in shallow rippling water, tall pale ice-glass verticals"
+    "set_design": "Standing beside a cracked ice-glass wall, mirrored reflection, frost-lace bodysuit"
   },
   {
     "id": "ALC-024",
@@ -6518,18 +6518,18 @@
     "publication": "Alchimia campaign, autumn line",
     "edition": "08/8",
     "orientation": "portrait",
-    "width": 1122,
-    "height": 1402,
-    "accent": "#5B3725",
+    "width": 1003,
+    "height": 1568,
+    "accent": "#5D3724",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Slicked back",
+    "hair": "Sleek center part",
     "makeup": "Bold glam",
-    "set_design": "Narrow glossy black doorway, laced vinyl bodysuit, long gloves"
+    "set_design": "Standing in a black mirrored doorway, geometric glass-shard panelled monokini, dual reflection"
   },
   {
     "id": "ALC-027",
@@ -6547,7 +6547,7 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#6E4A38",
+    "accent": "#514232",
     "layers": [
       2,
       3
@@ -6555,9 +6555,9 @@
     "flash": false,
     "restricted": false,
     "flagship": true,
-    "hair": "Fanned loose, ritual pearl net",
-    "makeup": "Bare, luminous",
-    "set_design": "Kneeling within a drawn sigil circle, pearl-netted white bodysuit"
+    "hair": "Windswept updo",
+    "makeup": "Bold glam",
+    "set_design": "Vertical light beam splitting black and gold sheer gown, floating gemstones, reaching hand"
   },
   {
     "id": "ALC-028",
@@ -6575,16 +6575,16 @@
     "orientation": "portrait",
     "width": 1122,
     "height": 1402,
-    "accent": "#5A341B",
+    "accent": "#5A3720",
     "layers": [
       2,
       3
     ],
     "flash": false,
     "restricted": false,
-    "hair": "Gold-leafed updo",
-    "makeup": "Bold glam",
-    "set_design": "Gold leaf drifting through the air, seated on draped gold fabric, fingertip to lips"
+    "hair": "Wet-look waves",
+    "makeup": "Bronze glam",
+    "set_design": "Amber wrap dress, apothecary bar of bottles, fingertip to lips"
   },
   {
     "id": "ALC-029",
