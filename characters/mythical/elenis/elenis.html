@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Нимфея Эленис — Архив | Разделённый мир</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   НИМФЕЯ ЭЛЕНИС — АРХИВ
+   Фотографический архив по коллекциям, с отдельной витриной для
+   АЛХИМИИ (29 стадий Великого Делания). Один HTML-файл, три
+   брейкпоинта через media queries: моб. портрет (база, ≤600px),
+   моб. ландшафт/планшет (601–900px), десктоп (≥901px).
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#0a0806;
+  --ink:#f4eee3;
+  --ink-dim:rgba(244,238,227,.62);
+  --ink-faint:rgba(244,238,227,.38);
+  --gold:197,166,110;
+  --gold-br:224,197,143;
+  --wine:122,32,32;
+  --line:rgba(197,166,110,.18);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+img{display:block;width:100%;height:100%;object-fit:cover}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+a{color:inherit}
+::selection{background:rgba(var(--gold),.35)}
+
+#grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+
+/* ── выход ── */
+.exit-btn{position:fixed;top:14px;left:14px;z-index:90;font-family:var(--mono);
+  font-size:10px;color:rgba(244,238,227,.65);background:rgba(10,8,6,.55);border:1px solid var(--line);
+  padding:7px 12px;border-radius:3px;text-decoration:none;letter-spacing:.1em;backdrop-filter:blur(6px)}
+.exit-btn:hover{color:rgb(var(--gold-br));border-color:rgba(var(--gold),.5)}
+
+/* ── переход-меню по разделам ── */
+.jumpnav{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:80;
+  display:flex;gap:6px;background:rgba(10,8,6,.6);border:1px solid var(--line);border-radius:30px;
+  padding:6px;backdrop-filter:blur(10px)}
+.jumpnav a{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--ink-dim);
+  padding:7px 12px;border-radius:20px;text-decoration:none;white-space:nowrap;transition:color .25s,background .25s}
+.jumpnav a:hover,.jumpnav a.active{color:rgb(var(--gold-br));background:rgba(var(--gold),.12)}
+
+/* ══════════════════════════════════════════
+   ГЕРОЙ
+   ══════════════════════════════════════════ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{object-position:center 22%}
+.hero-scrim{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(10,8,6,.55) 0%,rgba(10,8,6,.15) 30%,rgba(10,8,6,.35) 55%,rgba(10,8,6,.96) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 20px 84px;width:100%}
+.hero-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:rgb(var(--gold-br));
+  text-shadow:0 0 14px rgba(var(--gold),.5);margin-bottom:10px}
+.hero-name{font-family:var(--serif);font-weight:500;font-size:clamp(46px,14vw,64px);line-height:.95;
+  letter-spacing:.005em;color:#faf6ee;text-shadow:0 4px 30px rgba(0,0,0,.65)}
+.hero-quote{font-family:var(--serif);font-style:italic;font-size:17px;color:#e4dccd;line-height:1.55;
+  max-width:46ch;margin-top:16px}
+.hero-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-faint);
+  margin-top:16px}
+.scroll-cue{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:9px;letter-spacing:.2em;color:var(--ink-faint)}
+.scroll-cue span{width:1px;height:22px;background:linear-gradient(180deg,rgba(var(--gold),.7),transparent);
+  animation:cue-drop 1.8s ease-in-out infinite}
+@keyframes cue-drop{0%{opacity:0;transform:scaleY(.3)}40%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(.3) translateY(6px)}}
+
+/* ── бегущая строка публикаций ── */
+.masthead-strip{position:relative;z-index:2;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:#0d0a07;overflow:hidden;padding:10px 0}
+.masthead-track{display:inline-flex;white-space:nowrap;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;color:var(--ink-faint);animation:marquee 60s linear infinite}
+.masthead-track span{padding-right:0}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.masthead-track{animation:none}}
+
+/* ══════════════════════════════════════════
+   ОБЩИЕ БЛОКИ СЕКЦИЙ
+   ══════════════════════════════════════════ */
+section{position:relative;z-index:2;padding:64px 20px}
+.sec-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:rgb(var(--gold-br));margin-bottom:10px}
+.sec-title{font-family:var(--serif);font-weight:500;font-size:clamp(30px,7vw,44px);line-height:1.02;color:#faf6ee}
+.sec-lede{font-family:var(--serif);font-size:16.5px;font-style:italic;color:var(--ink-dim);
+  line-height:1.6;max-width:60ch;margin-top:14px}
+
+/* ── о ней ── */
+.about{max-width:760px;margin:0 auto}
+.about-body{font-family:var(--sans);font-weight:300;font-size:14.5px;line-height:1.85;
+  color:rgba(244,238,227,.82);margin-top:22px;max-width:62ch}
+.about-body b{color:rgb(var(--gold-br));font-weight:500}
+
+/* ══════════════════════════════════════════
+   АЛХИМИЯ — витрина
+   ══════════════════════════════════════════ */
+.alchimia{background:radial-gradient(120% 60% at 50% 0%,rgba(var(--wine),.14),transparent 60%),#0a0705}
+.alc-strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:28px 4px 14px;
+  margin:0 -20px;padding-left:20px;padding-right:20px;-webkit-overflow-scrolling:touch}
+.alc-strip::-webkit-scrollbar{height:4px}
+.alc-strip::-webkit-scrollbar-thumb{background:rgba(var(--gold),.3);border-radius:4px}
+.alc-card{position:relative;flex:0 0 auto;width:64vw;max-width:230px;aspect-ratio:3/4;border-radius:6px;
+  overflow:hidden;scroll-snap-align:start;border:1px solid rgba(var(--ac,var(--gold)),.35);
+  box-shadow:0 20px 50px -24px rgba(0,0,0,.8);transition:transform .3s ease,border-color .3s ease}
+.alc-card:hover{transform:translateY(-4px);border-color:rgba(var(--ac,var(--gold)),.75)}
+.alc-card-img{position:absolute;inset:0}
+.alc-card-img img{filter:brightness(.86) saturate(1.05);transition:filter .3s ease,transform .5s ease}
+.alc-card:hover .alc-card-img img{filter:brightness(1) saturate(1.15);transform:scale(1.04)}
+.alc-card-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,6,4,.05) 0%,transparent 38%,rgba(8,6,4,.92) 100%)}
+.alc-card-num{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;color:rgba(var(--ac,var(--gold-br)),1);display:flex;align-items:center;gap:6px;
+  text-shadow:0 0 10px rgba(0,0,0,.6)}
+.alc-card-sym{font-size:14px;opacity:.9}
+.alc-card-body{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:12px}
+.alc-card-title{font-family:var(--serif);font-weight:600;font-size:16.5px;letter-spacing:.03em;color:#f5f0e6}
+.alc-card-note{font-family:var(--sans);font-size:10.5px;line-height:1.4;color:rgba(244,238,227,.65);margin-top:4px}
+.load-error{font-family:var(--mono);font-size:11px;color:rgba(220,120,120,.8);padding:20px 0}
+
+/* ══════════════════════════════════════════
+   СЕТКА КОЛЛЕКЦИЙ
+   ══════════════════════════════════════════ */
+.coll-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px}
+.coll-tile{position:relative;aspect-ratio:4/5;border-radius:6px;overflow:hidden;text-align:left;
+  border:1px solid var(--line);transition:transform .25s ease,border-color .25s ease}
+.coll-tile:hover{transform:translateY(-3px);border-color:rgba(var(--gold),.45)}
+.coll-tile-img{position:absolute;inset:0}
+.coll-tile-img img{filter:brightness(.8) saturate(.95);transition:filter .3s ease,transform .5s ease}
+.coll-tile:hover .coll-tile-img img{filter:brightness(.98) saturate(1.1);transform:scale(1.03)}
+.coll-tile.is-private .coll-tile-img img{filter:brightness(.55) saturate(.7) blur(3px)}
+.coll-tile.is-private:hover .coll-tile-img img{filter:brightness(.72) saturate(.85) blur(1px)}
+.coll-tile-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,6,4,.05) 0%,transparent 34%,rgba(8,6,4,.94) 100%)}
+.coll-tile-lock{position:absolute;top:12px;right:12px;z-index:2;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.1em;color:rgba(224,197,143,.85);background:rgba(8,6,4,.6);border:1px solid var(--line);
+  padding:4px 8px;border-radius:20px}
+.coll-tile-body{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px}
+.coll-tile-count{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:rgb(var(--gold-br))}
+.coll-tile-title{font-family:var(--serif);font-weight:500;font-size:26px;color:#faf6ee;margin-top:4px}
+.coll-tile-line{font-family:var(--sans);font-size:11.5px;color:rgba(244,238,227,.62);margin-top:5px;line-height:1.4}
+
+/* ══════════════════════════════════════════
+   ОВЕРЛЕЙ КОЛЛЕКЦИИ (полная сетка кадров)
+   ══════════════════════════════════════════ */
+.collection-view{position:fixed;inset:0;z-index:120;background:rgba(6,5,4,.97);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.collection-view.open{opacity:1;pointer-events:auto}
+.cv-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:16px 20px;background:rgba(6,5,4,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.cv-head-text{display:flex;flex-direction:column;gap:2px}
+#cvTitle{font-family:var(--serif);font-weight:500;font-size:22px;color:#faf6ee}
+#cvCount{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--ink-faint)}
+.cv-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(10,8,6,.6);
+  color:rgb(var(--gold-br));font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
+.cv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;padding:2px}
+.cv-thumb{position:relative;aspect-ratio:3/4;overflow:hidden;text-align:left}
+.cv-thumb img{filter:brightness(.9);transition:filter .25s ease,transform .4s ease}
+.cv-thumb:hover img{filter:brightness(1.05);transform:scale(1.04)}
+.cv-thumb.is-restricted img{filter:brightness(.5) blur(6px) saturate(.7)}
+.cv-thumb.is-restricted:hover img{filter:brightness(.7) blur(2px) saturate(.85)}
+.cv-thumb-lock{position:absolute;top:8px;right:8px;font-size:12px;z-index:2}
+.cv-thumb-title{position:absolute;left:0;right:0;bottom:0;padding:8px;font-family:var(--mono);
+  font-size:9px;letter-spacing:.06em;color:rgba(244,238,227,.85);
+  background:linear-gradient(180deg,transparent,rgba(6,5,4,.9));z-index:1}
+
+/* ══════════════════════════════════════════
+   ЛАЙТБОКС
+   ══════════════════════════════════════════ */
+.lightbox{position:fixed;inset:0;z-index:150;background:rgba(4,3,2,.98);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lb-inner{display:flex;flex-direction:column;min-height:100%}
+.lb-imgwrap{position:relative;width:100%;background:#000;flex:none}
+.lb-imgwrap img{width:100%;height:auto;max-height:78svh;object-fit:contain;transition:filter .4s ease}
+.lb-imgwrap.is-restricted img{filter:blur(22px) brightness(.7) saturate(.7)}
+.lb-imgwrap.is-restricted.revealed img{filter:none}
+.lb-reveal{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;align-items:center;
+  justify-content:center;gap:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  color:rgb(var(--gold-br));background:rgba(6,5,4,.25)}
+.lb-imgwrap.is-restricted .lb-reveal{display:flex}
+.lb-imgwrap.is-restricted.revealed .lb-reveal{display:none}
+.lb-reveal-btn{border:1px solid rgba(var(--gold),.5);padding:9px 18px;border-radius:24px;
+  background:rgba(6,5,4,.65);backdrop-filter:blur(4px)}
+.lb-close{position:fixed;top:14px;right:16px;z-index:5;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(6,5,4,.7);color:rgb(var(--gold-br));font-size:16px;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.lb-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:5;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(6,5,4,.6);color:rgb(var(--gold-br));font-size:16px;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.lb-prev{left:10px}.lb-next{right:10px}
+.lb-pos{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:5;font-family:var(--mono);
+  font-size:10px;letter-spacing:.12em;color:var(--ink-faint)}
+.lb-caption{padding:22px 20px 70px;max-width:640px;margin:0 auto;width:100%}
+.lb-cap-coll{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:rgba(var(--ac,var(--gold)),1)}
+.lb-cap-title{font-family:var(--serif);font-weight:500;font-size:26px;color:#faf6ee;margin-top:4px}
+.lb-cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:18px;
+  padding-top:16px;border-top:1px solid var(--line)}
+.lb-cap-grid div{font-family:var(--sans);font-size:12px;color:rgba(244,238,227,.8);line-height:1.4}
+.lb-cap-grid span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  color:var(--ink-faint);margin-bottom:2px}
+.lb-cap-set{margin-top:14px;font-family:var(--sans);font-size:12px;color:rgba(244,238,227,.8);line-height:1.5}
+.lb-cap-set span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--ink-faint);margin-bottom:2px}
+
+/* ── мягкий fallback: отсутствующий файл гасится в тёплый градиент,
+   без битой иконки браузера и без alert ── */
+.img-broken img{opacity:0}
+.img-broken{background:linear-gradient(160deg,#161009,#0a0806)}
+.img-broken::before{content:'· · ·';position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--ink-faint);z-index:1}
+
+/* ── подвал ── */
+.colophon{text-align:center;padding:60px 20px 120px;border-top:1px solid var(--line)}
+.colophon-mark{font-family:var(--serif);font-size:20px;letter-spacing:.08em;color:rgb(var(--gold-br))}
+.colophon-line{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--ink-faint);margin-top:10px}
+
+/* ══════════════════════════════════════════
+   601–900px — планшет / моб. ландшафт
+   ══════════════════════════════════════════ */
+@media (min-width:601px){
+  section{padding:84px 40px}
+  .hero-content{padding:0 40px 100px}
+  .coll-grid{grid-template-columns:repeat(2,1fr)}
+  .cv-grid{grid-template-columns:repeat(3,1fr)}
+  .alc-card{width:38vw;max-width:220px}
+  .jumpnav{bottom:22px}
+}
+
+/* ══════════════════════════════════════════
+   ≥901px — десктоп
+   ══════════════════════════════════════════ */
+@media (min-width:901px){
+  .exit-btn{top:20px;left:20px}
+  .jumpnav{left:auto;right:24px;bottom:auto;top:20px;transform:none}
+  section{padding:110px 64px;max-width:1280px;margin:0 auto}
+  .about{margin:0 auto}
+  .hero-content{padding:0 64px 120px;max-width:1280px;margin:0 auto;left:0;right:0}
+  .hero-name{font-size:clamp(64px,8vw,104px)}
+  .coll-grid{grid-template-columns:repeat(3,1fr);gap:18px}
+  .alc-card{width:264px}
+  .alc-strip{margin:0;padding-left:0;padding-right:0}
+  .cv-grid{grid-template-columns:repeat(5,1fr);max-width:1400px;margin:0 auto}
+  .cv-head{padding:20px 40px}
+  .lb-inner{flex-direction:row;align-items:center;min-height:100svh}
+  .lb-imgwrap{flex:1 1 62%;height:100svh}
+  .lb-imgwrap img{max-height:100svh;height:100%}
+  .lb-caption{flex:1 1 38%;max-width:460px;padding:40px 56px}
+}
+</style>
+</head>
+<body>
+
+<div id="grain"></div>
+<a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
+<nav class="jumpnav">
+  <a href="#about">О НЕЙ</a>
+  <a href="#alchimia">АЛХИМИЯ</a>
+  <a href="#collections">КОЛЛЕКЦИИ</a>
+</nav>
+
+<header class="hero" id="hero">
+  <div class="hero-bg"><img src="collections/nocturne/C8C2ABA9-1096-4078-8C09-CD04F64343B5.webp" alt="Нимфея Эленис"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">ЛИЧНЫЙ АРХИВ · ELENIS ATELIER</div>
+    <h1 class="hero-name">Нимфея<br>Эленис</h1>
+    <div class="hero-quote">«Мне нравится наблюдать, какие удивительные вещи люди делают по собственной воле.»</div>
+    <div class="hero-meta" id="heroMeta"><b id="frameCount">—</b> КАДРОВ · 13 КОЛЛЕКЦИЙ · 2015—2061</div>
+  </div>
+  <div class="scroll-cue">СКРОЛЛ<span></span></div>
+</header>
+
+<div class="masthead-strip"><div class="masthead-track" id="mastheadTrack"></div></div>
+
+<section class="about" id="about">
+  <div class="sec-eyebrow">ОБ АРХИВЕ</div>
+  <div class="sec-title">Икона, которую снимают десятилетиями</div>
+  <p class="about-body">
+    Модельную карьеру Нимфея оставила давно — но от съёмок так и не отказалась. Часть кадров
+    уходит в рекламные кампании <b>«Эленис»</b>, часть — в модные журналы, часть не покидает
+    личного архива. Ей нравится смотреть на результат. А больше всего — знать, кто ещё на него
+    посмотрит. Этот архив — витрина того, что дошло до публикации, и того, что почти не должно
+    было её увидеть.
+  </p>
+</section>
+
+<section class="alchimia" id="alchimia">
+  <div class="sec-eyebrow">КОЛЛЕКЦИЯ · ALCHIMIA</div>
+  <div class="sec-title">Великое Делание</div>
+  <p class="sec-lede">
+    Двадцать девять стадий, снятых с перерывами почти в полвека — от Prima Materia до
+    Квинтэссенции. Четыре элемента, семь металлов, три философских цвета. Ним заказывала
+    очередную стадию раз в несколько лет, никогда не объясняя, зачем продолжает цикл, который
+    не обязан заканчиваться.
+  </p>
+  <div class="alc-strip" id="alcStrip"></div>
+</section>
+
+<section class="collections" id="collections">
+  <div class="sec-eyebrow">ОСТАЛЬНОЙ АРХИВ</div>
+  <div class="sec-title">Коллекции</div>
+  <p class="sec-lede">Тринадцать линий за годы съёмок — от агентского тест-шута до личного архива, куда не заглядывают посторонние.</p>
+  <div class="coll-grid" id="collGrid"></div>
+</section>
+
+<footer class="colophon">
+  <div class="colophon-mark">Э</div>
+  <div class="colophon-line">ELENIS ATELIER · ЛИЧНЫЙ АРХИВ · НЕ ДЛЯ ПЕРЕДАЧИ ТРЕТЬИМ ЛИЦАМ</div>
+</footer>
+
+<div class="collection-view" id="collectionView">
+  <div class="cv-head">
+    <div class="cv-head-text"><div id="cvTitle"></div><div id="cvCount"></div></div>
+    <button class="cv-close" id="cvClose">✕</button>
+  </div>
+  <div class="cv-grid" id="cvGrid"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
+  <div class="lb-pos" id="lbPos"></div>
+  <div class="lb-inner">
+    <div class="lb-imgwrap" id="lbImgWrap">
+      <img id="lbImg" src="" alt="">
+      <div class="lb-reveal"><span>🔒 ЛИЧНЫЙ АРХИВ</span><button class="lb-reveal-btn" id="lbReveal">Показать</button></div>
+    </div>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+</div>
+
+<script src="elenis.js"></script>
+</body>
+</html>

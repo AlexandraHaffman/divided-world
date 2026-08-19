@@ -454,7 +454,7 @@ function openDossier(idx) {
       </div>
       ${c.card_quote ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-quote">«${c.card_quote}»</div></div>` : ''}
       ${c.biography ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Биография</div><div class="dossier-bio">${c.biography.replace(/\n/g,"<br>")}</div></div>` : ''}
-      ${c.current_status ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Текущий статус</div><div class="dossier-bio">${c.current_status.replace(/\n/g,"<br>")}</div></div>` : ''}
+      ${c.current_status ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Текущий статус</div><div class="dossier-bio">${c.current_status.replace(/\n/g,"<br>")}${c._slug === 'нимфея-эленис' ? '<a class="archive-gate" href="mythical/elenis/elenis.html" aria-label="Архив" title="">⚗</a>' : ''}</div></div>` : ''}
       ${c.abilities?.length ? `<div class="dossier-divider"></div><div class="dossier-section"><div class="dossier-section-title">Способности</div><div class="abilities">${c.abilities.map(a=>`<div class="chip">${a}</div>`).join("")}</div></div>` : ''}
       <div class="dossier-bottom"></div>
     </div>`;
