@@ -42,6 +42,9 @@ const COLLECTIONS = {
   // Warm, confident evening glamour — galas, rooftops, staircases. Distinct from NOCTURNE's
   // shadow/danger mood and from LUMIERE's abstract studio symbolism.
   soiree: { code: 'SOIREE', prefix: 'SOI', layers: [1], flash: false, restricted: false },
+  // Futuristic couture — chrome/gold armor, glowing seams, laser lines, orbital ring motifs,
+  // void backdrops. Distinct from CHROMA (flash pop-colour) and SCULPTED (architecture-as-body).
+  orbit: { code: 'ORBIT', prefix: 'ORB', layers: [0, 1], flash: false, restricted: false },
 };
 
 const CRISIS_START = new Date('2020-07-04T00:00:00Z').getTime();
