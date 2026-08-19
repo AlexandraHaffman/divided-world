@@ -45,6 +45,9 @@ const COLLECTIONS = {
   // Futuristic couture — chrome/gold armor, glowing seams, laser lines, orbital ring motifs,
   // void backdrops. Distinct from CHROMA (flash pop-colour) and SCULPTED (architecture-as-body).
   orbit: { code: 'ORBIT', prefix: 'ORB', layers: [0, 1], flash: false, restricted: false },
+  // The 29-stage alchemical-process shoot — Prima Materia through Quintessentia.
+  // Deep, seductive, transformative; core/base layers, no top-note campaign use.
+  alchimia: { code: 'ALCHIMIA', prefix: 'ALC', layers: [2, 3], flash: false, restricted: false },
 };
 
 const CRISIS_START = new Date('2020-07-04T00:00:00Z').getTime();
