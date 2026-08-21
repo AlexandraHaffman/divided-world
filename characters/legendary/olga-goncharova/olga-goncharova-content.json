@@ -1,0 +1,602 @@
+{
+  "character": "Ольга Гончарова",
+  "audioThemes": [
+    {
+      "id": "forma",
+      "title": "Форма",
+      "file": "audio/theme-forma.mp3"
+    },
+    {
+      "id": "memoirs",
+      "title": "Мемуары / диктофон",
+      "file": "audio/theme-memoirs.mp3"
+    },
+    {
+      "id": "glass-walls",
+      "title": "День Стеклянных Стен",
+      "file": "audio/theme-glass-walls.mp3"
+    },
+    {
+      "id": "frontier",
+      "title": "Рубеж",
+      "file": "audio/theme-frontier.mp3"
+    },
+    {
+      "id": "meta",
+      "title": "Мета-силы",
+      "file": "audio/theme-meta.mp3"
+    },
+    {
+      "id": "operations",
+      "title": "Операции / охота",
+      "file": "audio/theme-operations.mp3"
+    },
+    {
+      "id": "maro",
+      "title": "Дело Маро",
+      "file": "audio/theme-maro.mp3"
+    },
+    {
+      "id": "home",
+      "title": "Дом",
+      "file": "audio/theme-home.mp3"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "01-past",
+      "number": 1,
+      "act": 1,
+      "actTitle": "Прошлое её глазами",
+      "title": "Ранняя жизнь и Академия",
+      "status": "reserved",
+      "audioTheme": "memoirs",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch01-bg-h.jpg",
+        "v": "olga-goncharova-ch01-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch01-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 01.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch01-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 01.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.",
+        "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.",
+        "Ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+        "Totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
+        "Nam quod facere debentes, iure deficiunt. Quisquam est qui dolorem ipsum quia dolor sit amet. Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam.",
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse."
+      ]
+    },
+    {
+      "id": "02-past",
+      "number": 2,
+      "act": 1,
+      "actTitle": "Прошлое её глазами",
+      "title": "Охота на Дорна и Вистнера",
+      "status": "reserved",
+      "audioTheme": "operations",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch02-bg-h.jpg",
+        "v": "olga-goncharova-ch02-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch02-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 02.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch02-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 02.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
+        "Nam quod facere debentes, iure deficiunt. Quisquam est qui dolorem ipsum quia dolor sit amet. Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam.",
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.",
+        "Quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.",
+        "Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper.",
+        "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Nullam id dolor id nibh ultricies vehicula ut id elit."
+      ]
+    },
+    {
+      "id": "03-past",
+      "number": 3,
+      "act": 1,
+      "actTitle": "Прошлое её глазами",
+      "title": "День Стеклянных Стен и рождение Тенебриона",
+      "status": "reserved",
+      "audioTheme": "glass-walls",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch03-bg-h.jpg",
+        "v": "olga-goncharova-ch03-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch03-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 03.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch03-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 03.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.",
+        "Quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.",
+        "Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper.",
+        "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Nullam id dolor id nibh ultricies vehicula ut id elit.",
+        "Aenean lacinia bibendum nulla sed consectetur. Sed posuere consectetur est at lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui.",
+        "Curabitur blandit tempus porttitor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper.",
+        "Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula."
+      ]
+    },
+    {
+      "id": "04-past",
+      "number": 4,
+      "act": 1,
+      "actTitle": "Прошлое её глазами",
+      "title": "Вступление в Управление",
+      "status": "reserved",
+      "audioTheme": "frontier",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch04-bg-h.jpg",
+        "v": "olga-goncharova-ch04-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch04-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 04.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch04-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 04.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Nullam id dolor id nibh ultricies vehicula ut id elit.",
+        "Aenean lacinia bibendum nulla sed consectetur. Sed posuere consectetur est at lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui.",
+        "Curabitur blandit tempus porttitor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper.",
+        "Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+        "Sed posuere consectetur est at lobortis. Nullam id dolor id nibh ultricies vehicula ut id elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo.",
+        "Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra augue. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur."
+      ]
+    },
+    {
+      "id": "05-service",
+      "number": 5,
+      "act": 2,
+      "actTitle": "Служба",
+      "title": "Дела",
+      "status": "reserved",
+      "audioTheme": "maro",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch05-bg-h.jpg",
+        "v": "olga-goncharova-ch05-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch05-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 05.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch05-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 05.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+        "Sed posuere consectetur est at lobortis. Nullam id dolor id nibh ultricies vehicula ut id elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo.",
+        "Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra augue. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur.",
+        "Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.",
+        "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur."
+      ]
+    },
+    {
+      "id": "06-service",
+      "number": 6,
+      "act": 2,
+      "actTitle": "Служба",
+      "title": "Служба сегодня",
+      "status": "reserved",
+      "audioTheme": "frontier",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch06-bg-h.jpg",
+        "v": "olga-goncharova-ch06-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch06-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 06.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch06-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 06.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra augue. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur.",
+        "Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.",
+        "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur.",
+        "Maecenas faucibus mollis interdum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula.",
+        "Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      ]
+    },
+    {
+      "id": "07-service",
+      "number": 7,
+      "act": 2,
+      "actTitle": "Служба",
+      "title": "Отряд",
+      "status": "reserved",
+      "audioTheme": "operations",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch07-bg-h.jpg",
+        "v": "olga-goncharova-ch07-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch07-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 07.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch07-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 07.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur.",
+        "Maecenas faucibus mollis interdum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula.",
+        "Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+        "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus."
+      ]
+    },
+    {
+      "id": "08-service",
+      "number": 8,
+      "act": 2,
+      "actTitle": "Служба",
+      "title": "Снаряжение",
+      "status": "ready",
+      "audioTheme": "forma",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch08-bg-h.jpg",
+        "v": "olga-goncharova-ch08-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch08-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 08.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch08-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 08.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+        "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.",
+        "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.",
+        "Ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+        "Totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit."
+      ]
+    },
+    {
+      "id": "09-service",
+      "number": 9,
+      "act": 2,
+      "actTitle": "Служба",
+      "title": "Вооружение",
+      "status": "ready",
+      "audioTheme": "operations",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch09-bg-h.jpg",
+        "v": "olga-goncharova-ch09-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch09-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 09.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch09-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 09.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.",
+        "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus.",
+        "Ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+        "Totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
+        "Nam quod facere debentes, iure deficiunt. Quisquam est qui dolorem ipsum quia dolor sit amet. Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam.",
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse."
+      ]
+    },
+    {
+      "id": "10-service",
+      "number": 10,
+      "act": 2,
+      "actTitle": "Служба",
+      "title": "Мета-силы",
+      "status": "reserved",
+      "audioTheme": "meta",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch10-bg-h.jpg",
+        "v": "olga-goncharova-ch10-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch10-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 10.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch10-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 10.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+        "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet consectetur adipisci velit. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.",
+        "Nam quod facere debentes, iure deficiunt. Quisquam est qui dolorem ipsum quia dolor sit amet. Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam.",
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.",
+        "Quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.",
+        "Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper.",
+        "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Nullam id dolor id nibh ultricies vehicula ut id elit."
+      ]
+    },
+    {
+      "id": "11-self",
+      "number": 11,
+      "act": 3,
+      "actTitle": "О ней самой",
+      "title": "Внешность",
+      "status": "ready",
+      "audioTheme": "forma",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch11-bg-h.jpg",
+        "v": "olga-goncharova-ch11-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch11-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 11.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch11-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 11.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse.",
+        "Quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.",
+        "Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper.",
+        "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Nullam id dolor id nibh ultricies vehicula ut id elit.",
+        "Aenean lacinia bibendum nulla sed consectetur. Sed posuere consectetur est at lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui.",
+        "Curabitur blandit tempus porttitor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper.",
+        "Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula."
+      ]
+    },
+    {
+      "id": "12-self",
+      "number": 12,
+      "act": 3,
+      "actTitle": "О ней самой",
+      "title": "Привычки",
+      "status": "reserved",
+      "audioTheme": "home",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch12-bg-h.jpg",
+        "v": "olga-goncharova-ch12-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch12-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 12.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch12-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 12.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Donec ullamcorper nulla non metus auctor fringilla. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas faucibus mollis interdum. Nullam id dolor id nibh ultricies vehicula ut id elit.",
+        "Aenean lacinia bibendum nulla sed consectetur. Sed posuere consectetur est at lobortis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui.",
+        "Curabitur blandit tempus porttitor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper.",
+        "Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+        "Sed posuere consectetur est at lobortis. Nullam id dolor id nibh ultricies vehicula ut id elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo.",
+        "Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra augue. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur."
+      ]
+    },
+    {
+      "id": "13-self",
+      "number": 13,
+      "act": 3,
+      "actTitle": "О ней самой",
+      "title": "Жильё",
+      "status": "reserved",
+      "audioTheme": "home",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch13-bg-h.jpg",
+        "v": "olga-goncharova-ch13-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch13-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 13.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch13-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 13.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+        "Sed posuere consectetur est at lobortis. Nullam id dolor id nibh ultricies vehicula ut id elit. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo.",
+        "Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra augue. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur.",
+        "Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.",
+        "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur."
+      ]
+    },
+    {
+      "id": "14-self",
+      "number": 14,
+      "act": 3,
+      "actTitle": "О ней самой",
+      "title": "Татуировки",
+      "status": "ready",
+      "audioTheme": "memoirs",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch14-bg-h.jpg",
+        "v": "olga-goncharova-ch14-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch14-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 14.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch14-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 14.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra augue. Donec id elit non mi porta gravida at eget metus. Aenean lacinia bibendum nulla sed consectetur.",
+        "Cras mattis consectetur purus sit amet fermentum. Maecenas sed diam eget risus varius blandit sit amet non magna. Sed posuere consectetur est at lobortis. Etiam porta sem malesuada magna mollis euismod.",
+        "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur.",
+        "Maecenas faucibus mollis interdum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula.",
+        "Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      ]
+    },
+    {
+      "id": "15-self",
+      "number": 15,
+      "act": 3,
+      "actTitle": "О ней самой",
+      "title": "Тайная жизнь",
+      "status": "reserved",
+      "audioTheme": "memoirs",
+      "background": {
+        "mode": "set",
+        "h": "olga-goncharova-ch15-bg-h.jpg",
+        "v": "olga-goncharova-ch15-bg-v.jpg"
+      },
+      "images": [
+        {
+          "src": "olga-goncharova-ch15-img1.jpg",
+          "mode": "crop",
+          "ratio": "4/5",
+          "caption": "Илл. 15.1 — из архива, без подписи"
+        },
+        {
+          "src": "olga-goncharova-ch15-img2.jpg",
+          "mode": "crop",
+          "ratio": "16/10",
+          "caption": "Илл. 15.2 — из архива, без подписи"
+        }
+      ],
+      "body": [
+        "Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur.",
+        "Maecenas faucibus mollis interdum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Donec ullamcorper nulla non metus auctor fringilla. Nullam id dolor id nibh ultricies vehicula.",
+        "Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Duis mollis, est non commodo luctus, nisi erat porttitor ligula.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+        "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus."
+      ]
+    }
+  ]
+}
