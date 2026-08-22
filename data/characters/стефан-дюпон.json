@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Наместник логистического узла, специалист по противовоздушной и точечной обороне",
-  "birthdate": "11.08.2019",
+  "birthdate": "11.08",
   "faction": "Ракшасы",
   "subfaction": "Асуры",
   "location": "Долина реки Сицзян",
@@ -37,5 +37,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/00449105-3896-4A3F-AE73-BF39854E2AE3.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B35662CD-BBA8-4477-9606-CE16BE045530.jpeg",
   "tier": "elite",
-  "exported_at": "2026-07-12T11:20:16.261Z"
+  "appearance": {
+    "height": 184,
+    "weight": 79,
+    "eye_color": "Серые",
+    "hair_color": "Тёмно-русые",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:28:46.723Z"
 }
