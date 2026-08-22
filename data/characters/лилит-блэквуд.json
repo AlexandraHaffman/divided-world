@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Женский",
   "role": "Глава Капитула Надзора",
-  "birthdate": "04.04.2017",
+  "birthdate": "04.04",
   "faction": "Тенебрион",
   "subfaction": "Капитул Надзора",
   "location": "Тенебрион",
@@ -37,5 +37,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/786136FB-450D-4C30-BEBD-660E3EAAD280.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/FBDD52F8-924F-4D92-864A-4E25EB991068.jpeg",
   "tier": "elite",
-  "exported_at": "2026-07-15T08:04:37.884Z"
+  "appearance": {
+    "height": 172,
+    "weight": 57,
+    "eye_color": "Карие",
+    "hair_color": "Каштановые",
+    "bust_size": 2,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:31:07.977Z"
 }
