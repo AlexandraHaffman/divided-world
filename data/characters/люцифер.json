@@ -36,5 +36,13 @@
   "avatar_web": "https://alexandrahaffman.github.io/divided-world/data/images/characters/B8199503-6097-4356-8B14-0E7B6E09F282.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/5B42E4F2-11CB-432A-9FFE-B4502B9B52B9.jpeg",
   "tier": "elite",
-  "exported_at": "2026-07-16T20:13:54.147Z"
+  "appearance": {
+    "height": 195,
+    "weight": 100,
+    "eye_color": "Тёмно-карие",
+    "hair_color": "Лысый",
+    "bust_size": null,
+    "marks": "Татуировки почти по всему телу. Во все лицо татуировка черепа."
+  },
+  "exported_at": "2026-08-22T05:21:55.416Z"
 }
