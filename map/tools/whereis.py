@@ -117,6 +117,8 @@ def main():
 
     if args and args[0] == "--check-locations":
         s = open(f"{DATA}/locations.js", encoding="utf-8").read()
+        # закомментированный образец в шапке — не локация
+        s = "\n".join(ln for ln in s.splitlines() if not ln.lstrip().startswith("//"))
         blocks = re.findall(
             r'name:\s*"([^"]+)".*?type:\s*"([^"]*)".*?faction:\s*"([^"]*)".*?lat:\s*(-?[\d.]+).*?lon:\s*(-?[\d.]+)',
             s, re.S)
