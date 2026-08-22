@@ -3,8 +3,8 @@
   "name": "Рафаэль Монтальво",
   "status": "Активен",
   "gender": "Мужской",
-  "role": "Командующий корпусом «Земля»",
-  "birthdate": "13.06.2015",
+  "role": "Командующий корпусом «Луна»",
+  "birthdate": "12.06",
   "faction": "Единая Америка",
   "subfaction": "Корпус «Луна»",
   "location": "Единая Америка",
@@ -36,5 +36,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/9020CCDC-213B-4A5D-BF79-28D9558B43AD.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/EABE6DE4-C966-4DA2-960D-40F10713C21A.jpeg",
   "tier": "elite",
-  "exported_at": "2026-06-29T17:06:36.893Z"
+  "appearance": {
+    "height": 177,
+    "weight": 80,
+    "eye_color": "Карие",
+    "hair_color": "Каштановые",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:26:09.064Z"
 }
