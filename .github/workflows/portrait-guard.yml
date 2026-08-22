@@ -7,6 +7,7 @@ on:
       - 'data/characters/**'
       - 'data/portraits.json'
       - 'data/images/characters/**'
+  workflow_dispatch: {}
 
 permissions:
   contents: write
