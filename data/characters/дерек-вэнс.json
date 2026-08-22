@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Глава Департамента корпоративной безопасности «Эленис»",
-  "birthdate": "12.04.2004",
+  "birthdate": "12.04",
   "faction": "Единая Америка",
   "subfaction": "Парфюмерная компания «Эленис»",
   "location": "Единая Америка",
@@ -38,5 +38,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B9368955-4729-4C0C-A767-EA30686F2B42.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/CFABE759-81CF-4D1F-A86B-46836766A6AB.jpeg",
   "tier": "elite",
-  "exported_at": "2026-06-30T18:25:14.268Z"
+  "appearance": {
+    "height": 182,
+    "weight": 91,
+    "eye_color": "Голубые",
+    "hair_color": "Светло-русые",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:25:14.166Z"
 }
