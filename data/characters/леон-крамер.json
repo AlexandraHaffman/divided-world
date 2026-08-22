@@ -3,7 +3,7 @@
   "name": "Леон Крамер",
   "status": "Активен",
   "gender": "Мужской",
-  "role": "Председатель Стратегического Военного Совета, Командующий ССГВ",
+  "role": "Председатель Стратегического Военного Совета, Главнокомандующий ССГВ",
   "birthdate": "01.09",
   "faction": "Единая Америка",
   "subfaction": "Силы суверенитета и глобального влияния",
@@ -36,7 +36,7 @@
   "avatar": "Portrait_Cramer",
   "alt_avatar": "",
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/D8B4ED44-DD63-44A2-885F-8AD7CA4BFC54.png",
-  "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/63012A85-1611-4180-B38A-1F58B637CDEC.png",
+  "avatar_web_full": "https://alexandrahaffman.github.io/divided-world/data/images/characters/63012A85-1611-4180-B38A-1F58B637CDEC.png",
   "tier": "elite",
   "appearance": {
     "height": 181,
@@ -46,5 +46,5 @@
     "bust_size": null,
     "marks": ""
   },
-  "exported_at": "2026-07-30T16:50:31.123Z"
+  "exported_at": "2026-08-22T05:34:42.670Z"
 }
