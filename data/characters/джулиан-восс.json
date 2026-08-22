@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Главный судмедэксперт и консультант Минздрава",
-  "birthdate": "23.01.2014",
+  "birthdate": "23.01",
   "faction": "Единая Америка",
   "subfaction": "Министерство здравоохранения",
   "location": "Восточный регион",
@@ -14,7 +14,7 @@
     "Личный токсиколог"
   ],
   "abilities": [
-    "Создание невидимых ядов",
+    "Создание ядов",
     "Фальсификация медицинских экспертиз",
     "Биохимическая инженерия"
   ],
@@ -38,5 +38,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/8D663F65-D8AA-4202-B7A0-7E509DDD9FAF.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/E0533A9D-0E18-4897-B259-86E4D727CF20.jpeg",
   "tier": "elite",
-  "exported_at": "2026-07-01T12:54:48.438Z"
+  "appearance": {
+    "height": 185,
+    "weight": 80,
+    "eye_color": "Серые",
+    "hair_color": "Чёрные",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:23:12.678Z"
 }
