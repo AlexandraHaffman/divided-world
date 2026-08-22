@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Защитник территорий культа",
-  "birthdate": "21.12.2003",
+  "birthdate": "21.12",
   "faction": "Отражение бездны",
   "subfaction": "",
   "location": "Сибирские леса",
@@ -41,5 +41,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/D84D0460-0CD2-4484-833F-FC2CF489AC5A.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/4970BA6D-F4CF-4662-B2A6-3BDBED508E3F.jpeg",
   "tier": "elite",
-  "exported_at": "2026-07-07T19:09:31.727Z"
+  "appearance": {
+    "height": 180,
+    "weight": 81,
+    "eye_color": "Серые",
+    "hair_color": "Русые",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:36:23.716Z"
 }
