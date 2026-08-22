@@ -1,0 +1,40 @@
+name: Portrait link guard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/characters/**'
+      - 'data/portraits.json'
+      - 'data/images/characters/**'
+
+permissions:
+  contents: write
+
+jobs:
+  heal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check and heal portrait links
+        id: heal
+        run: node scripts/heal-portrait-links.mjs
+
+      - name: Commit auto-fixes
+        if: always() && steps.heal.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/characters data/portraits.json
+          git commit -m "fix: auto-heal regressed portrait links
+
+Portrait guard detected and restored avatar_web/avatar_web_full
+fields blanked or mis-extensioned by a re-export."
+          git push
