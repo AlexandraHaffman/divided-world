@@ -541,7 +541,7 @@ function joinNamesRu(names) {
   return names.slice(0, -1).join(", ") + " и " + names[names.length - 1];
 }
 
-const TIER_RANK = { divine: 0, mythical: 1, legendary: 2, epic: 3, rare: 4, common: 5 };
+const TIER_RANK = { divine: 0, mythical: 1, legendary: 2, epic: 3, elite: 4, rare: 5, common: 6 };
 
 /* Авто-вердикт словами: собираем ВСЕ сработавшие условия, перемешиваем,
    показываем до 5 — каждый раз с новой случайной формулировкой из банка.
@@ -627,8 +627,10 @@ async function autoVerdictLines(chars) {
 
   // разрыв тиров (например legendary против common)
   const tiers = chars.map(c => getTier(c));
-  const ranks = tiers.map(t => TIER_RANK[t] ?? 5);
+  const ranks = tiers.map(t => TIER_RANK[t] ?? 6);
   const minR = Math.min(...ranks), maxR = Math.max(...ranks);
+  /* Порог 2 = между тирами лежит хотя бы один целый тир. Смысл не зависит
+     от их количества, поэтому с появлением elite его менять не нужно. */
   if (maxR - minR >= 2) {
     const hiI = ranks.indexOf(minR), loI = ranks.indexOf(maxR);
     triggered.push({ cat: "tier_gap", slots: { highName: hiI, lowName: loI }, extra: { highTier: tiers[hiI].toUpperCase(), lowTier: tiers[loI].toUpperCase() } });

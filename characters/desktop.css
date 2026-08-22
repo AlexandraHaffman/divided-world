@@ -189,6 +189,8 @@
   .grid .char-card .card-top-bar { height: 3px; }
   .grid .char-card[data-tier="rare"] { border-width: 2px; }
   .grid .char-card[data-tier="rare"] .card-top-bar { height: 4px; }
+  .grid .char-card[data-tier="elite"] { border-width: 2.25px; }
+  .grid .char-card[data-tier="elite"] .card-top-bar { height: 4.5px; }
   .grid .char-card[data-tier="epic"] { border-width: 2.5px; }
   .grid .char-card[data-tier="epic"] .card-top-bar { height: 5px; }
   .grid .char-card[data-tier="legendary"] {
@@ -416,6 +418,10 @@
      = 72vh; остальные тиры увеличены на тот же множитель (~6.5%). */
   .c-card { --cw: min(410px, 36.1vh); width: var(--cw); max-width: var(--cw); }
   .c-card[data-tier="rare"]      { --cw: min(454px, 39.9vh); }
+  /* elite встал внутрь бывшего шага rare→epic: его ширина — среднее
+     геометрическое соседей, поэтому крайние точки лестницы (common 410 и
+     divine 820, ровно в два раза) остались на месте. */
+  .c-card[data-tier="elite"]     { --cw: min(482px, 42.4vh); }
   .c-card[data-tier="epic"]      { --cw: min(511px, 44.9vh); }
   .c-card[data-tier="legendary"] { --cw: min(576px, 50.7vh); }
   .c-card[data-tier="mythical"]  { --cw: min(670px, 59.1vh); }
@@ -485,6 +491,7 @@
 
   /* тир-обводки под увеличенный масштаб */
   .c-card[data-tier="rare"]      { outline-width: 1.5px;  outline-offset: 3px; }
+  .c-card[data-tier="elite"]     { outline-width: 1.75px; outline-offset: 3.5px; }
   .c-card[data-tier="epic"]      { outline-width: 2px;    outline-offset: 4px; }
   .c-card[data-tier="legendary"] { outline-width: 2.25px; outline-offset: 5px; }
   .c-card[data-tier="mythical"]  { outline-width: 2.75px; outline-offset: 6px; }

@@ -207,6 +207,11 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .char-card[data-tier="common"] .card-top-bar{height:2px;opacity:0.6;}
 .char-card[data-tier="rare"]{border-color:rgba(var(--cr),0.35);}
 .char-card[data-tier="rare"] .card-top-bar{height:3px;opacity:0.85;}
+/* elite — ступень между rare и epic. Намеренно без .tier-corners: уголки
+   остаются признаком «epic и выше», поэтому elite читается как усиленный
+   rare, а не как ослабленный epic. */
+.char-card[data-tier="elite"]{border-color:rgba(var(--cr),0.42);}
+.char-card[data-tier="elite"] .card-top-bar{height:3.5px;opacity:0.92;}
 .char-card[data-tier="epic"]{border-color:rgba(var(--cr),0.5);}
 .char-card[data-tier="epic"] .card-top-bar{height:4px;opacity:1;}
 .char-card[data-tier="epic"] .tier-corners{opacity:0.7;}
@@ -503,6 +508,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .c-back-meta-val{font-size:11px;font-weight:600;color:var(--white);}
 
 .c-card[data-tier="rare"]{outline:1px solid rgba(var(--cr),0.12);outline-offset:2px;}
+.c-card[data-tier="elite"]{outline:1px solid rgba(var(--cr),0.16);outline-offset:2.5px;}
 .c-card[data-tier="epic"]{outline:1px solid rgba(var(--cr),0.2);outline-offset:3px;}
 .c-card[data-tier="legendary"]{outline:1px solid rgba(var(--cr),0.3);outline-offset:3px;animation:legendaryGlow 7s ease-in-out infinite;}
 .c-card[data-tier="mythical"]{outline:1.5px solid rgba(var(--cr),0.42);outline-offset:3.25px;animation:mythicalGlow 5.5s ease-in-out infinite;}

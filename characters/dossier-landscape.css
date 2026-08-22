@@ -105,6 +105,11 @@
   height: 3px; opacity: 0.9;
 }
 
+/* elite — без рамки-уголков: она начинается с epic (см. ниже) */
+.dossier-overlay[data-tier="elite"] .dossier-faction-bar {
+  height: 3.5px; opacity: 0.95;
+}
+
 .dossier-overlay[data-tier="epic"] .dossier-art::before {
   content: '';
   position: absolute; inset: 0;
