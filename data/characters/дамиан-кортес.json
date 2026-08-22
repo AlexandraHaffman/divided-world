@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Командующий Скандинавским фронтом",
-  "birthdate": "22.09.2027",
+  "birthdate": "22.09",
   "faction": "Тенебрион",
   "subfaction": "",
   "location": "Скандинавский экзархат",
@@ -40,5 +40,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/B2E17DCF-B3DC-49D7-9059-66CB1AEC6B5F.jpeg",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/D8E4C581-935C-4102-9FAE-17EF7119AC0C.jpeg",
   "tier": "elite",
-  "exported_at": "2026-07-16T15:10:57.268Z"
+  "appearance": {
+    "height": 183,
+    "weight": 96,
+    "eye_color": "Карие",
+    "hair_color": "Чёрные",
+    "bust_size": null,
+    "marks": ""
+  },
+  "exported_at": "2026-08-22T05:32:08.966Z"
 }
