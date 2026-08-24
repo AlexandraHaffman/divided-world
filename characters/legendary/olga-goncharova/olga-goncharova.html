@@ -18,14 +18,25 @@
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;overflow-x:hidden;position:relative;}
+body{margin:0;color:var(--ink);font-family:'Share Tech Mono',monospace;overflow-x:hidden;position:relative;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse 120% 55% at 50% -8%, rgba(var(--act1),0.05), transparent 60%),
+    radial-gradient(ellipse 90% 50% at 8% 105%, rgba(var(--act2),0.045), transparent 58%),
+    radial-gradient(ellipse 75% 45% at 96% 30%, rgba(var(--act3),0.04), transparent 55%),
+    linear-gradient(180deg, #0e0f10 0%, #0a0b0c 45%, #060708 100%);
+  background-attachment:fixed;}
 .locked body{overflow:hidden;}
 .locked .shell{visibility:hidden;}
 img{display:block;width:100%;height:100%;object-fit:cover;}
 button{font:inherit;}
 
+/* лёгкое бумажное зерно поверх градиента — архивная, не «просто чёрная» подложка */
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0.5;
   background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 4px);}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/></svg>");
+  background-size:180px 180px;}
 
 /* ══════════════════════ ЗАМОК: доступ по коду ══════════════════════ */
 .pin-gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:24px;
@@ -396,23 +407,38 @@ const Fracture = (function(){
     };
   }
 
-  function buildAnchors(W, H, count, rng){
-    // главная ось линии слева направо + вертикальный джиттер: неровный ход, не синусоида
-    const pts = [];
+  function buildAnchors(W, H, rng){
+    // высота узла = её tone (-1..1): подъём — плюс, спуск — минус.
+    // между узлами — линейная интерполяция + лёгкая шероховатость скола,
+    // а не независимый случайный обход (иначе график не читался бы как график).
     const mid = H / 2;
-    let cross = mid + (rng() - 0.5) * H * 0.12;
-    let drift = 0;
-    for (let i = 0; i < count; i++) {
-      const t = i / (count - 1);
-      const main = 24 + t * (W - 48);
-      drift += (rng() - 0.5) * H * 0.09;
-      drift = Math.max(-H * 0.22, Math.min(H * 0.22, drift));
-      const jag = (rng() - 0.5) * H * (i % 2 === 0 ? 0.05 : 0.11);
-      cross = mid + drift + jag;
-      cross = Math.max(H * 0.08, Math.min(H * 0.92, cross));
-      pts.push({ x: main, y: cross });
+    const amp = H * 0.32;
+    const perGap = 3;
+    const n = chapters.length;
+
+    const nodeY = chapters.map(ch => {
+      const tone = Math.max(-1, Math.min(1, typeof ch.tone === 'number' ? ch.tone : 0));
+      const y = mid - tone * amp + (rng() - 0.5) * H * 0.04;
+      return Math.max(H * 0.1, Math.min(H * 0.9, y));
+    });
+    const nodeX = chapters.map((_, i) => 24 + (n > 1 ? i / (n - 1) : 0) * (W - 48));
+
+    const pts = [];
+    const nodeIdxInPts = [];
+    for (let i = 0; i < n; i++) {
+      nodeIdxInPts.push(pts.length);
+      pts.push({ x: nodeX[i], y: nodeY[i] });
+      if (i < n - 1) {
+        for (let g = 1; g <= perGap; g++) {
+          const t = g / (perGap + 1);
+          const x = nodeX[i] + t * (nodeX[i + 1] - nodeX[i]);
+          const yBase = nodeY[i] + t * (nodeY[i + 1] - nodeY[i]);
+          const rough = (rng() - 0.5) * H * 0.05;
+          pts.push({ x, y: Math.max(H * 0.04, Math.min(H * 0.96, yBase + rough)) });
+        }
+      }
     }
-    return pts;
+    return { pts, nodeIdxInPts };
   }
 
   function buildShards(W, H, rng){
@@ -445,17 +471,14 @@ const Fracture = (function(){
     const H = wrap.clientHeight || 500;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-    const rng = mulberry32(20610918); // фиксированный сид — форма линии стабильна между загрузками
+    const rng = mulberry32(20610918); // фиксированный сид — шероховатость скола стабильна между загрузками, высота узлов — от tone
 
-    // главы + микро-джиттер между ними для неровного, но не хаотичного хода
-    const perGap = 3;
-    const totalAnchors = (chapters.length - 1) * perGap + chapters.length;
-    const rawAnchors = buildAnchors(W, H, totalAnchors, rng);
+    const { pts: rawAnchors, nodeIdxInPts } = buildAnchors(W, H, rng);
 
     anchors = rawAnchors;
     nodes = [];
     for (let i = 0; i < chapters.length; i++) {
-      const idx = i * perGap + i; // индекс узла-главы в массиве anchors
+      const idx = nodeIdxInPts[i];
       nodes.push({ chapter: chapters[i], x: rawAnchors[idx].x, y: rawAnchors[idx].y, idx });
     }
 
@@ -484,7 +507,7 @@ const Fracture = (function(){
   function renderNodes(){
     nodesLayer.innerHTML = nodes.map((n, i) => `
       <g class="node" data-status="${n.chapter.status}" data-node-index="${i}" tabindex="0"
-         role="button" aria-label="Глава ${n.chapter.number}. ${n.chapter.title}"
+         role="button" aria-label="Глава ${n.chapter.number}${n.chapter.title ? '. ' + n.chapter.title : ''}"
          transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})">
         <circle class="node-halo" r="16"></circle>
         <circle class="node-core" r="4.5"></circle>
@@ -561,6 +584,7 @@ const Scene = (function(){
   let open_ = false;
 
   const ACT_RGB = { 1: '168,178,182', 2: '190,188,180', 3: '189,158,140' };
+  const ACT_TITLES = { 1: 'Прошлое её глазами', 2: 'Дела' };
 
   function isPortraitNow(){ return matchMedia('(orientation: portrait)').matches; }
 
@@ -584,16 +608,17 @@ const Scene = (function(){
 
     inner.innerHTML = `
       <div class="scene-eyebrow">
-        Акт ${ch.act} · ${ch.actTitle}
+        Акт ${ch.act} · ${ACT_TITLES[ch.act] || ''}
         <span class="scene-status">${statusLabel}</span>
       </div>
-      <div class="scene-title">${String(ch.number).padStart(2,'0')} — ${ch.title}</div>
+      <div class="scene-title">Глава ${String(ch.number).padStart(2,'0')}${ch.title ? '. ' + ch.title : ''}</div>
       <div class="scene-body">${bodyHtml}</div>
       <div class="scene-images">${imagesHtml}</div>
       <div class="latin-divider">memoria custodit veritatem</div>
       <div class="scene-foot">
         <span>Досье · Ольга Гончарова</span>
-        <span>Глава ${String(ch.number).padStart(2,'0')} / 15</span>
+        ${(ch.reveals && ch.reveals.length) ? `<span>Внутри: ${ch.reveals.join(', ')}</span>` : ''}
+        <span>Глава ${String(ch.number).padStart(2,'0')} / ${(CONTENT && CONTENT.chapters.length) || ch.number}</span>
       </div>`;
 
     inner.querySelectorAll('.scene-img-wrap').forEach(w => {
