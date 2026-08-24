@@ -96,10 +96,14 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opac
 #spineScroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;}
 #spineWrap{position:relative;height:64vh;min-height:420px;max-height:640px;}
 #fractureSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
-.fracture-main{fill:none;stroke:url(#fractureGrad);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
-.fracture-half{fill:none;stroke:url(#fractureGrad);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
+/* линия — как разметка маркером поверх архивного фото, не просто светлая
+   черта, которая теряется среди стеллажей и бликов на снимке */
+.fracture-main{fill:none;stroke:url(#fractureGrad);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 3px rgba(4,3,1,0.9)) drop-shadow(0 0 9px rgba(var(--ember),0.35));}
+.fracture-half{fill:none;stroke:url(#fractureGrad);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 3px rgba(4,3,1,0.9)) drop-shadow(0 0 9px rgba(var(--ember),0.35));
   transition:transform 0.6s cubic-bezier(.22,.8,.32,1),opacity 0.4s;}
-.fracture-shard{fill:none;stroke:rgba(var(--ready),0.14);stroke-width:1;stroke-linecap:round;}
+.fracture-shard{fill:none;stroke:rgba(var(--ember),0.22);stroke-width:1;stroke-linecap:round;}
 
 .node{cursor:pointer;}
 .node-halo{fill:rgba(var(--ready),0.05);transition:r 0.35s,fill 0.35s,filter 0.35s;}
@@ -249,9 +253,9 @@ footer.page-foot{text-align:center;padding:30px 16px 60px;font-size:9px;letter-s
       <svg id="fractureSvg" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="fractureGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="rgba(200,200,195,0.85)"/>
-            <stop offset="50%" stop-color="rgba(230,230,225,0.95)"/>
-            <stop offset="100%" stop-color="rgba(200,200,195,0.85)"/>
+            <stop offset="0%" stop-color="rgba(224,168,86,0.92)"/>
+            <stop offset="50%" stop-color="rgba(255,196,120,0.98)"/>
+            <stop offset="100%" stop-color="rgba(224,168,86,0.92)"/>
           </linearGradient>
           <filter id="heatWarp" x="-60%" y="-60%" width="220%" height="220%">
             <feTurbulence type="fractalNoise" baseFrequency="0.02 0.06" numOctaves="2" seed="7" result="turb">
