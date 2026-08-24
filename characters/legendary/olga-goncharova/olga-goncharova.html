@@ -34,6 +34,14 @@ button{font:inherit;}
 /* лёгкое бумажное зерно поверх градиента — архивная, не «просто чёрная» подложка */
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0.5;
   background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.012) 2px,rgba(255,255,255,0.012) 4px);}
+
+/* ── ФОН СТРАНИЦЫ: фото на всю высоту вьюпорта, градиент — резервный слой,
+   если файла ещё нет (без брони, без alert — просто не показываем img) ── */
+#pageBg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+#pageBg img{width:100%;height:100%;object-fit:cover;filter:saturate(0.55) contrast(1.05) brightness(0.6);opacity:0.8;}
+#pageBg.broken img{display:none;}
+#pageBg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(6,7,8,0.55) 0%,rgba(6,7,8,0.72) 45%,rgba(6,7,8,0.92) 100%);}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.5;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/></svg>");
   background-size:180px 180px;}
@@ -224,6 +232,8 @@ footer.page-foot{text-align:center;padding:30px 16px 60px;font-size:9px;letter-s
 
 <div class="shell">
 
+<div id="pageBg"><img id="pageBgImg" alt=""></div>
+
 <a class="exit-btn" href="../../index.html">✕ ВЫЙТИ</a>
 <button class="mute-btn" id="muteBtn" title="Звук">🔇</button>
 
@@ -302,6 +312,22 @@ footer.page-foot{text-align:center;padding:30px 16px 60px;font-size:9px;letter-s
       panel.classList.remove('denied'); void panel.offsetWidth; panel.classList.add('denied');
     }
   });
+})();
+
+/* ═══════════════════════ ФОН СТРАНИЦЫ: h/v по ориентации, мягкий fallback ═══════════════════════ */
+(function(){
+  const wrap = document.getElementById('pageBg');
+  const img = document.getElementById('pageBgImg');
+  const slug = 'olga-goncharova';
+  let resizeTimer = null;
+  function apply(){
+    const portrait = matchMedia('(orientation: portrait)').matches;
+    const src = portrait ? `${slug}-page-bg-v.jpg` : `${slug}-page-bg-h.jpg`;
+    if (img.getAttribute('src') !== src) { wrap.classList.remove('broken'); img.src = src; }
+  }
+  img.addEventListener('error', () => wrap.classList.add('broken'));
+  apply();
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(apply, 200); });
 })();
 
 /* ═══════════════════════ ЗВУК: 8 тем, кроссфейд, глобальный мьют ═══════════════════════ */
