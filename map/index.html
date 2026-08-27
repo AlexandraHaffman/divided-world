@@ -344,7 +344,10 @@
     border: 1px solid color-mix(in srgb, var(--fc) 50%, transparent);
     color: var(--fc);
     background: rgba(2,4,9,0.7);
+    text-decoration: none;
   }
+  a.lc-chip { cursor: pointer; }
+  a.lc-chip:hover { background: color-mix(in srgb, var(--fc) 20%, rgba(2,4,9,0.7)); }
   .lc-child {
     display: flex;
     align-items: center;
@@ -1021,6 +1024,16 @@ if (window.innerWidth <= 700){
 document.getElementById('fcClose').addEventListener('click', () => select(null));
 
 const INFLUENCE_MAX = 15;   // шкала влияния из справочника фракций, 1-15
+const CHAR_ARCHIVE = '../characters/index.html';
+
+// Слуг персонажа = имя файла в data/characters/ без .json: имя строчными
+// буквами, пробелы заменены на дефисы. Если досье с таким слугом нет
+// (например, «Верховный Эну» — титул, а не отдельный именованный
+// персонаж), ссылка просто открывает общий реестр — страница это
+// переживает штатно, см. openFromHash в characters/dossier.js.
+function charSlug(name){
+  return name.trim().toLowerCase().replace(/\s+/g, '-');
+}
 
 // Досье фракции: столица и статистика — короткими карточками, влияние —
 // шкалой (не числом в тексте), лидеры — отдельными фигурами, а не
@@ -1047,7 +1060,7 @@ function facCardHtml(f){
   if (f.leader){
     const names = f.leader.split(/,\s*/).filter(Boolean);
     h += `<div class="lc-row"><div class="lc-label">${names.length > 1 ? 'ЛИДЕРЫ' : 'ЛИДЕР'}</div><div class="lc-chips">${
-      names.map(n => `<span class="lc-chip">${esc(n)}</span>`).join('')}</div></div>`;
+      names.map(n => `<a class="lc-chip" href="${CHAR_ARCHIVE}#${encodeURIComponent(charSlug(n))}" target="_blank" rel="noopener">${esc(n)}</a>`).join('')}</div></div>`;
   }
   if (f.ideo) h += `<div class="fcard-ideo">${esc(f.ideo)}</div>`;
   if (!f.capital && !f.population && !f.area && !f.influence && !f.leader && !f.ideo){

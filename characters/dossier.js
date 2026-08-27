@@ -357,6 +357,7 @@ async function loadCharacters() {
     buildTierFilters();
     renderGrid(currentFiltered);
     document.getElementById("count-total").textContent = allChars.length;
+    openFromHash();
   } catch (e) {
     document.getElementById("grid").innerHTML =
       `<div class="empty-state">ОШИБКА: ${e.message}<br><br>Попробуйте обновить страницу через минуту.</div>`;
@@ -473,6 +474,20 @@ function closeDossier() {
   document.getElementById("dossier").classList.remove("open");
   document.body.style.overflow = "";
 }
+
+// Открыть досье по ссылке вида characters/index.html#слуг-персонажа —
+// так на персонажа ссылаются карточки фракций на карте. Слуг совпадает
+// с именем файла в data/characters/ (имя строчными буквами, пробелы
+// заменены на дефисы). Если слуга нет среди загруженных персонажей —
+// например, это не имя, а титул вроде «Верховный Эну» без досье, —
+// страница просто остаётся на общем реестре, без ошибки.
+function openFromHash() {
+  const slug = decodeURIComponent(location.hash.slice(1));
+  if (!slug) return;
+  const idx = allChars.findIndex(c => c._slug === slug);
+  if (idx >= 0) openDossier(idx);
+}
+window.addEventListener("hashchange", openFromHash);
 
 function attachCardEvents() {
   document.querySelectorAll(".char-card").forEach(el => {
