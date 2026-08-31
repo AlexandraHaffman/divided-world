@@ -219,6 +219,27 @@
   .fc-meter-label { font-size: 11.5px; color: var(--text); }
   .fc-meter-label b { font-family: var(--font-mono); color: var(--fc); font-weight: 700; }
   .fc-empty { font-size: 11.5px; line-height: 1.5; color: var(--text-dim); }
+  .fc-back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1.2px;
+    color: var(--fc);
+    opacity: .75;
+    cursor: pointer;
+    margin: -4px 0 8px;
+  }
+  .fc-back:hover { opacity: 1; }
+  .fc-sub {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 1.1px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin: -3px 0 9px;
+  }
+  .fc-reglist { margin-top: 10px; }
+  .fc-reglist .lc-chip { font-size: 8.5px; }
 
   /* ── КАРТОЧКА ЛОКАЦИИ ── */
   .loccard {
@@ -498,6 +519,8 @@
 <script src="data/factions.js"></script>
 <script src="data/factions-geo.js"></script>
 <script src="data/locations.js"></script>
+<script src="data/regions.js"></script>
+<script src="data/regions-geo.js"></script>
 <script>
 (function(){
 "use strict";
@@ -506,6 +529,17 @@
 // в factions-geo.js. Здесь они соединяются по ключу.
 const FAC_GEO  = window.FACTIONS_GEO || {};
 const FACTIONS = (window.FACTIONS_INFO || []).map(f => ({ ...f, polys: FAC_GEO[f.key] || [] }));
+// Регионы внутри фракций: текст правится руками в regions.js, очертания
+// собираются скриптом в regions-geo.js (см. map/tools/regions_build.py).
+const REG_GEO = window.REGIONS_GEO || {};
+const REGIONS = (window.REGIONS_INFO || []).map(r => {
+  const f = (window.FACTIONS_INFO || []).find(x => x.key === r.faction);
+  return { ...r, col: (f && f.col) || '#8fa8c8', polys: REG_GEO[r.key] || [] };
+}).filter(r => r.polys.length);
+// Внутренние линии между регионами лежат отдельно от самих полигонов:
+// обводить регион целиком нельзя, иначе побережье получит вторую границу
+// поверх границы фракции.
+const REG_BORDERS = window.REGIONS_BORDERS || {};
 const LAND     = window.LAND_DATA;   // [ [внешнее кольцо, дыра...], ... ], кольцо = [[lat,lon],...]
 const DEG = Math.PI / 180;
 const R_EARTH = 6371;                // км
@@ -528,6 +562,10 @@ function bounds(poly){
 }
 const LAND_BB = LAND.map(bounds);
 const FAC_BB = FACTIONS.map(f => (f.polys || []).map(bounds));
+const REG_BB = REGIONS.map(r => r.polys.map(bounds));
+// у линии границы кольцо одно — bounds ждёт список колец
+const REG_BORDER_BB = {};
+for (const key in REG_BORDERS) REG_BORDER_BB[key] = REG_BORDERS[key].map(l => bounds([l]));
 
 function pointInRing(lat, lon, ring){
   let inside = false;
@@ -562,6 +600,24 @@ function factionAt(lat, lon){
   return null;
 }
 
+// Регион ищется так же, как фракция, но список короче: регионы одной
+// фракции не перекрываются, поэтому первое попадание и есть ответ.
+function regionAt(lat, lon){
+  for (let ri = 0; ri < REGIONS.length; ri++){
+    const polys = REGIONS[ri].polys;
+    for (let pi = 0; pi < polys.length; pi++){
+      const bb = REG_BB[ri][pi];
+      if (lat < bb.laMin || lat > bb.laMax) continue;
+      for (const off of [-360, 0, 360]){
+        const L = lon + off;
+        if (L < bb.loMin || L > bb.loMax) continue;
+        if (pointInPoly(lat, L, polys[pi])) return REGIONS[ri];
+      }
+    }
+  }
+  return null;
+}
+
 // ═══════════════ ОТРИСОВКА КАРТЫ В ТЕКСТУРУ ═══════════════
 // Одна и та же функция рисует и общую текстуру всего мира, и «детальную»
 // текстуру только видимого окна — отличается лишь охват (rect).
@@ -569,7 +625,7 @@ function hexRgb(h){
   return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
 }
 
-function paintMap(c, W, H, rect, selectedKey, lineK){
+function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK){
   const loMin  = rect ? rect.loMin  : -180;
   const loSpan = rect ? rect.loSpan : 360;
   const laMin  = rect ? rect.laMin  : -90;
@@ -675,6 +731,66 @@ function paintMap(c, W, H, rect, selectedKey, lineK){
     c.fillStyle = `rgba(${r},${g},${b},${sel ? 0.38 : (hasSel ? 0.10 : 0.20)})`;
     for (const dx of offs){ tracePoly(poly, dx); c.fill('evenodd'); }
   }
+  // Выбранный регион подсвечивается поверх заливки своей фракции —
+  // так видно и его самого, и то, чьей частью он остаётся.
+  const selReg = selRegKey ? REGIONS.find(r => r.key === selRegKey) : null;
+  if (selReg){
+    const ri = REGIONS.indexOf(selReg);
+    const [r, g, b] = hexRgb(selReg.col);
+    for (let pi = 0; pi < selReg.polys.length; pi++){
+      const offs = offsetsFor(REG_BB[ri][pi]);
+      if (!offs) continue;
+      c.fillStyle = `rgba(${r},${g},${b},0.34)`;
+      for (const dx of offs){ tracePoly(selReg.polys[pi], dx); c.fill('evenodd'); }
+    }
+  }
+
+  // Границы регионов: та же линия, что у фракции, но вдвое тоньше и
+  // заметно бледнее — это деление внутри страны, а не её край.
+  for (const f of FACTIONS){
+    const lines = REG_BORDERS[f.key];
+    if (!lines || !lines.length) continue;
+    const bbs = REG_BORDER_BB[f.key];
+    const dim = hasSel && f.key !== selectedKey;
+    c.save();
+    c.strokeStyle = f.col;
+    c.lineJoin = 'round'; c.lineCap = 'round';
+    for (let pass = 0; pass < 2; pass++){
+      c.globalAlpha = pass ? (dim ? 0.30 : 0.58) : (dim ? 0.05 : 0.11);
+      c.lineWidth = (pass ? 1 : 3.2) * k;
+      for (let i = 0; i < lines.length; i++){
+        const offs = offsetsFor(bbs[i]);
+        if (!offs) continue;
+        const ln = lines[i];
+        for (const dx of offs){
+          c.beginPath();
+          for (let j = 0; j < ln.length; j++){
+            const x = X(ln[j][1]) + dx, y = Y(ln[j][0]);
+            j ? c.lineTo(x, y) : c.moveTo(x, y);
+          }
+          c.stroke();
+        }
+      }
+    }
+    c.restore();
+  }
+  // и обводка самого выбранного региона — уже в полную силу
+  if (selReg){
+    const ri = REGIONS.indexOf(selReg);
+    c.save();
+    c.strokeStyle = selReg.col;
+    for (let pass = 0; pass < 2; pass++){
+      c.globalAlpha = pass ? 0.95 : 0.16;
+      c.lineWidth = (pass ? 1.6 : 5) * k;
+      for (let pi = 0; pi < selReg.polys.length; pi++){
+        const offs = offsetsFor(REG_BB[ri][pi]);
+        if (!offs) continue;
+        for (const dx of offs){ tracePoly(selReg.polys[pi], dx); c.stroke(); }
+      }
+    }
+    c.restore();
+  }
+
   // Ширина свечения — в градусах. Раньше она была такой, что ореол шириной
   // ~100 км съедал мелкие острова целиком (Кипр превращался в кинжал).
   for (const [f, poly, offs] of facDraw){
@@ -702,9 +818,9 @@ const DET_MAX_TEXELS = 8e6;      // и потолок по площади, чт�
 const BORDER_MAX_PX = 5;
 const BORDER_REF_UNITS = 6;
 
-function buildTexture(selectedKey){
+function buildTexture(selectedKey, selRegKey){
   texCanvas.width = texSize; texCanvas.height = texSize / 2;
-  paintMap(texCanvas.getContext('2d'), texSize, texSize / 2, null, selectedKey);
+  paintMap(texCanvas.getContext('2d'), texSize, texSize / 2, null, selectedKey, selRegKey);
 }
 
 // ═══════════════ ЗВЁЗДНОЕ НЕБО (статичное, рисуется один раз) ═══════════════
@@ -984,7 +1100,7 @@ function updateDetail(){
   const lineK = Math.min(kDeg, BORDER_MAX_PX * texelPerPx / BORDER_REF_UNITS);
 
   detCanvas.width = w; detCanvas.height = h;
-  paintMap(detCanvas.getContext('2d'), w, h, rect, selectedKey, lineK);
+  paintMap(detCanvas.getContext('2d'), w, h, rect, selectedKey, selectedRegKey, lineK);
 
   gl.activeTexture(gl.TEXTURE1);
   gl.bindTexture(gl.TEXTURE_2D, detTex);
@@ -1003,6 +1119,7 @@ const legend = document.getElementById('legend');
 const legendBody = document.getElementById('legendBody');
 const fcard = document.getElementById('fcard');
 let selectedKey = null;
+let selectedRegKey = null;
 
 for (const f of FACTIONS){
   const it = document.createElement('div');
@@ -1072,16 +1189,72 @@ function facCardHtml(f){
       names.map(n => `<a class="lc-chip" href="${CHAR_ARCHIVE}#${encodeURIComponent(charSlug(n))}" target="_blank" rel="noopener">${esc(n)}</a>`).join('')}</div></div>`;
   }
   if (f.ideo) h += `<div class="fcard-ideo">${esc(f.ideo)}</div>`;
+  const regs = REGIONS.filter(r => r.faction === f.key);
+  if (regs.length){
+    h += `<div class="lc-row fc-reglist"><div class="lc-label">РЕГИОНЫ — ${regs.length}</div><div class="lc-chips">${
+      regs.map(r => `<a class="lc-chip" data-reg="${r.key}">${esc(r.name)}</a>`).join('')}</div></div>`;
+  }
   if (!f.capital && !f.population && !f.area && !f.influence && !f.leader && !f.ideo){
     h += '<div class="fc-empty">Досье не составлено — территория не имеет задокументированного центрального управления.</div>';
   }
   return h;
 }
 
+// Досье региона: та же карточка, что у фракции, но своим набором строк.
+// Показывается только заполненное — остальное ждёт, пока допишут.
+function regCardHtml(r){
+  const fac = FACTIONS.find(f => f.key === r.faction);
+  let h = `<div class="fcard-head"><div class="fcard-dot"></div><div class="fcard-name">${esc(r.name)}</div></div>`;
+  if (fac) h += `<a class="fc-back" data-fac="${esc(fac.key)}">◂ ${esc(fac.name)}</a>`;
+  if (r.status) h += `<div class="fc-sub">${esc(r.status)}</div>`;
+  if (r.capital) h += `<div class="lc-row"><div class="lc-label">СТОЛИЦА РЕГИОНА</div><div class="lc-value">${esc(r.capital)}</div></div>`;
+  if (r.population || r.area){
+    h += '<div class="fc-stats">';
+    if (r.population) h += `<div class="fc-stat"><div class="fc-stat-label">НАСЕЛЕНИЕ</div><div class="fc-stat-value">${esc(r.population)}</div></div>`;
+    if (r.area) h += `<div class="fc-stat"><div class="fc-stat-label">ПЛОЩАДЬ</div><div class="fc-stat-value">${esc(r.area)}</div></div>`;
+    h += '</div>';
+  }
+  if (r.areaNote) h += `<div class="fc-note">${esc(r.areaNote)}</div>`;
+  if (r.governor){
+    const names = r.governor.split(/,\s*/).filter(Boolean);
+    h += `<div class="lc-row"><div class="lc-label">${names.length > 1 ? 'НАМЕСТНИКИ' : 'НАМЕСТНИК'}</div><div class="lc-chips">${
+      names.map(n => `<a class="lc-chip" href="${CHAR_ARCHIVE}#${encodeURIComponent(charSlug(n))}" target="_blank" rel="noopener">${esc(n)}</a>`).join('')}</div></div>`;
+  }
+  for (const [label, val] of [['ХОЗЯЙСТВО', r.economy], ['ОБОРОНА', r.defense]]){
+    if (val) h += `<div class="lc-row"><div class="lc-label">${label}</div><div class="lc-value">${esc(val)}</div></div>`;
+  }
+  if (r.cities && r.cities.length){
+    h += `<div class="lc-row"><div class="lc-label">ГОРОДА</div><div class="lc-chips">${
+      r.cities.map(n => `<span class="lc-chip">${esc(n)}</span>`).join('')}</div></div>`;
+  }
+  if (r.desc) h += `<div class="fcard-ideo">${esc(r.desc)}</div>`;
+  if (!r.status && !r.population && !r.governor && !r.economy && !r.defense && !r.desc){
+    h += '<div class="fc-empty">Досье региона ещё не составлено.</div>';
+  }
+  return h;
+}
+
+// Ссылки внутри карточки ведут не наружу, а по самой карте: чип региона
+// выбирает регион, стрелка наверху возвращает к досье фракции.
+function bindCardLinks(){
+  fcard.querySelectorAll('[data-reg]').forEach(el =>
+    el.addEventListener('click', () => selectRegion(el.dataset.reg, true)));
+  fcard.querySelectorAll('[data-fac]').forEach(el =>
+    el.addEventListener('click', () => select(el.dataset.fac, false)));
+}
+
 function openCard(f){
   fcard.style.setProperty('--fc', f.col);
   document.getElementById('fcBody').innerHTML = facCardHtml(f);
   fcard.classList.add('open');
+  bindCardLinks();
+}
+
+function openRegionCard(r){
+  fcard.style.setProperty('--fc', r.col);
+  document.getElementById('fcBody').innerHTML = regCardHtml(r);
+  fcard.classList.add('open');
+  bindCardLinks();
 }
 
 function shortestAngle(from, to){
@@ -1098,20 +1271,26 @@ function flyToLL(lat, lon, minZoom){
   dirty = true;
 }
 
-function refreshTexture(key){
+function refreshTexture(){
+  const key = (selectedKey || '') + '|' + (selectedRegKey || '');
   if (refreshTexture._last === key) return;
   refreshTexture._last = key;
-  buildTexture(key);
+  buildTexture(selectedKey, selectedRegKey);
   uploadTexture();
   detRect = null;   // детальное окно тоже устарело
   dirty = true;
 }
 
+function syncLegend(){
+  legendBody.querySelectorAll('.l-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.key === selectedKey));
+}
+
 function select(key, fly){
   const f = key ? FACTIONS.find(x => x.key === key) : null;
   selectedKey = f ? key : null;
-  legendBody.querySelectorAll('.l-item').forEach(el =>
-    el.classList.toggle('active', el.dataset.key === selectedKey));
+  selectedRegKey = null;
+  syncLegend();
   if (f){
     closeLoc();
     openCard(f);
@@ -1119,7 +1298,21 @@ function select(key, fly){
   } else {
     fcard.classList.remove('open');
   }
-  refreshTexture(selectedKey);
+  refreshTexture();
+}
+
+// Выбор региона подсвечивает и его фракцию: регион показывается не сам
+// по себе, а куском своей страны.
+function selectRegion(key, fly){
+  const r = REGIONS.find(x => x.key === key);
+  if (!r){ select(null); return; }
+  selectedRegKey = r.key;
+  selectedKey = r.faction;
+  syncLegend();
+  closeLoc();
+  openRegionCard(r);
+  if (fly) flyToLL(r.clat != null ? r.clat : 0, r.clon != null ? r.clon : 0, baseR * 2.2);
+  refreshTexture();
 }
 
 // ═══════════════ МАСШТАБНАЯ ЛИНЕЙКА ═══════════════
@@ -1535,8 +1728,13 @@ inputEl.addEventListener('pointerup', e => {
       } else {
         closeLoc();
         const ll = unproject(mx, my, viewMatrix());
-        const f = ll ? factionAt(ll.lat, ll.lon) : null;
-        select(f ? f.key : null, false);
+        const reg = ll ? regionAt(ll.lat, ll.lon) : null;
+        if (reg){
+          selectRegion(reg.key, false);
+        } else {
+          const f = ll ? factionAt(ll.lat, ll.lon) : null;
+          select(f ? f.key : null, false);
+        }
       }
     }
   }
@@ -1570,7 +1768,7 @@ function start(){
   const shortPx = Math.min(screen.width, screen.height) * (window.devicePixelRatio || 1);
   texSize = Math.min(shortPx < 700 ? 2048 : 4096, maxTex);
   detMax = Math.min(4096, maxTex);
-  buildTexture(null);
+  buildTexture(null, null);
   uploadTexture();
   updateScale();
   requestAnimationFrame(frame);

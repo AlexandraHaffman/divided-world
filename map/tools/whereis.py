@@ -2,9 +2,10 @@
 """
 Проверка координат для карты «Разделённого мира».
 
-Отвечает на два вопроса по каждой точке:
+Отвечает на три вопроса по каждой точке:
   1. попала ли она на сушу (land.js)
   2. на территорию какой фракции (factions-geo.js)
+  3. в какой её регион, если у фракции они есть (regions-geo.js)
 
 Использование:
     python3 map/tools/whereis.py "Вена,48.21,16.37" "Каир,30.04,31.24"
@@ -22,9 +23,12 @@ DATA = os.environ.get("DW_MAP_DATA") or os.path.normpath(
 
 def load_js_object(path, varname):
     s = open(path, encoding="utf-8").read()
-    i = s.index(varname)
-    j = s.index("=", i) + 1
-    return json.loads(s[j:].strip().rstrip(";"))
+    # значение бывает и объектом, и списком; в файле их может лежать
+    # несколько подряд, поэтому берём ровно одно, а не всё до конца файла
+    j = s.index("=", s.index(varname)) + 1
+    while s[j] in " \t\r\n":
+        j += 1
+    return json.JSONDecoder().raw_decode(s, j)[0]
 
 
 def point_in_ring(lat, lon, ring):
@@ -62,6 +66,18 @@ class World:
             self.land = load_js_object(f"{DATA}/land.js", "window.LAND_DATA")
         except Exception:
             self.land = None
+        # регионы необязательны: их может не быть вовсе
+        try:
+            self.reg = load_js_object(f"{DATA}/regions-geo.js", "window.REGIONS_GEO")
+        except Exception:
+            self.reg = {}
+        self.reg_name = {}
+        try:
+            src = open(f"{DATA}/regions.js", encoding="utf-8").read()
+            for key, name in re.findall(r'key:\s*"([^"]+)"[^}]*?name:\s*"([^"]+)"', src):
+                self.reg_name.setdefault(key, name)
+        except Exception:
+            pass
         # быстрые bbox
         self.bbox = {}
         for k, polys in self.geo.items():
@@ -72,6 +88,26 @@ class World:
                         lats.append(p[0]); lons.append(p[1])
             if lats:
                 self.bbox[k] = (min(lats), max(lats), min(lons), max(lons))
+        self.reg_bbox = {}
+        for k, polys in self.reg.items():
+            lats, lons = [], []
+            for poly in polys:
+                for ring in poly:
+                    for p in ring:
+                        lats.append(p[0]); lons.append(p[1])
+            if lats:
+                self.reg_bbox[k] = (min(lats), max(lats), min(lons), max(lons))
+
+    def region(self, lat, lon):
+        for k, polys in self.reg.items():
+            b = self.reg_bbox.get(k)
+            if not b:
+                continue
+            if not (b[0] - .5 <= lat <= b[1] + .5 and b[2] - .5 <= lon <= b[3] + .5):
+                continue
+            if point_in_polys(lat, lon, polys):
+                return self.reg_name.get(k, k)
+        return ""
 
     def faction(self, lat, lon):
         hits = []
@@ -110,6 +146,12 @@ class World:
             notes.append(f"пересечение: {'/'.join(facs)}")
         return ok, got, land, "; ".join(notes)
 
+    def where(self, lat, lon):
+        """строка «фракция / регион» для показа"""
+        facs = self.faction(lat, lon)
+        reg = self.region(lat, lon) if facs else ""
+        return (facs[0] if facs else "(ничья)") + (f" / {reg}" if reg else "")
+
 
 def main():
     w = World()
@@ -128,7 +170,8 @@ def main():
             flag = "  " if ok and not notes else "!!"
             if not ok or notes:
                 bad += 1
-            print(f"{flag} {name:32s} {typ:17s} {fac:12s} {lat:>7s},{lon:>8s}  {notes}")
+            reg = w.region(float(lat), float(lon))
+            print(f"{flag} {name:28s} {typ:17s} {fac:12s} {reg:22s} {lat:>7s},{lon:>8s}  {notes}")
         print(f"\nвсего {len(blocks)}, с замечаниями {bad}")
         return
 
@@ -146,7 +189,9 @@ def main():
         expect = parts[3] if len(parts) > 3 else None
         ok, got, land, notes = w.check(name, lat, lon, expect)
         landtxt = "суша" if land else ("МОРЕ" if land is False else "?")
-        print(f"{name:32s} {lat:7.3f},{lon:9.3f}  {landtxt:5s} -> {got or '(ничья)':12s} {notes}")
+        reg = w.region(lat, lon) if got else ""
+        where = (got or "(ничья)") + (f" / {reg}" if reg else "")
+        print(f"{name:26s} {lat:7.3f},{lon:9.3f}  {landtxt:5s} -> {where:32s} {notes}")
 
 
 if __name__ == "__main__":
