@@ -262,17 +262,73 @@
   .fc-meter-label { font-size: 11.5px; color: var(--text); }
   .fc-meter-label b { font-family: var(--font-mono); color: var(--fc); font-weight: 700; }
   .fc-empty { font-size: 11.5px; line-height: 1.5; color: var(--text-dim); }
-  .fc-back {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 1.2px;
-    color: var(--fc);
-    opacity: .75;
-    cursor: pointer;
-    margin: -4px 0 8px;
+  /* Свёрнутая шапка фракции над досье региона: сама раскрывается по клику
+     (нативный details/summary, как «ПОЛНОЕ ДОСЬЕ» у локаций), поэтому
+     никакой отдельной логики выбора не требует — это не переход, а
+     разворачивание текста на месте. */
+  .fcard-fold {
+    margin: -2px 0 13px;
+    border: 1px solid color-mix(in srgb, var(--fc) 24%, transparent);
+    border-radius: 3px;
+    background: rgba(2,4,9,0.5);
   }
-  .fc-back:hover { opacity: 1; }
+  .fcard-fold summary {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 9px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .fcard-fold summary::-webkit-details-marker { display: none; }
+  .fcard-fold:hover summary { background: color-mix(in srgb, var(--fc) 8%, transparent); }
+  .fcard-fold[open] summary {
+    border-bottom: 1px solid color-mix(in srgb, var(--fc) 16%, transparent);
+  }
+  .fcard-fold-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--fc);
+    box-shadow: 0 0 5px var(--fc);
+    flex-shrink: 0;
+  }
+  .fcard-fold-name {
+    font-family: var(--font-display);
+    font-size: 10.5px;
+    letter-spacing: 1.1px;
+    color: var(--fc);
+    text-transform: uppercase;
+    opacity: .9;
+  }
+  .fcard-fold-chev {
+    margin-left: auto;
+    font-size: 9px;
+    color: var(--text-dim);
+    transition: transform .15s ease;
+  }
+  .fcard-fold[open] .fcard-fold-chev { transform: rotate(90deg); }
+  .fcard-fold-body { padding: 9px 9px 3px; }
+  .fc-photos {
+    margin: 14px -12px -12px;
+    overflow: hidden;
+    border-top: 1px solid color-mix(in srgb, var(--fc) 18%, transparent);
+  }
+  .fc-photos-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .fc-photos-track::-webkit-scrollbar { display: none; }
+  .fc-photo {
+    flex: 0 0 100%;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    scroll-snap-align: start;
+    background: rgba(2,4,9,0.8);
+  }
   .fc-sub {
     font-family: var(--font-mono);
     font-size: 9.5px;
@@ -1185,6 +1241,7 @@ document.getElementById('fcClose').addEventListener('click', () => select(null))
 
 const INFLUENCE_MAX = 15;   // шкала влияния из справочника фракций, 1-15
 const CHAR_ARCHIVE = '../characters/index.html';
+const REGION_PHOTO_DIR = '../data/images/regions/';
 
 // Слуг персонажа = имя файла в data/characters/ без .json: имя строчными
 // буквами, пробелы заменены на дефисы. Если в карточке фракции лидер
@@ -1208,8 +1265,12 @@ function charSlug(name){
 // шкалой (не числом в тексте), лидеры — отдельными фигурами, а не
 // перечислением через запятую. У фракций без единого командования
 // (Белая зона) все поля пустые — вместо досье показывается пояснение.
-function facCardHtml(f){
-  let h = `<div class="fcard-head"><div class="fcard-dot"></div><div class="fcard-name">${esc(f.name)}</div></div>`;
+function facCardHtml(f, skipHead){
+  // skipHead — вложенный показ досье фракции под её же свёрнутой шапкой
+  // (см. openRegionCard): имя фракции там уже стоит в самом summary,
+  // повторять его отдельным заголовком внутри незачем.
+  let h = skipHead ? '' :
+    `<div class="fcard-head"><div class="fcard-dot"></div><div class="fcard-name">${esc(f.name)}</div></div>`;
   if (f.capital){
     h += `<div class="lc-row"><div class="lc-label">СТОЛИЦА</div><div class="lc-value">${esc(f.capital)}</div></div>`;
   }
@@ -1246,9 +1307,7 @@ function facCardHtml(f){
 // Досье региона: та же карточка, что у фракции, но своим набором строк.
 // Показывается только заполненное — остальное ждёт, пока допишут.
 function regCardHtml(r){
-  const fac = FACTIONS.find(f => f.key === r.faction);
   let h = `<div class="fcard-head"><div class="fcard-dot"></div><div class="fcard-name">${esc(r.name)}</div></div>`;
-  if (fac) h += `<a class="fc-back" data-fac="${esc(fac.key)}">◂ ${esc(fac.name)}</a>`;
   if (r.status) h += `<div class="fc-sub">${esc(r.status)}</div>`;
   if (r.capital) h += `<div class="lc-row"><div class="lc-label">СТОЛИЦА РЕГИОНА</div><div class="lc-value">${esc(r.capital)}</div></div>`;
   if (r.population || r.area){
@@ -1274,16 +1333,24 @@ function regCardHtml(r){
   if (!r.status && !r.population && !r.governor && !r.economy && !r.defense && !r.desc){
     h += '<div class="fc-empty">Досье региона ещё не составлено.</div>';
   }
+  // Фото — одно или несколько (photos: [...]), внизу досье, во всю ширину.
+  // Файла нет — картинка просто не появится, без сломанной рамки.
+  const shots = r.photos && r.photos.length ? r.photos : (r.photo ? [r.photo] : []);
+  if (shots.length){
+    h += '<div class="fc-photos"><div class="fc-photos-track">' + shots.map(src =>
+      `<img class="fc-photo" src="${REGION_PHOTO_DIR}${encodeURIComponent(src)}" alt="" loading="lazy" onerror="this.remove()">`
+    ).join('') + '</div></div>';
+  }
   return h;
 }
 
 // Ссылки внутри карточки ведут не наружу, а по самой карте: чип региона
-// выбирает регион, стрелка наверху возвращает к досье фракции.
+// выбирает регион (в том числе из свёрнутого досье фракции — см.
+// openRegionCard, оно вложено в ту же карточку и попадает под тот же
+// querySelectorAll).
 function bindCardLinks(){
   fcard.querySelectorAll('[data-reg]').forEach(el =>
     el.addEventListener('click', () => selectRegion(el.dataset.reg, true)));
-  fcard.querySelectorAll('[data-fac]').forEach(el =>
-    el.addEventListener('click', () => select(el.dataset.fac, false)));
 }
 
 function openCard(f){
@@ -1293,9 +1360,23 @@ function openCard(f){
   bindCardLinks();
 }
 
+// Досье региона плюс, сверху, свёрнутая шапка его фракции: раньше клик по
+// территории державы открывал именно её досье, а с приходом регионов та
+// же точка попадает уже внутрь конкретного региона. Чтобы фракция не
+// потерялась, её карточка никуда не уехала — она здесь же, просто
+// свёрнута под «summary» и разворачивается на месте по клику.
 function openRegionCard(r){
   fcard.style.setProperty('--fc', r.col);
-  document.getElementById('fcBody').innerHTML = regCardHtml(r);
+  const fac = FACTIONS.find(f => f.key === r.faction);
+  let h = '';
+  if (fac){
+    h += `<details class="fcard-fold"><summary>
+      <div class="fcard-fold-dot"></div><div class="fcard-fold-name">${esc(fac.name)}</div>
+      <div class="fcard-fold-chev">▸</div>
+    </summary><div class="fcard-fold-body">${facCardHtml(fac, true)}</div></details>`;
+  }
+  h += regCardHtml(r);
+  document.getElementById('fcBody').innerHTML = h;
   fcard.classList.add('open');
   bindCardLinks();
 }
