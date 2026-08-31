@@ -289,7 +289,18 @@ def cut_regions(area, templates):
             for a in getattr(arcs, 'geoms', [arcs])]
     arcs = [a for a in arcs if len(a.coords) >= 2 and a.length > 0]
 
-    # 2. свободные концы (те, что упираются в берег) продлеваем за берег:
+    # 2. свободные концы (те, что упираются в берег) продлеваем за берег —
+    #    только чтобы линия дорезала территорию до самого края, не больше.
+    #    Направление продления берётся из последнего отрезка дуги, а у
+    #    стыков трёх и более регионов оно иногда указывает не в сторону
+    #    ближайшего берега, а вглубь чужой территории (эти пары дуг сами
+    #    сходятся не бит-в-бит, потому и остаются «свободными» вместо
+    #    обычного узла). Итоговые полигоны регионов это не портит —
+    #    каждая грань после разрезания приписывается региону заново по
+    #    содержащему её образцу, — но саму линию продления в отрисовку
+    #    брать нельзя, ею и рисуются лишние «усы» через чужую территорию.
+    #    Поэтому линии для отрисовки берутся отдельно, в конце функции,
+    #    из уже готовых, проверенных полигонов регионов.
     #    линия, не дошедшая до края территории, ничего не разрежет
     def node(pt):
         return (round(pt[0], 9), round(pt[1], 9))
@@ -338,8 +349,33 @@ def cut_regions(area, templates):
         bucket[tkeys[idx]].append(f)
 
     regions = {k: unary_union(v) for k, v in bucket.items() if v}
-    inner = unary_union([a.intersection(area) for a in arcs])
-    return regions, inner
+    return regions, region_borders(regions)
+
+
+def region_borders(regions):
+    """Линии для отрисовки: там, где два готовых полигона регионов реально
+    соприкасаются. В отличие от продлённых дуг разрезания, тут нечему
+    продлеваться и некуда убегать — общий край двух уже посчитанных
+    полигонов сам обрывается именно там, где кончается на самом деле:
+    на берегу или в стыке с третьим регионом."""
+    from shapely.ops import unary_union, linemerge
+    keys = list(regions)
+    pieces = []
+    for i in range(len(keys)):
+        for j in range(i + 1, len(keys)):
+            a, b = regions[keys[i]], regions[keys[j]]
+            if not a.envelope.intersects(b.envelope):
+                continue
+            inter = a.boundary.intersection(b.boundary)
+            if inter.is_empty:
+                continue
+            for g in getattr(inter, 'geoms', [inter]):
+                if g.geom_type == 'LineString' and g.length > 0:
+                    pieces.append(g)
+    merged = linemerge(unary_union(pieces))
+    merged = [g.simplify(TOL, preserve_topology=False)
+              for g in getattr(merged, 'geoms', [merged])]
+    return [g for g in merged if g.length > 0 and len(g.coords) >= 2]
 
 
 # ═══════════════ ОТЧЁТ И ЗАПИСЬ ═══════════════
@@ -385,7 +421,8 @@ def rings_of(geom, nd=3):
 
 def lines_of(geom, nd=3):
     out = []
-    for ln in getattr(geom, 'geoms', [geom]):
+    src = geom if isinstance(geom, list) else getattr(geom, 'geoms', [geom])
+    for ln in src:
         if ln.geom_type != 'LineString' or ln.is_empty:
             continue
         pts, prev = [], None
@@ -424,7 +461,7 @@ def main():
     if missing:
         sys.exit(f"не собрались образцы регионов: {', '.join(missing)}")
 
-    regions, inner = cut_regions(area, templates)
+    regions, border_lines = cut_regions(area, templates)
     print(f"разрезано за {time.time() - t0:.1f} с\n")
 
     # ── проверки ──
@@ -461,7 +498,7 @@ def main():
         return
 
     geo = {k: rings_of(regions[k]) for k in KEYS}
-    borders = lines_of(inner)
+    borders = lines_of(border_lines)
     pts = sum(len(r) for v in geo.values() for poly in v for r in poly)
     out = os.path.join(DATA_DIR, 'regions-geo.js')
     with open(out, 'w', encoding='utf-8') as f:
