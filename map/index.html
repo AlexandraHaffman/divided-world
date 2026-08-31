@@ -1241,7 +1241,7 @@ document.getElementById('fcClose').addEventListener('click', () => select(null))
 
 const INFLUENCE_MAX = 15;   // шкала влияния из справочника фракций, 1-15
 const CHAR_ARCHIVE = '../characters/index.html';
-const REGION_PHOTO_DIR = '../data/images/regions/';
+const REGION_PHOTO_DIR = 'data/images/regions/';
 
 // Слуг персонажа = имя файла в data/characters/ без .json: имя строчными
 // буквами, пробелы заменены на дефисы. Если в карточке фракции лидер
@@ -1492,7 +1492,7 @@ const LOC_FIELDS = [
   ['capacity', 'Вместимость'], ['danger', 'Уровень опасности'],
   ['status', 'Статус'], ['intensity', 'Интенсивность'], ['purpose', 'Назначение'],
 ];
-const PHOTO_DIR = '../data/images/locations/';
+const PHOTO_DIR = 'data/images/locations/';
 const NEUTRAL = { key: '', col: '#8fa8c0', name: '' };
 const facOf = key => FACTIONS.find(f => f.key === key) || NEUTRAL;
 
