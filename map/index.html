@@ -568,8 +568,15 @@
   @media (max-width: 700px) {
     .legend { width: 158px; }
     .l-name { font-size: 10.5px; }
-    .fcard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: 58%; }
-    .loccard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: 58%; }
+    /* Раньше карточка была жёстко зажата в нижние 58% экрана — с фото
+       внизу досье это почти всегда упиралось в потолок раньше, чем
+       заканчивался текст, и приходилось листать саму карточку, даже
+       когда на карте над ней ещё пустовало место. Теперь потолок один —
+       не залезать на кнопку «← Терминал» вверху, а высота сама
+       подстраивается под содержимое: у короткого досье карточка ниже,
+       у длинного — просто выше, до этого потолка. */
+    .fcard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: calc(100% - 90px); }
+    .loccard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: calc(100% - 90px); }
     .scalebar { bottom: 14px; }
   }
 </style>
