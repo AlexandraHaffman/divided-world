@@ -54,6 +54,7 @@ window.REGIONS_INFO = [
     name:    "Арктический",
     capital: "Эдмонтон",
     clat: 53.55, clon: -113.49,
+    population: "2 млн",
     area:    "9,65 млн км²",
   },
   {
@@ -62,6 +63,7 @@ window.REGIONS_INFO = [
     name:    "Каскадский",
     capital: "Ванкувер",
     clat: 49.28, clon: -123.12,
+    population: "20 млн",
     area:    "1,36 млн км²",
   },
   {
@@ -70,6 +72,7 @@ window.REGIONS_INFO = [
     name:    "Калифорнийский",
     capital: "Сакраменто",
     clat: 38.58, clon: -121.49,
+    population: "51 млн",
     area:    "578 тыс. км²",
   },
   {
@@ -78,6 +81,7 @@ window.REGIONS_INFO = [
     name:    "Скалистые горы",
     capital: "Денвер",
     clat: 39.74, clon: -104.99,
+    population: "22 млн",
     area:    "2,23 млн км²",
   },
   {
@@ -86,6 +90,7 @@ window.REGIONS_INFO = [
     name:    "Великие равнины",
     capital: "Канзас-Сити",
     clat: 39.1, clon: -94.58,
+    population: "16 млн",
     area:    "1,53 млн км²",
   },
   {
@@ -94,6 +99,7 @@ window.REGIONS_INFO = [
     name:    "Великие озёра",
     capital: "Чикаго",
     clat: 41.88, clon: -87.63,
+    population: "68 млн",
     area:    "1,85 млн км²",
   },
   {
@@ -102,6 +108,7 @@ window.REGIONS_INFO = [
     name:    "Св. Лаврентий",
     capital: "Монреаль",
     clat: 45.5, clon: -73.57,
+    population: "58 млн",
     area:    "2,25 млн км²",
   },
   {
@@ -110,6 +117,7 @@ window.REGIONS_INFO = [
     name:    "Средняя Атлантика",
     capital: "Филадельфия",
     clat: 39.95, clon: -75.17,
+    population: "64 млн",
     area:    "480 тыс. км²",
   },
   {
@@ -118,6 +126,7 @@ window.REGIONS_INFO = [
     name:    "Юго-Восток",
     capital: "Атланта",
     clat: 33.75, clon: -84.39,
+    population: "74 млн",
     area:    "995 тыс. км²",
   },
   {
@@ -126,6 +135,7 @@ window.REGIONS_INFO = [
     name:    "Мексиканский залив",
     capital: "Хьюстон",
     clat: 29.76, clon: -95.37,
+    population: "59 млн",
     area:    "1,48 млн км²",
   },
   {
@@ -134,6 +144,7 @@ window.REGIONS_INFO = [
     name:    "Мексиканское ядро",
     capital: "Мехико",
     clat: 19.43, clon: -99.13,
+    population: "124 млн",
     area:    "1,30 млн км²",
   },
   {
@@ -142,6 +153,7 @@ window.REGIONS_INFO = [
     name:    "Центральная Америка",
     capital: "Панама",
     clat: 8.98, clon: -79.52,
+    population: "58 млн",
     area:    "527 тыс. км²",
   },
   {
@@ -150,6 +162,7 @@ window.REGIONS_INFO = [
     name:    "Карибский бассейн",
     capital: "Гавана",
     clat: 23.11, clon: -82.37,
+    population: "48 млн",
     area:    "244 тыс. км²",
   },
   {
@@ -158,6 +171,7 @@ window.REGIONS_INFO = [
     name:    "Северные Анды",
     capital: "Богота",
     clat: 4.71, clon: -74.07,
+    population: "100 млн",
     area:    "2,32 млн км²",
   },
   {
@@ -166,6 +180,7 @@ window.REGIONS_INFO = [
     name:    "Центральные Анды",
     capital: "Лима",
     clat: -12.05, clon: -77.04,
+    population: "57 млн",
     area:    "2,40 млн км²",
   },
   {
@@ -174,6 +189,7 @@ window.REGIONS_INFO = [
     name:    "Амазония",
     capital: "Манаус",
     clat: -3.12, clon: -60.02,
+    population: "32 млн",
     area:    "4,02 млн км²",
   },
   {
@@ -182,6 +198,7 @@ window.REGIONS_INFO = [
     name:    "Северо-восток Бразилии",
     capital: "Ресифи",
     clat: -8.05, clon: -34.88,
+    population: "59 млн",
     area:    "1,56 млн км²",
   },
   {
@@ -190,6 +207,7 @@ window.REGIONS_INFO = [
     name:    "Центральная Бразилия",
     capital: "Бразилиа",
     clat: -15.79, clon: -47.88,
+    population: "19 млн",
     area:    "1,89 млн км²",
   },
   {
@@ -198,6 +216,7 @@ window.REGIONS_INFO = [
     name:    "Юго-восток Бразилии",
     capital: "Сан-Паулу",
     clat: -23.55, clon: -46.63,
+    population: "96 млн",
     area:    "936 тыс. км²",
   },
   {
@@ -206,6 +225,7 @@ window.REGIONS_INFO = [
     name:    "Южная Бразилия",
     capital: "Куритиба",
     clat: -25.43, clon: -49.27,
+    population: "33 млн",
     area:    "580 тыс. км²",
   },
   {
@@ -214,6 +234,7 @@ window.REGIONS_INFO = [
     name:    "Ла-Плата",
     capital: "Буэнос-Айрес",
     clat: -34.6, clon: -58.38,
+    population: "54 млн",
     area:    "1,91 млн км²",
   },
   {
@@ -222,6 +243,7 @@ window.REGIONS_INFO = [
     name:    "Южные Анды",
     capital: "Сантьяго",
     clat: -33.45, clon: -70.67,
+    population: "26 млн",
     area:    "2,28 млн км²",
   },
 ];

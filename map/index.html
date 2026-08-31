@@ -193,9 +193,32 @@
   .fcard-ideo { font-size: 11.5px; line-height: 1.5; color: var(--text); }
   .fc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
   .fc-stat {
+    position: relative;
     background: rgba(2,4,9,0.7);
+    border-left: 2px solid color-mix(in srgb, var(--fc) 45%, transparent);
     border-radius: 3px;
     padding: 6px 8px;
+    overflow: hidden;
+  }
+  /* Тонкая полоса-сканер пробегает по плашке один раз при открытии
+     карточки — тот же приём, что уже подсвечивает шкалу влияния
+     (fc-meter-fill), только как вспышка, а не заливка. */
+  .fc-stat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%,
+      color-mix(in srgb, var(--fc) 55%, transparent) 50%, transparent 70%);
+    transform: translateX(-120%);
+    animation: fc-stat-scan 1.1s ease-out both;
+    animation-delay: inherit;
+    pointer-events: none;
+  }
+  .fc-stat:nth-child(2) { animation-delay: .09s; }
+  .fc-stat:nth-child(2)::before { animation-delay: .09s; }
+  @keyframes fc-stat-scan {
+    0%   { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
   }
   .fc-stat-label {
     font-family: var(--font-mono);
@@ -204,7 +227,27 @@
     color: var(--text-dim);
     margin-bottom: 3px;
   }
-  .fc-stat-value { font-size: 12px; font-weight: 600; line-height: 1.25; color: #fff; }
+  .fc-stat-value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #fff;
+    letter-spacing: .3px;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 7px color-mix(in srgb, var(--fc) 65%, transparent);
+    opacity: 0;
+    animation: fc-stat-in .4s ease-out .12s both;
+  }
+  .fc-stat:nth-child(2) .fc-stat-value { animation-delay: .2s; }
+  @keyframes fc-stat-in {
+    0%   { opacity: 0; transform: translateY(3px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fc-stat::before { animation: none; display: none; }
+    .fc-stat-value { animation: none; opacity: 1; }
+  }
   .fc-note { font-size: 10px; line-height: 1.4; color: var(--text-dim); margin: -4px 0 8px; padding-left: 3px; }
   .fc-meter {
     position: relative;
