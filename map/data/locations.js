@@ -46,9 +46,10 @@
 //    float    — true, если объект парит над поверхностью
 //
 //  ── ОБРАЗЕЦ БЛОКА ─────────────────────────────────────────────────
-//  Сейчас в списке только 22 столицы регионов Единой Америки — по одной
-//  на регион, без описаний. Скопируйте образец внутрь квадратных скобок,
-//  уберите знаки комментария в начале строк и поменяйте поля:
+//  Сейчас в списке только столицы регионов: 22 у Единой Америки и
+//  17 экзархатов Тенебриона — по одной на регион, без описаний.
+//  Скопируйте образец внутрь квадратных скобок, уберите знаки
+//  комментария в начале строк и поменяйте поля:
 //
 //    {
 //      name: "Вена",
@@ -73,7 +74,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 53.55,
     lon: -113.49,
-    region: "Арктический",
+    region: "Арктический регион",
     subtitle: "Столица региона",
   },
   {
@@ -82,7 +83,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 49.28,
     lon: -123.12,
-    region: "Каскадский",
+    region: "Каскадский регион",
     subtitle: "Столица региона",
   },
   {
@@ -91,7 +92,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 38.58,
     lon: -121.49,
-    region: "Калифорнийский",
+    region: "Калифорнийский регион",
     subtitle: "Столица региона",
   },
   {
@@ -100,7 +101,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 39.74,
     lon: -104.99,
-    region: "Скалистые горы",
+    region: "Горный регион",
     subtitle: "Столица региона",
   },
   {
@@ -109,7 +110,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 39.1,
     lon: -94.58,
-    region: "Великие равнины",
+    region: "Равнинный регион",
     subtitle: "Столица региона",
   },
   {
@@ -118,7 +119,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 41.88,
     lon: -87.63,
-    region: "Великие озёра",
+    region: "Великоозёрный регион",
     subtitle: "Столица региона",
   },
   {
@@ -127,7 +128,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 45.5,
     lon: -73.57,
-    region: "Св. Лаврентий",
+    region: "Северо-Атлантический регион",
     subtitle: "Столица региона",
   },
   {
@@ -136,7 +137,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 39.95,
     lon: -75.17,
-    region: "Средняя Атлантика",
+    region: "Средне-Атлантический регион",
     subtitle: "Столица региона",
   },
   {
@@ -145,7 +146,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 33.75,
     lon: -84.39,
-    region: "Юго-Восток",
+    region: "Юго-Восточный регион",
     subtitle: "Столица региона",
   },
   {
@@ -154,7 +155,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 29.76,
     lon: -95.37,
-    region: "Мексиканский залив",
+    region: "Регион Мексиканского залива",
     subtitle: "Столица региона",
   },
   {
@@ -163,7 +164,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 19.43,
     lon: -99.13,
-    region: "Мексиканское ядро",
+    region: "Мексиканский регион",
     subtitle: "Столица региона",
   },
   {
@@ -172,7 +173,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 8.98,
     lon: -79.52,
-    region: "Центральная Америка",
+    region: "Центральноамериканский регион",
     subtitle: "Столица региона",
   },
   {
@@ -181,7 +182,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 23.11,
     lon: -82.37,
-    region: "Карибский бассейн",
+    region: "Карибский регион",
     subtitle: "Столица региона",
   },
   {
@@ -190,7 +191,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: 4.71,
     lon: -74.07,
-    region: "Северные Анды",
+    region: "Северо-Андский регион",
     subtitle: "Столица региона",
   },
   {
@@ -199,7 +200,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -12.05,
     lon: -77.04,
-    region: "Центральные Анды",
+    region: "Центрально-Андский регион",
     subtitle: "Столица региона",
   },
   {
@@ -208,7 +209,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -3.12,
     lon: -60.02,
-    region: "Амазония",
+    region: "Амазонский регион",
     subtitle: "Столица региона",
   },
   {
@@ -217,7 +218,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -8.05,
     lon: -34.88,
-    region: "Северо-восток Бразилии",
+    region: "Северо-Восточный Бразильский регион",
     subtitle: "Столица региона",
   },
   {
@@ -226,7 +227,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -15.79,
     lon: -47.88,
-    region: "Центральная Бразилия",
+    region: "Центрально-Бразильский регион",
     subtitle: "Столица региона",
   },
   {
@@ -235,7 +236,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -23.55,
     lon: -46.63,
-    region: "Юго-восток Бразилии",
+    region: "Юго-Восточный Бразильский регион",
     subtitle: "Столица региона",
   },
   {
@@ -244,7 +245,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -25.43,
     lon: -49.27,
-    region: "Южная Бразилия",
+    region: "Южно-Бразильский регион",
     subtitle: "Столица региона",
   },
   {
@@ -253,7 +254,7 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -34.6,
     lon: -58.38,
-    region: "Ла-Плата",
+    region: "Ла-Платский регион",
     subtitle: "Столица региона",
   },
   {
@@ -262,7 +263,161 @@ window.LOCATIONS_DATA = [
     faction: "america",
     lat: -33.45,
     lon: -70.67,
-    region: "Южные Анды",
+    region: "Южно-Андский регион",
     subtitle: "Столица региона",
+  },
+// ── Столицы экзархатов Тенебриона ─────────────────────────────────
+  {
+    name: "Вена",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 48.21,
+    lon: 16.37,
+    region: "Венский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Прага",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 50.09,
+    lon: 14.42,
+    region: "Пражский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Мюнхен",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 48.14,
+    lon: 11.58,
+    region: "Мюнхенский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Берлин",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 52.52,
+    lon: 13.4,
+    region: "Берлинский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Франкфурт-на-Майне",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 50.11,
+    lon: 8.68,
+    region: "Франкфуртский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Брюссель",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 50.85,
+    lon: 4.35,
+    region: "Брюссельский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Париж",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 48.86,
+    lon: 2.35,
+    region: "Парижский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Лион",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 45.76,
+    lon: 4.84,
+    region: "Лионский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Мадрид",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 40.42,
+    lon: -3.7,
+    region: "Мадридский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Кадис",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 36.53,
+    lon: -6.29,
+    region: "Кадисский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Милан",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 45.46,
+    lon: 9.19,
+    region: "Миланский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Рим",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 41.9,
+    lon: 12.5,
+    region: "Римский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Варшава",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 52.23,
+    lon: 21.01,
+    region: "Варшавский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Будапешт",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 47.5,
+    lon: 19.04,
+    region: "Будапештский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Бухарест",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 44.43,
+    lon: 26.1,
+    region: "Бухарестский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Афины",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 37.98,
+    lon: 23.73,
+    region: "Афинский экзархат",
+    subtitle: "Столица экзархата",
+  },
+  {
+    name: "Стокгольм",
+    type: "regional_capital",
+    faction: "tenebrion",
+    lat: 59.33,
+    lon: 18.07,
+    region: "Скандинавский экзархат",
+    subtitle: "Столица экзархата",
   },
 ];
