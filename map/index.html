@@ -149,16 +149,28 @@
     border-top: 2px solid var(--fc);
     border-radius: 3px;
   }
-  .fcard.open { display: flex; }
-  .fcard-body { overflow-y: auto; padding: 10px 12px 12px; }
+  .fcard.open { display: flex; animation: card-in .22s ease-out both; }
+  .fcard-body { overflow-y: auto; padding: 11px 13px 13px; }
   .fcard-body::-webkit-scrollbar { width: 3px; }
   .fcard-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
   .fcard-head {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     padding-right: 20px;
-    margin-bottom: 9px;
+    padding-bottom: 7px;
+    margin-bottom: 10px;
+  }
+  /* Черта под названием: слева в цвет фракции, вправо растворяется —
+     заголовок получает опору, но линия не режет карточку пополам. */
+  .fcard-head::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 18px; bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--fc) 60%, transparent), transparent);
   }
   .fcard-dot {
     width: 7px; height: 7px;
@@ -169,11 +181,12 @@
   }
   .fcard-name {
     font-family: var(--font-display);
-    font-size: 13px;
-    letter-spacing: 1.2px;
+    font-size: 15.5px;
+    letter-spacing: 1.4px;
     color: var(--fc);
     text-transform: uppercase;
-    line-height: 1.25;
+    line-height: 1.2;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--fc) 45%, transparent);
   }
   .fcard-close {
     position: absolute;
@@ -222,8 +235,8 @@
   }
   .fc-stat-label {
     font-family: var(--font-mono);
-    font-size: 7px;
-    letter-spacing: 1.3px;
+    font-size: 7.5px;
+    letter-spacing: 1.4px;
     color: var(--text-dim);
     margin-bottom: 3px;
   }
@@ -295,7 +308,7 @@
   }
   .fcard-fold-name {
     font-family: var(--font-display);
-    font-size: 10.5px;
+    font-size: 11px;
     letter-spacing: 1.1px;
     color: var(--fc);
     text-transform: uppercase;
@@ -310,9 +323,20 @@
   .fcard-fold[open] .fcard-fold-chev { transform: rotate(90deg); }
   .fcard-fold-body { padding: 9px 9px 3px; }
   .fc-photos {
-    margin: 14px -12px -12px;
+    position: relative;
+    margin: 14px -13px -13px;
     overflow: hidden;
     border-top: 1px solid color-mix(in srgb, var(--fc) 18%, transparent);
+  }
+  /* Тень по верхней кромке: фото не приклеено к тексту встык, а уходит
+     под него — та же логика, что у затемнения над сушей на глобусе. */
+  .fc-photos::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 26px;
+    background: linear-gradient(rgba(4,8,14,0.55), transparent);
+    pointer-events: none;
   }
   .fc-photos-track {
     display: flex;
@@ -331,8 +355,8 @@
   }
   .fc-sub {
     font-family: var(--font-mono);
-    font-size: 9.5px;
-    letter-spacing: 1.1px;
+    font-size: 10px;
+    letter-spacing: 1.2px;
     color: var(--text-dim);
     text-transform: uppercase;
     margin: -3px 0 9px;
@@ -354,7 +378,7 @@
     border-top: 2px solid var(--fc);
     border-radius: 3px;
   }
-  .loccard.open { display: flex; }
+  .loccard.open { display: flex; animation: card-in .22s ease-out both; }
   .lc-close {
     position: absolute;
     right: 5px; top: 5px;
@@ -370,14 +394,14 @@
     opacity: .8;
   }
   .lc-close:hover { opacity: 1; }
-  .lc-body { overflow-y: auto; padding: 10px 12px 12px; }
+  .lc-body { overflow-y: auto; padding: 11px 13px 13px; }
   .lc-body::-webkit-scrollbar { width: 3px; }
   .lc-body::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--fc) 40%, transparent); }
   .lc-shots {
     display: flex;
     gap: 4px;
-    width: calc(100% + 24px);
-    margin: -10px -12px 9px;
+    width: calc(100% + 26px);
+    margin: -11px -13px 9px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
   }
@@ -393,14 +417,25 @@
     scroll-snap-align: start;
   }
   .lc-name {
+    position: relative;
     font-family: var(--font-display);
-    font-size: 13px;
-    letter-spacing: 1.2px;
+    font-size: 15px;
+    letter-spacing: 1.35px;
     color: var(--fc);
     text-transform: uppercase;
-    line-height: 1.25;
+    line-height: 1.2;
     padding-right: 22px;
-    margin-bottom: 6px;
+    padding-bottom: 7px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--fc) 45%, transparent);
+  }
+  .lc-name::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 18px; bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--fc) 60%, transparent), transparent);
   }
   .lc-badges { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
   .lc-type, .lc-region {
@@ -445,8 +480,8 @@
   .lc-row { margin-bottom: 8px; }
   .lc-label {
     font-family: var(--font-mono);
-    font-size: 8px;
-    letter-spacing: 1.6px;
+    font-size: 8.5px;
+    letter-spacing: 1.7px;
     color: var(--fc);
     border-left: 2px solid var(--fc);
     padding: 2px 7px;
@@ -468,6 +503,13 @@
   }
   a.lc-chip { cursor: pointer; }
   a.lc-chip:hover { background: color-mix(in srgb, var(--fc) 20%, rgba(2,4,9,0.7)); }
+  /* Регион, чьё досье открыто, отмечен в списке своей фракции — иначе
+     в двадцати двух чипах не найти, где ты сейчас. */
+  .lc-chip.cur {
+    color: #fff;
+    border-color: var(--fc);
+    background: color-mix(in srgb, var(--fc) 26%, rgba(2,4,9,0.7));
+  }
   .lc-child {
     display: flex;
     align-items: center;
@@ -494,6 +536,17 @@
     border-radius: 3px;
     cursor: pointer;
     margin-bottom: 9px;
+  }
+
+  /* Появление карточки: короткий подъём с проявлением. Анимируются
+     только opacity и transform — их браузер считает на композиторе,
+     не пересобирая раскладку, так что вращение глобуса это не задевает. */
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fcard.open, .loccard.open { animation: none; }
   }
 
   /* ── МАСШТАБНАЯ ЛИНЕЙКА ── */
@@ -708,8 +761,11 @@ function factionAt(lat, lon){
 
 // Регион ищется так же, как фракция, но список короче: регионы одной
 // фракции не перекрываются, поэтому первое попадание и есть ответ.
-function regionAt(lat, lon){
+// facKey (необязательный) сужает перебор до одной фракции — при наведении
+// фракция под курсором уже известна, и остальные сорок регионов не нужны.
+function regionAt(lat, lon, facKey){
   for (let ri = 0; ri < REGIONS.length; ri++){
+    if (facKey && REGIONS[ri].faction !== facKey) continue;
     const polys = REGIONS[ri].polys;
     for (let pi = 0; pi < polys.length; pi++){
       const bb = REG_BB[ri][pi];
@@ -1303,7 +1359,7 @@ function facCardHtml(f, skipHead){
   const regs = REGIONS.filter(r => r.faction === f.key);
   if (regs.length){
     h += `<div class="lc-row fc-reglist"><div class="lc-label">РЕГИОНЫ — ${regs.length}</div><div class="lc-chips">${
-      regs.map(r => `<a class="lc-chip" data-reg="${r.key}">${esc(r.name)}</a>`).join('')}</div></div>`;
+      regs.map(r => `<a class="lc-chip${r.key === selectedRegKey ? ' cur' : ''}" data-reg="${r.key}">${esc(r.name)}</a>`).join('')}</div></div>`;
   }
   if (!f.capital && !f.population && !f.area && !f.influence && !f.leader && !f.ideo){
     h += '<div class="fc-empty">Досье не составлено — территория не имеет задокументированного центрального управления.</div>';
@@ -1612,6 +1668,114 @@ function drawLabel(text, x, y, off, col, hot, a, big){
   octx.restore();
 }
 
+// ═══════════════ ПОДСВЕТКА РЕГИОНА ПОД КУРСОРОМ ═══════════════
+// Наведение НЕ трогает текстуру глобуса: пересобирать 4096×2048 и заново
+// заливать её в видеопамять на каждое движение мыши — верный способ
+// уронить кадры. Регион под курсором рисуется поверх, в тот же 2D-слой,
+// где уже живут метки, — это один полигон на кадр.
+let mouseX = null, mouseY = null;
+let hoverReg = null;      // регион под курсором прямо сейчас
+let hoverShown = null;    // и тот, что ещё виден: подсветка гаснет плавно
+let hoverA = 0;
+let hoverT = 0;
+
+function hoverTarget(){
+  return (hoverReg && hoverReg.key !== selectedRegKey) ? 1 : 0;
+}
+
+function updateHover(){
+  hoverT = performance.now();
+  let next = null, point = false;
+  if (mouseX != null && !dragging){
+    const ll = unproject(mouseX, mouseY, viewMatrix());
+    const f = ll ? factionAt(ll.lat, ll.lon) : null;
+    const loc = locationAt(mouseX, mouseY);
+    point = !!(loc || f);
+    // над меткой подсветка не нужна: щелчок там откроет локацию, а не регион
+    if (f && !loc) next = regionAt(ll.lat, ll.lon, f.key);
+  }
+  inputEl.classList.toggle('pointing', point);
+  if (next !== hoverReg){
+    hoverReg = next;
+    if (next) hoverShown = next;
+    dirty = true;
+  }
+}
+
+// Единичные векторы контура считаются один раз на регион и живут дальше:
+// при наведении полигон проецируется каждый кадр, и гонять синусы по
+// тысяче точек заново незачем.
+const regVecCache = new Map();
+function regVecs(reg){
+  let v = regVecCache.get(reg.key);
+  if (v) return v;
+  v = reg.polys.map(poly => poly.map(ring => {
+    const a = new Float32Array(ring.length * 3);
+    for (let i = 0; i < ring.length; i++){
+      const la = ring[i][0] * DEG, lo = ring[i][1] * DEG, c = Math.cos(la);
+      a[i*3] = c * Math.sin(lo); a[i*3+1] = Math.sin(la); a[i*3+2] = c * Math.cos(lo);
+    }
+    return a;
+  }));
+  regVecCache.set(reg.key, v);
+  return v;
+}
+
+function traceRegion(reg, M){
+  octx.beginPath();
+  for (const poly of regVecs(reg)){
+    for (const ring of poly){
+      const n = ring.length / 3;
+      for (let i = 0; i < n; i++){
+        const x = ring[i*3], y = ring[i*3+1], z = ring[i*3+2];
+        let vx = M.r1[0]*x + M.r1[1]*y + M.r1[2]*z;
+        let vy = M.r2[0]*x + M.r2[1]*y + M.r2[2]*z;
+        const vz = M.r3[0]*x + M.r3[1]*y + M.r3[2]*z;
+        // Точка за горизонтом кладётся на кромку диска: контур не рвётся
+        // и не заворачивается на обратную сторону глобуса.
+        if (vz < 0){ const d = Math.hypot(vx, vy) || 1; vx /= d; vy /= d; }
+        const sx = W/2 + vx * R, sy = H/2 - vy * R;
+        i ? octx.lineTo(sx, sy) : octx.moveTo(sx, sy);
+      }
+      octx.closePath();
+    }
+  }
+}
+
+function drawHover(M){
+  if (hoverA <= 0.02 || !hoverShown) return;
+  const a = hoverA;
+  octx.save();
+  traceRegion(hoverShown, M);
+  octx.fillStyle = hoverShown.col;
+  octx.globalAlpha = 0.17 * a;
+  octx.fill('evenodd');
+  octx.strokeStyle = hoverShown.col;
+  octx.lineJoin = 'round';
+  octx.globalAlpha = 0.13 * a; octx.lineWidth = 5; octx.stroke();
+  octx.globalAlpha = 0.75 * a; octx.lineWidth = 1.3; octx.stroke();
+  // Название прямо у курсора — видно, что откроется, ещё до щелчка
+  if (mouseX != null){
+    const t = hoverShown.name.toUpperCase();
+    octx.font = '600 10px ' + LABEL_FONT;
+    octx.textAlign = 'left'; octx.textBaseline = 'top';
+    const tw = octx.measureText(t).width;
+    let x = mouseX + 14, y = mouseY + 12;
+    if (x + tw + 12 > W) x = mouseX - 14 - tw - 12;
+    if (y + 18 > H) y = mouseY - 12 - 18;
+    octx.globalAlpha = 0.82 * a;
+    octx.fillStyle = 'rgba(4,7,14,0.92)';
+    octx.fillRect(x, y, tw + 12, 17);
+    octx.globalAlpha = 0.5 * a;
+    octx.fillStyle = hoverShown.col;
+    octx.fillRect(x, y, 2, 17);
+    octx.globalAlpha = a;
+    octx.fillStyle = '#fff';
+    octx.fillText(t, x + 8, y + 4);
+  }
+  octx.restore();
+}
+
 // порядок обхода: важные подписи занимают место первыми
 const LOC_ORDER = [...LOCATIONS].sort((a, b) => (TYPE_PRIO[a.type] ?? 9) - (TYPE_PRIO[b.type] ?? 9));
 
@@ -1620,6 +1784,10 @@ function drawOverlay(M){
   octx.clearRect(0, 0, W, H);
   labelRects = [];
   for (const l of LOCATIONS) l._sx = null;
+
+  // Подсветка идёт первой и не зависит от зума: метки на общем плане ещё
+  // не проявились, а регион под курсором должен отзываться сразу.
+  drawHover(M);
 
   // Пока глобус виден целиком, меток нет вовсе — карта остаётся чистой.
   // Дальше они проявляются по мере приближения: сначала крупные, потом все.
@@ -1751,6 +1919,7 @@ function locationAt(mx, my){
 // GPU простаивает вместо того, чтобы бесконечно перерисовывать одно и то же.
 function animating(){
   return autoRot
+      || Math.abs(hoverA - hoverTarget()) > 0.01
       || Math.abs(vy) > 1e-5 || Math.abs(vx) > 1e-5
       || Math.abs(ty - ry) > 1e-4 || Math.abs(tx - rx) > 1e-4
       || Math.abs(tR - R)  > 0.05;
@@ -1766,6 +1935,13 @@ function frame(){
   ry += (ty - ry) * 0.09;
   rx += (tx - rx) * 0.09;
   R  += (tR - R) * 0.12;
+
+  // Глобус вращается — регион под неподвижным курсором меняется сам собой.
+  // Пересчёт идёт не каждый кадр, а десять раз в секунду: разницы на глаз
+  // никакой, а перебор полигонов вчетверо реже.
+  if (mouseX != null && !dragging && animating() && performance.now() - hoverT > 90) updateHover();
+  const ht = hoverTarget();
+  if (Math.abs(hoverA - ht) > 0.001){ hoverA += (ht - hoverA) * 0.22; dirty = true; }
 
   const moving = animating();
   if (dirty || moving){
@@ -1807,6 +1983,7 @@ inputEl.addEventListener('pointerdown', e => {
     vy = vx = 0;
     autoRot = false;
     inputEl.classList.add('dragging');
+    if (hoverReg){ hoverReg = null; dirty = true; }
   } else if (pointers.size === 2){
     const pts = [...pointers.values()];
     pinch0 = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
@@ -1838,11 +2015,14 @@ inputEl.addEventListener('pointermove', e => {
   }
   if (pointers.size === 0 && e.pointerType === 'mouse'){
     const rect = inputEl.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    const ll = unproject(mx, my, viewMatrix());
-    inputEl.classList.toggle('pointing', !!(locationAt(mx, my) || (ll && factionAt(ll.lat, ll.lon))));
+    mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+    updateHover();
+    if (hoverA > 0.02) dirty = true;   // подпись у курсора едет вместе с ним
   }
 });
+
+// Курсор ушёл с карты (или начал тащить глобус) — подсветка гаснет.
+inputEl.addEventListener('pointerleave', () => { mouseX = mouseY = null; updateHover(); });
 
 inputEl.addEventListener('pointerup', e => {
   pointers.delete(e.pointerId);
@@ -1870,12 +2050,26 @@ inputEl.addEventListener('pointerup', e => {
     }
   }
   if (pointers.size < 2) pinch0 = 0;
+  if (e.pointerType === 'mouse'){
+    const rect = inputEl.getBoundingClientRect();
+    mouseX = e.clientX - rect.left; mouseY = e.clientY - rect.top;
+    updateHover();
+  }
   dirty = true;
 });
 inputEl.addEventListener('pointercancel', e => {
   pointers.delete(e.pointerId);
   dragging = false;
   inputEl.classList.remove('dragging');
+});
+
+// Esc закрывает то, что открыто: сначала карточку локации (она лежит
+// поверх), потом досье фракции или региона. Крестик остаётся на месте —
+// это просто вторая дорога к нему.
+window.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (loccard.classList.contains('open')) closeLoc();
+  else if (fcard.classList.contains('open')) select(null);
 });
 
 inputEl.addEventListener('wheel', e => {
