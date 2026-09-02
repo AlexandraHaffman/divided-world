@@ -68,6 +68,33 @@
   }
   .back-link:hover { color: var(--blue); border-color: var(--blue); }
 
+  /* ── ВРЕМЯ МИРА ── */
+  .worldclock {
+    position: absolute;
+    top: 44px; left: 14px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 1.3px;
+    color: var(--text-dim);
+    border: 1px solid rgba(79,195,247,0.18);
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: rgba(8,12,18,0.82);
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+  }
+  .worldclock:hover { border-color: rgba(79,195,247,0.5); }
+  .worldclock:hover .wc-date { color: var(--blue); }
+  .wc-icon { color: var(--blue); font-size: 10px; line-height: 1; }
+  .wc-date { color: var(--text); transition: color .2s; }
+  .wc-time { font-variant-numeric: tabular-nums; }
+  .worldclock.off { opacity: .72; }
+  .worldclock.off .wc-icon { color: var(--text-dim); }
+
   /* ── МИНИ-ЛЕГЕНДА ── */
   .legend {
     position: absolute;
@@ -620,6 +647,7 @@
 
   @media (max-width: 700px) {
     .legend { width: 158px; }
+    .worldclock { font-size: 8.5px; padding: 4px 8px; gap: 6px; }
     .l-name { font-size: 10.5px; }
     /* Раньше карточка была жёстко зажата в нижние 58% экрана — с фото
        внизу досье это почти всегда упиралось в потолок раньше, чем
@@ -644,6 +672,13 @@
 </div>
 
 <a class="back-link" href="../index.html">← ТЕРМИНАЛ</a>
+
+<button class="worldclock" id="worldClock" type="button"
+        title="Солнечное освещение по времени мира — нажмите, чтобы включить или выключить">
+  <span class="wc-icon" id="wcIcon">◐</span>
+  <span class="wc-date" id="wcDate">—</span>
+  <span class="wc-time" id="wcTime">—</span>
+</button>
 
 <div class="legend" id="legend">
   <div class="legend-head" id="legendHead">
@@ -1039,6 +1074,8 @@ uniform sampler2D uTex;   // текстура всего мира
 uniform sampler2D uDet;   // детальная текстура видимого окна
 uniform vec4  uDetRect;   // loMin, laMin, loSpan, laSpan (градусы)
 uniform float uDetOn;
+uniform vec3  uSun;       // направление на солнце в мировых координатах
+uniform float uNight;     // 1 — терминатор включён, 0 — ровный свет
 
 const float R2D = 57.29577951;
 
@@ -1070,17 +1107,32 @@ void main(){
       tex = mix(tex, texture2D(uDet, duv).rgb, m);
     }
 
-    // мягкий свет + лимбовое затемнение
+    // Освещение. Без терминатора — прежний мягкий «студийный» свет,
+    // привязанный к камере. С ним — настоящее солнце: направление на него
+    // приходит снаружи, посчитанное по времени мира.
     vec3 L = normalize(vec3(-0.42, 0.34, 0.84));
-    float diff = 0.72 + 0.40 * max(dot(n, L), 0.0);
+    float studio = 0.72 + 0.40 * max(dot(n, L), 0.0);
+    float sun = dot(w, uSun);
+    float day = smoothstep(-0.17, 0.13, sun);      // полоса сумерек, ~17°
+    vec3 base = tex * mix(studio, 0.66 + 0.50 * max(sun, 0.0), uNight);
+    // Ночь холоднее и тусклее, но границы и заливки остаются читаемыми:
+    // это затемнение, а не выключенный свет.
+    vec3 night = tex * vec3(0.46, 0.58, 0.86) * 0.60;
+    base = mix(base, mix(night, base, day), uNight);
+    // тёплая полоса на самом терминаторе — рассвет и закат
+    base += uNight * exp(-sun * sun * 900.0) * vec3(0.20, 0.085, 0.028);
     float rim = pow(1.0 - z, 3.0);
-    vec3 col = tex * diff + atm * rim * 0.38;
+    vec3 col = base + atm * rim * 0.38 * mix(1.0, 0.25 + 0.75 * day, uNight);
 
     float m2 = smoothstep(1.0 + aa, 1.0 - aa, d);
     gl_FragColor = vec4(mix(atm, col, m2), max(m2, halo));
   } else {
     if (halo < 0.004) discard;
-    gl_FragColor = vec4(atm, halo);
+    // Ореол горит только там, где атмосферу освещает солнце: с ночной
+    // стороны планета уходит в темноту без светящейся каймы.
+    vec3 wl = uMinv * vec3(q / d, 0.0);
+    float lit = mix(1.0, 0.28 + 0.72 * smoothstep(-0.30, 0.22, dot(wl, uSun)), uNight);
+    gl_FragColor = vec4(atm, halo * lit);
   }
 }
 `;
@@ -1111,7 +1163,7 @@ function initGL(){
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
-  for (const name of ['uView','uMinv','uTex','uDet','uDetRect','uDetOn'])
+  for (const name of ['uView','uMinv','uTex','uDet','uDetRect','uDetOn','uSun','uNight'])
     uni[name] = gl.getUniformLocation(prog, name);
 
   gl.enable(gl.BLEND);
@@ -1529,6 +1581,69 @@ function updateScale(){
   altValue.textContent = fmtKm(alt);
 }
 
+// ═══════════════ ВРЕМЯ МИРА И ТЕРМИНАТОР ═══════════════
+// Разделённый мир идёт на 35 лет впереди нашего: последняя запись хроники
+// датирована 30.08.2061 — тот же день и месяц, что и в реальности, только
+// год другой. Поэтому часы карты настоящие, сдвинут один год: терминал
+// показывает «сейчас» этого мира, а солнце стоит там, где ему в это
+// «сейчас» и положено. Захочется прибить карту к одной дате — менять
+// нужно только WORLD_YEARS и worldNow().
+const WORLD_YEARS = 35;
+function worldNow(){
+  const t = new Date();
+  t.setUTCFullYear(t.getUTCFullYear() + WORLD_YEARS);
+  return t;
+}
+
+// Подсолнечная точка по среднему солнечному времени: долгота — прямо из
+// часов UTC (в полдень солнце над нулевым меридианом), склонение — из дня
+// года. Уравнение времени не учитываем: его максимум, 16 минут, это 4° по
+// долготе — на глобусе такого масштаба линия терминатора не дрогнет.
+function subsolar(t){
+  const secs = t.getUTCHours() * 3600 + t.getUTCMinutes() * 60 + t.getUTCSeconds();
+  const lon = 180 - secs / 86400 * 360;
+  const day = (Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate())
+             - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000;
+  const lat = 23.44 * Math.sin(2 * Math.PI * (day - 79.5) / 365.25);
+  return { lat, lon };
+}
+
+let sunW = [0, 0, 1];        // направление на солнце в мировых координатах
+let nightOn = true;
+try { nightOn = localStorage.getItem('map-terminator') !== '0'; } catch (e){}
+
+const clockEl = document.getElementById('worldClock');
+const wcIcon = document.getElementById('wcIcon');
+const wcDate = document.getElementById('wcDate');
+const wcTime = document.getElementById('wcTime');
+
+function applySun(){
+  const { lat, lon } = subsolar(worldNow());
+  const c = Math.cos(lat * DEG);
+  sunW = [c * Math.sin(lon * DEG), Math.sin(lat * DEG), c * Math.cos(lon * DEG)];
+  gl.uniform3f(uni.uSun, sunW[0], sunW[1], sunW[2]);
+  gl.uniform1f(uni.uNight, nightOn ? 1 : 0);
+  dirty = true;
+}
+
+// Часы идут раз в полминуты: терминатор за это время уползает на 0,125° —
+// меньше пикселя, зато лишних кадров не набегает.
+function tickClock(){
+  const t = worldNow();
+  const p = n => String(n).padStart(2, '0');
+  wcDate.textContent = `${p(t.getUTCDate())}.${p(t.getUTCMonth() + 1)}.${t.getUTCFullYear()}`;
+  wcTime.textContent = `${p(t.getUTCHours())}:${p(t.getUTCMinutes())} UTC`;
+  applySun();
+}
+
+clockEl.addEventListener('click', () => {
+  nightOn = !nightOn;
+  try { localStorage.setItem('map-terminator', nightOn ? '1' : '0'); } catch (e){}
+  clockEl.classList.toggle('off', !nightOn);
+  wcIcon.textContent = nightOn ? '◐' : '☀';
+  applySun();
+});
+
 // ═══════════════ ЛОКАЦИИ ═══════════════
 // Метки живут на отдельном 2D-слое поверх глобуса и перерисовываются ровно
 // тогда же, когда и сам глобус: на неподвижной карте слой не стоит ничего.
@@ -1796,6 +1911,34 @@ function drawOverlay(M){
   const aAll  = smooth01((z - 1.75) / 0.5);
   const lMain = smooth01((z - 1.5) / 0.4);
   const lAll  = smooth01((z - 2.2) / 0.5);
+
+  // Ночные огни. Пока метки ещё не проявились, ночная сторона светится
+  // самими городами — и видно, где в этом мире вообще горит свет: огни
+  // есть только там, где у кого-то есть города, то есть государство.
+  // Как только проступают полноценные метки, огни им уступают, чтобы
+  // одна и та же точка не двоилась.
+  const lightA = nightOn ? 1 - aMain : 0;
+  if (lightA > 0.02){
+    for (const loc of LOCATIONS){
+      let u = loc._u;
+      if (!u){
+        const la = loc.lat * DEG, lo = loc.lon * DEG, c = Math.cos(la);
+        u = loc._u = [c * Math.sin(lo), Math.sin(la), c * Math.cos(lo)];
+      }
+      const sun = u[0]*sunW[0] + u[1]*sunW[1] + u[2]*sunW[2];
+      if (sun > 0.04) continue;                 // день — огни не видны
+      const p = projectLL(loc.lat, loc.lon, M, 1);
+      if (!p.vis) continue;
+      const deep = smooth01((0.04 - sun) / 0.22);   // у терминатора разгораются
+      const sz = TYPE_SIZE[loc.type] || 3.4;
+      drawGlow(p.x, p.y, sz * 2.1, '#ffcb84', 0.5 * deep * lightA);
+      octx.globalAlpha = 0.85 * deep * lightA;
+      octx.fillStyle = '#ffe7c0';
+      octx.beginPath(); octx.arc(p.x, p.y, 1.1, 0, 6.2832); octx.fill();
+    }
+    octx.globalAlpha = 1;
+  }
+
   if (aMain <= 0.02) return;
 
   for (const loc of LOC_ORDER){
@@ -2095,6 +2238,10 @@ function start(){
   detMax = Math.min(4096, maxTex);
   buildTexture(null, null);
   uploadTexture();
+  clockEl.classList.toggle('off', !nightOn);
+  wcIcon.textContent = nightOn ? '◐' : '☀';
+  tickClock();
+  setInterval(tickClock, 30000);
   updateScale();
   requestAnimationFrame(frame);
   const loader = document.getElementById('loader');
