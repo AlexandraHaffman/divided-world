@@ -361,6 +361,51 @@ FACTIONS["forge"] = {
 }
 
 
+FACTIONS["rakshasy"] = {
+  "title": "Ракшасы",
+  "regions": [
+    ("ivy",   "Домен Плющ",  "Дакка",   23.81,  90.41),
+    ("ash",   "Домен Прах",  "Бастион", 29.65,  91.10),
+    ("haze",  "Домен Марево", "Куньмин", 25.04, 102.71),
+    ("rift",  "Домен Излом", "Пинсян",  22.10, 106.76),
+  ],
+  # Индостан целиком уходит Плющу, восточный Индокитай — Мареву.
+  "by_country": {
+    "India": "ivy", "Bangladesh": "ivy", "Sri Lanka": "ivy",
+    "Nepal": "ivy", "Bhutan": "ivy", "Pakistan": "ivy",
+
+    "Laos": "haze", "Thailand": "haze", "Vietnam": "haze",
+    "Cambodia": "haze", "Malaysia": "haze",
+  },
+  "by_state": {
+    # Мьянма разрезана ровно по одной линии: горный север (Качин) смотрит
+    # на Юньнань и уходит Мареву, остальное — западный Индокитай Плюща.
+    "Myanmar": {
+        "Kachin": "haze",
+        "Shan": "ivy", "Sagaing": "ivy", "Magway": "ivy", "Chin": "ivy",
+        "Mandalay": "ivy", "Bago": "ivy", "Tanintharyi": "ivy",
+        "Rakhine": "ivy", "Ayeyarwady": "ivy", "Kayin": "ivy",
+        "Kayah": "ivy", "Mon": "ivy", "Yangon": "ivy",
+    },
+    "China": {
+        # Прах — высокогорья, плато и пустынный север.
+        "Xizang": "ash", "Qinghai": "ash", "Gansu": "ash",
+        "Inner Mongol": "ash", "Xinjiang": "ash",
+
+        # Марево — Юньнань; дальше домен продолжается уже Индокитаем.
+        "Yunnan": "haze",
+
+        # Излом — пояс вдоль рубежа с Forge, от Нинся на севере через
+        # Сычуань и Гуйчжоу до Гуанси и Хайнаня. Шэньси, Шаньси, Хунань,
+        # Хубэй и Гуандун лежат в Forge почти целиком: сюда попадают
+        # только их полосы, оставшиеся снаружи.
+        "Ningxia": "rift", "Shaanxi": "rift", "Shanxi": "rift",
+        "Sichuan": "rift", "Chongqing": "rift", "Guizhou": "rift",
+        "Hubei": "rift", "Hunan": "rift",
+        "Guangxi": "rift", "Guangdong": "rift", "Hainan": "rift",
+    },
+  },
+}
 
 # ═══════════════ ЧТЕНИЕ ИСХОДНИКОВ ═══════════════
 def read_js_object(path, var):

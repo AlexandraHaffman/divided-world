@@ -284,6 +284,7 @@
   }
   .fcard-close:hover { opacity: 1; }
   .fcard-ideo { font-size: 11.5px; line-height: 1.5; color: var(--text); }
+  .fcard-ideo p + p { margin-top: 8px; }
   .fc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
   .fc-stat {
     position: relative;
@@ -1613,7 +1614,10 @@ function facCardHtml(f, skipHead){
 function regCardHtml(r){
   let h = `<div class="fcard-head"><div class="fcard-dot"></div><div class="fcard-name">${esc(r.name)}</div></div>`;
   if (r.status) h += `<div class="fc-sub">${esc(r.status)}</div>`;
-  if (r.capital) h += `<div class="lc-row"><div class="lc-label">СТОЛИЦА РЕГИОНА</div><div class="lc-value">${esc(r.capital)}</div></div>`;
+  // Как называется сама единица деления: регион, экзархат, провинция, домен.
+  // Не задано — общее «региона», оно верно для всех.
+  if (r.capital) h += `<div class="lc-row"><div class="lc-label">СТОЛИЦА ${
+    esc((r.unit || 'региона').toUpperCase())}</div><div class="lc-value">${esc(r.capital)}</div></div>`;
   if (r.population || r.area){
     h += '<div class="fc-stats">';
     if (r.population) h += `<div class="fc-stat"><div class="fc-stat-label">НАСЕЛЕНИЕ</div><div class="fc-stat-value">${esc(r.population)}</div></div>`;
@@ -1624,7 +1628,12 @@ function regCardHtml(r){
   if (r.areaNote) h += `<div class="fc-note">${esc(r.areaNote)}</div>`;
   if (r.governor){
     const names = r.governor.split(/,\s*/).filter(Boolean);
-    h += `<div class="lc-row"><div class="lc-label">${names.length > 1 ? 'НАМЕСТНИКИ' : 'НАМЕСТНИК'}</div><div class="lc-chips">${
+    // Титул правителя у каждой фракции свой: наместник, экзарх, правительница.
+    // Не задан — остаётся общий.
+    const title = r.governorTitle
+      ? esc(r.governorTitle.toUpperCase())
+      : (names.length > 1 ? 'НАМЕСТНИКИ' : 'НАМЕСТНИК');
+    h += `<div class="lc-row"><div class="lc-label">${title}</div><div class="lc-chips">${
       names.map(n => `<a class="lc-chip" href="${CHAR_ARCHIVE}#${encodeURIComponent(charSlug(n))}" target="_blank" rel="noopener">${esc(n)}</a>`).join('')}</div></div>`;
   }
   for (const [label, val] of [['ХОЗЯЙСТВО', r.economy], ['ОБОРОНА', r.defense]]){
@@ -1634,7 +1643,12 @@ function regCardHtml(r){
     h += `<div class="lc-row"><div class="lc-label">ГОРОДА</div><div class="lc-chips">${
       r.cities.map(n => `<span class="lc-chip">${esc(n)}</span>`).join('')}</div></div>`;
   }
-  if (r.desc) h += `<div class="fcard-ideo">${esc(r.desc)}</div>`;
+  // Описание может идти несколькими абзацами — пустая строка в тексте
+  // разбивает его так же, как в полном досье локации.
+  if (r.desc){
+    h += `<div class="fcard-ideo">${
+      String(r.desc).split(/\n\n+/).map(t => `<p>${esc(t)}</p>`).join('')}</div>`;
+  }
   if (!r.status && !r.population && !r.governor && !r.economy && !r.defense && !r.desc){
     h += '<div class="fc-empty">Досье региона ещё не составлено.</div>';
   }
