@@ -1194,7 +1194,7 @@ function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK, layer, selHoldKe
       const h = HOLDINGS[hi];
       const sel = h.key === selHoldKey;
       const sector = h.kind === 'sector';
-      const [r, g, b] = hexRgb(sector ? '#ff6655' : h.col);
+      const [r, g, b] = hexRgb(h.col);
       const draw = fn => {
         for (let pi = 0; pi < h.polys.length; pi++){
           const offs = offsetsFor(HOLD_BB[hi][pi]);
@@ -1202,7 +1202,9 @@ function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK, layer, selHoldKe
           for (const dx of offs){ tracePoly(h.polys[pi], dx); fn(); }
         }
       };
-      // У сектора заливки нет вовсе: это полоса ответственности, а не
+      // Цвет у всех один, фракционный: владения — не отдельные силы,
+      // а куски её же земли. Сектор отличается штрихом: заливки у него
+      // нет вовсе, а пунктир длиннее — это полоса ответственности, а не
       // земля во владении, и она лежит поверх чужих владений.
       if (!sector){
         c.setLineDash([]);
@@ -1211,7 +1213,7 @@ function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK, layer, selHoldKe
       }
       c.strokeStyle = `rgb(${r},${g},${b})`;
       c.setLineDash(sel ? [] : (sector ? [9 * k, 7 * k] : [5 * k, 4 * k]));
-      c.globalAlpha = sel ? 0.95 : (sector ? 0.75 : 0.62);
+      c.globalAlpha = sel ? 0.95 : (sector ? 0.7 : 0.62);
       c.lineWidth = (sel ? 1.8 : 1.2) * k;
       draw(() => c.stroke());
     }
@@ -2201,15 +2203,12 @@ function traceRegion(reg, M){
 function drawHover(M){
   if (hoverA <= 0.02 || !hoverShown) return;
   const a = hoverA;
-  // Оперативный сектор и подсвечивается своим красным: на карте он нарисован
-  // им же, и подсветка не должна менять ему цвет.
-  const hcol = hoverShown.kind === 'sector' ? '#ff6655' : hoverShown.col;
   octx.save();
   traceRegion(hoverShown, M);
-  octx.fillStyle = hcol;
+  octx.fillStyle = hoverShown.col;
   octx.globalAlpha = 0.17 * a;
   octx.fill('evenodd');
-  octx.strokeStyle = hcol;
+  octx.strokeStyle = hoverShown.col;
   octx.lineJoin = 'round';
   octx.globalAlpha = 0.13 * a; octx.lineWidth = 5; octx.stroke();
   octx.globalAlpha = 0.75 * a; octx.lineWidth = 1.3; octx.stroke();
@@ -2230,7 +2229,7 @@ function drawHover(M){
     octx.fillStyle = 'rgba(4,7,14,0.92)';
     octx.fillRect(x, y, tw + 12, 17);
     octx.globalAlpha = 0.5 * a;
-    octx.fillStyle = hcol;
+    octx.fillStyle = hoverShown.col;
     octx.fillRect(x, y, 2, 17);
     octx.globalAlpha = a;
     octx.fillStyle = '#fff';
