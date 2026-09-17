@@ -413,6 +413,87 @@ FACTIONS["rakshasy"] = {
   },
 }
 
+# ═══════════════ ВЛАДЕНИЯ ВНУТРИ РЕГИОНОВ ═══════════════
+# Это уже не деление, а отдельные куски внутри региона: личные владения,
+# концессии, зоны ответственности. Они могут не покрывать регион целиком
+# и могут налезать друг на друга — оперативный сектор и лежащие внутри
+# него владения так и задуманы. Точных границ у них нет и быть не может,
+# поэтому очертания здесь набросаны от руки по настоящей географии,
+# а скрипт только скругляет углы и обрезает набросок по своему региону,
+# чтобы владение не вылезло за границу домена.
+#
+#   shape  — кольцо [[широта, долгота], ...]
+#   line   — осевая линия и ширина в градусах (для коридоров вдоль рек)
+#   inside — ключи владений, которые обязаны лежать внутри этого: сектор
+#            объединяется с ними, и вложенность гарантируется
+HOLDINGS = {
+  "dali": {
+    "parent": "haze",
+    "shape": [(26.52, 99.98), (26.40, 100.42), (26.05, 100.62), (25.92, 100.98),
+              (25.62, 101.12), (25.35, 100.86), (25.08, 100.98), (24.88, 100.66),
+              (24.92, 100.22), (25.12, 99.92), (25.06, 99.58), (25.38, 99.42),
+              (25.78, 99.52), (26.02, 99.38), (26.28, 99.55)],
+  },
+  "guilin": {
+    "parent": "rift",
+    "shape": [(26.32, 110.02), (26.22, 110.48), (26.30, 110.86), (25.98, 111.12),
+              (25.62, 111.38), (25.28, 111.22), (25.02, 111.36), (24.72, 111.02),
+              (24.58, 110.62), (24.72, 110.18), (24.62, 109.88), (24.92, 109.62),
+              (25.32, 109.72), (25.62, 109.55), (25.98, 109.78)],
+  },
+  # Коридор идёт по самой реке: осевая от Наньнина через Гуйпин и Учжоу
+  # до восточного края домена, шириной примерно в семьдесят километров.
+  "xijiang": {
+    "parent": "rift",
+    "line": [(22.85, 108.30), (23.10, 109.00), (23.45, 109.60), (23.40, 110.10),
+             (23.45, 110.70), (23.50, 111.30), (23.30, 111.80)],
+    "width": 0.32,
+  },
+  "southfront": {
+    "parent": "rift",
+    "inside": ["guilin", "xijiang"],
+    "shape": [(22.05, 106.60), (22.60, 107.90), (23.30, 108.60), (24.20, 109.30),
+              (25.20, 109.80), (26.20, 110.10), (26.15, 110.95), (25.60, 111.35),
+              (24.80, 111.45), (23.90, 111.85), (23.20, 111.90), (22.90, 111.10),
+              (22.75, 110.20), (22.55, 109.20), (22.10, 108.00), (21.85, 107.00)],
+  },
+}
+
+
+def build_holdings(regions_by_key):
+    """Набросок -> скруглённый полигон, обрезанный по своему региону."""
+    from shapely.geometry import Polygon, LineString
+    from shapely.ops import unary_union
+    raw = {}
+    for key, spec in HOLDINGS.items():
+        if "line" in spec:
+            g = LineString([(lo, la) for la, lo in spec["line"]]).buffer(
+                spec["width"], cap_style=2, join_style=1)
+        else:
+            g = Polygon([(lo, la) for la, lo in spec["shape"]])
+        # скругление: набросок из десятка точек иначе выглядит рублеными
+        # гранями, а не границей владения
+        raw[key] = g.buffer(0.06, join_style=1).buffer(-0.06, join_style=1)
+
+    out = {}
+    print(f"\n{'владение':22s}{'площадь':>12s}   в составе")
+    for key, spec in HOLDINGS.items():
+        g = raw[key]
+        for inner in spec.get("inside", []):
+            g = unary_union([g, raw[inner]])
+        g = g.intersection(regions_by_key[spec["parent"]])
+        if g.is_empty:
+            sys.exit(f"владение {key} не попало в свой регион {spec['parent']}")
+        out[key] = g
+        print(f"{key:22s}{area_km2(g) / 1e3:9.0f} тыс   {spec['parent']}")
+    # то, что объявлено вложенным, обязано и правда лежать внутри
+    for key, spec in HOLDINGS.items():
+        for inner in spec.get("inside", []):
+            if not out[key].buffer(1e-9).covers(out[inner]):
+                sys.exit(f"владение {inner} вышло за пределы сектора {key}")
+    return out
+
+
 # ═══════════════ ЧТЕНИЕ ИСХОДНИКОВ ═══════════════
 def read_js_object(path, var):
     src = open(path, encoding='utf-8').read()
@@ -744,14 +825,18 @@ def main():
     feats = json.load(open(fetch_ne(args.ne), encoding='utf-8'))['features']
 
     geo, borders, all_ok = {}, {}, True
+    polys = {}
     for fkey, spec in FACTIONS.items():
         regions, border_lines, ok = build_faction(fkey, spec, feats)
         all_ok = all_ok and ok
         for key, *_ in spec["regions"]:
             geo[key] = rings_of(regions[key])
+            polys[key] = regions[key]
         borders[fkey] = lines_of(border_lines)
     if not all_ok:
         sys.exit("\nпроверки не прошли, файл не записан")
+
+    holds = {k: rings_of(g) for k, g in build_holdings(polys).items()}
 
     if args.dry:
         print("\n--dry: файл не записан")
@@ -770,9 +855,13 @@ def main():
             "// REGIONS_BORDERS: ключ фракции -> только внутренние линии между\n"
             "//                  её регионами, чтобы карта не обводила побережье\n"
             "//                  второй раз поверх границы самой фракции.\n"
+            "// HOLDINGS_GEO:    владения внутри регионов — набросок от руки,\n"
+            "//                  обрезанный по своему региону. Досье — в holdings.js.\n"
             f"window.REGIONS_GEO = {dumps_compact(geo)};\n"
-            f"window.REGIONS_BORDERS = {dumps_compact(borders)};\n")
+            f"window.REGIONS_BORDERS = {dumps_compact(borders)};\n"
+            f"window.HOLDINGS_GEO = {dumps_compact(holds)};\n")
     print(f"\nзаписано {out}")
+    print(f"  владений: {len(holds)}")
     print(f"  регионов: {len(geo)}, колец: "
           f"{sum(len(poly) for v in geo.values() for poly in v)}, точек: {pts}, "
           f"линий границ: {sum(len(v) for v in borders.values())}, "

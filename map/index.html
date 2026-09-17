@@ -788,6 +788,7 @@
 <script src="data/factions-geo.js"></script>
 <script src="data/locations.js"></script>
 <script src="data/regions.js"></script>
+<script src="data/holdings.js"></script>
 <script src="data/regions-geo.js"></script>
 <script>
 (function(){
@@ -808,6 +809,15 @@ const REGIONS = (window.REGIONS_INFO || []).map(r => {
 // обводить регион целиком нельзя, иначе побережье получит вторую границу
 // поверх границы фракции.
 const REG_BORDERS = window.REGIONS_BORDERS || {};
+
+// Владения внутри регионов: не деление, а отдельные куски — личные
+// владения, концессии, полосы ответственности. Могут налезать друг на
+// друга, поэтому живут отдельным списком, а не частью REGIONS.
+const HOLD_GEO = window.HOLDINGS_GEO || {};
+const HOLDINGS = (window.HOLDINGS_INFO || []).map(h => {
+  const f = (window.FACTIONS_INFO || []).find(x => x.key === h.faction);
+  return { ...h, col: (f && f.col) || '#8fa8c8', polys: HOLD_GEO[h.key] || [] };
+}).filter(h => h.polys.length);
 
 // ═══════════════ ЧИСЛА ИЗ ДОСЬЕ ═══════════════
 // Население и площадь в досье написаны для чтения людьми — «1,14 млрд»,
@@ -857,6 +867,7 @@ function bounds(poly){
 const LAND_BB = LAND.map(bounds);
 const FAC_BB = FACTIONS.map(f => (f.polys || []).map(bounds));
 const REG_BB = REGIONS.map(r => r.polys.map(bounds));
+const HOLD_BB = HOLDINGS.map(h => h.polys.map(bounds));
 // у линии границы кольцо одно — bounds ждёт список колец
 const REG_BORDER_BB = {};
 for (const key in REG_BORDERS) REG_BORDER_BB[key] = REG_BORDERS[key].map(l => bounds([l]));
@@ -949,6 +960,28 @@ function heatCss(v, spec){
   return HEAT_CSS[i];
 }
 
+// Владения ищутся так же, но перекрываться им можно, поэтому побеждает
+// меньшее по площади: щелчок внутри владения открывает именно владение,
+// а не сектор, который его накрывает.
+function holdingAt(lat, lon){
+  let best = null, bestA = Infinity;
+  for (let hi = 0; hi < HOLDINGS.length; hi++){
+    const polys = HOLDINGS[hi].polys;
+    for (let pi = 0; pi < polys.length; pi++){
+      const bb = HOLD_BB[hi][pi];
+      if (lat < bb.laMin || lat > bb.laMax) continue;
+      for (const off of [-360, 0, 360]){
+        const L = lon + off;
+        if (L < bb.loMin || L > bb.loMax) continue;
+        if (!pointInPoly(lat, L, polys[pi])) continue;
+        const a = (bb.laMax - bb.laMin) * (bb.loMax - bb.loMin);
+        if (a < bestA){ bestA = a; best = HOLDINGS[hi]; }
+      }
+    }
+  }
+  return best;
+}
+
 // ═══════════════ ОТРИСОВКА КАРТЫ В ТЕКСТУРУ ═══════════════
 // Одна и та же функция рисует и общую текстуру всего мира, и «детальную»
 // текстуру только видимого окна — отличается лишь охват (rect).
@@ -956,7 +989,7 @@ function hexRgb(h){
   return [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
 }
 
-function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK, layer){
+function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK, layer, selHoldKey){
   const LAY = layer ? LAYERS[layer] : null;
   const loMin  = rect ? rect.loMin  : -180;
   const loSpan = rect ? rect.loSpan : 360;
@@ -1147,6 +1180,42 @@ function paintMap(c, W, H, rect, selectedKey, selRegKey, lineK, layer){
         for (const dx of offs){ tracePoly(selReg.polys[pi], dx); c.stroke(); }
       }
     }
+    c.restore();
+  }
+
+  // Владения внутри регионов. Рисуются только в детальном окне: на общей
+  // текстуре 4096 px на 360° самое крупное из них занимает полтора десятка
+  // текселей, то есть на экране — пару пикселей мусора. Пунктир отличает
+  // владение от деления: это кусок внутри региона, а не сам регион.
+  if (rect && HOLDINGS.length){
+    c.save();
+    c.lineJoin = 'round'; c.lineCap = 'butt';
+    for (let hi = 0; hi < HOLDINGS.length; hi++){
+      const h = HOLDINGS[hi];
+      const sel = h.key === selHoldKey;
+      const sector = h.kind === 'sector';
+      const [r, g, b] = hexRgb(sector ? '#ff6655' : h.col);
+      const draw = fn => {
+        for (let pi = 0; pi < h.polys.length; pi++){
+          const offs = offsetsFor(HOLD_BB[hi][pi]);
+          if (!offs) continue;
+          for (const dx of offs){ tracePoly(h.polys[pi], dx); fn(); }
+        }
+      };
+      // У сектора заливки нет вовсе: это полоса ответственности, а не
+      // земля во владении, и она лежит поверх чужих владений.
+      if (!sector){
+        c.setLineDash([]);
+        c.fillStyle = `rgba(${r},${g},${b},${sel ? 0.30 : 0.13})`;
+        draw(() => c.fill('evenodd'));
+      }
+      c.strokeStyle = `rgb(${r},${g},${b})`;
+      c.setLineDash(sel ? [] : (sector ? [9 * k, 7 * k] : [5 * k, 4 * k]));
+      c.globalAlpha = sel ? 0.95 : (sector ? 0.75 : 0.62);
+      c.lineWidth = (sel ? 1.8 : 1.2) * k;
+      draw(() => c.stroke());
+    }
+    c.setLineDash([]);
     c.restore();
   }
 
@@ -1476,7 +1545,7 @@ function updateDetail(){
   const lineK = Math.min(kDeg, BORDER_MAX_PX * texelPerPx / BORDER_REF_UNITS);
 
   detCanvas.width = w; detCanvas.height = h;
-  paintMap(detCanvas.getContext('2d'), w, h, rect, selectedKey, selectedRegKey, lineK, mapLayer);
+  paintMap(detCanvas.getContext('2d'), w, h, rect, selectedKey, selectedRegKey, lineK, mapLayer, selectedHoldKey);
 
   gl.activeTexture(gl.TEXTURE1);
   gl.bindTexture(gl.TEXTURE_2D, detTex);
@@ -1496,6 +1565,7 @@ const legendBody = document.getElementById('legendBody');
 const fcard = document.getElementById('fcard');
 let selectedKey = null;
 let selectedRegKey = null;
+let selectedHoldKey = null;
 
 for (const f of FACTIONS){
   const it = document.createElement('div');
@@ -1649,6 +1719,12 @@ function regCardHtml(r){
     h += `<div class="fcard-ideo">${
       String(r.desc).split(/\n\n+/).map(t => `<p>${esc(t)}</p>`).join('')}</div>`;
   }
+  // Владения внутри региона — чипами, как регионы у фракции.
+  const hs = HOLDINGS.filter(x => x.parent === r.key);
+  if (hs.length){
+    h += `<div class="lc-row fc-reglist"><div class="lc-label">ВЛАДЕНИЯ ВНУТРИ — ${hs.length}</div><div class="lc-chips">${
+      hs.map(x => `<a class="lc-chip${x.key === selectedHoldKey ? ' cur' : ''}" data-hold="${x.key}">${esc(x.name)}</a>`).join('')}</div></div>`;
+  }
   if (!r.status && !r.population && !r.governor && !r.economy && !r.defense && !r.desc){
     h += '<div class="fc-empty">Досье региона ещё не составлено.</div>';
   }
@@ -1670,6 +1746,8 @@ function regCardHtml(r){
 function bindCardLinks(){
   fcard.querySelectorAll('[data-reg]').forEach(el =>
     el.addEventListener('click', () => selectRegion(el.dataset.reg, true)));
+  fcard.querySelectorAll('[data-hold]').forEach(el =>
+    el.addEventListener('click', () => selectHolding(el.dataset.hold, true)));
 }
 
 function openCard(f){
@@ -1700,6 +1778,30 @@ function openRegionCard(r){
   bindCardLinks();
 }
 
+// Досье владения — та же карточка, что у региона: набор полей совпадает.
+// Отличие одно — строка «в составе», по которой видно (и можно перейти),
+// внутри какого региона оно лежит.
+function openHoldingCard(h){
+  fcard.style.setProperty('--fc', h.col);
+  const fac = FACTIONS.find(f => f.key === h.faction);
+  const reg = REGIONS.find(r => r.key === h.parent);
+  let out = '';
+  if (fac){
+    out += `<details class="fcard-fold"><summary>
+      <div class="fcard-fold-dot"></div><div class="fcard-fold-name">${esc(fac.name)}</div>
+      <div class="fcard-fold-chev">▸</div>
+    </summary><div class="fcard-fold-body">${facCardHtml(fac, true)}</div></details>`;
+  }
+  out += regCardHtml(h);
+  if (reg){
+    out += `<div class="lc-row"><div class="lc-label">В СОСТАВЕ</div><div class="lc-chips">${
+      `<a class="lc-chip" data-reg="${reg.key}">${esc(reg.name)}</a>`}</div></div>`;
+  }
+  document.getElementById('fcBody').innerHTML = out;
+  fcard.classList.add('open');
+  bindCardLinks();
+}
+
 function shortestAngle(from, to){
   let d = (to - from) % (2 * Math.PI);
   if (d >  Math.PI) d -= 2 * Math.PI;
@@ -1715,7 +1817,8 @@ function flyToLL(lat, lon, minZoom){
 }
 
 function refreshTexture(){
-  const key = (selectedKey || '') + '|' + (selectedRegKey || '') + '|' + (mapLayer || '');
+  const key = (selectedKey || '') + '|' + (selectedRegKey || '') + '|' + (mapLayer || '')
+            + '|' + (selectedHoldKey || '');
   if (refreshTexture._last === key) return;
   refreshTexture._last = key;
   buildTexture(selectedKey, selectedRegKey);
@@ -1733,6 +1836,7 @@ function select(key, fly){
   const f = key ? FACTIONS.find(x => x.key === key) : null;
   selectedKey = f ? key : null;
   selectedRegKey = null;
+  selectedHoldKey = null;
   syncLegend();
   if (f){
     closeLoc();
@@ -1750,11 +1854,30 @@ function selectRegion(key, fly){
   const r = REGIONS.find(x => x.key === key);
   if (!r){ select(null); return; }
   selectedRegKey = r.key;
+  selectedHoldKey = null;
   selectedKey = r.faction;
   syncLegend();
   closeLoc();
   openRegionCard(r);
   if (fly) flyToLL(r.clat != null ? r.clat : 0, r.clon != null ? r.clon : 0, baseR * 2.2);
+  refreshTexture();
+}
+
+// Владение выбирается вместе со своим регионом и фракцией: оно
+// показывается не само по себе, а куском чьей-то земли.
+function selectHolding(key, fly){
+  const h = HOLDINGS.find(x => x.key === key);
+  if (!h){ select(null); return; }
+  selectedHoldKey = h.key;
+  selectedRegKey = h.parent;
+  selectedKey = h.faction;
+  syncLegend();
+  closeLoc();
+  openHoldingCard(h);
+  if (fly){
+    const b = HOLD_BB[HOLDINGS.indexOf(h)][0];
+    flyToLL((b.laMin + b.laMax) / 2, (b.loMin + b.loMax) / 2, baseR * 5.5);
+  }
   refreshTexture();
 }
 
@@ -2002,7 +2125,8 @@ let hoverT = 0;
 // faction — у фракции такого поля нет.
 function hoverTarget(){
   if (!hoverReg) return 0;
-  if (hoverReg.faction) return hoverReg.key === selectedRegKey ? 0 : 1;
+  if (hoverReg.parent) return hoverReg.key === selectedHoldKey ? 0 : 1;
+  if (hoverReg.faction) return (hoverReg.key === selectedRegKey && !selectedHoldKey) ? 0 : 1;
   return (hoverReg.key === selectedKey && !selectedRegKey) ? 0 : 1;
 }
 
@@ -2016,8 +2140,14 @@ function updateHover(){
     point = !!(loc || f);
     // над меткой подсветка не нужна: щелчок там откроет локацию, а не регион
     // Где деления на регионы нет, отзывается сама фракция: тактильной
-    // должна быть вся карта, а не только три поделённые державы.
-    if (f && !loc) next = regionAt(ll.lat, ll.lon, f.key) || (FAC_SPLIT[f.key] ? null : f);
+    // должна быть вся карта, а не только поделённые державы. Владение
+    // отзывается первым, но только когда его видно — то есть на том же
+    // приближении, на котором оно нарисовано.
+    if (f && !loc){
+      next = (detailWanted() ? holdingAt(ll.lat, ll.lon) : null)
+          || regionAt(ll.lat, ll.lon, f.key)
+          || (FAC_SPLIT[f.key] ? null : f);
+    }
   }
   inputEl.classList.toggle('pointing', point);
   if (next !== hoverReg){
@@ -2032,7 +2162,7 @@ function updateHover(){
 // тысяче точек заново незачем.
 const regVecCache = new Map();
 function regVecs(reg){
-  const ck = (reg.faction ? 'r:' : 'f:') + reg.key;
+  const ck = (reg.parent ? 'h:' : reg.faction ? 'r:' : 'f:') + reg.key;
   let v = regVecCache.get(ck);
   if (v) return v;
   v = reg.polys.map(poly => poly.map(ring => {
@@ -2071,12 +2201,15 @@ function traceRegion(reg, M){
 function drawHover(M){
   if (hoverA <= 0.02 || !hoverShown) return;
   const a = hoverA;
+  // Оперативный сектор и подсвечивается своим красным: на карте он нарисован
+  // им же, и подсветка не должна менять ему цвет.
+  const hcol = hoverShown.kind === 'sector' ? '#ff6655' : hoverShown.col;
   octx.save();
   traceRegion(hoverShown, M);
-  octx.fillStyle = hoverShown.col;
+  octx.fillStyle = hcol;
   octx.globalAlpha = 0.17 * a;
   octx.fill('evenodd');
-  octx.strokeStyle = hoverShown.col;
+  octx.strokeStyle = hcol;
   octx.lineJoin = 'round';
   octx.globalAlpha = 0.13 * a; octx.lineWidth = 5; octx.stroke();
   octx.globalAlpha = 0.75 * a; octx.lineWidth = 1.3; octx.stroke();
@@ -2097,7 +2230,7 @@ function drawHover(M){
     octx.fillStyle = 'rgba(4,7,14,0.92)';
     octx.fillRect(x, y, tw + 12, 17);
     octx.globalAlpha = 0.5 * a;
-    octx.fillStyle = hoverShown.col;
+    octx.fillStyle = hcol;
     octx.fillRect(x, y, 2, 17);
     octx.globalAlpha = a;
     octx.fillStyle = '#fff';
@@ -2397,8 +2530,11 @@ inputEl.addEventListener('pointerup', e => {
       } else {
         closeLoc();
         const ll = unproject(mx, my, viewMatrix());
+        const hold = (ll && detailWanted()) ? holdingAt(ll.lat, ll.lon) : null;
         const reg = ll ? regionAt(ll.lat, ll.lon) : null;
-        if (reg){
+        if (hold){
+          selectHolding(hold.key, false);
+        } else if (reg){
           selectRegion(reg.key, false);
         } else {
           const f = ll ? factionAt(ll.lat, ll.lon) : null;
