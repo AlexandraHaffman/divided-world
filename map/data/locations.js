@@ -500,7 +500,7 @@ window.LOCATIONS_DATA = [
     faction: "rakshasy",
     lat: 23.81,
     lon: 90.41,
-    region: "Домен Плющ",
+    region: "Домен «Плющ»",
     subtitle: "Столица домена",
   },
   {
@@ -509,7 +509,7 @@ window.LOCATIONS_DATA = [
     faction: "rakshasy",
     lat: 29.65,
     lon: 91.1,
-    region: "Домен Прах",
+    region: "Домен «Прах»",
     subtitle: "Столица домена",
   },
   {
@@ -518,7 +518,7 @@ window.LOCATIONS_DATA = [
     faction: "rakshasy",
     lat: 25.04,
     lon: 102.71,
-    region: "Домен Марево",
+    region: "Домен «Марево»",
     subtitle: "Столица домена",
   },
   {
@@ -527,7 +527,7 @@ window.LOCATIONS_DATA = [
     faction: "rakshasy",
     lat: 22.1,
     lon: 106.76,
-    region: "Домен Излом",
+    region: "Домен «Излом»",
     subtitle: "Столица домена",
   },
 ];

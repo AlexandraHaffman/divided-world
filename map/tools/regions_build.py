@@ -364,10 +364,10 @@ FACTIONS["forge"] = {
 FACTIONS["rakshasy"] = {
   "title": "Ракшасы",
   "regions": [
-    ("ivy",   "Домен Плющ",  "Дакка",   23.81,  90.41),
-    ("ash",   "Домен Прах",  "Бастион", 29.65,  91.10),
-    ("haze",  "Домен Марево", "Куньмин", 25.04, 102.71),
-    ("rift",  "Домен Излом", "Пинсян",  22.10, 106.76),
+    ("ivy",   "Домен «Плющ»",  "Дакка",   23.81,  90.41),
+    ("ash",   "Домен «Прах»",  "Бастион", 29.65,  91.10),
+    ("haze",  "Домен «Марево»", "Куньмин", 25.04, 102.71),
+    ("rift",  "Домен «Излом»", "Пинсян",  22.10, 106.76),
   ],
   # Индостан целиком уходит Плющу, восточный Индокитай — Мареву.
   "by_country": {
@@ -399,7 +399,13 @@ FACTIONS["rakshasy"] = {
         # Сычуань и Гуйчжоу до Гуанси и Хайнаня. Шэньси, Шаньси, Хунань,
         # Хубэй и Гуандун лежат в Forge почти целиком: сюда попадают
         # только их полосы, оставшиеся снаружи.
-        "Ningxia": "rift", "Shaanxi": "rift", "Shanxi": "rift",
+        # Шаньси заходит в территорию только северным клином, зажатым
+        # между Внутренней Монголией и рубежом Forge. Отдай его Излому —
+        # и граница доменов пойдёт внутри этого клина параллельно самому
+        # краю державы, в полусотне километров от неё: на карте две линии
+        # сливаются в одну удвоенную. Поэтому клин целиком за Прахом.
+        "Shanxi": "ash",
+        "Ningxia": "rift", "Shaanxi": "rift",
         "Sichuan": "rift", "Chongqing": "rift", "Guizhou": "rift",
         "Hubei": "rift", "Hunan": "rift",
         "Guangxi": "rift", "Guangdong": "rift", "Hainan": "rift",
@@ -568,10 +574,10 @@ def cut_regions(area, templates, keys):
         bucket[tkeys[idx]].append(f)
 
     regions = {k: unary_union(v) for k, v in bucket.items() if v}
-    return regions, region_borders(regions)
+    return regions, region_borders(regions, area)
 
 
-def region_borders(regions):
+def region_borders(regions, area):
     """Линии для отрисовки: там, где два готовых полигона регионов реально
     соприкасаются. В отличие от продлённых дуг разрезания, тут нечему
     продлеваться и некуда убегать — общий край двух уже посчитанных
@@ -594,7 +600,23 @@ def region_borders(regions):
     merged = linemerge(unary_union(pieces))
     merged = [g.simplify(TOL, preserve_topology=False)
               for g in getattr(merged, 'geoms', [merged])]
-    return [g for g in merged if g.length > 0 and len(g.coords) >= 2]
+    merged = [g for g in merged if g.length > 0 and len(g.coords) >= 2]
+
+    # Кусочек, целиком лежащий на внешней границе фракции, рисовать нельзя:
+    # два региона там не смотрят друг на друга через землю, а просто оба
+    # доходят до одного края. На карте такая линия ложится поверх границы
+    # державы и выглядит её удвоением. Здоровые линии этим порогом не
+    # задеваются: они лишь упираются в край концом, а не лежат на нём.
+    edge = area.boundary.buffer(0.03)      # ~3 км: здоровая линия лишь
+                                           # упирается в край, а не лежит на нём
+    out = []
+    for g in merged:
+        on = g.intersection(edge).length
+        if on > g.length * 0.8:
+            print(f"  убрана линия длиной {g.length:.2f}° — лежит на границе фракции")
+            continue
+        out.append(g)
+    return out
 
 
 # ═══════════════ ОТЧЁТ И ЗАПИСЬ ═══════════════
