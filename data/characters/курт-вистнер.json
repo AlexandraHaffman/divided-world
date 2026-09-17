@@ -4,7 +4,7 @@
   "status": "Активен",
   "gender": "Мужской",
   "role": "Спаситель",
-  "birthdate": "13.11.1990",
+  "birthdate": "13.11",
   "faction": "Аркадия",
   "subfaction": "",
   "location": "Аркадия",
@@ -38,5 +38,13 @@
   "avatar_web": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/A8E1C5AF-14EF-4F7C-BB2E-C744C3E019C0.webp",
   "avatar_web_full": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/0B6B0D1D-2E75-4C46-BE56-C8106D49E5AE.webp",
   "tier": "legendary",
-  "exported_at": "2026-07-01T07:09:51.399Z"
+  "appearance": {
+    "height": 182,
+    "weight": 77,
+    "eye_color": "Зелёные",
+    "hair_color": "Каштановые",
+    "bust_size": null,
+    "marks": "Волосы с заметной проседью. Но несмотря на истинный возраст, Вистнер выглядит лет на 40-45 (медицина Аркадии творит практически чудеса)"
+  },
+  "exported_at": "2026-09-06T19:55:55.642Z"
 }
