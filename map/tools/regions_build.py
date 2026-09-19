@@ -413,6 +413,109 @@ FACTIONS["rakshasy"] = {
   },
 }
 
+FACTIONS["ekvatornaya"] = {
+  "title": "Экваториальная сеть",
+  "regions": [
+    ("maghreb",   "Магрибская дуга",             "Алжир",          36.75,   3.06),
+    ("nile",      "Нильская линия",              "Каир",           30.04,  31.24),
+    ("atlantic",  "Атлантическая цепь",          "Дакар",          14.72, -17.47),
+    ("sahel",     "Западный Сахель",             "Бамако",         12.64,  -8.00),
+    ("guinea",    "Гвинейский пояс",             "Аккра",           5.60,  -0.19),
+    ("delta",     "Контур Большой Дельты",       "Лагос",           6.52,   3.38),
+    ("chad",      "Чадский разрыв",              "Нджамена",       12.11,  15.05),
+    ("cameroon",  "Камерунский переход",         "Яунде",           3.87,  11.52),
+    ("congo",     "Конголезская сеть",           "Киншаса",        -4.32,  15.31),
+    ("riftlakes", "Контур Великих озёр",         "Кампала",         0.35,  32.58),
+    ("abyssinia", "Абиссинское нагорье",         "Аддис-Абеба",     9.03,  38.74),
+    ("swahili",   "Суахилийская линия",          "Дар-эс-Салам",   -6.79,  39.21),
+    ("zambezi",   "Анголо-Замбезийский коридор", "Лусака",        -15.42,  28.28),
+    ("cape",      "Южный промышленный контур",   "Йоханнесбург",  -26.20,  28.05),
+    ("indian",    "Индоокеанский контур",        "Антананариву",  -18.88,  47.51),
+  ],
+  # Столиц у контуров нет: в пятом столбце стоит опорный узел, по нему
+  # скрипт только проверяет, что контур действительно накрыл свой город.
+  "by_country": {
+    "Morocco": "maghreb", "Western Sahara": "maghreb", "Algeria": "maghreb",
+    "Tunisia": "maghreb", "Libya": "maghreb",
+
+    "Egypt": "nile",
+
+    "Senegal": "atlantic", "Gambia": "atlantic", "Guinea Bissau": "atlantic",
+    "Sierra Leone": "atlantic", "Liberia": "atlantic",
+
+    "Mali": "sahel", "Burkina Faso": "sahel", "Niger": "sahel",
+
+    "Guinea": "guinea", "Ivory Coast": "guinea", "Ghana": "guinea", "Togo": "guinea",
+
+    "Benin": "delta",
+
+    "Chad": "chad",
+
+    "Cameroon": "cameroon", "Gabon": "cameroon", "Equatorial Guinea": "cameroon",
+
+    "Democratic Republic of the Congo": "congo",
+    "Republic of the Congo": "congo", "S. Sudan": "congo",
+
+    "Uganda": "riftlakes", "Rwanda": "riftlakes", "Burundi": "riftlakes",
+    "Malawi": "riftlakes",
+
+    "Ethiopia": "abyssinia", "Eritrea": "abyssinia", "Djibouti": "abyssinia",
+    "Somaliland": "abyssinia",
+
+    "Angola": "zambezi", "Zimbabwe": "zambezi",
+
+    "South Africa": "cape", "Namibia": "cape", "Botswana": "cape",
+    "Lesotho": "cape", "Swaziland": "cape",
+
+    "Madagascar": "indian",
+  },
+  # Девять стран поделены между контурами: там, где линия проходит внутри
+  # бывшей страны, она идёт по её же внутренним границам. "*" — всё
+  # остальное этой страны.
+  "by_state": {
+    # Дарфур тянется к озеру Чад, а не к реке.
+    "Sudan": {
+        "North Darfur": "chad", "Southern Darfur": "chad", "Eastern Darfur": "chad",
+        "Western Darfur": "chad", "Central Darfur": "chad",
+        "*": "nile",
+    },
+    # Приморская и северная Мавритания живёт морем, восточная — Сахелем.
+    "Mauritania": {
+        "Hodh ech Chargui": "sahel", "Hodh el Gharbi": "sahel",
+        "Assaba": "sahel", "Guidimaka": "sahel",
+        "*": "atlantic",
+    },
+    # Борно и Йобе смотрят на озеро Чад: Майдугури — узел Разрыва.
+    "Nigeria": {"Borno": "chad", "Yobe": "chad", "*": "delta"},
+    # Юг ЦАР — уже бассейн Конго; Банги с окрестностями остаётся Разрыву.
+    "Central African Republic": {
+        "Lobaye": "congo", "Sangha-Mbaéré": "congo", "Mambéré-Kadéï": "congo",
+        "Basse-Kotto": "congo", "Mbomou": "congo", "Haut-Mbomou": "congo",
+        "*": "chad",
+    },
+    "Kenya": {"Nyanza": "riftlakes", "Western": "riftlakes",
+              "Rift Valley": "riftlakes", "*": "swahili"},
+    "United Republic of Tanzania": {
+        "Kagera": "riftlakes", "Kigoma": "riftlakes", "Mwanza": "riftlakes",
+        "Geita": "riftlakes", "Mara": "riftlakes", "Simiyu": "riftlakes",
+        "Shinyanga": "riftlakes", "Tabora": "riftlakes", "Katavi": "riftlakes",
+        "Rukwa": "riftlakes", "Iringa": "riftlakes", "Singida": "riftlakes",
+        "Mbeya": "zambezi", "Njombe": "zambezi",
+        "*": "swahili",
+    },
+    "Mozambique": {"Maputo": "cape", "Gaza": "cape", "Inhambane": "cape",
+                   "Tete": "zambezi", "*": "swahili"},
+    # Север Сомали тянется к нагорью, юг — к суахилийскому побережью.
+    "Somalia": {"Bari": "abyssinia", "Nugaal": "abyssinia", "Mudug": "abyssinia",
+                "Galguduud": "abyssinia", "Hiiraan": "abyssinia",
+                "*": "swahili"},
+    # Север Замбии лежит в бассейне Конго, а не Замбези.
+    "Zambia": {"Northern": "congo", "Luapula": "congo", "Muchinga": "congo",
+               "*": "zambezi"},
+  },
+}
+
+
 # ═══════════════ ЧТЕНИЕ ИСХОДНИКОВ ═══════════════
 def read_js_object(path, var):
     src = open(path, encoding='utf-8').read()
@@ -466,8 +569,12 @@ def build_templates(feats, spec):
         if adm in by_state:
             table = by_state[adm]
             # сначала по имени самой единицы, потом по её области: так одной
-            # строкой ложатся и земли Германии, и целые области Италии
-            label = nm if nm in table else (reg if reg in table else None)
+            # строкой ложатся и земли Германии, и целые области Италии.
+            # Ключ "*" — куда уходит всё остальное: у стран, разрезанных
+            # пополам, иначе пришлось бы выписывать полсотни единиц ради
+            # одной линии.
+            label = nm if nm in table else (reg if reg in table else
+                                            ('*' if '*' in table else None))
             if label is None:
                 continue
             key = table[label]
@@ -481,7 +588,7 @@ def build_templates(feats, spec):
     # предупреждаем о единицах, которых в справочнике не нашлось: опечатка
     # в таблице выше молча выкинула бы кусок территории в «остаток»
     for adm, table in by_state.items():
-        lost = sorted(set(table) - seen[adm])
+        lost = sorted(set(table) - seen[adm] - {'*'})
         if lost:
             print(f"  ВНИМАНИЕ: в справочнике нет таких единиц {adm}: {', '.join(lost)}")
     return {k: unary_union(v) for k, v in groups.items() if v}

@@ -1640,7 +1640,10 @@ function regCardHtml(r){
     if (val) h += `<div class="lc-row"><div class="lc-label">${label}</div><div class="lc-value">${esc(val)}</div></div>`;
   }
   if (r.cities && r.cities.length){
-    h += `<div class="lc-row"><div class="lc-label">ГОРОДА</div><div class="lc-chips">${
+    // Подпись списка городов меняется: у контуров Экваториальной сети это
+    // не просто города, а опорные узлы, и столиц там нет вовсе.
+    h += `<div class="lc-row"><div class="lc-label">${
+      esc((r.citiesLabel || 'города').toUpperCase())}</div><div class="lc-chips">${
       r.cities.map(n => `<span class="lc-chip">${esc(n)}</span>`).join('')}</div></div>`;
   }
   // Описание может идти несколькими абзацами — пустая строка в тексте
