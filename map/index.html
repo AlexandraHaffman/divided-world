@@ -1794,7 +1794,7 @@ function select(key, fly){
   if (f){
     closeLoc();
     openCard(f);
-    if (fly) flyToLL(f.clat, f.clon, baseR * 1.5);
+    if (fly) flyToLL(f.clat, f.clon, baseR * FLY_FACTION);
   } else {
     fcard.classList.remove('open');
   }
@@ -1811,7 +1811,7 @@ function selectRegion(key, fly){
   syncLegend();
   closeLoc();
   openRegionCard(r);
-  if (fly) flyToLL(r.clat != null ? r.clat : 0, r.clon != null ? r.clon : 0, baseR * 2.2);
+  if (fly) flyToLL(r.clat != null ? r.clat : 0, r.clon != null ? r.clon : 0, baseR * FLY_REGION);
   refreshTexture();
 }
 
@@ -1919,6 +1919,24 @@ const TYPE_SIZE = {
   capital: 5.2, regional_capital: 4.2, city: 3.4, base: 3.4,
   settlement: 2.7, landmark: 4, anomaly: 4, frontline: 4, zone: 4.2,
 };
+// Когда метки проявляются, в зумах: 1 — глобус целиком в кадре.
+// Первое число — где метка начинает проступать, второе — за сколько
+// доходит до полной видимости. Точки идут раньше подписей, крупные
+// раньше прочих. Двигать эти четыре строки — и есть способ сделать
+// карту чище на общем плане: чем больше первое число, тем позже
+// появляется метка.
+const MARK_Z = {
+  dotMain: [1.42, 0.38],   // столицы, центры регионов, объекты, фронты
+  labMain: [1.80, 0.42],
+  dotAll:  [2.10, 0.52],   // города, базы, посёлки, аномалии, зоны
+  labAll:  [2.60, 0.55],
+};
+// Подлёт по щелчку в реестре привязан к этим же порогам, иначе выбор
+// фракции показывал бы пустую карту: летим ровно туда, где её метки
+// уже проявились полностью.
+const FLY_FACTION = MARK_Z.dotMain[0] + MARK_Z.dotMain[1];
+const FLY_REGION  = MARK_Z.dotAll[0]  + MARK_Z.dotAll[1];
+
 // приоритет подписи при нехватке места: меньше — важнее
 const TYPE_PRIO = {
   capital: 0, frontline: 1, landmark: 2, regional_capital: 3,
@@ -2179,10 +2197,10 @@ function drawOverlay(M){
   // Пока глобус виден целиком, меток нет вовсе — карта остаётся чистой.
   // Дальше они проявляются по мере приближения: сначала крупные, потом все.
   const z = R / baseR;
-  const aMain = smooth01((z - 1.15) / 0.35);
-  const aAll  = smooth01((z - 1.75) / 0.5);
-  const lMain = smooth01((z - 1.5) / 0.4);
-  const lAll  = smooth01((z - 2.2) / 0.5);
+  const aMain = smooth01((z - MARK_Z.dotMain[0]) / MARK_Z.dotMain[1]);
+  const aAll  = smooth01((z - MARK_Z.dotAll[0])  / MARK_Z.dotAll[1]);
+  const lMain = smooth01((z - MARK_Z.labMain[0]) / MARK_Z.labMain[1]);
+  const lAll  = smooth01((z - MARK_Z.labAll[0])  / MARK_Z.labAll[1]);
 
   // Ночные огни. Пока метки ещё не проявились, ночная сторона светится
   // самими городами — и видно, где в этом мире вообще горит свет: огни
