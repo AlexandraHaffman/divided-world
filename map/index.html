@@ -1546,6 +1546,7 @@ document.getElementById('fcClose').addEventListener('click', () => select(null))
 const INFLUENCE_MAX = 15;   // шкала влияния из справочника фракций, 1-15
 const CHAR_ARCHIVE = '../characters/index.html';
 const REGION_PHOTO_DIR = 'data/images/regions/';
+const FACTION_PHOTO_DIR = 'data/images/factions/';
 
 // Слуг персонажа = имя файла в data/characters/ без .json: имя строчными
 // буквами, пробелы заменены на дефисы. Если в карточке фракции лидер
@@ -1605,6 +1606,15 @@ function facCardHtml(f, skipHead){
   }
   if (!f.capital && !f.population && !f.area && !f.influence && !f.leader && !f.ideo){
     h += '<div class="fc-empty">Досье не составлено — территория не имеет задокументированного центрального управления.</div>';
+  }
+  // Фото фракции — только когда её досье открыто само по себе. Внутри
+  // досье региона оно лежит свёрнутой шапкой, и панорама на всю ширину
+  // там перевешивала бы фото самого региона.
+  const fshots = f.photos && f.photos.length ? f.photos : (f.photo ? [f.photo] : []);
+  if (fshots.length && !skipHead){
+    h += '<div class="fc-photos"><div class="fc-photos-track">' + fshots.map(src =>
+      `<img class="fc-photo" src="${FACTION_PHOTO_DIR}${encodeURIComponent(src)}" alt="" loading="lazy" onerror="this.remove()">`
+    ).join('') + '</div></div>';
   }
   return h;
 }
