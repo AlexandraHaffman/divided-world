@@ -17,8 +17,6 @@
 //
 //    name        — название региона
 //    capital     — региональная столица
-//    capitalLabel — своя подпись вместо «СТОЛИЦА <единицы>», если столицы
-//                  как таковой нет: "Главный узел" даст «ГЛАВНЫЙ УЗЕЛ»
 //    clat / clon — куда прилетает камера при выборе региона
 //                  (по умолчанию — координаты столицы)
 //    population  — население, строка как для показа ("214 млн")
@@ -974,8 +972,7 @@ window.REGIONS_INFO = [
     key:     "sharqiya",
     faction: "jamahiriya",
     name:    "Восточная группа",
-    capital: "Даммам—Джубайль",
-    capitalLabel: "Главный узел",
+    capital: "Даммам",
     clat: 26.434, clon: 50.103,
     unit:    "группы",
     status:  "Производственный пояс",
@@ -991,7 +988,6 @@ window.REGIONS_INFO = [
     faction: "jamahiriya",
     name:    "Хиджазская группа",
     capital: "Джидда",
-    capitalLabel: "Главный узел",
     clat: 21.543, clon: 39.173,
     unit:    "группы",
     status:  "Западная магистраль",
@@ -1007,7 +1003,6 @@ window.REGIONS_INFO = [
     faction: "jamahiriya",
     name:    "Недждийская группа",
     capital: "Эр-Рияд",
-    capitalLabel: "Главный узел",
     clat: 24.713, clon: 46.675,
     unit:    "группы",
     status:  "Политическое и медицинское ядро",
@@ -1023,7 +1018,6 @@ window.REGIONS_INFO = [
     faction: "jamahiriya",
     name:    "Южноаравийская группа",
     capital: "Аден",
-    capitalLabel: "Главный узел",
     clat: 12.79, clon: 45.03,
     unit:    "группы",
     status:  "Южный фронт",
