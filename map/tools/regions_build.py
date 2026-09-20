@@ -6,8 +6,8 @@
 
 Сейчас разложены шесть: Единая Америка (22 региона), Тенебрион
 (17 экзархатов), Forge (8 провинций), Ракшасы (4 домена), Экваториальная
-сеть (15 контуров) и Конфедерация Междуречья (9 полисов). Новая фракция
-добавляется одним блоком в FACTIONS ниже.
+сеть (15 контуров), Конфедерация Междуречья (9 полисов) и Джамахирия Нар
+(4 Группы). Новая фракция добавляется одним блоком в FACTIONS ниже.
 
 Что делает
 ──────────
@@ -586,6 +586,39 @@ FACTIONS["shumery"] = {
 }
 
 
+FACTIONS["jamahiriya"] = {
+  "title": "Джамахирия Нар",
+  "regions": [
+    ("hijaz", "Хиджазская группа",      "Джидда",   21.543, 39.173),
+    ("nejd",  "Недждийская группа",     "Эр-Рияд",  24.713, 46.675),
+    ("sharqiya", "Восточная группа",    "Даммам",   26.434, 50.103),
+    ("arabia_south", "Южноаравийская группа", "Аден", 12.790, 45.030),
+  ],
+  # Йемен и Оман целиком — юг; эмираты, Катар и Кувейт — восточное
+  # побережье; иорданская и иракская кромки достаются ближайшим.
+  "by_country": {
+      "Yemen": "arabia_south", "Oman": "arabia_south",
+      "United Arab Emirates": "sharqiya", "Qatar": "sharqiya",
+      "Kuwait": "sharqiya", "Bahrain": "sharqiya",
+      "Jordan": "hijaz",
+      "Iraq": "nejd",
+  },
+  "by_state": {
+    "Saudi Arabia": {
+        # Хиджаз — от Табука до Джизана вдоль Красного моря
+        "Tabuk": "hijaz", "Al Madinah": "hijaz", "Makkah": "hijaz",
+        "Al Bahah": "hijaz", "`Asir": "hijaz", "Jizan": "hijaz",
+        "Najran": "hijaz",
+        # Недж — внутреннее плато
+        "Ar Riyad": "nejd", "Al Quassim": "nejd", "Ha'il": "nejd",
+        "Al Jawf": "nejd", "Al Hudud ash Shamaliyah": "nejd",
+        # Восток — промышленный пояс залива
+        "Ash Sharqiyah": "sharqiya",
+    },
+  },
+}
+
+
 def read_js_object(path, var):
     src = open(path, encoding='utf-8').read()
     i = src.index('{', src.index(var))
@@ -940,6 +973,20 @@ def main():
         import shapely  # noqa: F401
     except ImportError:
         sys.exit('нужен shapely:  pip install shapely')
+
+    # Ключи регионов лежат в regions-geo.js одним общим списком, поэтому
+    # одинаковый ключ у двух фракций молча затрёт чужую геометрию: регион
+    # останется в regions.js, но на карте окажется в другом полушарии.
+    # Ловим это до того, как что-то посчитается.
+    seen = {}
+    clash = []
+    for fkey, spec in FACTIONS.items():
+        for key, *_ in spec["regions"]:
+            if key in seen:
+                clash.append(f'  «{key}» — и у {seen[key]}, и у {fkey}')
+            seen[key] = fkey
+    if clash:
+        sys.exit('ключи регионов повторяются, переименуйте:\n' + '\n'.join(clash))
 
     # справочник читается один раз на все фракции: он большой
     feats = json.load(open(fetch_ne(args.ne), encoding='utf-8'))['features']

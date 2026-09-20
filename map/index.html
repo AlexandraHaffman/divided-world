@@ -1669,9 +1669,13 @@ function regCardHtml(r){
   let h = `<div class="fcard-head"><div class="fcard-dot"></div><div class="fcard-name">${esc(r.name)}</div></div>`;
   if (r.status) h += `<div class="fc-sub">${esc(r.status)}</div>`;
   // Как называется сама единица деления: регион, экзархат, провинция, домен.
-  // Не задано — общее «региона», оно верно для всех.
-  if (r.capital) h += `<div class="lc-row"><div class="lc-label">СТОЛИЦА ${
-    esc((r.unit || 'региона').toUpperCase())}</div><div class="lc-value">${esc(r.capital)}</div></div>`;
+  // Не задано — общее «региона», оно верно для всех. А бывает, что столицы
+  // нет вовсе: Группы Джамахирии — не административные области, у них есть
+  // главный узел, но не столица. Тогда подпись задаётся своя.
+  if (r.capital) h += `<div class="lc-row"><div class="lc-label">${
+    esc(r.capitalLabel ? r.capitalLabel.toUpperCase()
+                       : 'СТОЛИЦА ' + (r.unit || 'региона').toUpperCase())
+    }</div><div class="lc-value">${esc(r.capital)}</div></div>`;
   if (r.population || r.area){
     h += '<div class="fc-stats">';
     if (r.population) h += `<div class="fc-stat"><div class="fc-stat-label">НАСЕЛЕНИЕ</div><div class="fc-stat-value">${esc(r.population)}</div></div>`;
