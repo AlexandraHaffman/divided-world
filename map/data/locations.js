@@ -782,12 +782,12 @@ window.LOCATIONS_DATA = [
   },
   {
     name: "Канберра",
-    type: "regional_capital",
+    type: "capital",
     faction: "australia",
     lat: -35.281,
     lon: 149.128,
     region: "Канберрская зона",
-    subtitle: "Столица зоны",
+    subtitle: "Столица зоны и всего Протектората",
   },
   {
     name: "Таунсвилл",

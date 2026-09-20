@@ -136,7 +136,7 @@ window.FACTIONS_INFO = [
     name:   "Австралийский протекторат",
     col:    "#a0522d",
     clat: -25, clon: 134,
-    capital:    "Комплекс Аделаиды",
+    capital:    "Канберра",
     population: "30 млн",
     area:       "7,70 млн км²",
     influence: 9,
