@@ -132,18 +132,30 @@ class World:
         got = facs[0] if facs else ""
         ok = True
         notes = []
+        mine = expect and expect in facs
         if land is False:
-            notes.append("В МОРЕ")
-            ok = False
+            # Метка на острове мельче, чем шаг, с которым обведена суша
+            # (Лофотены, Андаманы, атоллы): в land.js такого острова нет,
+            # но если точка внутри своей же фракции — это не ошибка,
+            # а известная грубость береговой линии.
+            if mine:
+                notes.append("остров мельче очертаний суши")
+            else:
+                notes.append("В МОРЕ")
+                ok = False
         if expect is not None:
             if expect == "":
                 if facs:
                     notes.append(f"ничья, но попала в {'/'.join(facs)}")
-            elif expect not in facs:
+            elif not mine:
                 notes.append(f"ожидалось {expect}, а тут {'/'.join(facs) or 'ничья земля'}")
                 ok = False
         if len(facs) > 1:
-            notes.append(f"пересечение: {'/'.join(facs)}")
+            # Анклав внутри чужой территории — так и задумано у Тихой
+            # гавани; ошибка только если метка не в своей фракции.
+            others = "/".join(k for k in facs if k != expect)
+            notes.append(f"анклав внутри {others}" if mine
+                         else f"пересечение: {'/'.join(facs)}")
         return ok, got, land, "; ".join(notes)
 
     def where(self, lat, lon):
@@ -164,15 +176,18 @@ def main():
         blocks = re.findall(
             r'name:\s*"([^"]+)".*?type:\s*"([^"]*)".*?faction:\s*"([^"]*)".*?lat:\s*(-?[\d.]+).*?lon:\s*(-?[\d.]+)',
             s, re.S)
-        bad = 0
+        bad = notable = 0
         for name, typ, fac, lat, lon in blocks:
             ok, got, land, notes = w.check(name, float(lat), float(lon), fac)
-            flag = "  " if ok and not notes else "!!"
-            if not ok or notes:
-                bad += 1
+            # «!!» — только настоящая ошибка. Пояснения вроде анклава или
+            # острова мельче очертаний суши помечаются точкой: это не
+            # поломка, а то, что стоит знать.
+            flag = "!!" if not ok else (" ·" if notes else "  ")
+            bad += not ok
+            notable += bool(ok and notes)
             reg = w.region(float(lat), float(lon))
             print(f"{flag} {name:28s} {typ:17s} {fac:12s} {reg:22s} {lat:>7s},{lon:>8s}  {notes}")
-        print(f"\nвсего {len(blocks)}, с замечаниями {bad}")
+        print(f"\nвсего {len(blocks)}, с ошибками {bad}, с пояснениями {notable}")
         return
 
     if args and args[0] == "--file":
