@@ -60,7 +60,7 @@ window.FACTIONS_INFO = [
     clat: 48, clon: 14,
     capital:    "Вена",
     population: "415 млн",
-    area:       "4,19 млн км²",
+    area:       "4,02 млн км²",
     influence: 14,
     tier:   "Глобальная сверхдержава",
     leader: "Тенебриа, Артур Остерман",

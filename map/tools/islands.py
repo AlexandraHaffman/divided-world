@@ -24,16 +24,25 @@ DATA = os.path.normpath(os.path.join(HERE, '..', 'data'))
 CACHE = os.path.join(HERE, '.cache', 'ne_10m_admin_1_states_provinces.geojson')
 R_EARTH = 6371.0088
 
-# ne_name — поле name в Natural Earth Admin-1; box — рамка
-# (lat0, lat1, lon0, lon1), внутри которой скрипт считает кольца своими;
-# min_km2 — порог, мельче не берём. Контур упрощается до SIMPLIFY градусов,
+# ne_name — поле name в Natural Earth Admin-1 (можно список); box — рамка
+# (lat0, lat1, lon0, lon1). Рамка работает в обе стороны: берутся только
+# куски, целиком в неё попавшие (поэтому материк, торчащий за край, не
+# утащится вместе с островами), и при повторном прогоне из land.js
+# убирается всё, что внутри неё лежит. min_km2 — порог, мельче не берём. Контур упрощается до SIMPLIFY градусов,
 # чтобы острова были не подробнее остального берега.
 SIMPLIFY = 0.01          # ≈1 км
 ISLANDS = [
     {"title": "Андаманские и Никобарские острова",
-     "ne_name": "Andaman and Nicobar",
+     "ne_name": ["Andaman and Nicobar"],
      "box": (5.5, 14.5, 91.5, 94.5),
      "min_km2": 100},
+    {"title": "Лофотены и Вестеролен",
+     # Норвегия в Natural Earth — один многоугольник на губернию, и
+     # материк из неё в рамку целиком не влезает: останутся острова.
+     "ne_name": ["Nordland", "Troms and Finnmark", "Troms og Finnmark",
+                 "Troms"],
+     "box": (67.3, 69.6, 11.0, 17.5),
+     "min_km2": 120},
 ]
 
 
@@ -75,10 +84,13 @@ def main():
         if before != len(land):
             print(f'  убрано прежних колец: {before - len(land)}')
 
+        want = isl['ne_name']
+        want = [want] if isinstance(want, str) else want
         geoms = [f['geometry'] for f in ne['features']
-                 if f['properties'].get('name') == isl['ne_name']]
+                 if f['properties'].get('name') in want]
         if not geoms:
-            raise SystemExit(f'в Natural Earth нет «{isl["ne_name"]}»')
+            raise SystemExit(f'в Natural Earth нет «{"/".join(want)}»')
+        la0, la1, lo0, lo1 = isl['box']
 
         rings = []
         for g in geoms:
@@ -87,6 +99,9 @@ def main():
             for part in parts:
                 shp = Polygon(part[0]).simplify(SIMPLIFY)
                 if shp.is_empty:
+                    continue
+                x0, y0, x1, y1 = shp.bounds       # целиком внутри рамки?
+                if not (lo0 <= x0 and x1 <= lo1 and la0 <= y0 and y1 <= la1):
                     continue
                 ext = [[round(y, 4), round(x, 4)]
                        for x, y in shp.exterior.coords]

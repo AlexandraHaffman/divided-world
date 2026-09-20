@@ -20,6 +20,16 @@
 Запускать можно сколько угодно раз: повторный прогон ничего не ломает,
 вырез просто совпадёт с прежним.
 
+Второй случай — передача куска УЖЕ СУЩЕСТВУЮЩЕЙ фракции (таблица
+TRANSFER ниже): держава отступает, и оставленное достаётся соседу.
+Здесь новой фракции не появляется, кусок просто переезжает.
+
+Важная оговорка: передача идемпотентна, но необратима. Повторный прогон
+ничего не меняет — забирать уже нечего, — однако и уменьшить очертания
+задним числом нельзя: в территории получателя кусок растворился, и
+отличить его там больше не от чего. Передумали — правьте
+factions-geo.js или восстанавливайте из истории git.
+
     python3 map/tools/carve_faction.py --dry    # показать и не записывать
     python3 map/tools/carve_faction.py          # записать factions-geo.js
 """
@@ -56,6 +66,31 @@ CARVE = {
       # вниз по Уралу
       (68.0, 65.5), (66.0, 63.5), (64.0, 62.0), (62.0, 60.5), (60.0, 59.5),
       (58.0, 58.5), (56.5, 58.0), (55.0, 57.8),
+    ],
+  },
+}
+
+
+# ═══════════════ ЧТО КОМУ ПЕРЕДАЁТСЯ ═══════════════
+# Тот же набросок, но кусок уходит не новой фракции, а уже существующей.
+# smooth: False — очертания заданы геометрическим правилом (здесь
+# полярный круг), сглаживать их незачем: линия должна остаться прямой.
+TRANSFER = {
+  "tenebrion>whitezone": {
+    "title":  "Заполярье Тенебриона",
+    "from":   "tenebrion",
+    "to":     "whitezone",
+    "smooth": False,
+    # Экзархат отходит за полярный круг: держава веры не держит пустую
+    # тундру. Всё, что севернее 66°33′, — северный Нурланн, Трумс,
+    # Финнмарк, шведское Заполярье и Шпицберген — достаётся Белой зоне,
+    # у которой по соседству уже лежит финская Лапландия.
+    "outline": [
+      (66.56, -14.0), (66.56,  -6.0), (66.56,   2.0), (66.56,   9.0),
+      (66.56,  14.0), (66.56,  19.0), (66.56,  24.0), (66.56,  30.0),
+      (66.56,  36.0),
+      (70.0,   36.0), (76.0,   36.0), (83.0,   36.0),
+      (83.0,  -14.0), (76.0,  -14.0), (70.0,  -14.0),
     ],
   },
 }
@@ -167,6 +202,40 @@ def main():
             sys.exit('  куски потерялись или налезают друг на друга — файл не записан')
         geo[key] = rings_of(cut)
         geo[host_key] = rings_of(rest)
+
+    for key, spec in TRANSFER.items():
+        src_key, dst_key = spec['from'], spec['to']
+        giver = make_valid(polys_of(geo[src_key]))
+        taker = make_valid(polys_of(geo[dst_key]))
+        before_g, before_t = area_km2(giver), area_km2(taker)
+        # Соседние фракции кое-где уже налезают друг на друга на пару
+        # сотен км² — это старый шов, не наша забота. Проверяем не то,
+        # что пересечение нулевое, а то, что оно не выросло.
+        before_ov = giver.intersection(taker).area
+
+        pts = [(la, lo) for la, lo in spec['outline']]
+        if spec.get('smooth', True):
+            pts = catmull_rom(pts)
+        sketch = make_valid(Polygon([(lo, la) for la, lo in pts]))
+        cut = make_valid(sketch.intersection(giver))
+
+        rest = make_valid(giver.difference(cut))
+        grown = make_valid(taker.union(cut))
+
+        a_cut = area_km2(cut)
+        print(f"\n═══ {spec['title']}: «{src_key}» → «{dst_key}» ═══")
+        print(f"  передаётся          {a_cut:10.0f} км²"
+              f"{'   (уже передано ранее)' if a_cut < 1 else ''}")
+        print(f"  {src_key:<12s} {before_g/1e6:8.3f} → {area_km2(rest)/1e6:.3f} млн км²")
+        print(f"  {dst_key:<12s} {before_t/1e6:8.3f} → {area_km2(grown)/1e6:.3f} млн км²")
+        gap = (before_g + before_t) - (area_km2(rest) + area_km2(grown))
+        after_ov = rest.intersection(grown).area
+        print(f"  расхождение         {gap:+10.1f} км²")
+        print(f"  старый шов между ними, град²: {before_ov:.5f} → {after_ov:.5f}")
+        if abs(gap) > 1000 or after_ov > before_ov + 1e-9:
+            sys.exit('  куски потерялись или наложение выросло — файл не записан')
+        geo[src_key] = rings_of(rest)
+        geo[dst_key] = rings_of(grown)
 
     if args.dry:
         print('\n--dry: файл не записан')
