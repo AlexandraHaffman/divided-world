@@ -889,6 +889,8 @@ function clean(it){
   if (isFinite(la)) o.lat = +la.toFixed(3);
   if (isFinite(lo)) o.lon = +lo.toFixed(3);
   if (it.photos && it.photos.length) o.photos = it.photos.slice();
+  // обложки в конструкторе не редактируются, но и не теряются при выгрузке
+  for (const k of ['cover','coverTall']) if (it[k]) o[k] = it[k];
   for (const k of ['subtitle','desc','full']) if (it[k] && it[k].trim()) o[k] = it[k].trim();
   for (const k of (BY_TYPE[it.type] || [])){
     const v = it[k];
@@ -901,7 +903,7 @@ function payload(){ return items.filter(i => i.name.trim()).map(clean); }
 
 // тот же вид, что в locations.js — можно вставить прямо в файл
 function toJsBlock(list){
-  const ORDER = ['name','type','faction','lat','lon','photos','region','subtitle','desc','full',
+  const ORDER = ['name','type','faction','lat','lon','photos','cover','coverTall','region','subtitle','desc','full',
     'population','founded','management','economy','defense','capacity','danger','status',
     'intensity','purpose','chars','involved'];
   const q = s => '"' + String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n') + '"';
@@ -923,7 +925,7 @@ let fmt = 'json';
 function fillOut(){
   const list = payload();
   out.value = fmt === 'json' ? JSON.stringify(list, null, 2) : toJsBlock(list);
-  const files = [...new Set(list.flatMap(l => l.photos || []))];
+  const files = [...new Set(list.flatMap(l => [...(l.photos || []), l.cover, l.coverTall].filter(Boolean)))];
   document.getElementById('fileList').innerHTML = files.length
     ? `<div class="files"><b>Не забудьте приложить ${files.length} файл(ов):</b><ul>${files.map(f => '<li>' + esc(f) + '</li>').join('')}</ul></div>`
     : '';

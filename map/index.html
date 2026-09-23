@@ -567,6 +567,92 @@
   .lc-full summary::before { content: '\25b8  '; }
   .lc-full[open] summary::before { content: '\25be  '; }
   .lc-full p { font-size: 11.5px; line-height: 1.55; margin: 7px 2px 0; }
+  /* В полном досье абзац с "## " — подзаголовок, строки с "• " — список */
+  .lc-h {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 400;
+    letter-spacing: 1.8px;
+    color: var(--fc);
+    text-transform: uppercase;
+    margin: 12px 2px 0;
+    padding-bottom: 3px;
+    border-bottom: 1px solid color-mix(in srgb, var(--fc) 22%, transparent);
+  }
+  .lc-list { list-style: none; margin: 7px 2px 0; padding: 0; }
+  .lc-list li {
+    position: relative;
+    font-size: 11.5px;
+    line-height: 1.45;
+    padding-left: 13px;
+    margin-bottom: 4px;
+  }
+  .lc-list li::before {
+    content: '';
+    position: absolute;
+    left: 1px; top: .55em;
+    width: 5px; height: 5px;
+    transform: rotate(45deg);
+    background: var(--fc);
+    box-shadow: 0 0 5px var(--fc);
+  }
+
+  /* ── ОБЛОЖКА ЛОКАЦИИ ──
+     Фото лежит под прокручиваемым досье, а не внутри него: текст при
+     прокрутке наезжает на снимок, как лист на постер. На компьютере это
+     горизонтальный баннер (cover), на телефоне — вертикальный постер
+     (coverTall); <picture> скачивает только один из двух. Высота обложки
+     задана одной переменной --cover-h — от неё же считается отступ,
+     с которого начинается текст. */
+  .lc-cover { display: none; }
+  .loccard.has-cover {
+    --cover-h: 225px;
+    width: min(400px, calc(100vw - 28px));
+    overflow: hidden;
+  }
+  .has-cover .lc-cover {
+    display: block;
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: var(--cover-h);
+    overflow: hidden;
+    will-change: transform, opacity;
+  }
+  .lc-cover img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    animation: cover-in 1.2s ease-out both;
+  }
+  /* сверху — притенение под крестик, снизу — уход в цвет карточки */
+  .lc-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(4,8,14,0.5), transparent 22%),
+      linear-gradient(transparent 55%, rgba(8,13,22,0.94));
+    pointer-events: none;
+  }
+  @keyframes cover-in {
+    from { transform: scale(1.06); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+  }
+  .has-cover .lc-body { position: relative; z-index: 1; padding-top: 0; }
+  .lc-spacer { height: calc(var(--cover-h) - 62px); }
+  .lc-sheet {
+    margin: 0 -13px -13px;
+    padding: 18px 13px 13px;
+    background: linear-gradient(transparent, rgba(8,13,22,0.94) 62px);
+  }
+  .has-cover .lc-name {
+    font-size: 19px;
+    letter-spacing: 1.8px;
+    text-shadow:
+      0 1px 10px rgba(0,0,0,0.85),
+      0 0 18px color-mix(in srgb, var(--fc) 55%, transparent);
+  }
+  .lc-sheet .lc-shots { margin: 10px -13px -13px; }
   .lc-row { margin-bottom: 8px; }
   .lc-label {
     font-family: var(--font-mono);
@@ -636,7 +722,7 @@
     to   { opacity: 1; transform: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .fcard.open, .loccard.open { animation: none; }
+    .fcard.open, .loccard.open, .lc-cover img { animation: none; }
   }
 
   /* ── МАСШТАБНАЯ ЛИНЕЙКА ── */
@@ -721,6 +807,9 @@
        у длинного — просто выше, до этого потолка. */
     .fcard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: calc(100% - 90px); }
     .loccard { left: 10px; right: 10px; top: auto; bottom: 74px; width: auto; max-height: calc(100% - 90px); }
+    /* постер 3:4 во всю ширину карточки, но не выше 62% экрана —
+       иначе на коротких телефонах до текста пришлось бы долистывать */
+    .loccard.has-cover { width: auto; --cover-h: min(calc((100vw - 20px) * 4 / 3), 62vh); }
     .scalebar { bottom: 14px; }
   }
 </style>
@@ -769,6 +858,7 @@
 
 <div class="loccard" id="loccard">
   <button class="lc-close" id="lcClose" aria-label="Закрыть">×</button>
+  <div class="lc-cover" id="lcCover"></div>
   <div class="lc-body" id="lcBody"></div>
 </div>
 
@@ -2265,6 +2355,8 @@ function drawOverlay(M){
 // ═══════════════ КАРТОЧКА ЛОКАЦИИ ═══════════════
 const loccard = document.getElementById('loccard');
 const lcBody = document.getElementById('lcBody');
+const lcCover = document.getElementById('lcCover');
+const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)');
 let selectedLocId = null;
 document.getElementById('lcClose').addEventListener('click', () => closeLoc());
 
@@ -2272,17 +2364,33 @@ function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// Полное досье: "## " в начале абзаца — подзаголовок, абзац из строк
+// с "• " — список, остальное — обычные абзацы.
+function fullHtml(text){
+  return String(text).split(/\n\n+/).map(p => {
+    if (p.startsWith('## ')) return `<h4 class="lc-h">${esc(p.slice(3))}</h4>`;
+    const lines = p.split('\n');
+    if (lines.every(l => /^[•*-] /.test(l)))
+      return '<ul class="lc-list">' + lines.map(l => `<li>${esc(l.slice(2))}</li>`).join('') + '</ul>';
+    return `<p>${esc(p)}</p>`;
+  }).join('');
+}
+
+const hasCover = loc => !!(loc.cover || loc.coverTall);
+
 function locCardHtml(loc, parent){
   const f = facOf(loc.faction);
+  const cover = hasCover(loc);
   let h = '';
   // фотографий может быть несколько: photos: ["a.webp", "b.webp"].
   // Одиночное photo тоже понимаем — так писались первые локации.
+  // При обложке лента уезжает вниз досье: верх уже занят снимком.
   const shots = loc.photos && loc.photos.length ? loc.photos : (loc.photo ? [loc.photo] : []);
-  if (shots.length){
-    h += '<div class="lc-shots">' + shots.map(src =>
-      `<img class="lc-photo" src="${PHOTO_DIR}${encodeURIComponent(src)}" alt="" loading="lazy" onerror="this.remove()">`
-    ).join('') + '</div>';
-  }
+  const shotsHtml = shots.length ? '<div class="lc-shots">' + shots.map(src =>
+    `<img class="lc-photo" src="${PHOTO_DIR}${encodeURIComponent(src)}" alt="" loading="lazy" onerror="this.remove()">`
+  ).join('') + '</div>' : '';
+  if (cover) h += '<div class="lc-spacer"></div><div class="lc-sheet">';
+  else h += shotsHtml;
   if (parent) h += `<div class="lc-back" data-back="1">◄ ${esc(parent.name)}</div>`;
   h += `<div class="lc-name">${esc(loc.name)}</div>`;
   h += `<div class="lc-badges"><span class="lc-type${loc.type === 'frontline' ? ' war' : ''}">${TYPE_RU[loc.type] || 'ОБЪЕКТ'}</span>`;
@@ -2291,8 +2399,7 @@ function locCardHtml(loc, parent){
   if (loc.subtitle) h += `<div class="lc-sub">${esc(loc.subtitle)}</div>`;
   if (loc.desc) h += `<div class="lc-desc">${esc(loc.desc)}</div>`;
   if (loc.full){
-    const paras = String(loc.full).split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join('');
-    h += `<details class="lc-full"><summary>ПОЛНОЕ ДОСЬЕ</summary>${paras}</details>`;
+    h += `<details class="lc-full"><summary>ПОЛНОЕ ДОСЬЕ</summary>${fullHtml(loc.full)}</details>`;
   }
   for (const [key, label] of LOC_FIELDS){
     if (!loc[key]) continue;
@@ -2309,12 +2416,37 @@ function locCardHtml(loc, parent){
         <span class="lc-child-type">${TYPE_RU[c.type] || 'ОБЪЕКТ'}</span>
         <span class="lc-child-name">${esc(c.name)}</span></div>`).join('')}</div>`;
   }
+  if (cover) h += shotsHtml + '</div>';
   return h;
 }
+
+// Обложка: широкий снимок для компьютера, высокий — для телефона.
+// Если есть только один из двух, он и идёт на оба экрана.
+function coverHtml(loc){
+  const wide = loc.cover || loc.coverTall, tall = loc.coverTall;
+  const url = n => PHOTO_DIR + encodeURIComponent(n);
+  return '<picture>' +
+    (tall && tall !== wide ? `<source media="(max-width: 700px)" srcset="${url(tall)}">` : '') +
+    `<img src="${url(wide)}" alt="" decoding="async" onerror="this.closest('.loccard').classList.remove('has-cover')">` +
+    '</picture>';
+}
+
+// При прокрутке снимок чуть отстаёт от текста и гаснет — лист досье
+// словно уходит вверх по постеру. Двигаем только transform и opacity.
+lcBody.addEventListener('scroll', () => {
+  if (!loccard.classList.contains('has-cover')) return;
+  const y = lcBody.scrollTop;
+  if (!REDUCED_MOTION.matches) lcCover.style.transform = `translateY(${-y * 0.35}px)`;
+  lcCover.style.opacity = Math.max(0.3, 1 - y / 420);
+}, { passive: true });
 
 function showLocCard(loc, parent){
   const f = facOf(loc.faction);
   loccard.style.setProperty('--fc', f.col);
+  const cover = hasCover(loc);
+  loccard.classList.toggle('has-cover', cover);
+  lcCover.innerHTML = cover ? coverHtml(loc) : '';
+  lcCover.style.transform = lcCover.style.opacity = '';
   lcBody.innerHTML = locCardHtml(loc, parent);
   lcBody.scrollTop = 0;
   lcBody.querySelectorAll('[data-child]').forEach(el =>
