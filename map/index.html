@@ -2016,7 +2016,9 @@ const TYPE_SIZE = {
 // карту чище на общем плане: чем больше первое число, тем позже
 // появляется метка.
 const MARK_Z = {
-  dotMain: [1.42, 0.38],   // столицы, центры регионов, объекты, фронты
+  dotCap:  [1.05, 0.30],   // столицы фракций — видны раньше всех
+  labCap:  [1.22, 0.35],
+  dotMain: [1.42, 0.38],   // центры регионов, объекты, фронты
   labMain: [1.80, 0.42],
   dotAll:  [2.10, 0.52],   // города, базы, посёлки, аномалии, зоны
   labAll:  [2.60, 0.55],
@@ -2106,7 +2108,7 @@ function drawMarker(loc, x, y, col, hot, a){
     octx.beginPath(); octx.arc(x, y, sz + 4, 0, Math.PI * 2); octx.stroke();
     return sz;
   }
-  drawGlow(x, y, sz + (hot ? 12 : 7), col, a * 0.8);
+  drawGlow(x, y, sz + (hot ? 12 : 7) + (t === 'capital' ? 8 : 0), col, a * 0.8);
   octx.globalAlpha = a;
   octx.fillStyle = col;
   if (t === 'base'){
@@ -2121,9 +2123,25 @@ function drawMarker(loc, x, y, col, hot, a){
     octx.beginPath(); octx.arc(x, y, sz, 0, Math.PI * 2); octx.fill();
   }
   if (t === 'capital'){
-    octx.globalAlpha = a * 0.5;
-    octx.strokeStyle = col; octx.lineWidth = 1;
-    octx.beginPath(); octx.arc(x, y, sz + 4, 0, Math.PI * 2); octx.stroke();
+    // Столица — «прицел»: белое ядро, сплошное кольцо и внешнее
+    // тонкое с четырьмя засечками по сторонам света. Отдаём наружу
+    // радиус внешнего кольца, чтобы подпись не наезжала на засечки.
+    const r1 = sz + 3.5, r2 = sz + 7.5;
+    octx.fillStyle = '#fff';
+    octx.beginPath(); octx.arc(x, y, sz * 0.42, 0, Math.PI * 2); octx.fill();
+    octx.strokeStyle = col;
+    octx.globalAlpha = a * 0.9; octx.lineWidth = 1.4;
+    octx.beginPath(); octx.arc(x, y, r1, 0, Math.PI * 2); octx.stroke();
+    octx.globalAlpha = a * 0.45; octx.lineWidth = 1;
+    octx.beginPath(); octx.arc(x, y, r2, 0, Math.PI * 2); octx.stroke();
+    octx.globalAlpha = a * 0.9; octx.lineWidth = 1.4;
+    octx.beginPath();
+    for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]){
+      octx.moveTo(x + dx * (r2 - 2), y + dy * (r2 - 2));
+      octx.lineTo(x + dx * (r2 + 3), y + dy * (r2 + 3));
+    }
+    octx.stroke();
+    return r2 + 1;
   }
   return sz;
 }
@@ -2135,9 +2153,10 @@ const LABEL_FONT = (getComputedStyle(document.documentElement)
 
 function drawLabel(text, x, y, off, col, hot, a, big){
   if (a <= 0.05) return;
-  const fs = big ? 11.5 : 10;
+  // big: 0 — прочие, 1 — крупные метки, 2 — столицы
+  const fs = big === 2 ? 12.5 : big ? 11.5 : 10;
   octx.save();
-  octx.font = (hot ? '700 ' : '500 ') + fs + 'px ' + LABEL_FONT;
+  octx.font = (hot || big === 2 ? '700 ' : '500 ') + fs + 'px ' + LABEL_FONT;
   octx.textAlign = 'center';
   octx.textBaseline = 'top';
   const tw = octx.measureText(text).width;
@@ -2287,6 +2306,8 @@ function drawOverlay(M){
   // Пока глобус виден целиком, меток нет вовсе — карта остаётся чистой.
   // Дальше они проявляются по мере приближения: сначала крупные, потом все.
   const z = R / baseR;
+  const aCap  = smooth01((z - MARK_Z.dotCap[0])  / MARK_Z.dotCap[1]);
+  const lCap  = smooth01((z - MARK_Z.labCap[0])  / MARK_Z.labCap[1]);
   const aMain = smooth01((z - MARK_Z.dotMain[0]) / MARK_Z.dotMain[1]);
   const aAll  = smooth01((z - MARK_Z.dotAll[0])  / MARK_Z.dotAll[1]);
   const lMain = smooth01((z - MARK_Z.labMain[0]) / MARK_Z.labMain[1]);
@@ -2296,10 +2317,12 @@ function drawOverlay(M){
   // самими городами — и видно, где в этом мире вообще горит свет: огни
   // есть только там, где у кого-то есть города, то есть государство.
   // Как только проступают полноценные метки, огни им уступают, чтобы
-  // одна и та же точка не двоилась.
-  const lightA = nightOn ? 1 - aMain : 0;
-  if (lightA > 0.02){
+  // одна и та же точка не двоилась. Столицы проступают раньше прочих —
+  // их огонь и гаснет раньше.
+  if (nightOn && aMain < 0.98){
     for (const loc of LOCATIONS){
+      const lightA = 1 - (loc.type === 'capital' ? aCap : aMain);
+      if (lightA <= 0.02) continue;
       let u = loc._u;
       if (!u){
         const la = loc.lat * DEG, lo = loc.lon * DEG, c = Math.cos(la);
@@ -2319,11 +2342,12 @@ function drawOverlay(M){
     octx.globalAlpha = 1;
   }
 
-  if (aMain <= 0.02) return;
+  if (aCap <= 0.02) return;
 
   for (const loc of LOC_ORDER){
+    const cap = loc.type === 'capital';
     const main = (TYPE_PRIO[loc.type] ?? 9) <= 3;
-    const a = main ? aMain : aAll;
+    const a = cap ? aCap : main ? aMain : aAll;
     if (a <= 0.02) continue;
     const f = facOf(loc.faction);
     const p = projectLL(loc.lat, loc.lon, M, loc.float ? 1.04 : 1);
@@ -2345,9 +2369,9 @@ function drawOverlay(M){
 
     const hot = selectedLocId === loc.id;
     const sz = drawMarker(loc, p.x, p.y, f.col, hot, a);
-    const la = (main ? lMain : lAll) * (hot ? 1 : 0.9);
-    drawLabel(loc.name, p.x, p.y, sz + 5,
-      loc.type === 'frontline' ? '#ff6655' : f.col, hot, la, main);
+    const la = (cap ? lCap : main ? lMain : lAll) * (hot ? 1 : 0.9);
+    drawLabel(cap ? loc.name.toUpperCase() : loc.name, p.x, p.y, sz + 5,
+      loc.type === 'frontline' ? '#ff6655' : f.col, hot, la, cap ? 2 : main ? 1 : 0);
   }
   octx.globalAlpha = 1;
 }
