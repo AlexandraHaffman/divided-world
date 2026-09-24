@@ -1004,7 +1004,7 @@ window.REGIONS_INFO = [
   {
     key:     "nejd",
     faction: "jamahiriya",
-    name:    "Недждийская группа",
+    name:    "Надждская группа",
     capital: "Эр-Рияд",
     clat: 24.713, clon: 46.675,
     unit:    "группы",
