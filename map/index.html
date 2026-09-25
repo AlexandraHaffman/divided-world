@@ -5,19 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Терминал: Глобус — Разделённый мир</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700&family=Russo+One&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-  /* Кириллица: Share Tech Mono её не содержит, поэтому в моноспейс-стек
-     первым идёт Exo 2 — тот же техно-стиль, но буквы и цифры одной гарнитурой. */
+  /* Шрифты «Штаба»: Oswald — узкий рубленый для названий и подписей на
+     карте (узкие буквы — больше подписей помещается), Manrope — для
+     текста досье, JetBrains Mono — служебные строки. У всех троих есть
+     кириллица. Подписи на глобусе рисуются тем же Oswald: --font-label. */
   :root {
     --bg: #080c12;
     --blue: #4fc3f7;
     --text: #c8d8e8;
     --text-dim: #5a7a9a;
     --border: rgba(79,195,247,0.2);
-    --font-display: 'Russo One', 'Exo 2', sans-serif;
-    --font-ui: 'Exo 2', system-ui, sans-serif;
-    --font-mono: 'Share Tech Mono', 'Exo 2', monospace;
+    --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+    --font-ui: 'Manrope', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-label: 'Oswald', 'Arial Narrow', sans-serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -261,8 +264,9 @@
   }
   .fcard-name {
     font-family: var(--font-display);
-    font-size: 15.5px;
-    letter-spacing: 1.4px;
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: 1.6px;
     color: var(--fc);
     text-transform: uppercase;
     line-height: 1.2;
@@ -509,8 +513,9 @@
   .lc-name {
     position: relative;
     font-family: var(--font-display);
-    font-size: 15px;
-    letter-spacing: 1.35px;
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: 1.6px;
     color: var(--fc);
     text-transform: uppercase;
     line-height: 1.2;
@@ -646,8 +651,9 @@
     background: linear-gradient(transparent, rgba(8,13,22,0.94) 62px);
   }
   .has-cover .lc-name {
-    font-size: 19px;
-    letter-spacing: 1.8px;
+    font-size: 28px;
+    letter-spacing: 2.4px;
+    line-height: 1.05;
     text-shadow:
       0 1px 10px rgba(0,0,0,0.85),
       0 0 18px color-mix(in srgb, var(--fc) 55%, transparent);
@@ -2150,7 +2156,10 @@ function drawMarker(loc, x, y, col, hot, a){
 // шрифт подписей читаем из CSS один раз: getComputedStyle на каждую подпись
 // каждый кадр — это синхронный пересчёт стилей, и он дороже самой отрисовки
 const LABEL_FONT = (getComputedStyle(document.documentElement)
-  .getPropertyValue('--font-mono') || 'monospace').trim();
+  .getPropertyValue('--font-label') || 'sans-serif').trim();
+// Подписи на холсте не заставляют браузер грузить шрифт — пока он не
+// пришёл, они рисуются запасным. Как только загрузится — перерисовать.
+document.fonts && document.fonts.load('500 12px ' + LABEL_FONT).then(() => { dirty = true; });
 
 // Подпись ищет себе место вокруг точки: снизу, справа, слева, сверху —
 // первое свободное. Не нашлось — молчит: лучше без подписи, чем каша.
@@ -2159,10 +2168,10 @@ const LABEL_FONT = (getComputedStyle(document.documentElement)
 function drawLabel(text, x, y, off, col, hot, a, big){
   if (a <= 0.05) return;
   // big: 0 — прочие, 1 — крупные метки, 2 — столицы
-  const fs = big === 2 ? 12.5 : big ? 11 : 10;
+  const fs = big === 2 ? 14 : big ? 12.5 : 11.5;
   octx.save();
-  octx.font = (hot || big === 2 ? '700 ' : big ? '600 ' : '500 ') + fs + 'px ' + LABEL_FONT;
-  if ('letterSpacing' in octx) octx.letterSpacing = big === 2 ? '1.6px' : '0.4px';
+  octx.font = (hot || big === 2 ? '600 ' : '500 ') + fs + 'px ' + LABEL_FONT;
+  if ('letterSpacing' in octx) octx.letterSpacing = big === 2 ? '2.2px' : '0.6px';
   octx.textBaseline = 'top';
   octx.textAlign = 'left';
   const tw = octx.measureText(text).width, th = fs + 2, pad = 2;
