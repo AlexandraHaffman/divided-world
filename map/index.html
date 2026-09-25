@@ -1517,8 +1517,18 @@ let autoRot = true;
 let vy = 0, vx = 0;           // инерция
 let dirty = true;
 
+// Размер берём у самой сцены, а не у window.innerHeight: во встроенных
+// браузерах на iPhone панели появляются и прячутся уже после загрузки,
+// innerHeight врёт, и холст, нарисованный под одну высоту, растягивался
+// на другую — глобус выходил сплющенным. ResizeObserver ловит любое
+// изменение сцены, даже когда событие resize так и не приходит.
+const stageEl = document.getElementById('stage');
 function resize(){
-  W = window.innerWidth; H = window.innerHeight;
+  const r = stageEl.getBoundingClientRect();
+  const w = Math.round(r.width) || window.innerWidth;
+  const h = Math.round(r.height) || window.innerHeight;
+  if (w === W && h === H) return;
+  W = w; H = h;
   glCanvas.width = W * dpr; glCanvas.height = H * dpr;
   overlay.width = W * dpr; overlay.height = H * dpr;
   gl.viewport(0, 0, glCanvas.width, glCanvas.height);
@@ -1530,6 +1540,8 @@ function resize(){
   dirty = true;
 }
 window.addEventListener('resize', resize);
+if (window.visualViewport) visualViewport.addEventListener('resize', resize);
+if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stageEl);
 
 // view = M · world;  M = Rx(rx) · Ry(ry)
 function viewMatrix(){
