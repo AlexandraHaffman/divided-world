@@ -2085,12 +2085,13 @@ function drawGlow(x, y, r, col, a){
 
 function smooth01(x){ return x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x); }
 
+// Занятые места на экране: сами метки и уже поставленные подписи.
+// Подпись не имеет права лечь ни на чужую подпись, ни на чужую точку.
 let labelRects = [];
-function labelFits(x, y, w, h){
+function rectFree(x, y, w, h){
   for (const r of labelRects){
     if (x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y) return false;
   }
-  labelRects.push({ x, y, w, h });
   return true;
 }
 
@@ -2151,23 +2152,42 @@ function drawMarker(loc, x, y, col, hot, a){
 const LABEL_FONT = (getComputedStyle(document.documentElement)
   .getPropertyValue('--font-mono') || 'monospace').trim();
 
+// Подпись ищет себе место вокруг точки: снизу, справа, слева, сверху —
+// первое свободное. Не нашлось — молчит: лучше без подписи, чем каша.
+// Вместо плашки — тёмный ореол по контуру букв, как на атласах: текст
+// читается на любом фоне и не закрывает карту прямоугольниками.
 function drawLabel(text, x, y, off, col, hot, a, big){
   if (a <= 0.05) return;
   // big: 0 — прочие, 1 — крупные метки, 2 — столицы
-  const fs = big === 2 ? 12.5 : big ? 11.5 : 10;
+  const fs = big === 2 ? 12.5 : big ? 11 : 10;
   octx.save();
-  octx.font = (hot || big === 2 ? '700 ' : '500 ') + fs + 'px ' + LABEL_FONT;
-  octx.textAlign = 'center';
+  octx.font = (hot || big === 2 ? '700 ' : big ? '600 ' : '500 ') + fs + 'px ' + LABEL_FONT;
+  if ('letterSpacing' in octx) octx.letterSpacing = big === 2 ? '1.6px' : '0.4px';
   octx.textBaseline = 'top';
-  const tw = octx.measureText(text).width;
-  const py = y + off;
-  if (!hot && !labelFits(x - tw/2 - 4, py - 2, tw + 8, fs + 5)){ octx.restore(); return; }
-  octx.globalAlpha = 0.8 * a;
-  octx.fillStyle = 'rgba(4,7,14,0.9)';
-  octx.fillRect(x - tw/2 - 4, py - 2, tw + 8, fs + 5);
+  octx.textAlign = 'left';
+  const tw = octx.measureText(text).width, th = fs + 2, pad = 2;
+  const spots = [
+    [x - tw / 2, y + off],                 // снизу
+    [x + off + 1, y - th / 2],             // справа
+    [x - off - 1 - tw, y - th / 2],        // слева
+    [x - tw / 2, y - off - th],            // сверху
+  ];
+  let at = null;
+  for (const [lx, ly] of spots){
+    if (rectFree(lx - pad, ly - pad, tw + pad * 2, th + pad * 2)){ at = [lx, ly]; break; }
+  }
+  if (!at){
+    if (!hot){ octx.restore(); return; }
+    at = spots[0];
+  }
+  labelRects.push({ x: at[0] - pad, y: at[1] - pad, w: tw + pad * 2, h: th + pad * 2 });
   octx.globalAlpha = a;
+  octx.lineJoin = 'round';
+  octx.lineWidth = 3.2;
+  octx.strokeStyle = 'rgba(3,6,12,0.88)';
+  octx.strokeText(text, at[0], at[1]);
   octx.fillStyle = hot ? '#ffffff' : col;
-  octx.fillText(text, x, py);
+  octx.fillText(text, at[0], at[1]);
   octx.restore();
 }
 
@@ -2344,6 +2364,7 @@ function drawOverlay(M){
 
   if (aCap <= 0.02) return;
 
+  const placed = [];
   for (const loc of LOC_ORDER){
     const cap = loc.type === 'capital';
     const main = (TYPE_PRIO[loc.type] ?? 9) <= 3;
@@ -2369,9 +2390,17 @@ function drawOverlay(M){
 
     const hot = selectedLocId === loc.id;
     const sz = drawMarker(loc, p.x, p.y, f.col, hot, a);
-    const la = (cap ? lCap : main ? lMain : lAll) * (hot ? 1 : 0.9);
-    drawLabel(cap ? loc.name.toUpperCase() : loc.name, p.x, p.y, sz + 5,
-      loc.type === 'frontline' ? '#ff6655' : f.col, hot, la, cap ? 2 : main ? 1 : 0);
+    // точка занимает место ещё до того, как начнут ставиться подписи
+    labelRects.push({ x: p.x - sz, y: p.y - sz, w: sz * 2, h: sz * 2 });
+    placed.push({ loc, x: p.x, y: p.y, sz, hot, col: f.col,
+      la: (cap ? lCap : main ? lMain : lAll) * (hot ? 1 : 0.9), big: cap ? 2 : main ? 1 : 0 });
+  }
+  // Подписи — вторым проходом и в порядке важности: выбранная, столицы,
+  // крупные, прочие. Кто важнее, тот первым и занимает место.
+  placed.sort((a, b) => (b.hot - a.hot) || (b.big - a.big));
+  for (const q of placed){
+    drawLabel(q.big === 2 ? q.loc.name.toUpperCase() : q.loc.name, q.x, q.y, q.sz + 4,
+      q.loc.type === 'frontline' ? '#ff6655' : q.col, q.hot, q.la, q.big);
   }
   octx.globalAlpha = 1;
 }
