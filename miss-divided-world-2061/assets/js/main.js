@@ -171,7 +171,7 @@ window.DWpalette = function(arr){
 };
 
 /* модное досье (купальник/платье/костюм/финальный образ) */
-window.DWdossier = function(d, fc){
+window.DWdossier = function(d, fc, photo){
   if(!d) return "";
   const rowsSpec = d.kind==="Фракционный костюм"
     ? [["Силуэт","silhouette"],["Материалы","materials"],["Символы","symbols"],["Головной убор","headpiece"],["Появление","entrance"],["Техника","tech"],["Свет","light"],["Музыка","music"]]
@@ -184,7 +184,9 @@ window.DWdossier = function(d, fc){
   if(d.faction_reaction) extra.push(`<div class="drow"><div class="k">Реакция фракции</div><div class="v">${esc(d.faction_reaction)}</div></div>`);
   if(d.controversy) extra.push(`<div class="drow"><div class="k">Полемика</div><div class="v">${esc(d.controversy)}</div></div>`);
   if(d.crowd) extra.push(`<div class="drow"><div class="k">Реакция зала</div><div class="v">${esc(d.crowd)}</div></div>`);
+  const photoBlock = photo?`<div class="dphoto"><img src="${photo}" alt="${esc(d.concept||'')}" loading="lazy"><span class="dptag">Финальный выход</span></div>`:"";
   return `<div class="dossier" style="${fc||''}">`+
+    photoBlock+
     `<div class="dh"><div class="dkind">${esc(d.kind)}</div>`+
     `<div class="dconcept">${esc(d.concept)}</div>`+
     window.DWpalette(d.palette)+`</div>`+

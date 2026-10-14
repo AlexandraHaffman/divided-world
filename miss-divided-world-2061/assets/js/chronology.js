@@ -91,7 +91,7 @@ function perfBlock(rk,slug,rr){
       (rk==="costume"&&d&&d.entrance?`<p><b>Появление.</b> ${esc(d.entrance)}</p>`:"")+
       (d&&d.crowd&&rk!=="costume"?`<p><b>Зал.</b> ${esc(d.crowd)}</p>`:"")+
       (PRELIM.includes(rk)?movementHTML(rk,slug):"")+
-      `</div><div>${window.DWdossier(d,fac(c))}</div></div>`+
+      `</div><div>${window.DWdossier(d,fac(c),rk==="final_look"?img(c.img.final_look):null)}</div></div>`+
       window.DWprotocol(rk,slug,"Протокол · "+ROUND_TITLE[rk]);
   } else if(rk==="interview"){
     body = `<div class="cols"><div>${window.DWinterview(p.interview,fac(c))}${PRELIM.includes(rk)?movementHTML(rk,slug):""}</div>`+

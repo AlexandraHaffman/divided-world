@@ -14,6 +14,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHARDIR = os.path.join(ROOT, "data", "characters")
 PORTRAITS = json.load(open(os.path.join(ROOT, "data", "portraits.json")))
 OUT = os.path.join(ROOT, "miss-divided-world-2061", "data")
+# фото финального выхода (раунд final_look) — не канон-портреты, а отдельные
+# постановочные снимки конкурса; кладутся вручную по мере появления
+FINAL_LOOK_DIR = os.path.join(ROOT, "miss-divided-world-2061", "assets", "img", "final-looks")
 
 def _rng(*p):
     h = hashlib.sha256("|".join(str(x) for x in p).encode()).hexdigest()
@@ -33,6 +36,11 @@ def load_contestants():
         if d.get("gender") != "Женский":
             continue
         slug = os.path.basename(f)[:-5]
+        if slug not in PROFILES:
+            # ростер конкурса зафиксирован на старте (35 участниц); новые
+            # женские персонажи, появившиеся в общем каноне позже, в
+            # «Мисс Разделённый мир — 2061» не попадают
+            continue
         p = PROFILES[slug]
         fac = d.get("faction","—")
         fmeta = FACTIONS.get(fac, {"id":"independent","color":"#c0c8d4"})
@@ -44,6 +52,10 @@ def load_contestants():
             sys11 = img_rel(PORTRAITS[slug])
         # ожидаемый путь системного портрета 1:1 (даже если файла ещё нет)
         expect11 = "data/images/characters/%s-portrait-web.jpg" % _translit(slug)
+        # фото финального выхода (если для этой участницы оно уже загружено)
+        flpath = os.path.join(FINAL_LOOK_DIR, slug + ".jpg")
+        final_look_photo = ("miss-divided-world-2061/assets/img/final-looks/%s.jpg" % slug) \
+            if os.path.exists(flpath) else None
         rows[slug] = {
             "slug": slug,
             "name": d["name"],
@@ -74,6 +86,7 @@ def load_contestants():
                 "cinematic": cin,
                 "system_1x1": sys11,               # None -> заглушка
                 "system_1x1_expected": expect11,   # ожидаемый путь на будущее
+                "final_look": final_look_photo,    # None, если фото ещё не загружено
             },
         }
     return rows

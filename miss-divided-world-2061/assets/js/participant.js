@@ -23,7 +23,7 @@ function portrait(frameCls,src,capText,noimgText,c){
 function roundBody(rk,c,p){
   const sec=SECTION[rk], d=p[sec];
   if(["swimwear","gown","costume","final_look"].includes(rk))
-    return window.DWdossier(d,fac(c))+window.DWprotocol(rk,c.slug,"Протокол");
+    return window.DWdossier(d,fac(c),rk==="final_look"?img(c.img.final_look):null)+window.DWprotocol(rk,c.slug,"Протокол");
   if(rk==="interview") return window.DWinterview(p.interview,fac(c))+window.DWprotocol(rk,c.slug,"Протокол");
   if(rk==="presentation"){ const op=p.opening||{};
     return `<div class="chron">`+
