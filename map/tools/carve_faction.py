@@ -30,6 +30,11 @@ TRANSFER ниже): держава отступает, и оставленное
 отличить его там больше не от чего. Передумали — правьте
 factions-geo.js или восстанавливайте из истории git.
 
+Третий случай — фракция на ничьей земле (таблица CLAIM ниже): её
+территория — вся суша из land.js внутри рамки, которую не держит никто
+другой. Наброска здесь нет: берег и границы с соседями берутся точно
+по их контурам, поэтому ни щелей, ни нахлёстов не бывает.
+
     python3 map/tools/carve_faction.py --dry    # показать и не записывать
     python3 map/tools/carve_faction.py          # записать factions-geo.js
 """
@@ -92,6 +97,23 @@ TRANSFER = {
       (70.0,   36.0), (76.0,   36.0), (83.0,   36.0),
       (83.0,  -14.0), (76.0,  -14.0), (70.0,  -14.0),
     ],
+  },
+}
+
+
+# ═══════════════ ЧТО ЗАНИМАЕТ НИЧЬЮ ЗЕМЛЮ ═══════════════
+# box — рамка (шир0, шир1, дол0, дол1); долгота может заходить за 180,
+# как и сама суша в land.js по антимеридиану. Берётся вся ничья суша
+# внутри рамки. Прогон повторяемый: своя прежняя территория при подсчёте
+# ничьей земли не учитывается.
+CLAIM = {
+  "nusantara": {
+    "title": "Республика Нусантара",
+    # Малайский полуостров, Суматра, Ява, Борнео, Сулавеси, Малые Зондские
+    # острова, Молукки, Филиппины, Новая Гвинея с Бисмарком, Соломоновы
+    # острова, Вануату, Новая Каледония и Фиджи. Северный край — 19,5°:
+    # выше остаются только щели вдоль берега Forge и Ракшасов.
+    "box": (-25.0, 19.5, 94.0, 190.0),
   },
 }
 
@@ -161,6 +183,14 @@ def polys_of(rings):
     return MultiPolygon(ps) if len(ps) > 1 else ps[0]
 
 
+def load_land():
+    s = open(os.path.join(DATA, 'land.js'), encoding='utf-8').read()
+    j = s.index('=', s.index('window.LAND_DATA')) + 1
+    while s[j] in ' \t\r\n':
+        j += 1
+    return json.JSONDecoder().raw_decode(s, j)[0]
+
+
 def main():
     ap = argparse.ArgumentParser(description='Вырезать территорию фракции из чужой')
     ap.add_argument('--dry', action='store_true', help='ничего не записывать')
@@ -202,6 +232,27 @@ def main():
             sys.exit('  куски потерялись или налезают друг на друга — файл не записан')
         geo[key] = rings_of(cut)
         geo[host_key] = rings_of(rest)
+
+    for key, spec in CLAIM.items():
+        from shapely.geometry import box
+        from shapely.ops import unary_union
+        la0, la1, lo0, lo1 = spec['box']
+        frame = box(lo0, la0, lo1, la1)
+        land = [make_valid(polys_of([p])) for p in load_land()]
+        land = make_valid(unary_union([g for g in land if g.intersects(frame)]))
+        taken = make_valid(unary_union([make_valid(polys_of(v))
+                                        for k, v in geo.items() if k != key]))
+        land = make_valid(land.intersection(frame))
+        cut = make_valid(land.difference(taken))
+        a_land, a_cut = area_km2(land), area_km2(cut)
+        print(f"\n═══ {spec['title']} ({key}) занимает ничью землю ═══")
+        print(f"  суша в рамке          {a_land/1e6:8.3f} млн км²")
+        print(f"  из неё ничья          {a_cut/1e6:8.3f} млн км²")
+        ov = cut.intersection(taken).area
+        print(f"  наложение на соседей, град²: {ov:.6f}")
+        if ov > 1e-6:
+            sys.exit('  территория налезает на соседей — файл не записан')
+        geo[key] = rings_of(cut)
 
     for key, spec in TRANSFER.items():
         src_key, dst_key = spec['from'], spec['to']
