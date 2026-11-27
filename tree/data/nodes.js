@@ -548,25 +548,27 @@ window.META_TREE = {
   },
   {
    "id": "тева-мануа",
-   "slug": null,
-   "cls": "PSI",
+   "slug": "тева-мануа",
+   "cls": "COG",
    "dual": false,
-   "subclass": "нейросенсорика / боль",
+   "subclass": "ощущение непосредственной угрозы",
    "origin": "s",
    "fac": "RKS",
    "serial": "018",
+   "lobe": "Провидение",
    "name": "Тева Мануа",
-   "role": "Оперативница Квартета",
-   "meta_power": 8,
-   "threat": 41,
+   "role": "Кризис-менеджер Ракшасов, специалист по подавлению восстаний и ликвидации очагов сопротивления",
+   "meta_power": 3,
+   "threat": 45,
    "status": "alive",
    "abilities": [
-    "Нейросенсорные перегрузки",
-    "Дистанционная индукция боли"
+    "Ощущение непосредственной угрозы",
+    "Выдающиеся навыки рукопашного боя"
    ],
-   "avatar": "",
-   "aliases": [],
-   "undocumented": true
+   "avatar": "https://AlexandraHaffman.github.io/divided-world/data/images/characters/ED1A0484-9FE8-43E5-B71C-BC847E1FB783.jpeg",
+   "aliases": [
+    "Тева Мануа"
+   ]
   },
   {
    "id": "стефан-дюпон",
