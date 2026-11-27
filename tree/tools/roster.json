@@ -25,10 +25,7 @@
 
     { "slug": "маро",             "cls": "PSI", "subclass": "телепатия / гипноз",      "origin": "s", "fac": "GRN", "serial": "003" },
     { "slug": "смотрящий-в-бездну","cls": "PSI","subclass": "перцептивные искажения",  "origin": "s", "fac": "ABY", "serial": "032" },
-    { "slug": null, "id": "тева-мануа", "name": "Тева Мануа", "meta_power": 8, "threat": 41, "status": "alive",
-      "role": "Оперативница Квартета",
-      "abilities": ["Нейросенсорные перегрузки", "Дистанционная индукция боли"],
-      "cls": "PSI", "subclass": "нейросенсорика / боль", "origin": "s", "fac": "RKS", "serial": "018" },
+    { "slug": "тева-мануа", "cls": "COG", "subclass": "ощущение непосредственной угрозы", "origin": "s", "fac": "RKS", "serial": "018", "lobe": "Провидение" },
     { "slug": "стефан-дюпон",     "cls": "PSI", "subclass": "эрозия воли",             "origin": "s", "fac": "RKS", "serial": "019" },
     { "slug": "кристиан-фогель",  "cls": "PSI", "subclass": "вестибулярная дезориентация", "origin": "s", "fac": "RKS", "serial": "020" },
     { "slug": "александра-вегас", "cls": "PSI", "subclass": "стирание памяти",         "origin": "s", "fac": "UAM", "serial": "007" },
