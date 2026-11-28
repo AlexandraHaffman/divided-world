@@ -74,7 +74,7 @@
   "img": {
    "reference": "data/images/characters/E9709DFE-E713-4D1D-8804-55275B534835.jpeg",
    "cinematic": "data/images/characters/80FCA5EE-1B0D-4146-BE8D-3D2632652081.jpeg",
-   "system_1x1": "data/images/characters/nymphea-elenis-portrait-web.jpg",
+   "system_1x1": "data/images/characters/nymphea-elenis-system-v2.webp",
    "system_1x1_expected": "data/images/characters/nimfeya-elenis-portrait-web.jpg",
    "final_look": "miss-divided-world-2061/assets/img/final-looks/нимфея-эленис.jpg"
   },
